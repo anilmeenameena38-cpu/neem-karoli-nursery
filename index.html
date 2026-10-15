@@ -8,25 +8,23 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f2f8ed;color:#23452b}
-header{background:#176b37;color:white;text-align:center;padding:25px 12px}
-header h1{font-size:25px;margin:0 0 12px}
-header p{margin:7px}
-nav{background:white;text-align:center;padding:15px;position:sticky;top:0}
-nav a{color:#176b37;font-weight:bold;margin:0 12px}
-main{max-width:950px;margin:auto;padding:18px}
-.welcome,.order{background:white;border-radius:18px;padding:22px;text-align:center;margin-bottom:22px;box-shadow:0 3px 15px #0000000c}
+header{background:#176b37;color:white;text-align:center;padding:24px 12px}
+header h1{font-size:24px}
+nav{background:white;text-align:center;padding:14px;position:sticky;top:0}
+nav a{color:#176b37;font-weight:bold;margin:8px}
+main{max-width:950px;margin:auto;padding:16px}
+.card{background:white;border-radius:16px;padding:20px;text-align:center;margin-bottom:20px}
 h2{color:#176b37}
-.plants{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
-.plant{background:white;border:1px solid #d6e7d2;border-radius:15px;padding:17px 10px;text-align:center}
-.emoji{font-size:42px}
+.plants{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.plant{background:white;border:1px solid #d6e7d2;border-radius:14px;padding:15px 8px;text-align:center}
+.emoji{font-size:40px}
 .price{font-size:21px;font-weight:bold;color:#176b37}
-.stock{font-size:14px;color:#526b55}
-button,.btn{display:inline-block;border:0;border-radius:9px;background:#168447;color:white;padding:12px 17px;font-size:16px;font-weight:bold;text-decoration:none;cursor:pointer;margin:5px}
-.call{background:#176b37}
-input,select{width:100%;padding:13px;margin:7px 0 13px;border:1px solid #b9cfb5;border-radius:8px;font-size:16px;background:white}
-label{text-align:left;display:block;font-weight:bold}
-.note{font-size:13px;color:#5a6d5b}
-footer{background:#174b2b;color:white;text-align:center;padding:22px}
+button,.btn{display:inline-block;border:0;border-radius:9px;background:#168447;color:white;padding:12px;font-size:16px;font-weight:bold;text-decoration:none;margin:5px;cursor:pointer}
+input,select{width:100%;padding:12px;margin:7px 0 14px;border:1px solid #b9cfb5;border-radius:8px;font-size:16px}
+label{display:block;text-align:left;font-weight:bold}
+.status{background:#f2f8ed;border-radius:9px;padding:12px;margin:12px 0;overflow-wrap:anywhere}
+.note{font-size:13px;color:#526b55}
+footer{background:#174b2b;color:white;text-align:center;padding:20px}
 </style>
 </head>
 <body>
@@ -35,65 +33,68 @@ footer{background:#174b2b;color:white;text-align:center;padding:22px}
 <p>स्वस्थ पौधे • हरी सब्जियाँ • हरियाली</p>
 <p>ग्राम चारावास, झुंझुनू, राजस्थान</p>
 </header>
+
 <nav>
 <a href="#plants">पौधे व कीमत</a>
 <a href="#order">ऑर्डर करें</a>
 <a href="#contact">संपर्क</a>
 </nav>
+
 <main>
-<section class="welcome">
+<section class="card">
 <h2>🙏 आपका स्वागत है</h2>
 <p>अपने घर और खेत के लिए सब्जियों के पौधे चुनें।</p>
-<p>पौधों की उपलब्धता की पुष्टि करके अपना ऑर्डर WhatsApp पर भेजें।</p>
+<p>चारावास के आसपास लगभग 10 किमी के क्षेत्र में ऑर्डर के लिए अपनी लोकेशन साझा करें।</p>
 <a class="btn" href="tel:9887666626">📞 अभी कॉल करें</a>
-<a class="btn" href="https://wa.me/919887666626" target="_blank">WhatsApp पर पूछें</a>
+<a class="btn" href="https://wa.me/919887666626">WhatsApp पर पूछें</a>
 </section>
 
 <h2 id="plants">🌿 हमारे पौधे और कीमत</h2>
 <div class="plants">
 <div class="plant">
-<div class="emoji">🍅</div>
-<h3>टमाटर</h3>
+<div class="emoji">🍅</div><h3>टमाटर</h3>
 <div class="price">₹5 / पौधा</div>
-<p class="stock">दिखाई गई उपलब्धता: 450 पौधे</p>
-<button onclick="choose('टमाटर')">ऑर्डर करें</button>
+<p>उपलब्धता: 450 पौधे</p>
+<button onclick="choosePlant('टमाटर')">ऑर्डर करें</button>
 </div>
 <div class="plant">
-<div class="emoji">🌶️</div>
-<h3>हरी मिर्च</h3>
+<div class="emoji">🌶️</div><h3>हरी मिर्च</h3>
 <div class="price">₹5 / पौधा</div>
-<p class="stock">दिखाई गई उपलब्धता: 75 पौधे</p>
-<button onclick="choose('हरी मिर्च')">ऑर्डर करें</button>
+<p>उपलब्धता: 75 पौधे</p>
+<button onclick="choosePlant('हरी मिर्च')">ऑर्डर करें</button>
 </div>
 <div class="plant">
-<div class="emoji">🍆</div>
-<h3>बैंगन</h3>
+<div class="emoji">🍆</div><h3>बैंगन</h3>
 <div class="price">₹5 / पौधा</div>
-<p class="stock">दिखाई गई उपलब्धता: 75 पौधे</p>
-<button onclick="choose('बैंगन')">ऑर्डर करें</button>
+<p>उपलब्धता: 75 पौधे</p>
+<button onclick="choosePlant('बैंगन')">ऑर्डर करें</button>
 </div>
 <div class="plant">
-<div class="emoji">🥬</div>
-<h3>पत्तेदार सब्जियाँ</h3>
+<div class="emoji">🥬</div><h3>पत्तेदार सब्जियाँ</h3>
 <p>मौसम व उपलब्धता के अनुसार</p>
-<button onclick="choose('पत्तेदार सब्जियाँ')">पूछें</button>
+<button onclick="choosePlant('पत्तेदार सब्जियाँ')">पूछें</button>
 </div>
 <div class="plant">
-<div class="emoji">🥒</div>
-<h3>लौकी व खीरा</h3>
+<div class="emoji">🥒</div><h3>लौकी व खीरा</h3>
 <p>मौसम व उपलब्धता के अनुसार</p>
-<button onclick="choose('लौकी व खीरा')">पूछें</button>
+<button onclick="choosePlant('लौकी व खीरा')">पूछें</button>
 </div>
 <div class="plant">
-<div class="emoji">🌱</div>
-<h3>अन्य पौधे</h3>
+<div class="emoji">🌱</div><h3>अन्य पौधे</h3>
 <p>उपलब्धता के लिए संपर्क करें</p>
-<button onclick="choose('अन्य पौधे')">पूछें</button>
+<button onclick="choosePlant('अन्य पौधे')">पूछें</button>
 </div>
 </div>
 
-<section class="order" id="order">
-<h2>🛒 अपना ऑर्डर बुक करें</h2>
+<section class="card" id="order">
+<h2>📍 ऑर्डर और डिलीवरी लोकेशन</h2>
+<p>नीचे बटन दबाकर अपने मोबाइल की लोकेशन साझा करें।</p>
+<button type="button" onclick="getLocation()">📍 मेरी वर्तमान लोकेशन लें</button>
+<div class="status" id="locationStatus" aria-live="polite">
+अभी लोकेशन नहीं मिली है।
+</div>
+<p class="note">आपकी अनुमति के बिना वेबसाइट GPS लोकेशन नहीं ले सकती। दूरी नर्सरी से सीधी दूरी के आधार पर जाँची जाएगी।</p>
+
 <label for="plant">पौधा चुनें</label>
 <select id="plant">
 <option>टमाटर</option>
@@ -103,48 +104,127 @@ footer{background:#174b2b;color:white;text-align:center;padding:22px}
 <option>लौकी व खीरा</option>
 <option>अन्य पौधे</option>
 </select>
-<label for="qty">कितने पौधे चाहिए?</label>
+
+<label for="qty">पौधों की संख्या</label>
 <input id="qty" type="number" min="1" value="10">
+
 <label for="customer">आपका नाम</label>
 <input id="customer" type="text" placeholder="अपना नाम लिखें">
-<label for="village">गाँव / स्थान</label>
-<input id="village" type="text" placeholder="अपने गाँव का नाम लिखें">
-<button onclick="sendOrder()">WhatsApp पर ऑर्डर भेजें</button>
-<p class="note">ऑर्डर भेजने पर WhatsApp खुलेगा। भेजने से पहले संदेश जाँच लें।</p>
+
+<label for="phone">मोबाइल नंबर (वैकल्पिक)</label>
+<input id="phone" type="tel" placeholder="मोबाइल नंबर">
+
+<label for="address">गाँव / डिलीवरी का पता</label>
+<input id="address" type="text" placeholder="गाँव या पूरा पता">
+
+<button type="button" onclick="sendOrder()">WhatsApp पर ऑर्डर भेजें</button>
+<p class="note">WhatsApp खुलने पर संदेश जाँचकर स्वयं Send दबाएँ।</p>
 </section>
 
-<section id="contact" class="welcome">
+<section class="card" id="contact">
 <h2>📞 संपर्क करें</h2>
 <p>श्री नीम करोली महाराज ग्रीन नर्सरी</p>
 <p>ग्राम चारावास, झुंझुनू, राजस्थान</p>
-<p><strong>मोबाइल: 9887666626</strong></p>
-<a class="btn call" href="tel:9887666626">📞 कॉल करें</a>
-<a class="btn" href="https://wa.me/919887666626" target="_blank">WhatsApp खोलें</a>
+<p>मोबाइल: 9887666626</p>
+<a class="btn" href="tel:9887666626">कॉल करें</a>
+<a class="btn" href="https://wa.me/919887666626">WhatsApp</a>
+<a class="btn" href="https://www.google.com/maps?q=28.0102870,75.6538370">🗺️ नर्सरी का नक्शा</a>
 </section>
 </main>
+
 <footer>
 <p>🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</p>
 <p>स्वस्थ पौधे • हरित गाँव • खुशहाल किसान</p>
 </footer>
+
 <script>
-function choose(name){
+const nurseryLat = 28.0102870;
+const nurseryLon = 75.6538370;
+const maxKm = 10;
+let customerLocation = null;
+let customerDistance = null;
+
+function distanceKm(lat1,lon1,lat2,lon2){
+ const rad=x=>x*Math.PI/180;
+ const dLat=rad(lat2-lat1), dLon=rad(lon2-lon1);
+ const a=Math.sin(dLat/2)**2+
+ Math.cos(rad(lat1))*Math.cos(rad(lat2))*Math.sin(dLon/2)**2;
+ return 6371*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function choosePlant(name){
  document.getElementById('plant').value=name;
  document.getElementById('order').scrollIntoView({behavior:'smooth'});
 }
+
+function getLocation(){
+ const status=document.getElementById('locationStatus');
+ if(!navigator.geolocation){
+  status.textContent='आपके ब्राउज़र में GPS उपलब्ध नहीं है।';
+  return;
+ }
+ status.textContent='लोकेशन प्राप्त हो रही है। कृपया अनुमति दें।';
+
+ navigator.geolocation.getCurrentPosition(
+ function(position){
+  const lat=position.coords.latitude;
+  const lon=position.coords.longitude;
+  customerLocation={lat:lat,lon:lon};
+  customerDistance=distanceKm(nurseryLat,nurseryLon,lat,lon);
+  const maps='https://www.google.com/maps?q='+lat+','+lon;
+
+  if(customerDistance<=maxKm){
+   status.innerHTML='✅ आप 10 किमी के दायरे में हैं। सीधी दूरी: '+
+   customerDistance.toFixed(2)+' किमी।<br><a target="_blank" rel="noopener" href="'+maps+'">नक्शे पर अपनी लोकेशन देखें</a>';
+  }else{
+   status.innerHTML='⚠️ आप 10 किमी के दायरे से बाहर हैं। सीधी दूरी: '+
+   customerDistance.toFixed(2)+' किमी।<br><a target="_blank" rel="noopener" href="'+maps+'">नक्शे पर अपनी लोकेशन देखें</a>';
+  }
+ },
+ function(error){
+  customerLocation=null;
+  customerDistance=null;
+  if(error.code===1) status.textContent='लोकेशन की अनुमति नहीं मिली। ब्राउज़र में अनुमति देकर फिर कोशिश करें।';
+  else if(error.code===2) status.textContent='लोकेशन नहीं मिली। मोबाइल का GPS चालू करके फिर कोशिश करें।';
+  else status.textContent='समय पर लोकेशन नहीं मिली। फिर से कोशिश करें।';
+ },
+ {enableHighAccuracy:true,timeout:20000,maximumAge:60000}
+ );
+}
+
 function sendOrder(){
  const plant=document.getElementById('plant').value;
- const qty=document.getElementById('qty').value;
+ const qty=Number(document.getElementById('qty').value);
  const customer=document.getElementById('customer').value.trim();
- const village=document.getElementById('village').value.trim();
- if(!qty || Number(qty)<1){
-  alert('कृपया पौधों की सही संख्या लिखें।');return;
+ const phone=document.getElementById('phone').value.trim();
+ const address=document.getElementById('address').value.trim();
+
+ if(!qty||qty<1){
+  alert('कृपया पौधों की सही संख्या लिखें।');
+  return;
  }
- const message='नमस्ते! मुझे नर्सरी से पौधे ऑर्डर करने हैं।'
- +'\nपौधा: '+plant+'\nमात्रा: '+qty
- +'\nनाम: '+(customer||'नहीं बताया')
- +'\nगाँव: '+(village||'नहीं बताया')
- +'\nकृपया कीमत और उपलब्धता की पुष्टि करें।';
- window.open('https://wa.me/919887666626?text='+encodeURIComponent(message),'_blank');
+ if(!customerLocation){
+  alert('पहले अपनी वर्तमान लोकेशन लें। यदि लोकेशन साझा नहीं करना चाहते, तो नर्सरी को सीधे WhatsApp पर संपर्क करें।');
+  return;
+ }
+ if(customerDistance>maxKm){
+  alert('आपकी लोकेशन नर्सरी से 10 किमी से बाहर है। ऑर्डर के लिए नर्सरी से सीधे WhatsApp पर संपर्क करें।');
+  return;
+ }
+
+ const maps='https://www.google.com/maps?q='+
+ customerLocation.lat+','+customerLocation.lon;
+ const message='नमस्ते! मुझे नर्सरी से पौधे ऑर्डर करने हैं।'+
+ '\nनाम: '+(customer||'नहीं बताया')+
+ '\nमोबाइल: '+(phone||'नहीं बताया')+
+ '\nपौधा: '+plant+
+ '\nमात्रा: '+qty+
+ '\nगाँव/पता: '+(address||'नहीं बताया')+
+ '\nनर्सरी से सीधी दूरी: '+customerDistance.toFixed(2)+' किमी'+
+ '\nग्राहक की लोकेशन: '+maps+
+ '\nकृपया उपलब्धता और कुल कीमत की पुष्टि करें।';
+
+ window.location.href='https://wa.me/919887666626?text='+encodeURIComponent(message);
 }
 </script>
 </body>
