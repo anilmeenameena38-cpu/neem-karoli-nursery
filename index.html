@@ -2,120 +2,150 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>श्री नीम करोली महाराज ग्रीन नर्सरी</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f8ef;
-      color: #203a24;
-    }
-    header {
-      background: #176b37;
-      color: white;
-      padding: 24px 16px;
-      text-align: center;
-    }
-    header h1 { font-size: 25px; margin: 0 0 10px; }
-    header p { margin: 0; }
-    nav {
-      background: #fff;
-      padding: 12px;
-      text-align: center;
-      position: sticky;
-      top: 0;
-    }
-    nav a { color: #176b37; margin: 0 10px; font-weight: bold; }
-    main { padding: 18px; max-width: 850px; margin: auto; }
-    .hero {
-      background: white;
-      border-radius: 16px;
-      padding: 22px;
-      text-align: center;
-      box-shadow: 0 3px 12px #0001;
-    }
-    .hero h2 { color: #176b37; }
-    .plants {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
-      gap: 12px;
-      margin-top: 20px;
-    }
-    .plant {
-      background: white;
-      padding: 16px 10px;
-      border-radius: 12px;
-      text-align: center;
-      border: 1px solid #dce8d8;
-    }
-    .emoji { font-size: 35px; }
-    .button {
-      display: inline-block;
-      background: #168443;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 9px;
-      text-decoration: none;
-      font-weight: bold;
-      margin-top: 12px;
-    }
-    footer {
-      margin-top: 25px;
-      padding: 22px;
-      text-align: center;
-      background: #174b2b;
-      color: white;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>श्री नीम करोली महाराज ग्रीन नर्सरी</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f2f8ed;color:#23452b}
+header{background:#176b37;color:white;text-align:center;padding:25px 12px}
+header h1{font-size:25px;margin:0 0 12px}
+header p{margin:7px}
+nav{background:white;text-align:center;padding:15px;position:sticky;top:0}
+nav a{color:#176b37;font-weight:bold;margin:0 12px}
+main{max-width:950px;margin:auto;padding:18px}
+.welcome,.order{background:white;border-radius:18px;padding:22px;text-align:center;margin-bottom:22px;box-shadow:0 3px 15px #0000000c}
+h2{color:#176b37}
+.plants{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.plant{background:white;border:1px solid #d6e7d2;border-radius:15px;padding:17px 10px;text-align:center}
+.emoji{font-size:42px}
+.price{font-size:21px;font-weight:bold;color:#176b37}
+.stock{font-size:14px;color:#526b55}
+button,.btn{display:inline-block;border:0;border-radius:9px;background:#168447;color:white;padding:12px 17px;font-size:16px;font-weight:bold;text-decoration:none;cursor:pointer;margin:5px}
+.call{background:#176b37}
+input,select{width:100%;padding:13px;margin:7px 0 13px;border:1px solid #b9cfb5;border-radius:8px;font-size:16px;background:white}
+label{text-align:left;display:block;font-weight:bold}
+.note{font-size:13px;color:#5a6d5b}
+footer{background:#174b2b;color:white;text-align:center;padding:22px}
+</style>
 </head>
 <body>
-  <header>
-    <h1>🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</h1>
-    <p>स्वस्थ पौधे • हरी सब्जियाँ • हरियाली</p>
-    <p>ग्राम चारावास, झुंझुनू, राजस्थान</p>
-  </header>
+<header>
+<h1>🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</h1>
+<p>स्वस्थ पौधे • हरी सब्जियाँ • हरियाली</p>
+<p>ग्राम चारावास, झुंझुनू, राजस्थान</p>
+</header>
+<nav>
+<a href="#plants">पौधे व कीमत</a>
+<a href="#order">ऑर्डर करें</a>
+<a href="#contact">संपर्क</a>
+</nav>
+<main>
+<section class="welcome">
+<h2>🙏 आपका स्वागत है</h2>
+<p>अपने घर और खेत के लिए सब्जियों के पौधे चुनें।</p>
+<p>पौधों की उपलब्धता की पुष्टि करके अपना ऑर्डर WhatsApp पर भेजें।</p>
+<a class="btn" href="tel:9887666626">📞 अभी कॉल करें</a>
+<a class="btn" href="https://wa.me/919887666626" target="_blank">WhatsApp पर पूछें</a>
+</section>
 
-  <nav>
-    <a href="#plants">पौधे</a>
-    <a href="#contact">संपर्क</a>
-  </nav>
+<h2 id="plants">🌿 हमारे पौधे और कीमत</h2>
+<div class="plants">
+<div class="plant">
+<div class="emoji">🍅</div>
+<h3>टमाटर</h3>
+<div class="price">₹5 / पौधा</div>
+<p class="stock">दिखाई गई उपलब्धता: 450 पौधे</p>
+<button onclick="choose('टमाटर')">ऑर्डर करें</button>
+</div>
+<div class="plant">
+<div class="emoji">🌶️</div>
+<h3>हरी मिर्च</h3>
+<div class="price">₹5 / पौधा</div>
+<p class="stock">दिखाई गई उपलब्धता: 75 पौधे</p>
+<button onclick="choose('हरी मिर्च')">ऑर्डर करें</button>
+</div>
+<div class="plant">
+<div class="emoji">🍆</div>
+<h3>बैंगन</h3>
+<div class="price">₹5 / पौधा</div>
+<p class="stock">दिखाई गई उपलब्धता: 75 पौधे</p>
+<button onclick="choose('बैंगन')">ऑर्डर करें</button>
+</div>
+<div class="plant">
+<div class="emoji">🥬</div>
+<h3>पत्तेदार सब्जियाँ</h3>
+<p>मौसम व उपलब्धता के अनुसार</p>
+<button onclick="choose('पत्तेदार सब्जियाँ')">पूछें</button>
+</div>
+<div class="plant">
+<div class="emoji">🥒</div>
+<h3>लौकी व खीरा</h3>
+<p>मौसम व उपलब्धता के अनुसार</p>
+<button onclick="choose('लौकी व खीरा')">पूछें</button>
+</div>
+<div class="plant">
+<div class="emoji">🌱</div>
+<h3>अन्य पौधे</h3>
+<p>उपलब्धता के लिए संपर्क करें</p>
+<button onclick="choose('अन्य पौधे')">पूछें</button>
+</div>
+</div>
 
-  <main>
-    <section class="hero">
-      <h2>आपका स्वागत है 🙏</h2>
-      <p>अपने घर और खेत के लिए सब्जियों के पौधे चुनें।</p>
-      <p>टमाटर, मिर्च, बैंगन और अन्य पौधों की उपलब्धता के लिए संपर्क करें।</p>
-      <a class="button"
-         href="https://wa.me/919887666626?text=नमस्ते,%20मुझे%20नर्सरी%20के%20पौधों%20की%20जानकारी%20चाहिए।">
-         WhatsApp पर पूछें
-      </a>
-    </section>
+<section class="order" id="order">
+<h2>🛒 अपना ऑर्डर बुक करें</h2>
+<label for="plant">पौधा चुनें</label>
+<select id="plant">
+<option>टमाटर</option>
+<option>हरी मिर्च</option>
+<option>बैंगन</option>
+<option>पत्तेदार सब्जियाँ</option>
+<option>लौकी व खीरा</option>
+<option>अन्य पौधे</option>
+</select>
+<label for="qty">कितने पौधे चाहिए?</label>
+<input id="qty" type="number" min="1" value="10">
+<label for="customer">आपका नाम</label>
+<input id="customer" type="text" placeholder="अपना नाम लिखें">
+<label for="village">गाँव / स्थान</label>
+<input id="village" type="text" placeholder="अपने गाँव का नाम लिखें">
+<button onclick="sendOrder()">WhatsApp पर ऑर्डर भेजें</button>
+<p class="note">ऑर्डर भेजने पर WhatsApp खुलेगा। भेजने से पहले संदेश जाँच लें।</p>
+</section>
 
-    <h2 id="plants">🌿 हमारे पौधे</h2>
-    <section class="plants">
-      <div class="plant"><div class="emoji">🍅</div><h3>टमाटर</h3><p>पौधे उपलब्धता के अनुसार</p></div>
-      <div class="plant"><div class="emoji">🌶️</div><h3>हरी मिर्च</h3><p>पौधे उपलब्धता के अनुसार</p></div>
-      <div class="plant"><div class="emoji">🍆</div><h3>बैंगन</h3><p>पौधे उपलब्धता के अनुसार</p></div>
-      <div class="plant"><div class="emoji">🥬</div><h3>पत्तेदार सब्जियाँ</h3><p>मौसम के अनुसार</p></div>
-      <div class="plant"><div class="emoji">🥒</div><h3>लौकी व खीरा</h3><p>मौसम के अनुसार</p></div>
-      <div class="plant"><div class="emoji">🌱</div><h3>अन्य पौधे</h3><p>जानकारी के लिए संपर्क करें</p></div>
-    </section>
-
-    <section id="contact">
-      <h2>📞 संपर्क करें</h2>
-      <p>नर्सरी: ग्राम चारावास, झुंझुनू, राजस्थान</p>
-      <p>मोबाइल: 9887666626</p>
-      <a class="button" href="tel:+919887666626">कॉल करें</a>
-      <a class="button" href="https://wa.me/919887666626">WhatsApp</a>
-    </section>
-  </main>
-
-  <footer>
-    <p>🙏 श्री नीम करोली महाराज ग्रीन नर्सरी</p>
-    <p>आपका विश्वास, हमारी सेवा 🌱</p>
-  </footer>
+<section id="contact" class="welcome">
+<h2>📞 संपर्क करें</h2>
+<p>श्री नीम करोली महाराज ग्रीन नर्सरी</p>
+<p>ग्राम चारावास, झुंझुनू, राजस्थान</p>
+<p><strong>मोबाइल: 9887666626</strong></p>
+<a class="btn call" href="tel:9887666626">📞 कॉल करें</a>
+<a class="btn" href="https://wa.me/919887666626" target="_blank">WhatsApp खोलें</a>
+</section>
+</main>
+<footer>
+<p>🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</p>
+<p>स्वस्थ पौधे • हरित गाँव • खुशहाल किसान</p>
+</footer>
+<script>
+function choose(name){
+ document.getElementById('plant').value=name;
+ document.getElementById('order').scrollIntoView({behavior:'smooth'});
+}
+function sendOrder(){
+ const plant=document.getElementById('plant').value;
+ const qty=document.getElementById('qty').value;
+ const customer=document.getElementById('customer').value.trim();
+ const village=document.getElementById('village').value.trim();
+ if(!qty || Number(qty)<1){
+  alert('कृपया पौधों की सही संख्या लिखें।');return;
+ }
+ const message='नमस्ते! मुझे नर्सरी से पौधे ऑर्डर करने हैं।'
+ +'\nपौधा: '+plant+'\nमात्रा: '+qty
+ +'\nनाम: '+(customer||'नहीं बताया')
+ +'\nगाँव: '+(village||'नहीं बताया')
+ +'\nकृपया कीमत और उपलब्धता की पुष्टि करें।';
+ window.open('https://wa.me/919887666626?text='+encodeURIComponent(message),'_blank');
+}
+</script>
 </body>
 </html>
