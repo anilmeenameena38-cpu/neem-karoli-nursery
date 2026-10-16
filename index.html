@@ -18,6 +18,17 @@ header p{margin:7px auto;max-width:800px;font-size:clamp(14px,2vw,18px)}
 nav{position:sticky;top:0;z-index:1000;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 14px;background:#ffffffed;backdrop-filter:blur(12px);box-shadow:0 4px 18px #0000000c;border-bottom:1px solid #e8f0e5}
 nav a{display:inline-block;min-width:110px;text-align:center;padding:9px 15px;border-radius:999px;background:#f0f7ed;color:var(--green);font-weight:700;text-decoration:none;transition:background .2s,transform .2s}
 nav a:hover{background:#dff0dc;transform:translateY(-1px)}
+.nav-menu-wrap{position:relative;display:inline-flex;align-items:center}
+#adminPanelNav{min-width:130px;padding:9px 15px;border-radius:999px;background:linear-gradient(135deg,#176b37,#104b29);color:#fff;border:0;font-weight:700;box-shadow:0 5px 14px #16844720}
+#menuToggle{min-width:110px;padding:9px 15px;border-radius:999px;background:linear-gradient(135deg,#176b37,#104b29);color:#fff;border:0;font-weight:700;box-shadow:0 5px 14px #16844720}
+#menuDropdown{display:none;position:absolute;right:0;top:calc(100% + 8px);min-width:210px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px;box-shadow:0 16px 36px #173f2526;z-index:1200}
+#menuDropdown.open{display:block}
+#menuDropdown a{display:block;min-width:0;text-align:left;border-radius:10px;padding:11px 13px;margin:2px 0;background:#f4faf1;color:var(--green);text-decoration:none;font-weight:700}
+#menuDropdown a:hover{background:#e3f2df}
+#owner{display:none;scroll-margin-top:100px}
+#owner.login-visible{display:block}
+@media(max-width:650px){.nav-menu-wrap{flex:1 1 28%;justify-content:center}#adminPanelNav{min-width:0;flex:1 1 28%;padding:8px 7px;font-size:14px}
+#menuToggle{min-width:0;width:100%;padding:8px 7px;font-size:14px}#menuDropdown{right:0;min-width:190px}}
 main{max-width:1120px;margin:0 auto;padding:clamp(16px,3vw,30px) 16px}
 .card{background:#fff;border:1px solid #e2eddf;border-radius:22px;padding:clamp(18px,3vw,30px);margin-bottom:24px;box-shadow:var(--shadow)}
 .card h2{color:var(--green);font-size:clamp(21px,3vw,28px);line-height:1.4;margin:0 0 12px}
@@ -44,6 +55,7 @@ button:disabled{opacity:.55;cursor:wait;transform:none}
 .order{background:#fbfef9;border:1px solid var(--line);padding:17px;border-radius:16px;margin:13px 0;box-shadow:0 4px 14px #174b2b08}
 .order strong{color:var(--green)}
 #ownerStats{display:none}#ownerOrders{display:none}#ownerPanelHeader{display:none;background:linear-gradient(135deg,#103f24,#25884b);color:#fff;border-radius:20px;padding:22px;margin:18px 0 14px;box-shadow:0 12px 28px #174b2b20}#ownerPanelHeader h3{margin:0 0 4px;font-size:clamp(22px,3vw,30px)}#ownerPanelHeader p{margin:0;color:#e9f7e9}.admin-welcome{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.admin-chip{background:#ffffff20;border:1px solid #ffffff45;border-radius:999px;padding:6px 12px;font-size:13px}.admin-tabs{display:none;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0}.admin-tab{width:100%;min-height:76px;display:flex;flex-direction:column;gap:3px;align-items:center;justify-content:center;background:#fff;color:var(--green);border:1px solid var(--line);box-shadow:0 5px 16px #174b2b0a;border-radius:16px;padding:10px 6px}.admin-tab .tab-icon{font-size:24px;line-height:1.2}.admin-tab .tab-label{font-size:14px}.admin-tab.active{background:linear-gradient(135deg,#176b37,#104b29);color:#fff;border-color:#176b37;box-shadow:0 8px 20px #176b3730}.admin-pane{display:none}.admin-pane.active{display:block}.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}.metric{background:linear-gradient(145deg,#f1f9ee,#fff);border:1px solid var(--line);border-radius:16px;padding:16px}.metric .metric-label{font-size:13px;color:var(--muted)}.metric .metric-value{font-size:clamp(22px,3vw,30px);font-weight:800;color:var(--green);line-height:1.35}.admin-section-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 5px 18px #174b2b0a}.stock-row,.sale-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 4px;border-bottom:1px solid #eaf1e7}.stock-row:last-child,.sale-row:last-child{border-bottom:0}.stock-name{font-weight:700}.stock-count{white-space:nowrap;background:#edf7ed;color:var(--green);padding:5px 10px;border-radius:999px;font-weight:800}.sale-row{align-items:flex-start}.sale-meta{font-size:13px;color:var(--muted)}.sale-amount{font-weight:800;color:var(--green);white-space:nowrap}.admin-action-row{display:flex;gap:10px;flex-wrap:wrap}.admin-action-row button{width:auto}.admin-muted{color:var(--muted);font-size:14px}
+.customer-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center}.customer-search-row input{margin:6px 0 12px}.customer-search-row button{white-space:nowrap}.secondary-btn{background:#edf5e9!important;color:var(--green)!important;border:1px solid var(--line)!important;box-shadow:none!important}.customer-result-card{border:1px solid var(--line);background:#fbfef9;border-radius:14px;padding:15px;margin:12px 0}.customer-result-card h3{margin:0 0 8px;color:var(--green)}.customer-order-row{padding:10px 0;border-top:1px solid #e4eee0}.customer-order-row:first-of-type{border-top:0}@media(max-width:650px){.customer-search-row{grid-template-columns:1fr 1fr}.customer-search-row input{grid-column:1/-1}.customer-search-row button{width:100%;padding:11px 8px}}
 #contact .btn{margin-top:6px}
 footer{background:linear-gradient(130deg,#174b2b,#0b3520);color:#fff;text-align:center;padding:30px 16px;border-radius:28px 28px 0 0;margin-top:26px}
 footer p{margin:5px}
@@ -60,8 +72,7 @@ footer p{margin:5px}
 <a href="#plants">पौधे</a>
 <a href="#order">ऑर्डर</a>
 <a href="#contact">संपर्क</a>
-<a href="#owner">मालिक लॉगिन</a>
-<a href="#owner">मालिक एडमिन पैनल</a>
+<button id="adminPanelNav" type="button" aria-label="मालिक एडमिन पैनल खोलें">🔐 Admin Panel</button>
 </nav>
 <main>
 <section class="card" id="welcome">
@@ -108,7 +119,7 @@ footer p{margin:5px}
 <a class="btn" href="https://wa.me/919887666626" target="_blank" rel="noopener">WhatsApp पर संपर्क करें</a>
 </section>
 
-<section class="card" id="owner">
+<section class="card" id="owner" aria-hidden="true">
 <h2>🔐 नर्सरी मालिक लॉगिन</h2>
 <p class="note">यहाँ केवल अधिकृत मालिक लॉगिन करें।</p>
 <form id="loginForm">
@@ -121,6 +132,16 @@ footer p{margin:5px}
 <button id="logoutButton" type="button" style="display:none">लॉगआउट</button>
 <div id="ownerStatus" class="status" aria-live="polite">लॉगिन करने के बाद ऑर्डर दिखेंगे।</div>
 <div id="ownerPanelHeader"><div class="admin-welcome"><div><h3>🌿 नर्सरी एडमिन पैनल</h3><p>आपका व्यवसाय, एक ही जगह — ऑर्डर, स्टॉक और बिक्री</p></div><span class="admin-chip">🔒 मालिक लॉगिन सक्रिय</span></div></div>
+<div id="adminCustomerSearch" class="admin-section-card" style="display:none">
+  <h2>🔎 ग्राहक की जानकारी खोजें</h2>
+  <p class="admin-muted">ग्राहक का मोबाइल नंबर डालें। उस नंबर से जुड़े ऑर्डर, पता और खरीद का रिकॉर्ड दिखेगा।</p>
+  <form id="customerSearchForm">
+    <label for="customerSearchPhone">ग्राहक का मोबाइल नंबर</label>
+    <div class="customer-search-row"><input id="customerSearchPhone" type="tel" inputmode="numeric" autocomplete="off" placeholder="जैसे 9876543210" required><button id="customerSearchButton" type="submit">🔍 खोजें</button><button id="customerSearchClear" type="button" class="secondary-btn">साफ करें</button></div>
+  </form>
+  <div id="customerSearchStatus" class="status" aria-live="polite">मोबाइल नंबर डालकर खोजें।</div>
+  <div id="customerSearchResults"></div>
+</div>
 <div id="adminTabs" class="admin-tabs" role="tablist" aria-label="एडमिन पैनल सेक्शन">
   <button class="admin-tab active" type="button" data-tab="dashboard" role="tab" aria-selected="true"><span class="tab-icon">📊</span><span class="tab-label">डैशबोर्ड</span></button>
   <button class="admin-tab" type="button" data-tab="orders" role="tab" aria-selected="false"><span class="tab-icon">🛒</span><span class="tab-label">ऑर्डर</span></button>
@@ -139,6 +160,13 @@ footer p{margin:5px}
 </footer>
 
 <script>
+const ownerSection = document.getElementById('owner');
+document.getElementById('adminPanelNav').addEventListener('click', () => {
+  ownerSection.classList.add('login-visible');
+  ownerSection.setAttribute('aria-hidden', 'false');
+  ownerSection.scrollIntoView({behavior:'smooth', block:'start'});
+});
+
 const SUPABASE_URL = 'https://knwpnjzwknnzdkyboeuy.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ANudpZPHHiFcBeI3U7SaEA_QRzMOywA';
 const OWNER_UID = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9';
@@ -333,6 +361,7 @@ document.getElementById('loginForm').addEventListener('submit', async event => {
   document.getElementById('logoutButton').style.display = 'inline-block';
   document.getElementById('ownerOrders').style.display = 'block';
   document.getElementById('ownerPanelHeader').style.display = 'block';
+  document.getElementById('adminCustomerSearch').style.display = 'block';
   document.getElementById('adminTabs').style.display = 'grid';
   showAdminTab('dashboard');
   const existingStats = document.getElementById('ownerStats');
@@ -349,6 +378,10 @@ document.getElementById('logoutButton').addEventListener('click', async () => {
   document.getElementById('ownerOrders').innerHTML = '';
   document.getElementById('ownerOrders').style.display = 'none';
   document.getElementById('ownerPanelHeader').style.display = 'none';
+  document.getElementById('adminCustomerSearch').style.display = 'none';
+  document.getElementById('customerSearchResults').innerHTML = '';
+  document.getElementById('customerSearchStatus').textContent = 'मोबाइल नंबर डालकर खोजें।';
+  document.getElementById('customerSearchForm').reset();
   document.getElementById('adminTabs').style.display = 'none';
   document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active'));
   document.getElementById('ownerStockList').innerHTML = '';
@@ -509,6 +542,85 @@ async function loadOwnerStats() {
   }
 }
 
+document.getElementById('customerSearchForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const status = document.getElementById('customerSearchStatus');
+  const results = document.getElementById('customerSearchResults');
+  const button = document.getElementById('customerSearchButton');
+  const {data: sessionData, error: sessionError} = await db.auth.getSession();
+  const currentUser = sessionData && sessionData.session && sessionData.session.user;
+  if (sessionError || !currentUser || currentUser.id !== OWNER_UID || currentUser.email !== OWNER_EMAIL) {
+    status.textContent = 'यह जानकारी केवल अधिकृत मालिक लॉगिन के बाद खोजी जा सकती है।';
+    results.innerHTML = '';
+    return;
+  }
+  const rawPhone = document.getElementById('customerSearchPhone').value.trim();
+  const digits = rawPhone.replace(/\D/g, '');
+  if (digits.length < 6) {
+    status.textContent = 'कृपया मोबाइल नंबर के कम से कम 6 अंक लिखें।';
+    results.innerHTML = '';
+    return;
+  }
+  button.disabled = true;
+  status.textContent = 'ग्राहक की जानकारी खोजी जा रही है…';
+  results.innerHTML = '';
+  try {
+    const pattern = '%' + digits + '%';
+    const [ordersResult, customersResult] = await Promise.all([
+      db.from('order_requests')
+        .select('id,plant_name,quantity,unit_price,customer_name,customer_phone,customer_address,notes,status,created_at')
+        .ilike('customer_phone', pattern)
+        .order('created_at', {ascending:false})
+        .limit(50),
+      db.from('customers')
+        .select('id,name,phone,address')
+        .ilike('phone', pattern)
+        .limit(20)
+    ]);
+    if (ordersResult.error) throw ordersResult.error;
+    if (customersResult.error) throw customersResult.error;
+    const orders = ordersResult.data || [];
+    const customers = customersResult.data || [];
+    if (!orders.length && !customers.length) {
+      status.textContent = 'इस नंबर से कोई ग्राहक या ऑर्डर नहीं मिला। नंबर की जाँच करें या ग्राहक के पुराने ऑर्डर में मोबाइल नंबर दर्ज न होने की संभावना देखें।';
+      return;
+    }
+    const escaped = value => safe(value == null ? '' : value);
+    const uniqueCustomers = [];
+    const seen = new Set();
+    customers.concat(orders.map(o => ({name:o.customer_name, phone:o.customer_phone, address:o.customer_address}))).forEach(c => {
+      const key = [String(c.phone||''),String(c.name||''),String(c.address||'')].join('|');
+      if (!seen.has(key)) { seen.add(key); uniqueCustomers.push(c); }
+    });
+    status.textContent = `मिला: ${uniqueCustomers.length} ग्राहक रिकॉर्ड और ${orders.length} ऑर्डर।`;
+    results.innerHTML = uniqueCustomers.map(c => `
+      <div class="customer-result-card">
+        <h3>👤 ${escaped(c.name || 'नाम उपलब्ध नहीं')}</h3>
+        <p><strong>मोबाइल:</strong> ${escaped(c.phone || 'नहीं दिया')}</p>
+        <p><strong>पता:</strong> ${escaped(c.address || 'पता उपलब्ध नहीं')}</p>
+      </div>`).join('') + (orders.length ? `
+      <div class="customer-result-card"><h3>🛒 खरीद / ऑर्डर इतिहास</h3>
+        ${orders.map(o => `
+          <div class="customer-order-row">
+            <strong>ऑर्डर #${escaped(o.id)} — ${escaped(o.status || 'स्थिति उपलब्ध नहीं')}</strong>
+            <p>${escaped(o.plant_name || 'पौधा')} • ${Number(o.quantity)||0} पौधे • ₹${(Number(o.unit_price||0)*Number(o.quantity||0)).toFixed(2)}</p>
+            <p><strong>पता:</strong> ${escaped(o.customer_address || 'नहीं दिया')}</p>
+            <p class="admin-muted">${o.created_at ? new Date(o.created_at).toLocaleString('hi-IN') : ''}</p>
+            ${String(o.notes||'').includes('MAPS_URL:https://www.google.com/maps?q=') ? `<p><a href="${escaped((String(o.notes).match(/MAPS_URL:(https:\/\/www\.google\.com\/maps\?q=[0-9.,-]+)/)||[])[1]||'#')}" target="_blank" rel="noopener">📍 Google Maps लोकेशन खोलें</a></p>` : ''}
+          </div>`).join('')}
+      </div>` : '');
+  } catch (error) {
+    status.textContent = 'ग्राहक की जानकारी नहीं खुली: ' + (error.message || error) + '। डेटाबेस अनुमति (RLS) भी जाँचनी पड़ सकती है।';
+  } finally {
+    button.disabled = false;
+  }
+});
+document.getElementById('customerSearchClear').addEventListener('click', () => {
+  document.getElementById('customerSearchForm').reset();
+  document.getElementById('customerSearchResults').innerHTML = '';
+  document.getElementById('customerSearchStatus').textContent = 'मोबाइल नंबर डालकर खोजें।';
+});
+
 db.auth.onAuthStateChange((event, session) => {
   const user = session && session.user;
   const isOwner = !!(user && user.id === OWNER_UID && user.email === OWNER_EMAIL);
@@ -520,13 +632,18 @@ db.auth.onAuthStateChange((event, session) => {
     document.getElementById("loginForm").style.display = "block";
     document.getElementById("logoutButton").style.display = "none";
     document.getElementById("ownerPanelHeader").style.display = "none";
+    document.getElementById("adminCustomerSearch").style.display = "none";
+    document.getElementById("customerSearchResults").innerHTML = "";
     document.getElementById("adminTabs").style.display = "none";
+    ownerSection.classList.remove('login-visible');
+    ownerSection.setAttribute('aria-hidden', 'true');
     document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active'));
     return;
   }
   document.getElementById("loginForm").style.display = "none";
   document.getElementById("logoutButton").style.display = "inline-block";
   document.getElementById("ownerPanelHeader").style.display = "block";
+  document.getElementById("adminCustomerSearch").style.display = "block";
   document.getElementById("adminTabs").style.display = "grid";
   showAdminTab('dashboard');
   if (ordersBox) ordersBox.style.display = "block";
