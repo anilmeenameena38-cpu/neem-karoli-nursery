@@ -1,0 +1,462 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>श्री नीम करोली महाराज ग्रीन नर्सरी</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--green:#176b37;--deep:#104b29;--leaf:#25884b;--mint:#edf7ed;--cream:#fbfdf8;--line:#dce9d8;--ink:#243b2a;--muted:#607464;--shadow:0 12px 32px rgba(20,70,35,.09)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;font-family:Arial,"Noto Sans Devanagari",sans-serif;background:linear-gradient(180deg,#f2f8ed 0,#fff 38%,#f7fbf5 100%);color:var(--ink);line-height:1.7}
+header{position:relative;overflow:hidden;text-align:center;color:#fff;padding:clamp(32px,6vw,64px) 18px 52px;background:radial-gradient(circle at 12% 15%,#ffffff22 0 8%,transparent 9%),linear-gradient(125deg,#103f24 0%,#176b37 50%,#57a45f 100%);border-radius:0 0 34px 34px;box-shadow:0 12px 32px #174b2b24}
+header:after{content:"🌿  🌱  🍃";display:block;margin-top:18px;font-size:24px;letter-spacing:10px;opacity:.9}
+header h1{font-size:clamp(25px,4.5vw,42px);line-height:1.35;margin:0 auto 12px;max-width:950px}
+header p{margin:7px auto;max-width:800px;font-size:clamp(14px,2vw,18px)}
+nav{position:sticky;top:0;z-index:1000;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 14px;background:#ffffffed;backdrop-filter:blur(12px);box-shadow:0 4px 18px #0000000c;border-bottom:1px solid #e8f0e5}
+nav a{display:inline-block;min-width:110px;text-align:center;padding:9px 15px;border-radius:999px;background:#f0f7ed;color:var(--green);font-weight:700;text-decoration:none;transition:background .2s,transform .2s}
+nav a:hover{background:#dff0dc;transform:translateY(-1px)}
+main{max-width:1120px;margin:0 auto;padding:clamp(16px,3vw,30px) 16px}
+.card{background:#fff;border:1px solid #e2eddf;border-radius:22px;padding:clamp(18px,3vw,30px);margin-bottom:24px;box-shadow:var(--shadow)}
+.card h2{color:var(--green);font-size:clamp(21px,3vw,28px);line-height:1.4;margin:0 0 12px}
+.card p{margin:9px 0}
+#plants>p:first-of-type{color:var(--muted)}
+#plants{background:linear-gradient(145deg,#fff,#fbfef9)}
+#order{border-top:5px solid #25884b}
+.plants{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:18px;margin-top:18px}
+.plant{min-width:0;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;text-align:center;box-shadow:0 5px 18px #174b2b0b;transition:transform .2s,box-shadow .2s}
+.plant:hover{transform:translateY(-4px);box-shadow:0 14px 28px #174b2b18}
+.plant img{display:block;width:100%;height:185px;object-fit:cover;border-radius:13px;background:#eef5eb;margin-bottom:12px}
+.plant h3{color:var(--green);font-size:21px;margin:8px 0}
+.price{font-weight:800;color:#138044;font-size:25px;margin:8px 0}
+label{display:block;font-weight:700;margin:12px 0 3px;color:#294d32}
+input,select,textarea{display:block;width:100%;padding:13px 14px;margin:6px 0 12px;border:1px solid #c9ddc4;border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-size:16px}
+input:focus,select:focus,textarea:focus{outline:3px solid #25884b25;border-color:#25884b}
+button,.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#25884b,#116334);color:#fff;border:0;border-radius:12px;padding:13px 19px;font:inherit;font-weight:700;text-decoration:none;cursor:pointer;box-shadow:0 5px 14px #16844720;transition:transform .2s,filter .2s}
+button:hover,.btn:hover{filter:brightness(1.04);transform:translateY(-1px)}
+button:disabled{opacity:.55;cursor:wait;transform:none}
+#orderForm button{width:100%;margin-top:6px}
+.status{background:#f3f9f0;border:1px solid #dcebd7;padding:13px 15px;border-radius:13px;margin-top:12px;overflow-wrap:anywhere}
+.note{font-size:13px;color:var(--muted)}
+.order{background:#fbfef9;border:1px solid var(--line);padding:17px;border-radius:16px;margin:13px 0;box-shadow:0 4px 14px #174b2b08}
+.order strong{color:var(--green)}
+#ownerStats .card{background:linear-gradient(145deg,#f3faf0,#fff)}
+#ownerStats p{padding:8px 10px;border-radius:9px;background:#ffffffc9}
+#contact .btn{margin-top:6px}
+footer{background:linear-gradient(130deg,#174b2b,#0b3520);color:#fff;text-align:center;padding:30px 16px;border-radius:28px 28px 0 0;margin-top:26px}
+footer p{margin:5px}
+@media(max-width:650px){header{border-radius:0 0 24px 24px}nav{gap:6px;padding:9px 6px}nav a{min-width:0;flex:1 1 28%;padding:8px 7px;font-size:14px}main{padding:14px 10px}.card{padding:18px;border-radius:17px}.plant img{height:160px}button,.btn{max-width:100%}}
+</style>
+</head>
+<body>
+<header>
+<h1>🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</h1>
+<p>हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए</p>
+<p>📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान</p>
+</header>
+<nav>
+<a href="#plants">पौधे</a>
+<a href="#order">ऑर्डर</a>
+<a href="#contact">संपर्क</a>
+<a href="#owner">मालिक लॉगिन</a>
+<a href="#owner">नर्सरी का हिसाब</a>
+</nav>
+<main>
+<section class="card" id="welcome">
+<h2>🌿 प्रकृति से जुड़ें, स्वस्थ पौधे घर लाएँ</h2>
+<p>घर की क्यारी हो या खेत—सब्जियों के पौधों की जानकारी, कीमत और उपलब्ध स्टॉक यहाँ देखें।</p>
+<p class="note">ऑर्डर भेजने के बाद नर्सरी मालिक उपलब्धता और कीमत की पुष्टि करेंगे।</p>
+</section>
+
+<section class="card" id="plants">
+<h2>🌱 उपलब्ध पौधे</h2>
+<p>पौधों की सूची और स्टॉक डेटाबेस से लोड होंगे।</p>
+<div id="plantList" class="plants">पौधों की सूची लोड हो रही है…</div>
+<div id="plantStatus" class="status" aria-live="polite"></div>
+</section>
+
+<section class="card" id="order">
+<h2>🛒 पौधों का ऑर्डर करें</h2>
+<form id="orderForm">
+<label for="plant">पौधा चुनें</label>
+<select id="plant" required>
+<option value="">पहले पौधों की सूची लोड होने दें</option>
+</select>
+<label for="qty">पौधों की संख्या</label>
+<input id="qty" type="number" min="1" step="1" value="1" required>
+<label for="customer">आपका नाम</label>
+<input id="customer" type="text" required placeholder="पूरा नाम">
+<label for="phone">मोबाइल नंबर</label>
+<input id="phone" type="tel" placeholder="मोबाइल नंबर">
+<label for="address">गाँव और पूरा पता</label>
+<textarea id="address" rows="3" required placeholder="गाँव, ढाणी, नजदीकी जगह"></textarea>
+<button id="orderButton" type="submit">ऑर्डर भेजें</button>
+</form>
+<div id="orderStatus" class="status" aria-live="polite"></div>
+<p class="note">ऑर्डर भेजना बिक्री की पुष्टि नहीं है। मालिक पुष्टि करने के बाद ही स्टॉक घटेगा।</p>
+</section>
+
+<section class="card" id="contact">
+<h2>📞 संपर्क करें</h2>
+<p>नर्सरी मोबाइल: 9887666626</p>
+<a class="btn" href="https://wa.me/919887666626" target="_blank" rel="noopener">WhatsApp पर संपर्क करें</a>
+</section>
+
+<section class="card" id="owner">
+<h2>🔐 नर्सरी मालिक लॉगिन</h2>
+<p class="note">यहाँ केवल अधिकृत मालिक लॉगिन करें।</p>
+<form id="loginForm">
+<label for="email">ईमेल</label>
+<input id="email" type="email" required autocomplete="username" placeholder="मालिक का ईमेल">
+<label for="password">पासवर्ड</label>
+<input id="password" type="password" required autocomplete="current-password" placeholder="Supabase का पासवर्ड">
+<button type="submit">लॉगिन करें</button>
+</form>
+<button id="logoutButton" type="button" style="display:none">लॉगआउट</button>
+<div id="ownerStatus" class="status" aria-live="polite">लॉगिन करने के बाद ऑर्डर दिखेंगे।</div>
+<div id="ownerOrders"></div>
+</section>
+</main>
+<footer>
+<p>🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</p>
+<p>चारावास, झुंझुनू, राजस्थान</p>
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://knwpnjzwknnzdkyboeuy.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ANudpZPHHiFcBeI3U7SaEA_QRzMOywA';
+const OWNER_UID = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9';
+const OWNER_EMAIL = 'anilmeena.meena38@gmail.com';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let plants = [];
+
+function safe(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[c]));
+}
+
+async function loadPlants() {
+  const list = document.getElementById('plantList');
+  const select = document.getElementById('plant');
+  const status = document.getElementById('plantStatus');
+
+  const {data, error} = await db.from('plants')
+    .select('id,name,variety,category,selling_price,stock_quantity,description,is_active')
+    .eq('is_active', true).order('name');
+
+  if (error) {
+    list.textContent = 'पौधों की सूची लोड नहीं हुई। डेटाबेस की अनुमति जाँचनी होगी।';
+    status.textContent = 'त्रुटि: ' + error.message;
+    select.innerHTML = '<option value="">सूची उपलब्ध नहीं</option>';
+    return;
+  }
+
+  plants = (data || []).filter(p => Number(p.stock_quantity) > 0);
+  list.innerHTML = '';
+  select.innerHTML = '<option value="">पौधा चुनें</option>';
+
+  if (!plants.length) {
+    list.textContent = 'अभी डेटाबेस में उपलब्ध स्टॉक वाले पौधे दर्ज नहीं हैं।';
+    status.textContent = 'Supabase की plants टेबल में पौधों की कीमत और स्टॉक दर्ज करें।';
+    return;
+  }
+
+  plants.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'plant';
+    
+     
+      
+      const plantImage = p.name.includes('टमाटर')
+        ? 'https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=600'
+        : p.name.includes('बैंगन')
+        ? 'baingan.jpg'
+        : 'https://images.unsplash.com/photo-1588252303782-cb80119abd6d?w=600';
+
+      card.innerHTML = '<img src="' + plantImage +
+        '" alt="' + safe(p.name) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+        '<h3>' + safe(p.name) + '</h3><div>' +
+        safe(p.variety || p.category || '') +
+        '</div><p class="price">₹' +
+        Number(p.selling_price).toFixed(2) +
+        '</p><p>स्टॉक: ' + Number(p.stock_quantity) +
+        ' पौधे</p><p class="note">' +
+        safe(p.description || '') + '</p>';
+
+    list.appendChild(card);
+
+    const option = document.createElement('option');
+    option.value = String(p.id);
+    option.textContent = p.name + ' — ₹' + Number(p.selling_price).toFixed(2) +
+      ' (स्टॉक ' + p.stock_quantity + ')';
+    select.appendChild(option);
+  });
+  status.textContent = 'पौधों की सूची डेटाबेस से अपडेट हुई।';
+}
+
+document.getElementById('orderForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const button = document.getElementById('orderButton');
+  const status = document.getElementById('orderStatus');
+  const plantId = Number(document.getElementById('plant').value);
+  const p = plants.find(item => Number(item.id) === plantId);
+  const quantity = Number(document.getElementById('qty').value);
+  const customerName = document.getElementById('customer').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const address = document.getElementById('address').value.trim();
+
+  if (!p) {
+    status.textContent = 'कृपया सूची में से उपलब्ध पौधा चुनें।';
+    return;
+  }
+  if (!Number.isInteger(quantity) || quantity < 1) {
+    status.textContent = 'पौधों की सही संख्या लिखें।';
+    return;
+  }
+  if (quantity > Number(p.stock_quantity)) {
+    status.textContent = 'इतना स्टॉक अभी उपलब्ध नहीं है।';
+    return;
+  }
+  if (!customerName || !address) {
+    status.textContent = 'नाम और पूरा पता भरें।';
+    return;
+  }
+
+  button.disabled = true;
+  status.textContent = 'ऑर्डर सेव हो रहा है…';
+
+  try {
+    const {error} = await db.from('order_requests').insert({
+      plant_name: p.name,
+      quantity: quantity,
+      unit_price: Number(p.selling_price),
+      customer_name: customerName,
+      customer_phone: phone || null,
+     customer_address: address,
+      status: 'pending'
+    });
+    if (error) throw error;
+
+    status.textContent = '✅ ऑर्डर वेबसाइट में सेव हो गया। WhatsApp पर भी संदेश भेजें।';
+
+    const message = 'नमस्ते, मैंने नर्सरी वेबसाइट पर ऑर्डर भेजा है।' +
+      '\nनाम: ' + customerName +
+      '\nमोबाइल: ' + (phone || 'नहीं दिया') +
+      '\nपौधा: ' + p.name +
+      '\nमात्रा: ' + quantity +
+      '\nवेबसाइट की कीमत: ₹' + Number(p.selling_price).toFixed(2) + ' प्रति पौधा' +
+      '\nपता: ' + address +
+      '\nकृपया ऑर्डर और कुल कीमत की पुष्टि करें।';
+
+    const link = document.createElement('a');
+    link.href = 'https://wa.me/919887666626?text=' + encodeURIComponent(message);
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.className = 'btn';
+    link.textContent = 'WhatsApp संदेश खोलें';
+    status.appendChild(document.createElement('br'));
+    status.appendChild(link);
+    document.getElementById('orderForm').reset();
+  } catch (error) {
+    status.textContent = '❌ ऑर्डर सेव नहीं हुआ: ' + error.message;
+  } finally {
+    button.disabled = false;
+  }
+});
+
+document.getElementById('loginForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const status = document.getElementById('ownerStatus');
+  status.textContent = 'लॉगिन जाँचा जा रहा है…';
+
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const {data, error} = await db.auth.signInWithPassword({email, password});
+
+  if (error) {
+    status.textContent = 'लॉगिन नहीं हुआ: ' + error.message;
+    return;
+  }
+
+  if (!data.user || data.user.id !== OWNER_UID || data.user.email !== OWNER_EMAIL) {
+    await db.auth.signOut();
+    status.textContent = 'यह खाता अधिकृत नर्सरी मालिक का नहीं है।';
+    return;
+  }
+
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('logoutButton').style.display = 'inline-block';
+  status.textContent = 'लॉगिन सफल।';
+  await loadOrders();
+});
+
+document.getElementById('logoutButton').addEventListener('click', async () => {
+  await db.auth.signOut();
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('logoutButton').style.display = 'none';
+  document.getElementById('ownerOrders').innerHTML = '';
+  document.getElementById('ownerStatus').textContent = 'आप लॉगआउट हो गए हैं।';
+});
+
+async function loadOrders() {
+  const container = document.getElementById('ownerOrders');
+  container.textContent = 'ऑर्डर लोड हो रहे हैं…';
+
+  const {data, error} = await db.from('order_requests')
+    .select('id,plant_name,quantity,unit_price,customer_name,customer_phone,customer_address,status,created_at')
+    .order('created_at', {ascending:false});
+
+  if (error) {
+    container.textContent = 'ऑर्डर नहीं पढ़ सके: ' + error.message;
+    return;
+  }
+  if (!data || data.length === 0) {
+    container.textContent = 'अभी कोई ऑर्डर नहीं है।';
+    return;
+  }
+
+  container.innerHTML = '';
+  data.forEach(order => {
+    const div = document.createElement('div');
+    div.className = 'order';
+    const total = Number(order.unit_price) * Number(order.quantity);
+    div.innerHTML = '<strong>ऑर्डर #' + order.id + ' — ' + safe(order.status) +
+      '</strong><p>ग्राहक: ' + safe(order.customer_name) +
+      '<br>मोबाइल: ' + safe(order.customer_phone || 'नहीं दिया') +
+      '<br>पौधा: ' + safe(order.plant_name) +
+      '<br>मात्रा: ' + order.quantity +
+      '<br>दर्ज कीमत से राशि: ₹' + total.toFixed(2) +
+      '<br>पता: ' + safe(order.customer_address || 'नहीं दिया') +
+      '<br>समय: ' + new Date(order.created_at).toLocaleString('hi-IN') + '</p>';
+
+    if (order.status === 'pending') {
+      const button = document.createElement('button');
+      button.textContent = 'ऑर्डर कन्फर्म करें और स्टॉक घटाएँ';
+      button.addEventListener('click', async () => {
+        if (!confirm('क्या ग्राहक का ऑर्डर पक्का है? पुष्टि से बिक्री दर्ज होगी और स्टॉक घटेगा।')) return;
+        button.disabled = true;
+        button.textContent = 'प्रोसेस हो रहा है…';
+        const {data: result, error: rpcError} = await db.rpc(
+          'confirm_nursery_order', {p_order_id: order.id}
+        );
+        if (rpcError) {
+          document.getElementById('ownerStatus').textContent =
+            'बिक्री कन्फर्म नहीं हुई: ' + rpcError.message;
+          button.disabled = false;
+          button.textContent = 'फिर कोशिश करें';
+          return;
+        }
+        document.getElementById('ownerStatus').textContent =
+          '✅ ऑर्डर #' + order.id + ' की बिक्री कन्फर्म हो गई। बिक्री दर्ज हुई और स्टॉक अपडेट किया जा रहा है।';
+        await loadOrders();
+        await loadPlants();
+      });
+      div.appendChild(button);
+    }
+    container.appendChild(div);
+  });
+}
+
+loadPlants();
+
+async function loadOwnerStats() {
+  const ownerBox = document.getElementById("ownerOrders");
+  if (!ownerBox) return;
+
+  let statsBox = document.getElementById("ownerStats");
+
+  if (!statsBox) {
+    statsBox = document.createElement("div");
+    statsBox.id = "ownerStats";
+    ownerBox.parentNode.insertBefore(statsBox, ownerBox);
+  }
+
+  statsBox.innerHTML = "<p>बिक्री का हिसाब लोड हो रहा है...</p>";
+
+  try {
+    const now = new Date();
+    const dateText =
+      now.getFullYear() + "-" +
+      String(now.getMonth() + 1).padStart(2, "0") + "-" +
+      String(now.getDate()).padStart(2, "0");
+
+    const [salesResult, ordersResult, plantsResult] =
+      await Promise.all([
+        db.from("sales")
+          .select("id,sale_date,total_amount"),
+
+        db.from("order_requests")
+          .select("id,status,created_at"),
+
+        db.from("plants")
+          .select("name,stock_quantity")
+          .eq("is_active", true)
+      ]);
+
+    if (salesResult.error) throw salesResult.error;
+    if (ordersResult.error) throw ordersResult.error;
+    if (plantsResult.error) throw plantsResult.error;
+
+    const sales = salesResult.data || [];
+    const orders = ordersResult.data || [];
+    const availablePlants = plantsResult.data || [];
+
+    const todaySales = sales.filter(s =>
+      s.sale_date && s.sale_date.slice(0, 10) === dateText
+    );
+
+    const todayOrders = orders.filter(o =>
+      o.created_at &&
+      o.created_at.slice(0, 10) === dateText &&
+      o.status === "confirmed"
+    ).length;
+
+    const total = todaySales.reduce(
+      (sum, s) => sum + Number(s.total_amount || 0), 0
+    );
+
+    statsBox.innerHTML = `
+      <div class="card">
+        <h2>📊 नर्सरी का बिक्री हिसाब</h2>
+        <p>आज की कुल बिक्री:
+          <strong>₹${total.toFixed(2)}</strong>
+        </p>
+        <p>आज की बिक्री एंट्री:
+          <strong>${todaySales.length}</strong>
+        </p>
+        <p>आज कन्फर्म ऑर्डर:
+          <strong>${todayOrders}</strong>
+        </p>
+        <h3>🌱 उपलब्ध पौधों का स्टॉक</h3>
+        ${availablePlants.map(p => `
+          <p>${p.name}: <strong>${p.stock_quantity} पौधे</strong></p>
+        `).join("")}
+        <button type="button" id="refreshOwnerStats">
+          🔄 हिसाब फिर से देखें
+        </button>
+      </div>
+    `;
+
+    document.getElementById("refreshOwnerStats")
+      .addEventListener("click", loadOwnerStats);
+
+  } catch (error) {
+    statsBox.innerHTML =
+      "<p>हिसाब लोड नहीं हुआ: " +
+      String(error.message || error) + "</p>";
+  }
+}
+
+db.auth.onAuthStateChange((event, session) => {
+  if (session) {
+    setTimeout(loadOwnerStats, 0);
+  }
+});
+</script>
+</body>
+</html>
+
