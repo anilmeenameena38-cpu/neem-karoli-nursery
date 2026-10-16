@@ -43,7 +43,7 @@ button:disabled{opacity:.55;cursor:wait;transform:none}
 .note{font-size:13px;color:var(--muted)}
 .order{background:#fbfef9;border:1px solid var(--line);padding:17px;border-radius:16px;margin:13px 0;box-shadow:0 4px 14px #174b2b08}
 .order strong{color:var(--green)}
-#ownerStats .card{background:linear-gradient(145deg,#f3faf0,#fff)}
+#ownerStats{display:none}#ownerOrders{display:none}#ownerStats .card{background:linear-gradient(145deg,#f3faf0,#fff)}
 #ownerStats p{padding:8px 10px;border-radius:9px;background:#ffffffc9}
 #contact .btn{margin-top:6px}
 footer{background:linear-gradient(130deg,#174b2b,#0b3520);color:#fff;text-align:center;padding:30px 16px;border-radius:28px 28px 0 0;margin-top:26px}
@@ -213,16 +213,14 @@ async function loadPlants() {
         safe(p.variety || p.category || '') +
         '</div><p class="price">₹' +
         Number(p.selling_price).toFixed(2) +
-        '</p><p>स्टॉक: ' + Number(p.stock_quantity) +
-        ' पौधे</p><p class="note">' +
+        '</p><p class="note">' +
         safe(p.description || '') + '</p>';
 
     list.appendChild(card);
 
     const option = document.createElement('option');
     option.value = String(p.id);
-    option.textContent = p.name + ' — ₹' + Number(p.selling_price).toFixed(2) +
-      ' (स्टॉक ' + p.stock_quantity + ')';
+    option.textContent = p.name + ' — ₹' + Number(p.selling_price).toFixed(2);
     select.appendChild(option);
   });
   status.textContent = 'पौधों की सूची डेटाबेस से अपडेट हुई।';
@@ -324,6 +322,9 @@ document.getElementById('loginForm').addEventListener('submit', async event => {
 
   document.getElementById('loginForm').style.display = 'none';
   document.getElementById('logoutButton').style.display = 'inline-block';
+  document.getElementById('ownerOrders').style.display = 'block';
+  const existingStats = document.getElementById('ownerStats');
+  if (existingStats) existingStats.style.display = 'block';
   status.textContent = 'लॉगिन सफल।';
   await loadOrders();
   await loadOwnerStats();
@@ -334,6 +335,9 @@ document.getElementById('logoutButton').addEventListener('click', async () => {
   document.getElementById('loginForm').style.display = 'block';
   document.getElementById('logoutButton').style.display = 'none';
   document.getElementById('ownerOrders').innerHTML = '';
+  document.getElementById('ownerOrders').style.display = 'none';
+  const statsBox = document.getElementById('ownerStats');
+  if (statsBox) { statsBox.innerHTML = ''; statsBox.style.display = 'none'; }
   document.getElementById('ownerStatus').textContent = 'आप लॉगआउट हो गए हैं।';
 });
 
@@ -416,6 +420,7 @@ async function loadOwnerStats() {
     ownerBox.parentNode.insertBefore(statsBox, ownerBox);
   }
 
+  statsBox.style.display = "block";
   statsBox.innerHTML = "<p>बिक्री का हिसाब लोड हो रहा है...</p>";
 
   try {
