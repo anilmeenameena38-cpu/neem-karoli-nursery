@@ -7,213 +7,47 @@
 <title>श्री नीम करोली महाराज ग्रीन नर्सरी</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
+:root{--green:#176b37;--deep:#104b29;--leaf:#25884b;--mint:#edf7ed;--cream:#fbfdf8;--line:#dce9d8;--ink:#243b2a;--muted:#607464;--shadow:0 12px 32px rgba(20,70,35,.09)}
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f2f8ed;color:#23452b}
-header{background:#176b37;color:white;text-align:center;padding:22px 12px}
-header h1{font-size:24px;margin:5px}
-nav{
-  background:#ffffff;
-  text-align:center;
-  padding:12px;
-  position:sticky;
-  top:0;
-  z-index:1000;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:10px;
-  box-shadow:0 2px 8px #0001;
-}
-nav a{
-  display:inline-block;
-  padding:10px 14px;
-  border-radius:8px;
-  background:#f0f8ed;
-}
-nav a{color:#176b37;font-weight:bold;margin:8px;text-decoration:none}
-main{max-width:950px;margin:auto;padding:16px}
-  nav a {
-  min-width: 120px;
-  text-align: center;
-  font-size: 16px;
-  font-weight: bold;
-}
-.card{background:white;border-radius:14px;padding:18px;margin-bottom:18px;box-shadow:0 2px 8px #0001}
-h2{color:#176b37}
-.plants{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
-.plant{background:#fff;border:1px solid #d6e7d2;border-radius:12px;padding:14px;text-align:center}
-.plant h3{margin:8px 0}
-.price{font-weight:bold;color:#176b37;font-size:20px}
-input,select,textarea{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #b9cdb5;border-radius:8px;font-size:16px}
-button,.btn{background:#168447;color:white;border:0;border-radius:8px;padding:12px 16px;font-size:16px;cursor:pointer}
-button:disabled{opacity:.5}
-.status{background:#f2f8ed;padding:12px;border-radius:8px;margin-top:10px;overflow-wrap:anywhere}
-.note{font-size:13px;color:#526b55}
-footer{background:#174b2b;color:white;text-align:center;padding:20px}
-.order{border:1px solid #d6e7d2;padding:12px;border-radius:10px;margin:10px 0}
-
-/* सुंदर और आधुनिक नर्सरी डिज़ाइन */
-body {
-  background: linear-gradient(180deg, #edf8e9 0%, #ffffff 55%, #f0f8ed 100%);
-  color: #24452c;
-  line-height: 1.7;
-}
-
-header {
-  background: linear-gradient(135deg, #14532d, #218c4b, #65a765);
-  padding: 38px 16px;
-  border-radius: 0 0 28px 28px;
-  box-shadow: 0 5px 20px #14532d25;
-}
-
-header h1 {
-  font-size: clamp(24px, 4vw, 38px);
-  line-height: 1.4;
-  margin: 8px auto 12px;
-}
-
-header p {
-  margin: 8px 0;
-}
-
-nav {
-  z-index: 10;
-  box-shadow: 0 3px 12px #0000000d;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-nav a {
-  padding: 8px 13px;
-  border-radius: 20px;
-  transition: background 0.2s;
-}
-
-nav a:hover {
-  background: #e1f4df;
-}
-
-main {
-  max-width: 1100px;
-  padding: 24px 16px;
-}
-
-.card {
-  border: 1px solid #e0eddb;
-  border-radius: 20px;
-  padding: 24px;
-  margin-bottom: 24px;
-  box-shadow: 0 8px 25px #1c5c2b0c;
-}
-
-h2 {
-  font-size: 24px;
-  margin-top: 0;
-}
-
-.plants {
-  gap: 18px;
-}
-
-.plant {
-  border: 1px solid #d9ead4;
-  border-radius: 18px;
-  padding: 20px 14px;
-  box-shadow: 0 4px 14px #174b2b0d;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.plant:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 22px #174b2b1c;
-}
-
-.plant h3 {
-  color: #176b37;
-  font-size: 20px;
-}
-
-.price {
-  font-size: 23px;
-  color: #168447;
-}
-
-button, .btn {
-  background: linear-gradient(135deg, #168447, #0d6b35);
-  border-radius: 12px;
-  padding: 13px 20px;
-  font-weight: bold;
-  box-shadow: 0 4px 10px #16844720;
-  transition: transform 0.2s;
-}
-
-button:hover, .btn:hover {
-  transform: translateY(-2px);
-}
-
-input, select, textarea {
-  border: 1px solid #c9ddc4;
-  border-radius: 12px;
-  background: #ffffff;
-}
-
-input:focus, select:focus, textarea:focus {
-  outline: 2px solid #77bd82;
-  border-color: #168447;
-}
-
-.status {
-  border: 1px solid #dcebd7;
-  border-radius: 12px;
-}
-
-.order {
-  background: #f8fcf6;
-  border-color: #d9ead4;
-  border-radius: 14px;
-}
-
-footer {
-  background: linear-gradient(135deg, #174b2b, #0b3520);
-  padding: 28px 16px;
-  border-radius: 24px 24px 0 0;
-}
-
-@media (max-width: 600px) {
-  header {
-    padding: 28px 12px;
-  }
-
-  .card {
-    padding: 17px;
-  }
-
-  nav a {
-    margin: 2px;
-    padding: 7px 10px;
-  }
-
-  main {
-    padding: 14px 10px;
-  }
-
-  button, .btn {
-    max-width: 100%;
-  }
-}
-
-.plant img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 10px;
-}
-</style>
-
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;font-family:Arial,"Noto Sans Devanagari",sans-serif;background:linear-gradient(180deg,#f2f8ed 0,#fff 38%,#f7fbf5 100%);color:var(--ink);line-height:1.7}
+header{position:relative;overflow:hidden;text-align:center;color:#fff;padding:clamp(32px,6vw,64px) 18px 52px;background:radial-gradient(circle at 12% 15%,#ffffff22 0 8%,transparent 9%),linear-gradient(125deg,#103f24 0%,#176b37 50%,#57a45f 100%);border-radius:0 0 34px 34px;box-shadow:0 12px 32px #174b2b24}
+header:after{content:"🌿  🌱  🍃";display:block;margin-top:18px;font-size:24px;letter-spacing:10px;opacity:.9}
+header h1{font-size:clamp(25px,4.5vw,42px);line-height:1.35;margin:0 auto 12px;max-width:950px}
+header p{margin:7px auto;max-width:800px;font-size:clamp(14px,2vw,18px)}
+nav{position:sticky;top:0;z-index:1000;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 14px;background:#ffffffed;backdrop-filter:blur(12px);box-shadow:0 4px 18px #0000000c;border-bottom:1px solid #e8f0e5}
+nav a{display:inline-block;min-width:110px;text-align:center;padding:9px 15px;border-radius:999px;background:#f0f7ed;color:var(--green);font-weight:700;text-decoration:none;transition:background .2s,transform .2s}
+nav a:hover{background:#dff0dc;transform:translateY(-1px)}
+main{max-width:1120px;margin:0 auto;padding:clamp(16px,3vw,30px) 16px}
+.card{background:#fff;border:1px solid #e2eddf;border-radius:22px;padding:clamp(18px,3vw,30px);margin-bottom:24px;box-shadow:var(--shadow)}
+.card h2{color:var(--green);font-size:clamp(21px,3vw,28px);line-height:1.4;margin:0 0 12px}
+.card p{margin:9px 0}
+#plants>p:first-of-type{color:var(--muted)}
+#plants{background:linear-gradient(145deg,#fff,#fbfef9)}
+#order{border-top:5px solid #25884b}
+.plants{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:18px;margin-top:18px}
+.plant{min-width:0;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;text-align:center;box-shadow:0 5px 18px #174b2b0b;transition:transform .2s,box-shadow .2s}
+.plant:hover{transform:translateY(-4px);box-shadow:0 14px 28px #174b2b18}
+.plant img{display:block;width:100%;height:185px;object-fit:cover;border-radius:13px;background:#eef5eb;margin-bottom:12px}
+.plant h3{color:var(--green);font-size:21px;margin:8px 0}
+.price{font-weight:800;color:#138044;font-size:25px;margin:8px 0}
+label{display:block;font-weight:700;margin:12px 0 3px;color:#294d32}
+input,select,textarea{display:block;width:100%;padding:13px 14px;margin:6px 0 12px;border:1px solid #c9ddc4;border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-size:16px}
+input:focus,select:focus,textarea:focus{outline:3px solid #25884b25;border-color:#25884b}
+button,.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#25884b,#116334);color:#fff;border:0;border-radius:12px;padding:13px 19px;font:inherit;font-weight:700;text-decoration:none;cursor:pointer;box-shadow:0 5px 14px #16844720;transition:transform .2s,filter .2s}
+button:hover,.btn:hover{filter:brightness(1.04);transform:translateY(-1px)}
+button:disabled{opacity:.55;cursor:wait;transform:none}
+#orderForm button{width:100%;margin-top:6px}
+.status{background:#f3f9f0;border:1px solid #dcebd7;padding:13px 15px;border-radius:13px;margin-top:12px;overflow-wrap:anywhere}
+.note{font-size:13px;color:var(--muted)}
+.order{background:#fbfef9;border:1px solid var(--line);padding:17px;border-radius:16px;margin:13px 0;box-shadow:0 4px 14px #174b2b08}
+.order strong{color:var(--green)}
+#ownerStats .card{background:linear-gradient(145deg,#f3faf0,#fff)}
+#ownerStats p{padding:8px 10px;border-radius:9px;background:#ffffffc9}
+#contact .btn{margin-top:6px}
+footer{background:linear-gradient(130deg,#174b2b,#0b3520);color:#fff;text-align:center;padding:30px 16px;border-radius:28px 28px 0 0;margin-top:26px}
+footer p{margin:5px}
+@media(max-width:650px){header{border-radius:0 0 24px 24px}nav{gap:6px;padding:9px 6px}nav a{min-width:0;flex:1 1 28%;padding:8px 7px;font-size:14px}main{padding:14px 10px}.card{padding:18px;border-radius:17px}.plant img{height:160px}button,.btn{max-width:100%}}
 </style>
 </head>
 <body>
@@ -230,10 +64,10 @@ footer {
 <a href="#owner">नर्सरी का हिसाब</a>
 </nav>
 <main>
-<section class="card">
-<h2>🌿 हमारी नर्सरी में आपका स्वागत है</h2>
-<p>सब्जियों के पौधों की उपलब्धता और कीमत की पुष्टि नर्सरी से की जाएगी।</p>
-<p class="note">वेबसाइट पर ऑर्डर भेजने के बाद नर्सरी मालिक की पुष्टि का इंतजार करें।</p>
+<section class="card" id="welcome">
+<h2>🌿 प्रकृति से जुड़ें, स्वस्थ पौधे घर लाएँ</h2>
+<p>घर की क्यारी हो या खेत—सब्जियों के पौधों की जानकारी, कीमत और उपलब्ध स्टॉक यहाँ देखें।</p>
+<p class="note">ऑर्डर भेजने के बाद नर्सरी मालिक उपलब्धता और कीमत की पुष्टि करेंगे।</p>
 </section>
 
 <section class="card" id="plants">
@@ -344,7 +178,7 @@ async function loadPlants() {
         : 'https://images.unsplash.com/photo-1588252303782-cb80119abd6d?w=600';
 
       card.innerHTML = '<img src="' + plantImage +
-        '" alt="' + safe(p.name) + '" loading="lazy">' +
+        '" alt="' + safe(p.name) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
         '<h3>' + safe(p.name) + '</h3><div>' +
         safe(p.variety || p.category || '') +
         '</div><p class="price">₹' +
@@ -458,6 +292,7 @@ document.getElementById('loginForm').addEventListener('submit', async event => {
   document.getElementById('logoutButton').style.display = 'inline-block';
   status.textContent = 'लॉगिन सफल।';
   await loadOrders();
+  await loadOwnerStats();
 });
 
 document.getElementById('logoutButton').addEventListener('click', async () => {
@@ -496,7 +331,7 @@ async function loadOrders() {
       '<br>पौधा: ' + safe(order.plant_name) +
       '<br>मात्रा: ' + order.quantity +
       '<br>दर्ज कीमत से राशि: ₹' + total.toFixed(2) +
-      '<br>पता: ' + safe(order.delivery_address || 'नहीं दिया') +
+      '<br>पता: ' + safe(order.customer_address || 'नहीं दिया') +
       '<br>समय: ' + new Date(order.created_at).toLocaleString('hi-IN') + '</p>';
 
     if (order.status === 'pending') {
@@ -517,9 +352,10 @@ async function loadOrders() {
           return;
         }
         document.getElementById('ownerStatus').textContent =
-          'बिक्री कन्फर्म हुई: ' + JSON.stringify(result);
+          '✅ ऑर्डर #' + order.id + ' कन्फर्म हो गया। बिक्री दर्ज हुई; स्टॉक और हिसाब अपडेट हो रहा है।';
         await loadOrders();
         await loadPlants();
+        await loadOwnerStats();
       });
       div.appendChild(button);
     }
@@ -618,7 +454,8 @@ async function loadOwnerStats() {
 }
 
 db.auth.onAuthStateChange((event, session) => {
-  if (session) {
+  const user = session && session.user;
+  if (user && user.id === OWNER_UID && user.email === OWNER_EMAIL) {
     setTimeout(loadOwnerStats, 0);
   }
 });
