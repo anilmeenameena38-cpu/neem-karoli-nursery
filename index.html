@@ -19,14 +19,19 @@ nav{position:sticky;top:0;z-index:1000;display:flex;justify-content:center;align
 nav a{display:inline-block;min-width:110px;text-align:center;padding:9px 15px;border-radius:999px;background:#f0f7ed;color:var(--green);font-weight:700;text-decoration:none;transition:background .2s,transform .2s}
 nav a:hover{background:#dff0dc;transform:translateY(-1px)}
 .nav-menu-wrap{position:relative;display:inline-flex;align-items:center}
-#adminPanelNav{min-width:130px;padding:9px 15px;border-radius:999px;background:linear-gradient(135deg,#176b37,#104b29);color:#fff;border:0;font-weight:700;box-shadow:0 5px 14px #16844720}
+#adminPanelNav{display:inline-block;min-width:110px;text-align:center;padding:9px 15px;border-radius:999px;background:#f0f7ed;color:var(--green);border:0;font-weight:700;box-shadow:none;font:inherit;font-weight:700;cursor:pointer;transition:background .2s,transform .2s}#adminPanelNav:hover{background:#dff0dc;transform:translateY(-1px)}
 #menuToggle{min-width:110px;padding:9px 15px;border-radius:999px;background:linear-gradient(135deg,#176b37,#104b29);color:#fff;border:0;font-weight:700;box-shadow:0 5px 14px #16844720}
 #menuDropdown{display:none;position:absolute;right:0;top:calc(100% + 8px);min-width:210px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px;box-shadow:0 16px 36px #173f2526;z-index:1200}
 #menuDropdown.open{display:block}
 #menuDropdown a{display:block;min-width:0;text-align:left;border-radius:10px;padding:11px 13px;margin:2px 0;background:#f4faf1;color:var(--green);text-decoration:none;font-weight:700}
 #menuDropdown a:hover{background:#e3f2df}
 #owner{display:none;scroll-margin-top:100px}
-#owner.login-visible{display:block}
+#owner.login-visible{display:block;position:fixed;inset:0;z-index:2000;overflow-y:auto;background:rgba(10,35,19,.72);padding:clamp(12px,4vh,36px) 12px;border-radius:0;max-width:none;margin:0;box-shadow:none}
+#owner.login-visible>h2,#owner.login-visible>p,#owner.login-visible>form,#owner.login-visible>#logoutButton,#owner.login-visible>#ownerStatus,#owner.login-visible>#ownerPanelHeader,#owner.login-visible>#adminCustomerSearch,#owner.login-visible>#adminTabs,#owner.login-visible>.admin-pane{max-width:1000px;margin-left:auto;margin-right:auto}
+#owner.login-visible>h2:first-child{background:#fff;border-radius:18px 18px 0 0;padding:22px 24px 0;margin-top:0}
+#owner.login-visible>p:first-of-type,#owner.login-visible>#loginForm{background:#fff;padding-left:24px;padding-right:24px}
+#owner.login-visible>#loginForm{padding-bottom:24px;border-radius:0 0 18px 18px;margin-bottom:12px}
+#ownerCloseButton{float:right;margin:-4px 0 8px 12px;background:#edf5e9;color:var(--green);box-shadow:none;border:1px solid var(--line);padding:7px 12px}
 @media(max-width:650px){.nav-menu-wrap{flex:1 1 28%;justify-content:center}#adminPanelNav{min-width:0;flex:1 1 28%;padding:8px 7px;font-size:14px}
 #menuToggle{min-width:0;width:100%;padding:8px 7px;font-size:14px}#menuDropdown{right:0;min-width:190px}}
 main{max-width:1120px;margin:0 auto;padding:clamp(16px,3vw,30px) 16px}
@@ -72,7 +77,7 @@ footer p{margin:5px}
 <a href="#plants">पौधे</a>
 <a href="#order">ऑर्डर</a>
 <a href="#contact">संपर्क</a>
-<button id="adminPanelNav" type="button" aria-label="मालिक एडमिन पैनल खोलें">🔐 Admin Panel</button>
+<button id="adminPanelNav" type="button" aria-label="मालिक लॉगिन खोलें">मालिक लॉगिन</button>
 </nav>
 <main>
 <section class="card" id="welcome">
@@ -120,7 +125,7 @@ footer p{margin:5px}
 </section>
 
 <section class="card" id="owner" aria-hidden="true">
-<h2>🔐 नर्सरी मालिक लॉगिन</h2>
+<h2><button id="ownerCloseButton" type="button" aria-label="लॉगिन विंडो बंद करें">✕ बंद करें</button>🔐 नर्सरी मालिक लॉगिन</h2>
 <p class="note">यहाँ केवल अधिकृत मालिक लॉगिन करें।</p>
 <form id="loginForm">
 <label for="email">ईमेल</label>
@@ -188,7 +193,13 @@ const ownerSection = document.getElementById('owner');
 document.getElementById('adminPanelNav').addEventListener('click', () => {
   ownerSection.classList.add('login-visible');
   ownerSection.setAttribute('aria-hidden', 'false');
-  ownerSection.scrollIntoView({behavior:'smooth', block:'start'});
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('email').focus(), 50);
+});
+document.getElementById('ownerCloseButton').addEventListener('click', () => {
+  ownerSection.classList.remove('login-visible');
+  ownerSection.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
 });
 
 const SUPABASE_URL = 'https://knwpnjzwknnzdkyboeuy.supabase.co';
@@ -732,6 +743,7 @@ db.auth.onAuthStateChange((event, session) => {
     document.getElementById("adminTabs").style.display = "none";
     ownerSection.classList.remove('login-visible');
     ownerSection.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
     document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active'));
     return;
   }
