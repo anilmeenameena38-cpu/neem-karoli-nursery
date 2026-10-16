@@ -99,6 +99,22 @@ footer p{margin:5px}
 #owner button,#owner .btn{font-size:14px;font-weight:500;padding:10px 14px;border-radius:10px;box-shadow:none}
 #owner .order{padding:13px}
 @media(max-width:650px){.admin-tab{min-height:58px}.admin-tab .tab-icon{font-size:18px}.admin-tab .tab-label{font-size:11px}.admin-section-card{padding:12px}#ownerPanelHeader{padding:13px}}
+
+/* Final admin polish: centered nursery title, compact live customer search */
+#ownerPanelHeader .admin-welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px}
+#ownerPanelHeader .admin-welcome>div:first-child{width:100%;text-align:center}
+#ownerPanelHeader .admin-welcome h3,#ownerPanelHeader .admin-welcome p{text-align:center;width:100%}
+#ownerPanelHeader .admin-brand{justify-content:center;width:100%}
+#ownerPanelHeader .admin-chip{font-size:13px;letter-spacing:.15px}
+#logoutButton{margin:0!important;font-size:11px!important;font-weight:400!important;padding:4px 9px!important}
+#adminCustomerSearch{max-width:560px;margin:12px auto;padding:10px 12px}
+#adminCustomerSearch .customer-search-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+#adminCustomerSearch input{grid-column:1/-1;max-width:100%;padding:8px 10px!important;font-size:14px!important;margin:0!important}
+#adminCustomerSearch #customerSearchButton{background:linear-gradient(135deg,#176b37,#104b29)!important;color:#fff!important}
+#adminCustomerSearch #customerSearchClear{background:#fff1e9!important;color:#a33b16!important;border:1px solid #f3c6b4!important}
+#adminCustomerSearch .customer-search-row button{padding:8px 9px!important;font-size:13px!important;min-height:34px}
+@media(max-width:650px){#adminCustomerSearch{width:100%;max-width:100%;padding:9px}#adminCustomerSearch .customer-search-row{grid-template-columns:1fr 1fr}#adminCustomerSearch input{grid-column:1/-1}}
+
 </style>
 </head>
 <body>
@@ -168,7 +184,7 @@ footer p{margin:5px}
 <button type="submit">लॉगिन करें</button>
 </form>
 <div id="ownerStatus" class="status" aria-live="polite" style="display:none"></div>
-<div id="ownerPanelHeader"><div class="admin-welcome"><div><h3>🌿 नीम करोली नर्सरी</h3><p>आपका व्यवसाय, एक ही जगह — ऑर्डर, स्टॉक और बिक्री</p></div><div class="admin-brand"><span class="admin-chip">🌱 Neem Karoli Nursery</span><button id="logoutButton" type="button" aria-label="लॉगआउट">लॉग आउट ↗</button></div></div></div>
+<div id="ownerPanelHeader"><div class="admin-welcome"><div><h3>🌿 नीम करोली नर्सरी</h3><p>आपका व्यवसाय, एक ही जगह — ऑर्डर, स्टॉक और बिक्री</p></div><div class="admin-brand"><span class="admin-chip">🌱 Anil Kumar Meena</span><button id="logoutButton" type="button" aria-label="Log Out">Log Out ↗</button></div></div></div>
 <div id="adminCustomerSearch" class="admin-section-card" style="display:none">
   <form id="customerSearchForm" aria-label="ग्राहक मोबाइल नंबर खोजें">
     <div class="customer-search-row"><input id="customerSearchPhone" type="tel" inputmode="numeric" autocomplete="off" aria-label="ग्राहक का मोबाइल नंबर" placeholder="ग्राहक का मोबाइल नंबर डालें"><button id="customerSearchButton" type="submit">🔍 खोजें</button><button id="customerSearchClear" class="secondary-btn" type="button">✕ साफ करें</button></div>
@@ -714,6 +730,8 @@ document.getElementById('customerSearchClear').addEventListener('click', () => {
   document.getElementById('customerSearchResults').innerHTML = '';
   document.getElementById('customerSearchStatus').textContent = '';
   document.getElementById('customerSearchPhone').focus();
+  lastAutoSearchedDigits = '';
+  if (customerSearchTimer) clearTimeout(customerSearchTimer);
 });
 
 document.getElementById('customerSearchForm').addEventListener('submit', async event => {
@@ -788,6 +806,29 @@ document.getElementById('customerSearchForm').addEventListener('submit', async e
   } finally {
     button.disabled = false;
   }
+});
+
+
+// मोबाइल नंबर के 4 अंक लिखते ही ग्राहक खोज अपने-आप शुरू हो; एक साथ कई अनुरोध न भेजें।
+let customerSearchTimer = null;
+let lastAutoSearchedDigits = '';
+document.getElementById('customerSearchPhone').addEventListener('input', () => {
+  const input = document.getElementById('customerSearchPhone');
+  const digits = input.value.replace(/\D/g, '');
+  const results = document.getElementById('customerSearchResults');
+  const status = document.getElementById('customerSearchStatus');
+  if (customerSearchTimer) clearTimeout(customerSearchTimer);
+  if (digits.length < 4) {
+    lastAutoSearchedDigits = '';
+    results.innerHTML = '';
+    status.textContent = '';
+    return;
+  }
+  if (digits === lastAutoSearchedDigits) return;
+  customerSearchTimer = setTimeout(() => {
+    lastAutoSearchedDigits = digits;
+    document.getElementById('customerSearchForm').requestSubmit();
+  }, 450);
 });
 
 db.auth.onAuthStateChange((event, session) => {
