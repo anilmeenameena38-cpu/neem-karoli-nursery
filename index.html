@@ -27,6 +27,158 @@ button:disabled{opacity:.5}
 .note{font-size:13px;color:#526b55}
 footer{background:#174b2b;color:white;text-align:center;padding:20px}
 .order{border:1px solid #d6e7d2;padding:12px;border-radius:10px;margin:10px 0}
+
+/* सुंदर और आधुनिक नर्सरी डिज़ाइन */
+body {
+  background: linear-gradient(180deg, #edf8e9 0%, #ffffff 55%, #f0f8ed 100%);
+  color: #24452c;
+  line-height: 1.7;
+}
+
+header {
+  background: linear-gradient(135deg, #14532d, #218c4b, #65a765);
+  padding: 38px 16px;
+  border-radius: 0 0 28px 28px;
+  box-shadow: 0 5px 20px #14532d25;
+}
+
+header h1 {
+  font-size: clamp(24px, 4vw, 38px);
+  line-height: 1.4;
+  margin: 8px auto 12px;
+}
+
+header p {
+  margin: 8px 0;
+}
+
+nav {
+  z-index: 10;
+  box-shadow: 0 3px 12px #0000000d;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+nav a {
+  padding: 8px 13px;
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+
+nav a:hover {
+  background: #e1f4df;
+}
+
+main {
+  max-width: 1100px;
+  padding: 24px 16px;
+}
+
+.card {
+  border: 1px solid #e0eddb;
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 25px #1c5c2b0c;
+}
+
+h2 {
+  font-size: 24px;
+  margin-top: 0;
+}
+
+.plants {
+  gap: 18px;
+}
+
+.plant {
+  border: 1px solid #d9ead4;
+  border-radius: 18px;
+  padding: 20px 14px;
+  box-shadow: 0 4px 14px #174b2b0d;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.plant:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 22px #174b2b1c;
+}
+
+.plant h3 {
+  color: #176b37;
+  font-size: 20px;
+}
+
+.price {
+  font-size: 23px;
+  color: #168447;
+}
+
+button, .btn {
+  background: linear-gradient(135deg, #168447, #0d6b35);
+  border-radius: 12px;
+  padding: 13px 20px;
+  font-weight: bold;
+  box-shadow: 0 4px 10px #16844720;
+  transition: transform 0.2s;
+}
+
+button:hover, .btn:hover {
+  transform: translateY(-2px);
+}
+
+input, select, textarea {
+  border: 1px solid #c9ddc4;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid #77bd82;
+  border-color: #168447;
+}
+
+.status {
+  border: 1px solid #dcebd7;
+  border-radius: 12px;
+}
+
+.order {
+  background: #f8fcf6;
+  border-color: #d9ead4;
+  border-radius: 14px;
+}
+
+footer {
+  background: linear-gradient(135deg, #174b2b, #0b3520);
+  padding: 28px 16px;
+  border-radius: 24px 24px 0 0;
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: 28px 12px;
+  }
+
+  .card {
+    padding: 17px;
+  }
+
+  nav a {
+    margin: 2px;
+    padding: 7px 10px;
+  }
+
+  main {
+    padding: 14px 10px;
+  }
+
+  button, .btn {
+    max-width: 100%;
+  }
+}
 </style>
 </head>
 <body>
