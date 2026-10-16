@@ -34,6 +34,7 @@ main{max-width:1120px;margin:0 auto;padding:clamp(16px,3vw,30px) 16px}
 label{display:block;font-weight:700;margin:12px 0 3px;color:#294d32}
 input,select,textarea{display:block;width:100%;padding:13px 14px;margin:6px 0 12px;border:1px solid #c9ddc4;border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-size:16px}
 input:focus,select:focus,textarea:focus{outline:3px solid #25884b25;border-color:#25884b}
+.location-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:4px 0 12px}.location-row button{width:auto!important;margin:0!important}.location-status{font-size:14px;color:var(--muted);overflow-wrap:anywhere}
 button,.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#25884b,#116334);color:#fff;border:0;border-radius:12px;padding:13px 19px;font:inherit;font-weight:700;text-decoration:none;cursor:pointer;box-shadow:0 5px 14px #16844720;transition:transform .2s,filter .2s}
 button:hover,.btn:hover{filter:brightness(1.04);transform:translateY(-1px)}
 button:disabled{opacity:.55;cursor:wait;transform:none}
@@ -92,6 +93,10 @@ footer p{margin:5px}
 <input id="phone" type="tel" placeholder="मोबाइल नंबर">
 <label for="address">गाँव और पूरा पता</label>
 <textarea id="address" rows="3" required placeholder="गाँव, ढाणी, नजदीकी जगह"></textarea>
+<div class="location-row">
+  <button id="locationButton" type="button">📍 मेरी लोकेशन शेयर करें</button>
+  <span id="locationStatus" class="location-status" aria-live="polite">लोकेशन देना वैकल्पिक है।</span>
+</div>
 <button id="orderButton" type="submit">ऑर्डर भेजें</button>
 </form>
 <div id="orderStatus" class="status" aria-live="polite"></div>
@@ -132,12 +137,37 @@ const OWNER_EMAIL = 'anilmeena.meena38@gmail.com';
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let plants = [];
+let customerLocation = null;
 
 function safe(value) {
   return String(value ?? '').replace(/[&<>"']/g, c => ({
     '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
   }[c]));
 }
+
+// ग्राहक की अनुमति मिलने पर ही ब्राउज़र GPS लोकेशन लेता है।
+document.getElementById('locationButton').addEventListener('click', () => {
+  const locationStatus = document.getElementById('locationStatus');
+  if (!navigator.geolocation) {
+    locationStatus.textContent = 'इस ब्राउज़र में लोकेशन की सुविधा उपलब्ध नहीं है।';
+    return;
+  }
+  locationStatus.textContent = 'लोकेशन प्राप्त की जा रही है…';
+  navigator.geolocation.getCurrentPosition(position => {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    customerLocation = { lat, lon, mapsUrl: `https://www.google.com/maps?q=${lat},${lon}` };
+    locationStatus.textContent = '✅ लोकेशन मिल गई। यह ऑर्डर के साथ भेजी जाएगी।';
+  }, error => {
+    customerLocation = null;
+    const messages = {
+      1: 'लोकेशन की अनुमति नहीं मिली। ब्राउज़र में अनुमति दें या पता लिखें।',
+      2: 'लोकेशन अभी नहीं मिल सकी। दोबारा कोशिश करें या पता लिखें।',
+      3: 'लोकेशन मिलने में समय लगा। दोबारा कोशिश करें या पता लिखें।'
+    };
+    locationStatus.textContent = messages[error.code] || 'लोकेशन नहीं मिली। कृपया पता लिखें।';
+  }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+});
 
 async function loadPlants() {
   const list = document.getElementById('plantList');
@@ -236,7 +266,8 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
       unit_price: Number(p.selling_price),
       customer_name: customerName,
       customer_phone: phone || null,
-     customer_address: address,
+      customer_address: address,
+      notes: customerLocation ? 'MAPS_URL:' + customerLocation.mapsUrl : null,
       status: 'pending'
     });
     if (error) throw error;
@@ -250,6 +281,7 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
       '\nमात्रा: ' + quantity +
       '\nवेबसाइट की कीमत: ₹' + Number(p.selling_price).toFixed(2) + ' प्रति पौधा' +
       '\nपता: ' + address +
+      (customerLocation ? '\nलोकेशन: ' + customerLocation.mapsUrl : '') +
       '\nकृपया ऑर्डर और कुल कीमत की पुष्टि करें।';
 
     const link = document.createElement('a');
@@ -261,6 +293,8 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
     status.appendChild(document.createElement('br'));
     status.appendChild(link);
     document.getElementById('orderForm').reset();
+    customerLocation = null;
+    document.getElementById('locationStatus').textContent = 'लोकेशन देना वैकल्पिक है।';
   } catch (error) {
     status.textContent = '❌ ऑर्डर सेव नहीं हुआ: ' + error.message;
   } finally {
@@ -308,7 +342,7 @@ async function loadOrders() {
   container.textContent = 'ऑर्डर लोड हो रहे हैं…';
 
   const {data, error} = await db.from('order_requests')
-    .select('id,plant_name,quantity,unit_price,customer_name,customer_phone,customer_address,status,created_at')
+    .select('id,plant_name,quantity,unit_price,customer_name,customer_phone,customer_address,notes,status,created_at')
     .order('created_at', {ascending:false});
 
   if (error) {
@@ -325,6 +359,10 @@ async function loadOrders() {
     const div = document.createElement('div');
     div.className = 'order';
     const total = Number(order.unit_price) * Number(order.quantity);
+    const locationMatch = String(order.notes || '').match(/MAPS_URL:(https:\/\/www\.google\.com\/maps\?q=[0-9.,-]+)/);
+    const locationHtml = locationMatch
+      ? '<br>📍 ग्राहक की लोकेशन: <a href="' + safe(locationMatch[1]) + '" target="_blank" rel="noopener">Google Maps पर खोलें</a>'
+      : '<br>📍 ग्राहक ने GPS लोकेशन शेयर नहीं की';
     div.innerHTML = '<strong>ऑर्डर #' + order.id + ' — ' + safe(order.status) +
       '</strong><p>ग्राहक: ' + safe(order.customer_name) +
       '<br>मोबाइल: ' + safe(order.customer_phone || 'नहीं दिया') +
@@ -332,6 +370,7 @@ async function loadOrders() {
       '<br>मात्रा: ' + order.quantity +
       '<br>दर्ज कीमत से राशि: ₹' + total.toFixed(2) +
       '<br>पता: ' + safe(order.customer_address || 'नहीं दिया') +
+      locationHtml +
       '<br>समय: ' + new Date(order.created_at).toLocaleString('hi-IN') + '</p>';
 
     if (order.status === 'pending') {
