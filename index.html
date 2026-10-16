@@ -412,7 +412,19 @@ async function loadOwnerStats() {
   const ownerBox = document.getElementById("ownerOrders");
   if (!ownerBox) return;
 
+  // सुरक्षा: सही मालिक का सक्रिय लॉगिन होने पर ही हिसाब दिखाएँ।
+  const { data: sessionData, error: sessionError } = await db.auth.getSession();
+  const currentUser = sessionData && sessionData.session && sessionData.session.user;
+  const isOwner = !sessionError && currentUser &&
+    currentUser.id === OWNER_UID && currentUser.email === OWNER_EMAIL;
   let statsBox = document.getElementById("ownerStats");
+  if (!isOwner) {
+    if (statsBox) {
+      statsBox.innerHTML = "";
+      statsBox.style.display = "none";
+    }
+    return;
+  }
 
   if (!statsBox) {
     statsBox = document.createElement("div");
@@ -499,9 +511,20 @@ async function loadOwnerStats() {
 
 db.auth.onAuthStateChange((event, session) => {
   const user = session && session.user;
-  if (user && user.id === OWNER_UID && user.email === OWNER_EMAIL) {
-    setTimeout(loadOwnerStats, 0);
+  const isOwner = !!(user && user.id === OWNER_UID && user.email === OWNER_EMAIL);
+  const statsBox = document.getElementById("ownerStats");
+  const ordersBox = document.getElementById("ownerOrders");
+  if (!isOwner) {
+    if (statsBox) { statsBox.innerHTML = ""; statsBox.style.display = "none"; }
+    if (ordersBox) { ordersBox.innerHTML = ""; ordersBox.style.display = "none"; }
+    document.getElementById("loginForm").style.display = "block";
+    document.getElementById("logoutButton").style.display = "none";
+    return;
   }
+  document.getElementById("loginForm").style.display = "none";
+  document.getElementById("logoutButton").style.display = "inline-block";
+  if (ordersBox) ordersBox.style.display = "block";
+  setTimeout(() => { loadOrders(); loadOwnerStats(); }, 0);
 });
 </script>
 </body>
