@@ -186,7 +186,7 @@ footer p{margin:5px}
   <div id="ownerStats"></div>
 </div>
 <div id="adminOrdersPane" class="admin-pane"><div class="admin-section-card"><h2>🛒 ग्राहक के ऑर्डर</h2><p class="admin-muted">लंबित ऑर्डर जाँचें; पुष्टि करने पर बिक्री दर्ज होगी और स्टॉक घटेगा।</p><div id="ownerOrders"></div></div></div>
-<div id="adminStockPane" class="admin-pane"><div class="admin-section-card"><h2>🌱 उपलब्ध पौधों का स्टॉक</h2><p class="admin-muted">डेटाबेस में दर्ज सक्रिय पौधों की वर्तमान मात्रा।</p><div id="ownerStockList">स्टॉक लोड हो रहा है…</div></div></div>
+<div id="adminStockPane" class="admin-pane"><div class="admin-section-card"><h2>🌱 उपलब्ध पौधों का स्टॉक</h2><p class="admin-muted">यहाँ से पौधों को “अभी उपलब्ध नहीं / Sold Out” करें। वे ग्राहक की सूची और ऑर्डर विकल्प से हट जाएँगे; बाद में फिर उपलब्ध भी कर सकते हैं।</p><div id="ownerStockList">स्टॉक लोड हो रहा है…</div></div></div>
 <div id="adminSalesPane" class="admin-pane"><div class="admin-section-card"><h2>💰 बिक्री का हिसाब</h2><p class="admin-muted">आज की बिक्री और हाल की बिक्री एंट्री।</p><div id="ownerSalesList">बिक्री का हिसाब लोड हो रहा है…</div></div></div>
 <div id="adminDuesPane" class="admin-pane">
   <div class="admin-section-card">
@@ -356,9 +356,22 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
   }
 
   button.disabled = true;
-  status.textContent = 'ऑर्डर सेव हो रहा है…';
+  status.textContent = 'उपलब्धता जाँची जा रही है…';
 
   try {
+    const {data: latestPlant, error: availabilityError} = await db.from('plants')
+      .select('id,name,selling_price,stock_quantity,is_active')
+      .eq('id', plantId).maybeSingle();
+    if (availabilityError) throw availabilityError;
+    if (!latestPlant || latestPlant.is_active !== true || Number(latestPlant.stock_quantity) < quantity) {
+      status.textContent = 'क्षमा करें, यह पौधा अभी उपलब्ध नहीं है या पर्याप्त स्टॉक नहीं है। कृपया दूसरा पौधा चुनें।';
+      await loadPlants();
+      button.disabled = false;
+      return;
+    }
+    p.selling_price = Number(latestPlant.selling_price);
+    p.stock_quantity = Number(latestPlant.stock_quantity);
+    status.textContent = 'ऑर्डर सेव हो रहा है…';
     const {error} = await db.from('order_requests').insert({
       plant_name: p.name,
       quantity: quantity,
@@ -636,14 +649,15 @@ async function loadOwnerStats() {
     const [salesResult, ordersResult, plantsResult] = await Promise.all([
       db.from('sales').select('id,sale_date,total_amount,payment_method,notes').order('sale_date',{ascending:false}).limit(100),
       db.from('order_requests').select('id,status,created_at'),
-      db.from('plants').select('name,stock_quantity,is_active').eq('is_active',true).order('name')
+      db.from('plants').select('id,name,stock_quantity,is_active').order('name')
     ]);
     if (salesResult.error) throw salesResult.error;
     if (ordersResult.error) throw ordersResult.error;
     if (plantsResult.error) throw plantsResult.error;
     const sales = salesResult.data || [];
     const orders = ordersResult.data || [];
-    const availablePlants = plantsResult.data || [];
+    const allPlants = plantsResult.data || [];
+    const availablePlants = allPlants.filter(p => p.is_active === true);
     const todaySales = sales.filter(s => s.sale_date && String(s.sale_date).slice(0,10) === dateText);
     const todayOrders = orders.filter(o => o.created_at && String(o.created_at).slice(0,10) === dateText && o.status === 'confirmed').length;
     const pendingOrders = orders.filter(o => o.status === 'pending').length;
@@ -666,8 +680,29 @@ async function loadOwnerStats() {
     document.getElementById('refreshOwnerStats').addEventListener('click', async () => { await loadOwnerStats(); });
     document.getElementById('goPendingOrders').addEventListener('click', () => { showAdminTab('orders'); });
 
-    stockBox.innerHTML = availablePlants.length ? availablePlants.map(p => `
-      <div class="stock-row"><span class="stock-name">🌱 ${safe(p.name || 'पौधा')}</span><span class="stock-count">${Math.max(0,Number(p.stock_quantity)||0)} पौधे</span></div>`).join('') : '<p>अभी सक्रिय पौधे दर्ज नहीं हैं।</p>';
+    stockBox.innerHTML = allPlants.length ? allPlants.map(p => `
+      <div class="stock-row" style="gap:10px;align-items:center;flex-wrap:wrap">
+        <span class="stock-name">🌱 ${safe(p.name || 'पौधा')} <small style="display:block;font-weight:400;color:${p.is_active ? '#16803d' : '#b45309'}">${p.is_active ? 'उपलब्ध' : 'अभी उपलब्ध नहीं / Sold Out'}</small></span>
+        <span class="stock-count">${Math.max(0,Number(p.stock_quantity)||0)} पौधे</span>
+        <button type="button" class="availability-toggle" data-plant-id="${safe(p.id)}" data-active="${p.is_active ? 'true' : 'false'}" style="font-size:12px;padding:7px 10px;border-radius:8px;border:1px solid ${p.is_active ? '#dc2626' : '#15803d'};background:${p.is_active ? '#fff7f7' : '#f0fdf4'};color:${p.is_active ? '#b91c1c' : '#166534'}">${p.is_active ? 'Sold Out करें' : 'फिर उपलब्ध करें'}</button>
+      </div>`).join('') : '<p>अभी कोई पौधा दर्ज नहीं है।</p>';
+    stockBox.querySelectorAll('.availability-toggle').forEach(button => {
+      button.addEventListener('click', async () => {
+        const plantId = button.dataset.plantId;
+        const currentlyActive = button.dataset.active === 'true';
+        const nextActive = !currentlyActive;
+        if (!confirm(nextActive ? 'क्या इस पौधे को फिर उपलब्ध करना चाहते हैं?' : 'क्या इस पौधे को Sold Out करना चाहते हैं? यह ग्राहक की सूची और नए ऑर्डर विकल्प से हट जाएगा।')) return;
+        button.disabled = true;
+        const {error: updateError} = await db.from('plants').update({is_active: nextActive}).eq('id', plantId);
+        if (updateError) {
+          alert('स्थिति बदली नहीं जा सकी: ' + updateError.message);
+          button.disabled = false;
+          return;
+        }
+        await loadOwnerStats();
+        await loadPlants();
+      });
+    });
     salesBox.innerHTML = sales.length ? sales.slice(0,30).map(s => `
       <div class="sale-row"><div><strong>बिक्री #${safe(s.id)}</strong><div class="sale-meta">${s.sale_date ? new Date(s.sale_date).toLocaleDateString('hi-IN') : 'तारीख उपलब्ध नहीं'}${s.payment_method ? ' • '+safe(s.payment_method) : ''}</div><div class="sale-meta">${safe(s.notes || '')}</div></div><div class="sale-amount">₹${Number(s.total_amount||0).toFixed(2)}</div></div>`).join('') : '<p>अभी बिक्री एंट्री नहीं मिली।</p>';
   } catch (error) {
