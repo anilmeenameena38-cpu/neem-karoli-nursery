@@ -402,7 +402,7 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
       unit_price: Number(p.selling_price),
       customer_name: customerName,
       customer_phone: phone || null,
-      delivery_address: address,
+     customer_address: address,
       status: 'pending'
     });
     if (error) throw error;
