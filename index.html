@@ -327,6 +327,100 @@ async function loadOrders() {
 }
 
 loadPlants();
-</script>
+
+async function loadOwnerStats() {
+  const ownerBox = document.getElementById("ownerOrders");
+  if (!ownerBox) return;
+
+  let statsBox = document.getElementById("ownerStats");
+
+  if (!statsBox) {
+    statsBox = document.createElement("div");
+    statsBox.id = "ownerStats";
+    ownerBox.parentNode.insertBefore(statsBox, ownerBox);
+  }
+
+  statsBox.innerHTML = "<p>बिक्री का हिसाब लोड हो रहा है...</p>";
+
+  try {
+    const now = new Date();
+    const dateText =
+      now.getFullYear() + "-" +
+      String(now.getMonth() + 1).padStart(2, "0") + "-" +
+      String(now.getDate()).padStart(2, "0");
+
+    const [salesResult, ordersResult, plantsResult] =
+      await Promise.all([
+        db.from("sales")
+          .select("id,sale_date,total_amount"),
+
+        db.from("order_requests")
+          .select("id,status,created_at"),
+
+        db.from("plants")
+          .select("name,stock_quantity")
+          .eq("is_active", true)
+      ]);
+
+    if (salesResult.error) throw salesResult.error;
+    if (ordersResult.error) throw ordersResult.error;
+    if (plantsResult.error) throw plantsResult.error;
+
+    const sales = salesResult.data || [];
+    const orders = ordersResult.data || [];
+    const availablePlants = plantsResult.data || [];
+
+    const todaySales = sales.filter(s =>
+      s.sale_date && s.sale_date.slice(0, 10) === dateText
+    );
+
+    const todayOrders = orders.filter(o =>
+      o.created_at &&
+      o.created_at.slice(0, 10) === dateText &&
+      o.status === "confirmed"
+    ).length;
+
+    const total = todaySales.reduce(
+      (sum, s) => sum + Number(s.total_amount || 0), 0
+    );
+
+    statsBox.innerHTML = `
+      <div class="card">
+        <h2>📊 नर्सरी का बिक्री हिसाब</h2>
+        <p>आज की कुल बिक्री:
+          <strong>₹${total.toFixed(2)}</strong>
+        </p>
+        <p>आज की बिक्री एंट्री:
+          <strong>${todaySales.length}</strong>
+        </p>
+        <p>आज कन्फर्म ऑर्डर:
+          <strong>${todayOrders}</strong>
+        </p>
+        <h3>🌱 उपलब्ध पौधों का स्टॉक</h3>
+        ${availablePlants.map(p => `
+          <p>${p.name}: <strong>${p.stock_quantity} पौधे</strong></p>
+        `).join("")}
+        <button type="button" id="refreshOwnerStats">
+          🔄 हिसाब फिर से देखें
+        </button>
+      </div>
+    `;
+
+    document.getElementById("refreshOwnerStats")
+      .addEventListener("click", loadOwnerStats);
+
+  } catch (error) {
+    statsBox.innerHTML =
+      "<p>हिसाब लोड नहीं हुआ: " +
+      String(error.message || error) + "</p>";
+  }
+}
+
+db.auth.onAuthStateChange((event, session) => {
+  if (session) {
+    setTimeout(loadOwnerStats, 0);
+  }
+});
+
 </body>
 </html>
