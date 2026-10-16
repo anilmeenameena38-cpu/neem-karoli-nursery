@@ -65,6 +65,35 @@ button:disabled{opacity:.55;cursor:wait;transform:none}
 footer{background:linear-gradient(130deg,#174b2b,#0b3520);color:#fff;text-align:center;padding:30px 16px;border-radius:28px 28px 0 0;margin-top:26px}
 footer p{margin:5px}
 @media(max-width:650px){header{border-radius:0 0 24px 24px}nav{gap:6px;padding:9px 6px}nav a{min-width:0;flex:1 1 28%;padding:8px 7px;font-size:14px}main{padding:14px 10px}.card{padding:18px;border-radius:17px}.plant img{height:160px}button,.btn{max-width:100%}.admin-tabs{gap:6px}.admin-tab{min-height:70px;border-radius:12px;padding:8px 3px}.admin-tab .tab-icon{font-size:21px}.admin-tab .tab-label{font-size:11px}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{padding:12px}}
+
+/* एडमिन पैनल को साफ, छोटा और कम मोटे अक्षरों वाला रूप */
+#ownerStatus:empty{display:none!important}
+#owner.login-visible>h2:first-child{font-size:20px;font-weight:600;padding-top:16px}
+#owner.login-visible>p:first-of-type{font-size:13px}
+#ownerPanelHeader{padding:16px;border-radius:15px}
+#ownerPanelHeader h3{font-size:clamp(18px,2.5vw,23px);font-weight:600}
+#ownerPanelHeader p{font-size:13px;font-weight:400}
+.admin-chip{font-weight:400}
+.admin-tab{min-height:64px;font-weight:500;border-radius:12px}
+.admin-tab .tab-icon{font-size:20px}
+.admin-tab .tab-label{font-size:13px;font-weight:500}
+.admin-section-card{padding:15px;border-radius:15px}
+.admin-section-card h2,.admin-pane h2{font-size:19px;font-weight:600;line-height:1.4}
+.admin-muted{font-size:13px;font-weight:400}
+.metric{padding:12px;border-radius:13px}
+.metric .metric-value{font-weight:600;font-size:clamp(20px,2.7vw,26px)}
+.stock-name,.stock-count,.sale-amount{font-weight:500}
+.stock-count{padding:4px 8px}
+#owner .status{font-size:13px;padding:10px 12px}
+#owner label{font-size:14px;font-weight:500}
+#owner input,#owner select,#owner textarea{font-size:15px;padding:10px 12px;border-radius:10px}
+#owner button,#owner .btn{font-size:14px;font-weight:500;padding:10px 14px;border-radius:10px;box-shadow:none}
+#owner .order{padding:13px}
+#siteOfflineOverlay{position:fixed;inset:0;z-index:1500;background:rgba(8,28,15,.93);display:flex;align-items:center;justify-content:center;padding:20px}
+#siteOfflineOverlay .offline-card{max-width:440px;width:100%;text-align:center;background:#fff;border-radius:20px;padding:28px 22px;box-shadow:0 20px 60px #0004}
+#siteOfflineOverlay h2{font-size:23px;font-weight:600;color:var(--green);margin:8px 0}
+#siteOfflineOverlay p{font-size:15px;color:var(--muted);margin:8px 0 20px}
+@media(max-width:650px){.admin-tab{min-height:58px}.admin-tab .tab-icon{font-size:18px}.admin-tab .tab-label{font-size:11px}.admin-section-card{padding:12px}#ownerPanelHeader{padding:13px}}
 </style>
 </head>
 <body>
@@ -135,7 +164,7 @@ footer p{margin:5px}
 <button type="submit">लॉगिन करें</button>
 </form>
 <button id="logoutButton" type="button" style="display:none">लॉगआउट</button>
-<div id="ownerStatus" class="status" aria-live="polite">लॉगिन करने के बाद ऑर्डर दिखेंगे।</div>
+<div id="ownerStatus" class="status" aria-live="polite" style="display:none"></div>
 <div id="ownerPanelHeader"><div class="admin-welcome"><div><h3>🌿 नर्सरी एडमिन पैनल</h3><p>आपका व्यवसाय, एक ही जगह — ऑर्डर, स्टॉक और बिक्री</p></div><span class="admin-chip">🔒 मालिक लॉगिन सक्रिय</span></div></div>
 <div id="adminCustomerSearch" class="admin-section-card" style="display:none">
   <h2>🔎 ग्राहक की जानकारी खोजें</h2>
@@ -154,7 +183,16 @@ footer p{margin:5px}
   <button class="admin-tab" type="button" data-tab="sales" role="tab" aria-selected="false"><span class="tab-icon">💰</span><span class="tab-label">बिक्री हिसाब</span></button>
   <button class="admin-tab" type="button" data-tab="dues" role="tab" aria-selected="false"><span class="tab-icon">⏰</span><span class="tab-label">उधार / बाकी</span></button>
 </div>
-<div id="adminDashboardPane" class="admin-pane active"><div id="ownerStats"></div></div>
+<div id="adminDashboardPane" class="admin-pane active">
+  <div class="admin-section-card" id="siteStatusCard">
+    <h2>🌐 वेबसाइट चालू / बंद</h2>
+    <p class="admin-muted">यहाँ से आप तय कर सकते हैं कि ग्राहक वेबसाइट देख सकें या नहीं। बंद करने पर ग्राहकों को अस्थायी संदेश दिखेगा; मालिक लॉगिन करके इसे फिर चालू कर सकता है।</p>
+    <p id="siteStatusText" class="admin-muted">वेबसाइट की स्थिति जाँची जा रही है…</p>
+    <div class="admin-action-row"><button type="button" id="siteToggleButton">स्थिति लोड हो रही है…</button></div>
+    <p id="siteToggleMessage" class="admin-muted" aria-live="polite"></p>
+  </div>
+  <div id="ownerStats"></div>
+</div>
 <div id="adminOrdersPane" class="admin-pane"><div class="admin-section-card"><h2>🛒 ग्राहक के ऑर्डर</h2><p class="admin-muted">लंबित ऑर्डर जाँचें; पुष्टि करने पर बिक्री दर्ज होगी और स्टॉक घटेगा।</p><div id="ownerOrders"></div></div></div>
 <div id="adminStockPane" class="admin-pane"><div class="admin-section-card"><h2>🌱 उपलब्ध पौधों का स्टॉक</h2><p class="admin-muted">डेटाबेस में दर्ज सक्रिय पौधों की वर्तमान मात्रा।</p><div id="ownerStockList">स्टॉक लोड हो रहा है…</div></div></div>
 <div id="adminSalesPane" class="admin-pane"><div class="admin-section-card"><h2>💰 बिक्री का हिसाब</h2><p class="admin-muted">आज की बिक्री और हाल की बिक्री एंट्री।</p><div id="ownerSalesList">बिक्री का हिसाब लोड हो रहा है…</div></div></div>
@@ -183,6 +221,14 @@ footer p{margin:5px}
 </div>
 </section>
 </main>
+<div id="siteOfflineOverlay" role="status" aria-live="polite" style="display:none">
+  <div class="offline-card">
+    <div style="font-size:42px">🌱</div>
+    <h2>नर्सरी वेबसाइट अभी बंद है</h2>
+    <p>हम जल्द ही वापस आएँगे। पौधों और ऑर्डर के लिए कृपया कुछ समय बाद आएँ।</p>
+    <button type="button" id="offlineOwnerLogin">🔐 मालिक लॉगिन</button>
+  </div>
+</div>
 <footer>
 <p>🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</p>
 <p>चारावास, झुंझुनू, राजस्थान</p>
@@ -201,12 +247,71 @@ document.getElementById('ownerCloseButton').addEventListener('click', () => {
   ownerSection.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
 });
+document.getElementById('offlineOwnerLogin').addEventListener('click', () => {
+  ownerSection.classList.add('login-visible');
+  ownerSection.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('email').focus(), 50);
+});
+
+document.getElementById('siteToggleButton').addEventListener('click', async () => {
+  const button = document.getElementById('siteToggleButton');
+  const message = document.getElementById('siteToggleMessage');
+  const {data: sessionData} = await db.auth.getSession();
+  const user = sessionData && sessionData.session && sessionData.session.user;
+  if (!user || user.id !== OWNER_UID || user.email !== OWNER_EMAIL) {
+    message.textContent = 'यह सुविधा केवल मालिक लॉगिन के बाद उपलब्ध है।'; return;
+  }
+  if (!siteSettingsReady) { message.textContent = 'पहले Supabase में site_settings SQL सेटअप करें।'; return; }
+  const nextState = !siteIsOnline;
+  const confirmText = nextState ? 'क्या आप वेबसाइट फिर से चालू करना चाहते हैं?' : 'क्या आप ग्राहकों के लिए वेबसाइट बंद करना चाहते हैं?';
+  if (!confirm(confirmText)) return;
+  button.disabled = true; message.textContent = 'स्थिति बदली जा रही है…';
+  try {
+    const {error} = await db.from('site_settings').upsert({id:1, is_online:nextState, updated_at:new Date().toISOString()}, {onConflict:'id'});
+    if (error) throw error;
+    siteIsOnline = nextState;
+    renderSiteVisibility();
+    message.textContent = nextState ? 'वेबसाइट चालू कर दी गई है।' : 'वेबसाइट बंद कर दी गई है। मालिक लॉगिन से फिर चालू कर सकते हैं।';
+  } catch (error) {
+    message.textContent = 'सेटिंग सेव नहीं हुई: ' + (error.message || error) + ' — SQL और RLS नीति जाँचें।';
+  } finally { button.disabled = false; }
+});
 
 const SUPABASE_URL = 'https://knwpnjzwknnzdkyboeuy.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ANudpZPHHiFcBeI3U7SaEA_QRzMOywA';
 const OWNER_UID = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9';
 const OWNER_EMAIL = 'anilmeena.meena38@gmail.com';
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// वेबसाइट की वैश्विक चालू/बंद स्थिति Supabase के site_settings रिकॉर्ड में रहती है।
+let siteIsOnline = true;
+let siteSettingsReady = false;
+let ownerIsLoggedIn = false;
+function renderSiteVisibility() {
+  const overlay = document.getElementById('siteOfflineOverlay');
+  if (overlay) overlay.style.display = (siteIsOnline || ownerIsLoggedIn) ? 'none' : 'flex';
+  const text = document.getElementById('siteStatusText');
+  const button = document.getElementById('siteToggleButton');
+  if (text) text.textContent = siteIsOnline ? '🟢 वेबसाइट चालू है — ग्राहक वेबसाइट देख सकते हैं।' : '🔴 वेबसाइट बंद है — ग्राहकों को अस्थायी संदेश दिखेगा।';
+  if (button) button.textContent = siteIsOnline ? '🔴 वेबसाइट बंद करें' : '🟢 वेबसाइट चालू करें';
+}
+async function loadSiteVisibility() {
+  try {
+    const {data, error} = await db.from('site_settings').select('is_online').eq('id', 1).maybeSingle();
+    if (error) throw error;
+    if (data && typeof data.is_online === 'boolean') siteIsOnline = data.is_online;
+    siteSettingsReady = true;
+    renderSiteVisibility();
+  } catch (error) {
+    // यदि सेटिंग टेबल अभी नहीं बनी, तो वेबसाइट को गलती से बंद न करें।
+    siteSettingsReady = false;
+    const msg = document.getElementById('siteToggleMessage');
+    if (msg) msg.textContent = 'पहले दिए गए SQL से Supabase में site_settings सेटअप करें। विवरण नई SQL फ़ाइल में है।';
+    const button = document.getElementById('siteToggleButton');
+    if (button) { button.disabled = true; button.textContent = 'पहले सेटअप करें'; }
+  }
+}
 
 let plants = [];
 let customerLocation = null;
@@ -401,13 +506,18 @@ document.getElementById('loginForm').addEventListener('submit', async event => {
   showAdminTab('dashboard');
   const existingStats = document.getElementById('ownerStats');
   if (existingStats) existingStats.style.display = 'block';
+  ownerIsLoggedIn = true;
+  status.style.display = 'block';
   status.textContent = 'लॉगिन सफल।';
+  document.getElementById('siteOfflineOverlay').style.display = 'none';
+  await loadSiteVisibility();
   await loadOrders();
   await loadOwnerStats();
 });
 
 document.getElementById('logoutButton').addEventListener('click', async () => {
   await db.auth.signOut();
+  ownerIsLoggedIn = false;
   document.getElementById('loginForm').style.display = 'block';
   document.getElementById('logoutButton').style.display = 'none';
   document.getElementById('ownerOrders').innerHTML = '';
@@ -424,6 +534,7 @@ document.getElementById('logoutButton').addEventListener('click', async () => {
   const statsBox = document.getElementById('ownerStats');
   if (statsBox) { statsBox.innerHTML = ''; statsBox.style.display = 'none'; }
   document.getElementById('ownerStatus').textContent = 'आप लॉगआउट हो गए हैं।';
+  renderSiteVisibility();
 });
 
 async function loadOrders() {
@@ -483,6 +594,7 @@ async function loadOrders() {
           '✅ ऑर्डर #' + order.id + ' कन्फर्म हो गया। बिक्री दर्ज हुई; स्टॉक और हिसाब अपडेट हो रहा है।';
         await loadOrders();
         await loadPlants();
+loadSiteVisibility();
         await loadOwnerStats();
       });
       div.appendChild(button);
@@ -563,6 +675,7 @@ document.getElementById('dueList').addEventListener('click', event => {
 renderDueRecords();
 
 loadPlants();
+loadSiteVisibility();
 
 function showAdminTab(tabName) {
   const allowed = ['dashboard', 'orders', 'stock', 'sales', 'dues'];
