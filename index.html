@@ -5,227 +5,328 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>श्री नीम करोली महाराज ग्रीन नर्सरी</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f2f8ed;color:#23452b}
-header{background:#176b37;color:white;text-align:center;padding:24px 12px}
-header h1{font-size:24px}
-nav{background:white;text-align:center;padding:14px;position:sticky;top:0}
-nav a{color:#176b37;font-weight:bold;margin:8px}
+header{background:#176b37;color:white;text-align:center;padding:22px 12px}
+header h1{font-size:24px;margin:5px}
+nav{background:white;text-align:center;padding:12px;position:sticky;top:0}
+nav a{color:#176b37;font-weight:bold;margin:8px;text-decoration:none}
 main{max-width:950px;margin:auto;padding:16px}
-.card{background:white;border-radius:16px;padding:20px;text-align:center;margin-bottom:20px}
+.card{background:white;border-radius:14px;padding:18px;margin-bottom:18px;box-shadow:0 2px 8px #0001}
 h2{color:#176b37}
-.plants{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
-.plant{background:white;border:1px solid #d6e7d2;border-radius:14px;padding:15px 8px;text-align:center}
-.emoji{font-size:40px}
-.price{font-size:21px;font-weight:bold;color:#176b37}
-button,.btn{display:inline-block;border:0;border-radius:9px;background:#168447;color:white;padding:12px;font-size:16px;font-weight:bold;text-decoration:none;margin:5px;cursor:pointer}
-input,select{width:100%;padding:12px;margin:7px 0 14px;border:1px solid #b9cfb5;border-radius:8px;font-size:16px}
-label{display:block;text-align:left;font-weight:bold}
-.status{background:#f2f8ed;border-radius:9px;padding:12px;margin:12px 0;overflow-wrap:anywhere}
+.plants{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.plant{background:#fff;border:1px solid #d6e7d2;border-radius:12px;padding:14px;text-align:center}
+.plant h3{margin:8px 0}
+.price{font-weight:bold;color:#176b37;font-size:20px}
+input,select,textarea{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #b9cdb5;border-radius:8px;font-size:16px}
+button,.btn{background:#168447;color:white;border:0;border-radius:8px;padding:12px 16px;font-size:16px;cursor:pointer}
+button:disabled{opacity:.5}
+.status{background:#f2f8ed;padding:12px;border-radius:8px;margin-top:10px;overflow-wrap:anywhere}
 .note{font-size:13px;color:#526b55}
 footer{background:#174b2b;color:white;text-align:center;padding:20px}
+.order{border:1px solid #d6e7d2;padding:12px;border-radius:10px;margin:10px 0}
 </style>
 </head>
 <body>
 <header>
 <h1>🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</h1>
-<p>स्वस्थ पौधे • हरी सब्जियाँ • हरियाली</p>
-<p>ग्राम चारावास, झुंझुनू, राजस्थान</p>
+<p>हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए</p>
+<p>📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान</p>
 </header>
-
 <nav>
-<a href="#plants">पौधे व कीमत</a>
-<a href="#order">ऑर्डर करें</a>
+<a href="#plants">पौधे</a>
+<a href="#order">ऑर्डर</a>
 <a href="#contact">संपर्क</a>
+<a href="#owner">मालिक लॉगिन</a>
 </nav>
-
 <main>
 <section class="card">
-<h2>🙏 आपका स्वागत है</h2>
-<p>अपने घर और खेत के लिए सब्जियों के पौधे चुनें।</p>
-<p>चारावास के आसपास लगभग 10 किमी के क्षेत्र में ऑर्डर के लिए अपनी लोकेशन साझा करें।</p>
-<a class="btn" href="tel:9887666626">📞 अभी कॉल करें</a>
-<a class="btn" href="https://wa.me/919887666626">WhatsApp पर पूछें</a>
+<h2>🌿 हमारी नर्सरी में आपका स्वागत है</h2>
+<p>सब्जियों के पौधों की उपलब्धता और कीमत की पुष्टि नर्सरी से की जाएगी।</p>
+<p class="note">वेबसाइट पर ऑर्डर भेजने के बाद नर्सरी मालिक की पुष्टि का इंतजार करें।</p>
 </section>
 
-<h2 id="plants">🌿 हमारे पौधे और कीमत</h2>
-<div class="plants">
-<div class="plant">
-<div class="emoji">🍅</div><h3>टमाटर</h3>
-<div class="price">₹5 / पौधा</div>
-<p>उपलब्धता: 450 पौधे</p>
-<button onclick="choosePlant('टमाटर')">ऑर्डर करें</button>
-</div>
-<div class="plant">
-<div class="emoji">🌶️</div><h3>हरी मिर्च</h3>
-<div class="price">₹5 / पौधा</div>
-<p>उपलब्धता: 75 पौधे</p>
-<button onclick="choosePlant('हरी मिर्च')">ऑर्डर करें</button>
-</div>
-<div class="plant">
-<div class="emoji">🍆</div><h3>बैंगन</h3>
-<div class="price">₹5 / पौधा</div>
-<p>उपलब्धता: 75 पौधे</p>
-<button onclick="choosePlant('बैंगन')">ऑर्डर करें</button>
-</div>
-<div class="plant">
-<div class="emoji">🥬</div><h3>पत्तेदार सब्जियाँ</h3>
-<p>मौसम व उपलब्धता के अनुसार</p>
-<button onclick="choosePlant('पत्तेदार सब्जियाँ')">पूछें</button>
-</div>
-<div class="plant">
-<div class="emoji">🥒</div><h3>लौकी व खीरा</h3>
-<p>मौसम व उपलब्धता के अनुसार</p>
-<button onclick="choosePlant('लौकी व खीरा')">पूछें</button>
-</div>
-<div class="plant">
-<div class="emoji">🌱</div><h3>अन्य पौधे</h3>
-<p>उपलब्धता के लिए संपर्क करें</p>
-<button onclick="choosePlant('अन्य पौधे')">पूछें</button>
-</div>
-</div>
+<section class="card" id="plants">
+<h2>🌱 उपलब्ध पौधे</h2>
+<p>पौधों की सूची और स्टॉक डेटाबेस से लोड होंगे।</p>
+<div id="plantList" class="plants">पौधों की सूची लोड हो रही है…</div>
+<div id="plantStatus" class="status" aria-live="polite"></div>
+</section>
 
 <section class="card" id="order">
-<h2>📍 ऑर्डर और डिलीवरी लोकेशन</h2>
-<p>नीचे बटन दबाकर अपने मोबाइल की लोकेशन साझा करें।</p>
-<button type="button" onclick="getLocation()">📍 मेरी वर्तमान लोकेशन लें</button>
-<div class="status" id="locationStatus" aria-live="polite">
-अभी लोकेशन नहीं मिली है।
-</div>
-<p class="note">आपकी अनुमति के बिना वेबसाइट GPS लोकेशन नहीं ले सकती। दूरी नर्सरी से सीधी दूरी के आधार पर जाँची जाएगी।</p>
-
+<h2>🛒 पौधों का ऑर्डर करें</h2>
+<form id="orderForm">
 <label for="plant">पौधा चुनें</label>
-<select id="plant">
-<option>टमाटर</option>
-<option>हरी मिर्च</option>
-<option>बैंगन</option>
-<option>पत्तेदार सब्जियाँ</option>
-<option>लौकी व खीरा</option>
-<option>अन्य पौधे</option>
+<select id="plant" required>
+<option value="">पहले पौधों की सूची लोड होने दें</option>
 </select>
-
 <label for="qty">पौधों की संख्या</label>
-<input id="qty" type="number" min="1" value="10">
-
+<input id="qty" type="number" min="1" step="1" value="1" required>
 <label for="customer">आपका नाम</label>
-<input id="customer" type="text" placeholder="अपना नाम लिखें">
-
-<label for="phone">मोबाइल नंबर (वैकल्पिक)</label>
+<input id="customer" type="text" required placeholder="पूरा नाम">
+<label for="phone">मोबाइल नंबर</label>
 <input id="phone" type="tel" placeholder="मोबाइल नंबर">
-
-<label for="address">गाँव / डिलीवरी का पता</label>
-<input id="address" type="text" placeholder="गाँव या पूरा पता">
-
-<button type="button" onclick="sendOrder()">WhatsApp पर ऑर्डर भेजें</button>
-<p class="note">WhatsApp खुलने पर संदेश जाँचकर स्वयं Send दबाएँ।</p>
+<label for="address">गाँव और पूरा पता</label>
+<textarea id="address" rows="3" required placeholder="गाँव, ढाणी, नजदीकी जगह"></textarea>
+<button id="orderButton" type="submit">ऑर्डर भेजें</button>
+</form>
+<div id="orderStatus" class="status" aria-live="polite"></div>
+<p class="note">ऑर्डर भेजना बिक्री की पुष्टि नहीं है। मालिक पुष्टि करने के बाद ही स्टॉक घटेगा।</p>
 </section>
 
 <section class="card" id="contact">
 <h2>📞 संपर्क करें</h2>
-<p>श्री नीम करोली महाराज ग्रीन नर्सरी</p>
-<p>ग्राम चारावास, झुंझुनू, राजस्थान</p>
-<p>मोबाइल: 9887666626</p>
-<a class="btn" href="tel:9887666626">कॉल करें</a>
-<a class="btn" href="https://wa.me/919887666626">WhatsApp</a>
-<a class="btn" href="https://www.google.com/maps?q=28.0102870,75.6538370">🗺️ नर्सरी का नक्शा</a>
+<p>नर्सरी मोबाइल: 9887666626</p>
+<a class="btn" href="https://wa.me/919887666626" target="_blank" rel="noopener">WhatsApp पर संपर्क करें</a>
+</section>
+
+<section class="card" id="owner">
+<h2>🔐 नर्सरी मालिक लॉगिन</h2>
+<p class="note">यहाँ केवल अधिकृत मालिक लॉगिन करें।</p>
+<form id="loginForm">
+<label for="email">ईमेल</label>
+<input id="email" type="email" required autocomplete="username" placeholder="मालिक का ईमेल">
+<label for="password">पासवर्ड</label>
+<input id="password" type="password" required autocomplete="current-password" placeholder="Supabase का पासवर्ड">
+<button type="submit">लॉगिन करें</button>
+</form>
+button
+<button id="logoutButton" type="button" style="display:none">लॉगआउट</button>
+<div id="ownerStatus" class="status" aria-live="polite">लॉगिन करने के बाद ऑर्डर दिखेंगे।</div>
+<div id="ownerOrders"></div>
 </section>
 </main>
-
 <footer>
 <p>🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</p>
-<p>स्वस्थ पौधे • हरित गाँव • खुशहाल किसान</p>
+<p>चारावास, झुंझुनू, राजस्थान</p>
 </footer>
 
 <script>
-const nurseryLat = 28.0102870;
-const nurseryLon = 75.6538370;
-const maxKm = 10;
-let customerLocation = null;
-let customerDistance = null;
+const SUPABASE_URL = 'https://knwpnjzwknnzdkvboeuy.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ANudpZPHHiFcBeI3U7SaEA_QRzMOywA';
+const OWNER_UID = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9';
+const OWNER_EMAIL = 'anilmeena.meena38@gmail.com';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-function distanceKm(lat1,lon1,lat2,lon2){
- const rad=x=>x*Math.PI/180;
- const dLat=rad(lat2-lat1), dLon=rad(lon2-lon1);
- const a=Math.sin(dLat/2)**2+
- Math.cos(rad(lat1))*Math.cos(rad(lat2))*Math.sin(dLon/2)**2;
- return 6371*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+let plants = [];
+
+function safe(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[c]));
 }
 
-function choosePlant(name){
- document.getElementById('plant').value=name;
- document.getElementById('order').scrollIntoView({behavior:'smooth'});
-}
+async function loadPlants() {
+  const list = document.getElementById('plantList');
+  const select = document.getElementById('plant');
+  const status = document.getElementById('plantStatus');
 
-function getLocation(){
- const status=document.getElementById('locationStatus');
- if(!navigator.geolocation){
-  status.textContent='आपके ब्राउज़र में GPS उपलब्ध नहीं है।';
-  return;
- }
- status.textContent='लोकेशन प्राप्त हो रही है। कृपया अनुमति दें।';
+  const {data, error} = await db.from('plants')
+    .select('id,name,variety,category,selling_price,stock_quantity,description,is_active')
+    .eq('is_active', true).order('name');
 
- navigator.geolocation.getCurrentPosition(
- function(position){
-  const lat=position.coords.latitude;
-  const lon=position.coords.longitude;
-  customerLocation={lat:lat,lon:lon};
-  customerDistance=distanceKm(nurseryLat,nurseryLon,lat,lon);
-  const maps='https://www.google.com/maps?q='+lat+','+lon;
-
-  if(customerDistance<=maxKm){
-   status.innerHTML='✅ आप 10 किमी के दायरे में हैं। सीधी दूरी: '+
-   customerDistance.toFixed(2)+' किमी।<br><a target="_blank" rel="noopener" href="'+maps+'">नक्शे पर अपनी लोकेशन देखें</a>';
-  }else{
-   status.innerHTML='⚠️ आप 10 किमी के दायरे से बाहर हैं। सीधी दूरी: '+
-   customerDistance.toFixed(2)+' किमी।<br><a target="_blank" rel="noopener" href="'+maps+'">नक्शे पर अपनी लोकेशन देखें</a>';
+  if (error) {
+    list.textContent = 'पौधों की सूची लोड नहीं हुई। डेटाबेस की अनुमति जाँचनी होगी।';
+    status.textContent = 'त्रुटि: ' + error.message;
+    select.innerHTML = '<option value="">सूची उपलब्ध नहीं</option>';
+    return;
   }
- },
- function(error){
-  customerLocation=null;
-  customerDistance=null;
-  if(error.code===1) status.textContent='लोकेशन की अनुमति नहीं मिली। ब्राउज़र में अनुमति देकर फिर कोशिश करें।';
-  else if(error.code===2) status.textContent='लोकेशन नहीं मिली। मोबाइल का GPS चालू करके फिर कोशिश करें।';
-  else status.textContent='समय पर लोकेशन नहीं मिली। फिर से कोशिश करें।';
- },
- {enableHighAccuracy:true,timeout:20000,maximumAge:60000}
- );
+
+  plants = (data || []).filter(p => Number(p.stock_quantity) > 0);
+  list.innerHTML = '';
+  select.innerHTML = '<option value="">पौधा चुनें</option>';
+
+  if (!plants.length) {
+    list.textContent = 'अभी डेटाबेस में उपलब्ध स्टॉक वाले पौधे दर्ज नहीं हैं।';
+    status.textContent = 'Supabase की plants टेबल में पौधों की कीमत और स्टॉक दर्ज करें।';
+    return;
+  }
+
+  plants.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'plant';
+    card.innerHTML = '<div style="font-size:36px">🌱</div><h3>' +
+      safe(p.name) + '</h3><div>' + safe(p.variety || p.category || '') +
+      '</div><p class="price">₹' + Number(p.selling_price).toFixed(2) +
+      '</p><p>स्टॉक: ' + Number(p.stock_quantity) + ' पौधे</p>' +
+      '<p class="note">' + safe(p.description || '') + '</p>';
+    list.appendChild(card);
+
+    const option = document.createElement('option');
+    option.value = String(p.id);
+    option.textContent = p.name + ' — ₹' + Number(p.selling_price).toFixed(2) +
+      ' (स्टॉक ' + p.stock_quantity + ')';
+    select.appendChild(option);
+  });
+  status.textContent = 'पौधों की सूची डेटाबेस से अपडेट हुई।';
 }
 
-function sendOrder(){
- const plant=document.getElementById('plant').value;
- const qty=Number(document.getElementById('qty').value);
- const customer=document.getElementById('customer').value.trim();
- const phone=document.getElementById('phone').value.trim();
- const address=document.getElementById('address').value.trim();
+document.getElementById('orderForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const button = document.getElementById('orderButton');
+  const status = document.getElementById('orderStatus');
+  const plantId = Number(document.getElementById('plant').value);
+  const p = plants.find(item => Number(item.id) === plantId);
+  const quantity = Number(document.getElementById('qty').value);
+  const customerName = document.getElementById('customer').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const address = document.getElementById('address').value.trim();
 
- if(!qty||qty<1){
-  alert('कृपया पौधों की सही संख्या लिखें।');
-  return;
- }
- if(!customerLocation){
-  alert('पहले अपनी वर्तमान लोकेशन लें। यदि लोकेशन साझा नहीं करना चाहते, तो नर्सरी को सीधे WhatsApp पर संपर्क करें।');
-  return;
- }
- if(customerDistance>maxKm){
-  alert('आपकी लोकेशन नर्सरी से 10 किमी से बाहर है। ऑर्डर के लिए नर्सरी से सीधे WhatsApp पर संपर्क करें।');
-  return;
- }
+  if (!p) {
+    status.textContent = 'कृपया सूची में से उपलब्ध पौधा चुनें।';
+    return;
+  }
+  if (!Number.isInteger(quantity) || quantity < 1) {
+    status.textContent = 'पौधों की सही संख्या लिखें।';
+    return;
+  }
+  if (quantity > Number(p.stock_quantity)) {
+    status.textContent = 'इतना स्टॉक अभी उपलब्ध नहीं है।';
+    return;
+  }
+  if (!customerName || !address) {
+    status.textContent = 'नाम और पूरा पता भरें।';
+    return;
+  }
 
- const maps='https://www.google.com/maps?q='+
- customerLocation.lat+','+customerLocation.lon;
- const message='नमस्ते! मुझे नर्सरी से पौधे ऑर्डर करने हैं।'+
- '\nनाम: '+(customer||'नहीं बताया')+
- '\nमोबाइल: '+(phone||'नहीं बताया')+
- '\nपौधा: '+plant+
- '\nमात्रा: '+qty+
- '\nगाँव/पता: '+(address||'नहीं बताया')+
- '\nनर्सरी से सीधी दूरी: '+customerDistance.toFixed(2)+' किमी'+
- '\nग्राहक की लोकेशन: '+maps+
- '\nकृपया उपलब्धता और कुल कीमत की पुष्टि करें।';
+  button.disabled = true;
+  status.textContent = 'ऑर्डर सेव हो रहा है…';
 
- window.location.href='https://wa.me/919887666626?text='+encodeURIComponent(message);
+  try {
+    const {error} = await db.from('order_requests').insert({
+      plant_name: p.name,
+      quantity: quantity,
+      unit_price: Number(p.selling_price),
+      customer_name: customerName,
+      customer_phone: phone || null,
+      delivery_address: address,
+      status: 'pending'
+    });
+    if (error) throw error;
+
+    status.textContent = '✅ ऑर्डर वेबसाइट में सेव हो गया। WhatsApp पर भी संदेश भेजें।';
+
+    const message = 'नमस्ते, मैंने नर्सरी वेबसाइट पर ऑर्डर भेजा है।' +
+      '\nनाम: ' + customerName +
+      '\nमोबाइल: ' + (phone || 'नहीं दिया') +
+      '\nपौधा: ' + p.name +
+      '\nमात्रा: ' + quantity +
+      '\nवेबसाइट की कीमत: ₹' + Number(p.selling_price).toFixed(2) + ' प्रति पौधा' +
+      '\nपता: ' + address +
+      '\nकृपया ऑर्डर और कुल कीमत की पुष्टि करें।';
+
+    const link = document.createElement('a');
+    link.href = 'https://wa.me/919887666626?text=' + encodeURIComponent(message);
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.className = 'btn';
+    link.textContent = 'WhatsApp संदेश खोलें';
+    status.appendChild(document.createElement('br'));
+    status.appendChild(link);
+    document.getElementById('orderForm').reset();
+  } catch (error) {
+    status.textContent = '❌ ऑर्डर सेव नहीं हुआ: ' + error.message;
+  } finally {
+    button.disabled = false;
+  }
+});
+
+document.getElementById('loginForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const status = document.getElementById('ownerStatus');
+  status.textContent = 'लॉगिन जाँचा जा रहा है…';
+
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const {data, error} = await db.auth.signInWithPassword({email, password});
+
+  if (error) {
+    status.textContent = 'लॉगिन नहीं हुआ: ' + error.message;
+    return;
+  }
+
+  if (!data.user || data.user.id !== OWNER_UID || data.user.email !== OWNER_EMAIL) {
+    await db.auth.signOut();
+    status.textContent = 'यह खाता अधिकृत नर्सरी मालिक का नहीं है।';
+    return;
+  }
+
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('logoutButton').style.display = 'inline-block';
+  status.textContent = 'लॉगिन सफल।';
+  await loadOrders();
+});
+
+document.getElementById('logoutButton').addEventListener('click', async () => {
+  await db.auth.signOut();
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('logoutButton').style.display = 'none';
+  document.getElementById('ownerOrders').innerHTML = '';
+  document.getElementById('ownerStatus').textContent = 'आप लॉगआउट हो गए हैं।';
+});
+
+async function loadOrders() {
+  const container = document.getElementById('ownerOrders');
+  container.textContent = 'ऑर्डर लोड हो रहे हैं…';
+
+  const {data, error} = await db.from('order_requests')
+    .select('id,plant_name,quantity,unit_price,customer_name,customer_phone,delivery_address,status,created_at')
+    .order('created_at', {ascending:false});
+
+  if (error) {
+    container.textContent = 'ऑर्डर नहीं पढ़ सके: ' + error.message;
+    return;
+  }
+  if (!data || data.length === 0) {
+    container.textContent = 'अभी कोई ऑर्डर नहीं है।';
+    return;
+  }
+
+  container.innerHTML = '';
+  data.forEach(order => {
+    const div = document.createElement('div');
+    div.className = 'order';
+    const total = Number(order.unit_price) * Number(order.quantity);
+    div.innerHTML = '<strong>ऑर्डर #' + order.id + ' — ' + safe(order.status) +
+      '</strong><p>ग्राहक: ' + safe(order.customer_name) +
+      '<br>मोबाइल: ' + safe(order.customer_phone || 'नहीं दिया') +
+      '<br>पौधा: ' + safe(order.plant_name) +
+      '<br>मात्रा: ' + order.quantity +
+      '<br>दर्ज कीमत से राशि: ₹' + total.toFixed(2) +
+      '<br>पता: ' + safe(order.delivery_address || 'नहीं दिया') +
+      '<br>समय: ' + new Date(order.created_at).toLocaleString('hi-IN') + '</p>';
+
+    if (order.status === 'pending') {
+      const button = document.createElement('button');
+      button.textContent = 'ऑर्डर कन्फर्म करें और स्टॉक घटाएँ';
+      button.addEventListener('click', async () => {
+        if (!confirm('क्या ग्राहक का ऑर्डर पक्का है? पुष्टि से बिक्री दर्ज होगी और स्टॉक घटेगा।')) return;
+        button.disabled = true;
+        button.textContent = 'प्रोसेस हो रहा है…';
+        const {data: result, error: rpcError} = await db.rpc(
+          'confirm_nursery_order', {p_order_id: order.id}
+        );
+        if (rpcError) {
+          document.getElementById('ownerStatus').textContent =
+            'बिक्री कन्फर्म नहीं हुई: ' + rpcError.message;
+          button.disabled = false;
+          button.textContent = 'फिर कोशिश करें';
+          return;
+        }
+        document.getElementById('ownerStatus').textContent =
+          'बिक्री कन्फर्म हुई: ' + JSON.stringify(result);
+        await loadOrders();
+        await loadPlants();
+      });
+      div.appendChild(button);
+    }
+    container.appendChild(div);
+  });
 }
+
+loadPlants();
 </script>
 </body>
 </html>
