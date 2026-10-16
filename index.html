@@ -473,7 +473,7 @@ async function loadOrders() {
   container.textContent = 'ऑर्डर लोड हो रहे हैं…';
 
   const {data, error} = await db.from('order_requests')
-    .select('id,plant_name,quantity,unit_price,customer_name,customer_phone,delivery_address,status,created_at')
+    .select('id,plant_name,quantity,unit_price,customer_name,customer_phone,customer_address,status,created_at')
     .order('created_at', {ascending:false});
 
   if (error) {
