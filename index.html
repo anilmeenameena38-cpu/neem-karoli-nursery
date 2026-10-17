@@ -629,7 +629,7 @@ renderDueRecords();
 loadPlants();
 
 function showAdminTab(tabName) {
-  const allowed = ['dashboard', 'orders', 'stock', 'sales', 'dues'];
+  const allowed = ['dashboard', 'orders', 'stock', 'manageplants', 'sales', 'dues'];
   if (!allowed.includes(tabName)) tabName = 'dashboard';
   document.querySelectorAll('.admin-tab').forEach(button => {
     const active = button.dataset.tab === tabName;
@@ -644,7 +644,7 @@ function showAdminTab(tabName) {
   document.getElementById(paneId).classList.add('active');
 }
 document.querySelectorAll('.admin-tab').forEach(button => {
-  button.addEventListener('click', () => showAdminTab(button.dataset.tab));
+  button.addEventListener('click', () => { const tab = button.dataset.tab; showAdminTab(tab); if (tab === 'manageplants') renderAdminPlantEditor(); if (tab === 'stock') loadOwnerStats(); });
 });
 
 function isNurseryOwner() {
