@@ -638,7 +638,13 @@ if (customerTrackForm) customerTrackForm.addEventListener('submit', async (event
     };
     for (const order of orders) {
       const notes = String(order.notes || '');
-      const pathMatch = notes.match(/PAYMENT_PROOF_PATH:([^|]+)/);
+      // Support proof metadata saved in notes and in optional dedicated fields.
+      const readNoteValue = (key) => {
+        const match = notes.match(new RegExp('(?:^|\\|)\\s*' + key + ':([^|]+)', 'i'));
+        return match && match[1] ? match[1].trim() : '';
+      };
+      const proofPath = String(order.payment_proof_path || order.proof_path || readNoteValue('PAYMENT_PROOF_PATH')).trim();
+      const savedProofUrl = String(order.payment_proof_signed_url || order.payment_proof_url || order.proof_url || readNoteValue('PAYMENT_PROOF_SIGNED_URL')).trim();
       const total = (Number(order.unit_price) * Number(order.quantity)).toFixed(2);
       const card = document.createElement('div');
       card.className = 'status';
@@ -647,23 +653,29 @@ if (customerTrackForm) customerTrackForm.addEventListener('submit', async (event
         '<p><strong>पौधा:</strong> ' + safe(order.plant_name) + '<br><strong>मात्रा:</strong> ' + safe(order.quantity) +
         '<br><strong>कुल राशि:</strong> ₹' + total + '<br><strong>ऑर्डर की तारीख:</strong> ' + safe(order.created_at ? new Date(order.created_at).toLocaleString('hi-IN') : 'उपलब्ध नहीं') + '</p>';
       resultBox.appendChild(card);
-      if (pathMatch && pathMatch[1]) {
+      if (proofPath || savedProofUrl) {
         const proofBox = document.createElement('p');
-        proofBox.textContent = 'भुगतान स्क्रीनशॉट का सुरक्षित लिंक बनाया जा रहा है…';
+        proofBox.textContent = 'भुगतान स्क्रीनशॉट तैयार हो रहा है…';
         card.appendChild(proofBox);
-        const {data: signed, error: signedError} = await db.storage.from('payment-proofs').createSignedUrl(pathMatch[1].trim(), 60 * 60);
-        if (!signedError && signed && signed.signedUrl) {
+        let proofHref = '';
+        if (proofPath) {
+          const {data: signed, error: signedError} = await db.storage.from('payment-proofs').createSignedUrl(proofPath, 60 * 60);
+          if (!signedError && signed && signed.signedUrl) proofHref = signed.signedUrl;
+        }
+        // Fall back to the signed URL saved when the order was submitted.
+        if (!proofHref && savedProofUrl) proofHref = savedProofUrl;
+        if (proofHref) {
           proofBox.textContent = '';
           const proofLink = document.createElement('a');
-          proofLink.href = signed.signedUrl; proofLink.target = '_blank'; proofLink.rel = 'noopener';
+          proofLink.href = proofHref; proofLink.target = '_blank'; proofLink.rel = 'noopener noreferrer';
           proofLink.className = 'btn'; proofLink.textContent = '📸 भुगतान स्क्रीनशॉट देखें';
           proofBox.appendChild(proofLink);
         } else {
-          proofBox.textContent = 'स्क्रीनशॉट अभी नहीं खुला। कृपया नर्सरी से WhatsApp पर संपर्क करें।';
+          proofBox.textContent = 'स्क्रीनशॉट का रिकॉर्ड मिला, लेकिन लिंक नहीं खुला। कृपया नर्सरी से WhatsApp पर संपर्क करें।';
         }
       } else {
         const proofNote = document.createElement('p');
-        proofNote.textContent = 'इस ऑर्डर के साथ स्क्रीनशॉट का रिकॉर्ड उपलब्ध नहीं है।'; card.appendChild(proofNote);
+        proofNote.textContent = 'इस पुराने ऑर्डर में स्क्रीनशॉट का लिंक सेव नहीं मिला। नए ऑर्डर में स्क्रीनशॉट अपलोड होने के बाद यहाँ दिखेगा।'; card.appendChild(proofNote);
       }
       const help = document.createElement('p');
       help.textContent = 'भुगतान की अंतिम पुष्टि नर्सरी BharatPe में जाँचकर करेगी।'; card.appendChild(help);
