@@ -192,41 +192,41 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
 </select>
 <label for="qty">पौधों की संख्या</label>
 <input id="qty" type="number" min="1" step="1" value="1" required>
-<div id="orderTotalPreview" class="status" aria-live="polite">कुल राशि: पौधा और मात्रा चुनें।</div>
-<div id="selectedOrderSummary" class="status" aria-live="polite">चुना हुआ पौधा, मात्रा और कुल राशि यहाँ दिखेगी।</div>
+<div id="orderTotalPreview" class="status" aria-live="polite">कुल राशि दिखेगी।</div>
+<div id="selectedOrderSummary" class="status" aria-live="polite">पौधा, संख्या और कुल राशि।</div>
 <div id="bharatpePaymentBox" class="status" style="text-align:center">
-  <h3>💳 BharatPe से भुगतान</h3>
-  <p>नीचे दिए बटन से अपने UPI ऐप में जाएँ। आपकी कुल राशि अपने-आप भरने का प्रयास होगा। भुगतान एडमिन द्वारा जाँचा जाएगा।</p>
+  <h3>💳 UPI भुगतान</h3>
+  <p>UPI से भुगतान करें। भुगतान की पुष्टि नर्सरी करेगी।</p>
 <p><strong>UPI ID:</strong> BHARATPE2H0E0T6Z3P47445@unitype</p>
-  <p id="upiAmountHint">आपके ऑर्डर की कुल राशि अपने आप भरी जाएगी।</p>
-  <a id="upiPayButton" class="btn" href="#" role="button" style="display:block;margin:12px auto;max-width:340px">💳 UPI ऐप खोलें और भुगतान करें</a>
-  <p style="font-size:13px">यदि फोन पूछे, तो Google Pay, PhonePe, Paytm या अपने दूसरे UPI ऐप को चुनें। भुगतान पूरा करने के बाद इस वेबसाइट पर वापस आएँ।</p>
+  <p id="upiAmountHint">राशि अपने-आप भरने की कोशिश होगी।</p>
+  <a id="upiPayButton" class="btn" href="#" role="button" style="display:block;margin:12px auto;max-width:340px">💳 UPI से भुगतान करें</a>
+  <p style="font-size:13px">भुगतान के बाद इस वेबसाइट पर वापस आएँ।</p>
   <button id="paymentDoneButton" type="button" class="btn" style="display:none;margin:12px auto;max-width:340px;background:#176b35">✅ मैंने भुगतान कर दिया</button>
-  <p id="paymentReturnHint" style="font-size:13px">UPI ऐप खोलने पर 10 सेकंड का टाइमर शुरू होगा। समय पूरा होने पर नीचे जानकारी भरने का फॉर्म खुलेगा।</p>
+  <p id="paymentReturnHint" style="font-size:13px">10 सेकंड बाद आगे बढ़ने का विकल्प खुलेगा।</p>
   <div id="upiCountdown" class="status" role="timer" aria-live="polite" style="display:none;text-align:center;font-size:22px;font-weight:800;color:#176b35">00:10</div>
   <p><strong>कुल देय राशि:</strong> <span id="bharatpeTotalAmount">पौधा और मात्रा चुनें</span></p>
-  <small>यदि UPI ऐप राशि अपने-आप न भरे, तो भुगतान करने से पहले सही कुल राशि जाँचकर दर्ज करें।</small>
+  <small>भुगतान से पहले सही राशि जाँच लें।</small>
 </div>
 <div id="postPaymentForm" style="display:none">
-<div class="status" id="paymentCountdownStatus" role="status" aria-live="polite" style="text-align:center;font-weight:700">UPI ऐप खोलने के बाद 10 सेकंड की प्रतीक्षा शुरू होगी। समय पूरा होने पर नीचे का फॉर्म खुलेगा।</div>
-<label for="customer">आपका नाम</label>
-<input id="customer" type="text" required placeholder="अपना पूरा नाम">
+<div class="status" id="paymentCountdownStatus" role="status" aria-live="polite" style="text-align:center;font-weight:700">10 सेकंड बाद भुगतान की जानकारी भरें।</div>
+<label for="customer">नाम</label>
+<input id="customer" type="text" required placeholder="अपना नाम लिखें">
 <label for="phone">मोबाइल नंबर</label>
-<input id="phone" type="tel" required inputmode="tel" pattern="[0-9+() -]{10,15}" placeholder="10 अंकों का मोबाइल नंबर">
+<input id="phone" type="tel" required inputmode="tel" pattern="[0-9+() -]{10,15}" placeholder="मोबाइल नंबर">
 <label for="village">गाँव / ढाणी</label>
-<input id="village" type="text" required placeholder="अपने गाँव या ढाणी का नाम">
+<input id="village" type="text" required placeholder="गाँव / ढाणी">
 <label for="address">पूरा पता</label>
-<textarea id="address" rows="3" required placeholder="मकान/गली, नजदीकी जगह और डिलीवरी का पूरा पता"></textarea>
+<textarea id="address" rows="3" required placeholder="डिलीवरी का पूरा पता"></textarea>
 <div class="location-row">
-  <button id="locationButton" type="button">📍 मेरी लोकेशन शेयर करें (अनिवार्य)</button>
-  <span id="locationStatus" class="location-status" aria-live="polite">ऑर्डर के लिए GPS लोकेशन अनिवार्य है।</span>
+  <button id="locationButton" type="button">📍 लोकेशन शेयर करें</button>
+  <span id="locationStatus" class="location-status" aria-live="polite">डिलीवरी के लिए लोकेशन दें।</span>
 </div>
-<div id="paymentProofSection" class="status" style="margin-top:14px;display:none"><h3>📸 भुगतान का स्क्रीनशॉट अपलोड करें</h3><p>UPI ऐप में भुगतान पूरा करने के बाद सफल भुगतान का स्क्रीनशॉट चुनें। स्क्रीनशॉट चुनने के बाद नीचे “Submit &amp; Send Order” बटन खुलेगा।</p><label for="paymentProofFile">भुगतान स्क्रीनशॉट (JPG, PNG या WebP; अधिकतम 5 MB)</label><input id="paymentProofFile" type="file" accept="image/jpeg,image/png,image/webp" required><div id="paymentProofPreview" aria-live="polite" style="margin-top:8px"></div></div>
+<div id="paymentProofSection" class="status" style="margin-top:14px;display:none"><h3>📸 भुगतान स्क्रीनशॉट</h3><p>भुगतान का स्क्रीनशॉट चुनें।</p><label for="paymentProofFile">स्क्रीनशॉट (JPG/PNG/WebP, 5 MB तक)</label><input id="paymentProofFile" type="file" accept="image/jpeg,image/png,image/webp" required><div id="paymentProofPreview" aria-live="polite" style="margin-top:8px"></div></div>
 <button id="orderButton" type="submit" style="display:none">Submit &amp; Send Order</button>
 </div>
 </form>
 <div id="orderStatus" class="status" aria-live="polite"></div>
-<p class="note">पहले UPI से भुगतान करें, फिर सफल भुगतान का स्क्रीनशॉट अपलोड करके Submit & Send Order दबाएँ। स्क्रीनशॉट केवल जाँच के लिए है; भुगतान की पुष्टि नर्सरी BharatPe में करेगी।</p>
+<p class="note">UPI भुगतान करें → स्क्रीनशॉट चुनें → ऑर्डर भेजें। भुगतान की पुष्टि नर्सरी करेगी।</p>
 </div>
 </section>
 
@@ -374,7 +374,7 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
     <div class="status"><strong>महत्वपूर्ण:</strong> इस शुरुआती संस्करण में उधार का रिकॉर्ड इसी ब्राउज़र/डिवाइस में सेव होगा, Supabase में नहीं। ब्राउज़र का डेटा साफ करने पर रिकॉर्ड मिट सकता है और दूसरे मोबाइल पर अपने-आप नहीं आएगा।</div>
     <form id="dueForm">
       <label for="dueName">ग्राहक का नाम</label><input id="dueName" required placeholder="ग्राहक का पूरा नाम">
-      <label for="duePhone">मोबाइल नंबर</label><input id="duePhone" type="tel" inputmode="numeric" required placeholder="10 अंकों का मोबाइल नंबर">
+      <label for="duePhone">मोबाइल नंबर</label><input id="duePhone" type="tel" inputmode="numeric" required placeholder="मोबाइल नंबर">
       <label for="dueTotal">कुल पैसे (₹)</label><input id="dueTotal" type="number" min="1" step="0.01" required placeholder="जैसे 1000">
       <label for="duePaid">अभी कितने पैसे मिले (₹)</label><input id="duePaid" type="number" min="0" step="0.01" value="0" required>
       <label for="dueDate">बाकी पैसे देने की तारीख</label><input id="dueDate" type="date" required>
@@ -569,9 +569,9 @@ function closeOrderModal(){
   if (proofPreview) proofPreview.innerHTML = '';
   if (orderButton) orderButton.style.display = 'none';
   const status = document.getElementById('paymentCountdownStatus');
-  if (status) status.textContent = 'UPI ऐप खोलने के बाद 10 सेकंड की प्रतीक्षा शुरू होगी। समय पूरा होने पर नीचे का फॉर्म खुलेगा।';
+  if (status) status.textContent = '10 सेकंड बाद भुगतान की जानकारी भरें।';
   const hint = document.getElementById('paymentReturnHint');
-  if (hint) hint.textContent = 'UPI ऐप खोलने पर 10 सेकंड का टाइमर शुरू होगा। समय पूरा होने पर नीचे जानकारी भरने का फॉर्म खुलेगा।';
+  if (hint) hint.textContent = '10 सेकंड बाद आगे बढ़ने का विकल्प खुलेगा।';
   const form = document.getElementById('orderForm');
   if (form) form.reset();
   updateOrderTotal();
@@ -593,7 +593,7 @@ function updateUpiPaymentLink(){
   if (!p || amount <= 0 || !Number.isFinite(amount)) {
     payButton.href = '#'; payButton.setAttribute('aria-disabled','true');
     hint.textContent = 'पहले पौधा और मात्रा चुनें; कुल राशि अपने आप निकलेगी.';
-    payButton.textContent = '💳 UPI ऐप खोलें और भुगतान करें';
+    payButton.textContent = '💳 UPI से भुगतान करें';
     return;
   }
   const total = amount.toFixed(2);
@@ -698,7 +698,7 @@ document.getElementById('plant').addEventListener('change', () => {
   updateUpiPaymentLink();
   const p = plants.find(item => Number(item.id) === Number(document.getElementById('plant').value));
   const q = Number(document.getElementById('qty').value) || 0;
-  document.getElementById('selectedOrderSummary').innerHTML = p ? '<b>चुना हुआ पौधा:</b> ' + safe(p.name) + '<br><b>मात्रा:</b> ' + q + ' पौधे<br><b>प्रति पौधा कीमत:</b> ₹' + Number(p.selling_price).toFixed(2) + '<br><b>कुल राशि:</b> ₹' + (Number(p.selling_price)*q).toFixed(2) : 'चुना हुआ पौधा, मात्रा और कुल राशि यहाँ दिखेगी।';
+  document.getElementById('selectedOrderSummary').innerHTML = p ? '<b>चुना हुआ पौधा:</b> ' + safe(p.name) + '<br><b>मात्रा:</b> ' + q + ' पौधे<br><b>प्रति पौधा कीमत:</b> ₹' + Number(p.selling_price).toFixed(2) + '<br><b>कुल राशि:</b> ₹' + (Number(p.selling_price)*q).toFixed(2) : 'पौधा, संख्या और कुल राशि।';
 });
 document.getElementById('qty').addEventListener('input', () => {
   updateOrderTotal();
