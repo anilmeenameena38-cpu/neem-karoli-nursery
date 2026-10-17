@@ -202,13 +202,13 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
   <a id="upiPayButton" class="btn" href="#" role="button" style="display:block;margin:12px auto;max-width:340px">💳 UPI ऐप खोलें और भुगतान करें</a>
   <p style="font-size:13px">यदि फोन पूछे, तो Google Pay, PhonePe, Paytm या अपने दूसरे UPI ऐप को चुनें। भुगतान पूरा करने के बाद इस वेबसाइट पर वापस आएँ।</p>
   <button id="paymentDoneButton" type="button" class="btn" style="display:none;margin:12px auto;max-width:340px;background:#176b35">✅ मैंने भुगतान कर दिया</button>
-  <p id="paymentReturnHint" style="font-size:13px">UPI ऐप खोलने पर 3 मिनट का टाइमर शुरू होगा। समय पूरा होने पर नीचे जानकारी भरने का फॉर्म खुलेगा।</p>
-  <div id="upiCountdown" class="status" role="timer" aria-live="polite" style="display:none;text-align:center;font-size:22px;font-weight:800;color:#176b35">03:00</div>
+  <p id="paymentReturnHint" style="font-size:13px">UPI ऐप खोलने पर 10 सेकंड का टाइमर शुरू होगा। समय पूरा होने पर नीचे जानकारी भरने का फॉर्म खुलेगा।</p>
+  <div id="upiCountdown" class="status" role="timer" aria-live="polite" style="display:none;text-align:center;font-size:22px;font-weight:800;color:#176b35">00:10</div>
   <p><strong>कुल देय राशि:</strong> <span id="bharatpeTotalAmount">पौधा और मात्रा चुनें</span></p>
   <small>यदि UPI ऐप राशि अपने-आप न भरे, तो भुगतान करने से पहले सही कुल राशि जाँचकर दर्ज करें।</small>
 </div>
 <div id="postPaymentForm" style="display:none">
-<div class="status" id="paymentCountdownStatus" role="status" aria-live="polite" style="text-align:center;font-weight:700">UPI ऐप खोलने के बाद 3:00 मिनट की प्रतीक्षा शुरू होगी। समय पूरा होने पर नीचे का फॉर्म खुलेगा।</div>
+<div class="status" id="paymentCountdownStatus" role="status" aria-live="polite" style="text-align:center;font-weight:700">UPI ऐप खोलने के बाद 10 सेकंड की प्रतीक्षा शुरू होगी। समय पूरा होने पर नीचे का फॉर्म खुलेगा।</div>
 <label for="customer">आपका नाम</label>
 <input id="customer" type="text" required placeholder="अपना पूरा नाम">
 <label for="phone">मोबाइल नंबर</label>
@@ -574,7 +574,7 @@ function updateUpiPaymentLink(){
   payButton.textContent = '💳 ₹' + total + ' का भुगतान करें';
   hint.textContent = 'आपको अभी कुल ₹' + total + ' भुगतान करना है। UPI ऐप में राशि जाँचकर भुगतान पूरा करें।';
 }
-const UPI_WAIT_MS = 3 * 60 * 1000;
+const UPI_WAIT_MS = 10 * 1000;
 let upiCountdownInterval = null;
 function revealPostPaymentForm(){
   const gate = document.getElementById('postPaymentForm');
@@ -584,7 +584,7 @@ function revealPostPaymentForm(){
   if (done) done.style.display = 'block';
   if (countdown) { countdown.style.display = 'none'; countdown.textContent = '00:00'; }
   const status = document.getElementById('paymentCountdownStatus');
-  if (status) status.textContent = '3 मिनट पूरे हुए। यदि भुगतान सफल हुआ है, तो “मैंने भुगतान कर दिया” दबाकर अपनी जानकारी और स्क्रीनशॉट भरें।';
+  if (status) status.textContent = '10 सेकंड पूरे हुए। यदि भुगतान सफल हुआ है, तो “मैंने भुगतान कर दिया” दबाकर अपनी जानकारी और स्क्रीनशॉट भरें।';
   const hint = document.getElementById('paymentReturnHint');
   if (hint) hint.textContent = 'समय पूरा हुआ। भुगतान सफल होने पर “मैंने भुगतान कर दिया” दबाएँ; भुगतान की पुष्टि नर्सरी करेगी।';
   if (upiCountdownInterval) { clearInterval(upiCountdownInterval); upiCountdownInterval = null; }
