@@ -44,6 +44,12 @@ main{max-width:1120px;margin:0 auto;padding:clamp(16px,3vw,30px) 16px}
 #plants>p:first-of-type{color:var(--muted)}
 #plants{background:linear-gradient(145deg,#fff,#fbfef9)}
 #order{border-top:5px solid #25884b}
+#order:not([hidden]){position:fixed;inset:0;z-index:9999;margin:0!important;border:0;border-radius:0;background:rgba(8,25,13,.68);padding:18px;display:flex;align-items:center;justify-content:center;overflow:auto;box-shadow:none}
+#order .order-modal-card{position:relative;width:min(100%,620px);max-height:calc(100dvh - 36px);overflow:auto;background:#fff;border-radius:22px;padding:clamp(18px,3vw,28px);box-shadow:0 22px 70px #0005;border-top:5px solid #25884b}
+#order .order-modal-close{position:sticky;top:0;float:right;width:auto;margin:-6px -5px 6px 10px;padding:8px 12px;background:#edf5e9;color:#174b2b;box-shadow:none}
+#order #plant{display:none}#order label[for="plant"]{display:none}
+body.order-modal-open{overflow:hidden}
+@media(max-width:600px){#order:not([hidden]){padding:10px;align-items:center}#order .order-modal-card{max-height:calc(100dvh - 20px);padding:16px;border-radius:17px}}
 .plants{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:18px;margin-top:18px}
 .plant{min-width:0;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;text-align:center;box-shadow:0 5px 18px #174b2b0b;transition:transform .2s,box-shadow .2s}
 .plant:hover{transform:translateY(-4px);box-shadow:0 14px 28px #174b2b18}
@@ -149,8 +155,10 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
 <div id="plantStatus" class="status" aria-live="polite"></div>
 </section>
 
-<section class="card" id="order" hidden>
-<h2>🛒 पौधों का ऑर्डर करें</h2>
+<section class="card" id="order" hidden aria-modal="true" role="dialog" aria-labelledby="orderModalTitle">
+<div class="order-modal-card">
+<button class="order-modal-close" id="closeOrderModal" type="button" aria-label="ऑर्डर फॉर्म बंद करें">✕ बंद करें</button>
+<h2 id="orderModalTitle">🛒 आपका पौधा ऑर्डर करें</h2>
 <form id="orderForm">
 <label for="plant">पौधा चुनें</label>
 <select id="plant" required>
@@ -176,6 +184,7 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
 </form>
 <div id="orderStatus" class="status" aria-live="polite"></div>
 <p class="note">ऑर्डर भेजना बिक्री की पुष्टि नहीं है। मालिक पुष्टि करने के बाद ही स्टॉक घटेगा।</p>
+</div>
 </section>
 
 <section class="card" id="contact">
@@ -461,10 +470,10 @@ async function loadPlants() {
       updateOrderTotal();
       const orderSection = document.getElementById('order');
       orderSection.hidden = false;
-      document.getElementById('selectedOrderSummary').innerHTML = '<b>चुना हुआ पौधा:</b> ' + safe(p.name) + '<br><b>मात्रा:</b> ' + q + ' पौधे<br><b>प्रति पौधा कीमत:</b> ₹' + unitPrice.toFixed(2) + '<br><b>कुल राशि:</b> ₹' + (unitPrice * q).toFixed(2);
-      document.getElementById('orderStatus').textContent = 'कृपया नाम, मोबाइल नंबर, गाँव, पूरा पता भरें और लोकेशन शेयर करें।';
-      orderSection.scrollIntoView({behavior:'smooth', block:'start'});
-      setTimeout(() => document.getElementById('customer').focus({preventScroll:true}), 450);
+      document.body.classList.add('order-modal-open');
+      document.getElementById('orderStatus').textContent = 'कृपया नाम, मोबाइल नंबर, गाँव, पूरा पता भरें और चाहें तो लोकेशन शेयर करें।';
+      document.getElementById('selectedOrderSummary').innerHTML = '<b>आपका चुना हुआ पौधा:</b> ' + safe(p.name) + '<br><b>मात्रा:</b> ' + q + ' पौधे<br><b>प्रति पौधा कीमत:</b> ₹' + unitPrice.toFixed(2) + '<br><b>कुल राशि:</b> ₹' + (unitPrice * q).toFixed(2);
+      setTimeout(() => document.getElementById('customer').focus({preventScroll:true}), 150);
     });
     list.appendChild(card);
 
@@ -489,10 +498,13 @@ function updateOrderTotal() {
 }
 document.getElementById('orderNavLink').addEventListener('click', event => {
   event.preventDefault();
-  const orderSection = document.getElementById('order');
-  orderSection.hidden = false;
-  orderSection.scrollIntoView({behavior:'smooth', block:'start'});
+  document.getElementById('plants').scrollIntoView({behavior:'smooth', block:'start'});
+  document.getElementById('plantStatus').textContent = 'पहले पौधा और मात्रा चुनें, फिर Buy Now दबाएँ।';
 });
+function closeOrderModal(){document.getElementById('order').hidden=true;document.body.classList.remove('order-modal-open');}
+document.getElementById('closeOrderModal').addEventListener('click',closeOrderModal);
+document.getElementById('order').addEventListener('click',event=>{if(event.target===document.getElementById('order'))closeOrderModal();});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!document.getElementById('order').hidden)closeOrderModal();});
 
 document.getElementById('plant').addEventListener('change', () => {
   updateOrderTotal();
@@ -590,6 +602,7 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
     status.appendChild(link);
     document.getElementById('orderForm').reset();
     document.getElementById('order').hidden = true;
+    document.body.classList.remove('order-modal-open');
     customerLocation = null;
     document.getElementById('locationStatus').textContent = 'लोकेशन देना वैकल्पिक है।';
     document.getElementById('selectedOrderSummary').textContent = 'चुना हुआ पौधा, मात्रा और कुल राशि यहाँ दिखेगी।';
