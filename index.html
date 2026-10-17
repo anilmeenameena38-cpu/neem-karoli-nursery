@@ -131,7 +131,7 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
 </header>
 <nav>
 <a href="#plants">पौधे</a>
-<a href="#order">ऑर्डर</a>
+<a href="#order" id="orderNavLink">ऑर्डर</a>
 <a href="#contact">संपर्क</a>
 <button id="adminPanelNav" type="button" aria-label="Open Admin Login">Admin Login</button>
 </nav>
@@ -149,7 +149,7 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
 <div id="plantStatus" class="status" aria-live="polite"></div>
 </section>
 
-<section class="card" id="order">
+<section class="card" id="order" hidden>
 <h2>🛒 पौधों का ऑर्डर करें</h2>
 <form id="orderForm">
 <label for="plant">पौधा चुनें</label>
@@ -159,12 +159,15 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
 <label for="qty">पौधों की संख्या</label>
 <input id="qty" type="number" min="1" step="1" value="1" required>
 <div id="orderTotalPreview" class="status" aria-live="polite">कुल राशि: पौधा और मात्रा चुनें।</div>
+<div id="selectedOrderSummary" class="status" aria-live="polite">चुना हुआ पौधा, मात्रा और कुल राशि यहाँ दिखेगी।</div>
 <label for="customer">आपका नाम</label>
-<input id="customer" type="text" required placeholder="पूरा नाम">
+<input id="customer" type="text" required placeholder="अपना पूरा नाम">
 <label for="phone">मोबाइल नंबर</label>
-<input id="phone" type="tel" placeholder="मोबाइल नंबर">
-<label for="address">गाँव और पूरा पता</label>
-<textarea id="address" rows="3" required placeholder="गाँव, ढाणी, नजदीकी जगह"></textarea>
+<input id="phone" type="tel" required inputmode="tel" pattern="[0-9+() -]{10,15}" placeholder="10 अंकों का मोबाइल नंबर">
+<label for="village">गाँव / ढाणी</label>
+<input id="village" type="text" required placeholder="अपने गाँव या ढाणी का नाम">
+<label for="address">पूरा पता</label>
+<textarea id="address" rows="3" required placeholder="मकान/गली, नजदीकी जगह और डिलीवरी का पूरा पता"></textarea>
 <div class="location-row">
   <button id="locationButton" type="button">📍 मेरी लोकेशन शेयर करें</button>
   <span id="locationStatus" class="location-status" aria-live="polite">लोकेशन देना वैकल्पिक है।</span>
@@ -456,8 +459,11 @@ async function loadPlants() {
       select.value = String(p.id);
       document.getElementById('qty').value = String(q);
       updateOrderTotal();
-      document.getElementById('orderStatus').textContent = 'आपने ' + p.name + ' के ' + q + ' पौधे चुने हैं। कृपया अपना नाम, मोबाइल और पता भरकर ऑर्डर भेजें।';
-      document.getElementById('order').scrollIntoView({behavior:'smooth', block:'start'});
+      const orderSection = document.getElementById('order');
+      orderSection.hidden = false;
+      document.getElementById('selectedOrderSummary').innerHTML = '<b>चुना हुआ पौधा:</b> ' + safe(p.name) + '<br><b>मात्रा:</b> ' + q + ' पौधे<br><b>प्रति पौधा कीमत:</b> ₹' + unitPrice.toFixed(2) + '<br><b>कुल राशि:</b> ₹' + (unitPrice * q).toFixed(2);
+      document.getElementById('orderStatus').textContent = 'कृपया नाम, मोबाइल नंबर, गाँव, पूरा पता भरें और लोकेशन शेयर करें।';
+      orderSection.scrollIntoView({behavior:'smooth', block:'start'});
       setTimeout(() => document.getElementById('customer').focus({preventScroll:true}), 450);
     });
     list.appendChild(card);
@@ -481,8 +487,25 @@ function updateOrderTotal() {
   }
   box.textContent = 'कुल राशि: ₹' + (Number(p.selling_price) * qty).toFixed(2) + ' (' + qty + ' × ₹' + Number(p.selling_price).toFixed(2) + ') — अंतिम पुष्टि नर्सरी मालिक करेंगे।';
 }
-document.getElementById('plant').addEventListener('change', updateOrderTotal);
-document.getElementById('qty').addEventListener('input', updateOrderTotal);
+document.getElementById('orderNavLink').addEventListener('click', event => {
+  event.preventDefault();
+  const orderSection = document.getElementById('order');
+  orderSection.hidden = false;
+  orderSection.scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+document.getElementById('plant').addEventListener('change', () => {
+  updateOrderTotal();
+  const p = plants.find(item => Number(item.id) === Number(document.getElementById('plant').value));
+  const q = Number(document.getElementById('qty').value) || 0;
+  document.getElementById('selectedOrderSummary').innerHTML = p ? '<b>चुना हुआ पौधा:</b> ' + safe(p.name) + '<br><b>मात्रा:</b> ' + q + ' पौधे<br><b>प्रति पौधा कीमत:</b> ₹' + Number(p.selling_price).toFixed(2) + '<br><b>कुल राशि:</b> ₹' + (Number(p.selling_price)*q).toFixed(2) : 'चुना हुआ पौधा, मात्रा और कुल राशि यहाँ दिखेगी।';
+});
+document.getElementById('qty').addEventListener('input', () => {
+  updateOrderTotal();
+  const p = plants.find(item => Number(item.id) === Number(document.getElementById('plant').value));
+  const q = Number(document.getElementById('qty').value) || 0;
+  document.getElementById('selectedOrderSummary').innerHTML = p ? '<b>चुना हुआ पौधा:</b> ' + safe(p.name) + '<br><b>मात्रा:</b> ' + q + ' पौधे<br><b>प्रति पौधा कीमत:</b> ₹' + Number(p.selling_price).toFixed(2) + '<br><b>कुल राशि:</b> ₹' + (Number(p.selling_price)*q).toFixed(2) : 'चुना हुआ पौधा, मात्रा और कुल राशि यहाँ दिखेगी。';
+});
 
 document.getElementById('orderForm').addEventListener('submit', async event => {
   event.preventDefault();
@@ -493,7 +516,9 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
   const quantity = Number(document.getElementById('qty').value);
   const customerName = document.getElementById('customer').value.trim();
   const phone = document.getElementById('phone').value.trim();
+  const village = document.getElementById('village').value.trim();
   const address = document.getElementById('address').value.trim();
+  const fullAddress = village + ', ' + address;
 
   if (!p) {
     status.textContent = 'कृपया सूची में से उपलब्ध पौधा चुनें।';
@@ -507,8 +532,8 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
     status.textContent = 'इतना स्टॉक अभी उपलब्ध नहीं है।';
     return;
   }
-  if (!customerName || !address) {
-    status.textContent = 'नाम और पूरा पता भरें।';
+  if (!customerName || !phone || !village || !address) {
+    status.textContent = 'नाम, मोबाइल नंबर, गाँव और पूरा पता भरें।';
     return;
   }
 
@@ -535,8 +560,8 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
       unit_price: Number(p.selling_price),
       customer_name: customerName,
       customer_phone: phone || null,
-      customer_address: address,
-      notes: customerLocation ? 'MAPS_URL:' + customerLocation.mapsUrl : null,
+      customer_address: fullAddress,
+      notes: [(customerLocation ? 'MAPS_URL:' + customerLocation.mapsUrl : ''), 'TOTAL_QTY:' + quantity, 'UNIT_PRICE:' + Number(p.selling_price).toFixed(2), 'TOTAL_AMOUNT:' + (Number(p.selling_price) * quantity).toFixed(2)].filter(Boolean).join(' | '),
       status: 'pending'
     });
     if (error) throw error;
@@ -549,7 +574,9 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
       '\nपौधा: ' + p.name +
       '\nमात्रा: ' + quantity +
       '\nवेबसाइट की कीमत: ₹' + Number(p.selling_price).toFixed(2) + ' प्रति पौधा' +
-      '\nपता: ' + address +
+      '\nकुल मात्रा: ' + quantity +
+      '\nकुल अनुमानित राशि: ₹' + (Number(p.selling_price) * quantity).toFixed(2) +
+      '\nगाँव/ढाणी और पूरा पता: ' + fullAddress +
       (customerLocation ? '\nलोकेशन: ' + customerLocation.mapsUrl : '') +
       '\nकृपया ऑर्डर और कुल कीमत की पुष्टि करें।';
 
@@ -562,8 +589,10 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
     status.appendChild(document.createElement('br'));
     status.appendChild(link);
     document.getElementById('orderForm').reset();
+    document.getElementById('order').hidden = true;
     customerLocation = null;
     document.getElementById('locationStatus').textContent = 'लोकेशन देना वैकल्पिक है।';
+    document.getElementById('selectedOrderSummary').textContent = 'चुना हुआ पौधा, मात्रा और कुल राशि यहाँ दिखेगी।';
   } catch (error) {
     status.textContent = '❌ ऑर्डर सेव नहीं हुआ: ' + error.message;
   } finally {
