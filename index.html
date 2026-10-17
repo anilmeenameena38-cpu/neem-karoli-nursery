@@ -236,13 +236,11 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
 
 <section class="card" id="trackOrder">
 <h2>🔎 अपना ऑर्डर ट्रैक करें</h2>
-<p>अपना ऑर्डर नंबर और वही मोबाइल नंबर डालें जो ऑर्डर करते समय दिया था।</p>
+<p>ऑर्डर करते समय दिया हुआ मोबाइल नंबर डालें। आपके उस नंबर से जुड़े सभी ऑर्डर दिखेंगे।</p>
 <form id="customerTrackForm">
-  <label for="trackOrderId">ऑर्डर नंबर</label>
-  <input id="trackOrderId" type="number" min="1" step="1" required placeholder="जैसे 125">
-  <label for="trackPhone">ऑर्डर वाला मोबाइल नंबर</label>
-  <input id="trackPhone" type="tel" inputmode="numeric" autocomplete="tel" required pattern="[0-9+() -]{10,15}" placeholder="10 अंकों का मोबाइल नंबर">
-  <button type="submit" id="trackOrderButton">🔍 ऑर्डर की स्थिति देखें</button>
+  <label for="trackPhone">मोबाइल नंबर</label>
+  <input id="trackPhone" type="tel" inputmode="numeric" autocomplete="tel" required pattern="[0-9+() -]{10,15}" placeholder="ऑर्डर वाला 10 अंकों का मोबाइल नंबर">
+  <button type="submit" id="trackOrderButton">🔍 मेरे ऑर्डर देखें</button>
 </form>
 <div id="customerTrackStatus" class="status" aria-live="polite" style="display:none"></div>
 <div id="customerTrackResult"></div>
@@ -602,31 +600,27 @@ function closeOrderModal(){
   if (form) form.reset();
   updateOrderTotal();
   
-// Customer order tracking: requires order number + the same mobile number.
+// Customer order tracking: phone number only. RPC returns all orders matching the phone.
 const customerTrackForm = document.getElementById('customerTrackForm');
 if (customerTrackForm) customerTrackForm.addEventListener('submit', async (event) => {
   event.preventDefault();
-  const orderId = Number(document.getElementById('trackOrderId').value);
   const phone = document.getElementById('trackPhone').value.trim();
   const statusBox = document.getElementById('customerTrackStatus');
   const resultBox = document.getElementById('customerTrackResult');
   const button = document.getElementById('trackOrderButton');
   resultBox.innerHTML = '';
   statusBox.style.display = 'block';
-  if (!Number.isInteger(orderId) || orderId < 1 || phone.replace(/\D/g,'').length < 10) {
-    statusBox.textContent = 'कृपया सही ऑर्डर नंबर और 10 अंकों का मोबाइल नंबर भरें।'; return;
+  if (phone.replace(/\D/g,'').length < 10) {
+    statusBox.textContent = 'कृपया ऑर्डर करते समय दिया हुआ सही 10 अंकों का मोबाइल नंबर भरें।'; return;
   }
   button.disabled = true;
-  statusBox.textContent = 'ऑर्डर खोजा जा रहा है…';
+  statusBox.textContent = 'आपके ऑर्डर खोजे जा रहे हैं…';
   try {
-    const {data, error} = await db.rpc('get_customer_order_status', {
-      p_order_id: orderId,
-      p_phone: phone
-    });
+    const {data, error} = await db.rpc('get_customer_orders_by_phone', { p_phone: phone });
     if (error) throw error;
-    const order = Array.isArray(data) ? data[0] : data;
-    if (!order || !order.id) {
-      statusBox.textContent = 'इस ऑर्डर नंबर और मोबाइल नंबर का मेल नहीं मिला। दोनों की जाँच करें।';
+    const orders = Array.isArray(data) ? data : (data ? [data] : []);
+    if (!orders.length) {
+      statusBox.textContent = 'इस मोबाइल नंबर से कोई ऑर्डर नहीं मिला। वही नंबर डालें जो ऑर्डर करते समय दिया था।';
       return;
     }
     const statusLabels = {
@@ -637,39 +631,41 @@ if (customerTrackForm) customerTrackForm.addEventListener('submit', async (event
       rejected: '❌ ऑर्डर स्वीकार नहीं हुआ',
       payment_failed: '❌ भुगतान की पुष्टि नहीं हुई'
     };
-    const notes = String(order.notes || '');
-    const pathMatch = notes.match(/PAYMENT_PROOF_PATH:([^|]+)/);
-    const total = (Number(order.unit_price) * Number(order.quantity)).toFixed(2);
-    const card = document.createElement('div');
-    card.className = 'status';
-    card.innerHTML = '<h3>ऑर्डर #' + safe(order.id) + '</h3>' +
-      '<p><strong>स्थिति:</strong> ' + safe(statusLabels[String(order.status || '').toLowerCase()] || order.status || 'स्थिति उपलब्ध नहीं') + '</p>' +
-      '<p><strong>पौधा:</strong> ' + safe(order.plant_name) + '<br><strong>मात्रा:</strong> ' + safe(order.quantity) +
-      '<br><strong>कुल राशि:</strong> ₹' + total + '<br><strong>ऑर्डर की तारीख:</strong> ' + safe(order.created_at ? new Date(order.created_at).toLocaleString('hi-IN') : 'उपलब्ध नहीं') + '</p>';
-    resultBox.appendChild(card);
-    if (pathMatch && pathMatch[1]) {
-      const proofBox = document.createElement('p');
-      proofBox.textContent = 'भुगतान स्क्रीनशॉट का सुरक्षित लिंक बनाया जा रहा है…';
-      card.appendChild(proofBox);
-      const {data: signed, error: signedError} = await db.storage.from('payment-proofs').createSignedUrl(pathMatch[1].trim(), 60 * 60);
-      if (!signedError && signed && signed.signedUrl) {
-        proofBox.textContent = '';
-        const proofLink = document.createElement('a');
-        proofLink.href = signed.signedUrl; proofLink.target = '_blank'; proofLink.rel = 'noopener';
-        proofLink.className = 'btn'; proofLink.textContent = '📸 भुगतान स्क्रीनशॉट देखें';
-        proofBox.appendChild(proofLink);
+    for (const order of orders) {
+      const notes = String(order.notes || '');
+      const pathMatch = notes.match(/PAYMENT_PROOF_PATH:([^|]+)/);
+      const total = (Number(order.unit_price) * Number(order.quantity)).toFixed(2);
+      const card = document.createElement('div');
+      card.className = 'status';
+      card.innerHTML = '<h3>ऑर्डर #' + safe(order.id) + '</h3>' +
+        '<p><strong>स्थिति:</strong> ' + safe(statusLabels[String(order.status || '').toLowerCase()] || order.status || 'स्थिति उपलब्ध नहीं') + '</p>' +
+        '<p><strong>पौधा:</strong> ' + safe(order.plant_name) + '<br><strong>मात्रा:</strong> ' + safe(order.quantity) +
+        '<br><strong>कुल राशि:</strong> ₹' + total + '<br><strong>ऑर्डर की तारीख:</strong> ' + safe(order.created_at ? new Date(order.created_at).toLocaleString('hi-IN') : 'उपलब्ध नहीं') + '</p>';
+      resultBox.appendChild(card);
+      if (pathMatch && pathMatch[1]) {
+        const proofBox = document.createElement('p');
+        proofBox.textContent = 'भुगतान स्क्रीनशॉट का सुरक्षित लिंक बनाया जा रहा है…';
+        card.appendChild(proofBox);
+        const {data: signed, error: signedError} = await db.storage.from('payment-proofs').createSignedUrl(pathMatch[1].trim(), 60 * 60);
+        if (!signedError && signed && signed.signedUrl) {
+          proofBox.textContent = '';
+          const proofLink = document.createElement('a');
+          proofLink.href = signed.signedUrl; proofLink.target = '_blank'; proofLink.rel = 'noopener';
+          proofLink.className = 'btn'; proofLink.textContent = '📸 भुगतान स्क्रीनशॉट देखें';
+          proofBox.appendChild(proofLink);
+        } else {
+          proofBox.textContent = 'स्क्रीनशॉट अभी नहीं खुला। कृपया नर्सरी से WhatsApp पर संपर्क करें।';
+        }
       } else {
-        proofBox.textContent = 'स्क्रीनशॉट अभी नहीं खुला। कृपया नर्सरी से WhatsApp पर संपर्क करें।';
+        const proofNote = document.createElement('p');
+        proofNote.textContent = 'इस ऑर्डर के साथ स्क्रीनशॉट का रिकॉर्ड उपलब्ध नहीं है।'; card.appendChild(proofNote);
       }
-    } else {
-      const proofNote = document.createElement('p');
-      proofNote.textContent = 'इस ऑर्डर के साथ स्क्रीनशॉट का रिकॉर्ड उपलब्ध नहीं है।'; card.appendChild(proofNote);
+      const help = document.createElement('p');
+      help.textContent = 'भुगतान की अंतिम पुष्टि नर्सरी BharatPe में जाँचकर करेगी।'; card.appendChild(help);
     }
-    const help = document.createElement('p');
-    help.textContent = 'भुगतान की अंतिम पुष्टि नर्सरी BharatPe में जाँचकर करेगी।'; card.appendChild(help);
-    statusBox.textContent = 'ऑर्डर मिल गया। नीचे अपनी स्थिति देखें।';
+    statusBox.textContent = 'आपके ' + orders.length + ' ऑर्डर मिल गए। नीचे उनकी स्थिति देखें।';
   } catch (error) {
-    statusBox.textContent = 'ऑर्डर ट्रैक नहीं हो पाया: ' + (error.message || error) + '। Supabase में tracking SQL चलाना जरूरी है।';
+    statusBox.textContent = 'ऑर्डर ट्रैक नहीं हो पाए: ' + (error.message || error) + '। Supabase में phone tracking SQL चलाना जरूरी है।';
   } finally { button.disabled = false; }
 });
 
