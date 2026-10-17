@@ -127,6 +127,35 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
 .site-control-toggle{display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #e7f0e3}.site-control-toggle input{width:auto;margin:0}
 @media(max-width:650px){.site-control-subnav{grid-template-columns:repeat(2,minmax(0,1fr))}.site-control-field{padding:11px}}
 
+
+/* अतिरिक्त responsive सुरक्षा: मौजूदा लॉजिक/IDs को बदले बिना */
+@media (max-width: 760px) {
+  body { overflow-wrap: anywhere; }
+  nav { position: sticky; }
+  .admin-plant-edit-row { grid-template-columns: minmax(0,1fr); }
+  .admin-plant-edit-row > div, .admin-plant-edit-row .wide { grid-column: 1 / -1; min-width: 0; }
+  .admin-plant-edit-row input[type="file"] { font-size: 14px; padding: 9px; }
+  .admin-plant-edit-row img { max-width: 100%; height: auto; max-height: 180px; object-fit: contain; }
+  .admin-tabs { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .admin-tab { min-width: 0; }
+  .metric-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .admin-section-card, .admin-card, .card { min-width: 0; }
+  table { display: block; max-width: 100%; overflow-x: auto; }
+  input, select, textarea, button, .btn { max-width: 100%; }
+  #order .order-modal-card { width: 100%; max-height: calc(100dvh - 20px); overflow-y: auto; }
+}
+@media (max-width: 420px) {
+  header h1 { font-size: 24px; }
+  nav a { flex: 1 1 45%; }
+  main { padding-left: 8px; padding-right: 8px; }
+  .card { padding: 14px; }
+  .plants { grid-template-columns: minmax(0,1fr); }
+  .metric-grid { grid-template-columns: minmax(0,1fr); }
+  .customer-search-row { grid-template-columns: minmax(0,1fr); }
+  .customer-search-row input, .customer-search-row button { grid-column: 1 / -1; }
+  .admin-tabs { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+
 </style>
 </head>
 <body>
@@ -910,7 +939,10 @@ async function renderAdminPlantEditor() {
       '<div class="wide"><label>नई फोटो चुनें</label><input class="edit-image" type="file" accept="image/*"><label>या फोटो URL</label><input class="edit-url" type="url" placeholder="https://…" value="'+safe(p.image_url||'')+'"></div>' +
       '<button class="wide save-plant-edit" type="button">💾 कीमत / स्टॉक / फोटो सेव करें</button><div class="wide edit-status" aria-live="polite"></div>';
     const fileInput = row.querySelector('.edit-image');
-    fileInput.addEventListener('change',()=>{const f=fileInput.files&&fileInput.files[0]; if(!f)return; const reader=new FileReader();reader.onload=()=>{let preview=row.querySelector('img');if(!preview){preview=document.createElement('img');row.querySelector('div').appendChild(preview);}preview.src=reader.result;};reader.readAsDataURL(f);});
+    const urlInput = row.querySelector('.edit-url');
+    const ensurePhotoPreview = () => { let preview=row.querySelector('img'); if(!preview){preview=document.createElement('img');preview.alt=safe(p.name)+' की फोटो';row.querySelector('div').appendChild(preview);} return preview; };
+    fileInput.addEventListener('change',()=>{const f=fileInput.files&&fileInput.files[0]; if(!f)return; const reader=new FileReader();reader.onload=()=>{ensurePhotoPreview().src=reader.result;};reader.readAsDataURL(f);});
+    urlInput.addEventListener('input',()=>{const url=urlInput.value.trim(); if(/^https?:\/\//i.test(url)){const preview=ensurePhotoPreview();preview.src=url;} });
     row.querySelector('.save-plant-edit').addEventListener('click',async()=>{
       const btn=row.querySelector('.save-plant-edit'), status=row.querySelector('.edit-status');
       const price=Number(row.querySelector('.edit-price').value), stock=Number(row.querySelector('.edit-stock').value), file=fileInput.files&&fileInput.files[0], typedUrl=row.querySelector('.edit-url').value.trim();
