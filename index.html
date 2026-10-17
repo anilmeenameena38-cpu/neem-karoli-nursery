@@ -555,9 +555,23 @@ function updateUpiPaymentLink(){
   hint.textContent = 'आपको अभी कुल ₹' + total + ' भुगतान करना है। UPI ऐप में राशि जाँचकर भुगतान पूरा करें।';
 }
 document.getElementById('upiPayButton').addEventListener('click', function(e){
-  if (this.getAttribute('aria-disabled') === 'true' || this.href.endsWith('#')) {
-    e.preventDefault(); document.getElementById('orderStatus').textContent='पहले पौधा और मात्रा चुनें।';
+  // Recalculate at the moment of tapping so the currently selected quantity is used.
+  updateUpiPaymentLink();
+  if (this.getAttribute('aria-disabled') === 'true' || this.getAttribute('href') === '#') {
+    e.preventDefault();
+    document.getElementById('orderStatus').textContent='पहले पौधा और सही मात्रा चुनें।';
+    return;
   }
+  // Standard UPI deep link opens the phone's default UPI app, or the app chooser,
+  // with payee, exact order amount, currency, and note pre-filled where supported.
+  const paymentUri = this.getAttribute('href');
+  if (!paymentUri || !paymentUri.startsWith('upi://pay?')) {
+    e.preventDefault();
+    document.getElementById('orderStatus').textContent='UPI भुगतान लिंक तैयार नहीं हुआ। कृपया पौधा और मात्रा दोबारा चुनें।';
+    return;
+  }
+  e.preventDefault();
+  window.location.href = paymentUri;
 });
 document.getElementById('paymentDoneButton').addEventListener('click', function(){
   const plantId = Number(document.getElementById('plant').value);
