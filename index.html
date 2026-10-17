@@ -90,7 +90,7 @@ footer p{margin:5px}
 .admin-muted{font-size:13px;font-weight:400}
 .metric{padding:12px;border-radius:13px}
 .metric .metric-value{font-weight:600;font-size:clamp(20px,2.7vw,26px)}
-.admin-plant-edit-row{border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0;display:grid;grid-template-columns:minmax(0,1fr) minmax(120px,1fr);gap:8px;align-items:center}.admin-plant-edit-row input,.admin-plant-edit-row textarea{width:100%;min-width:0}.admin-plant-edit-row .wide{grid-column:1/-1}.admin-plant-edit-row img{width:90px;height:90px;object-fit:cover;border-radius:10px}.stock-name,.stock-count,.sale-amount{font-weight:500}
+.plant-manage-buttons{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px}.plant-manage-button{min-height:58px;background:#f2f8ef!important;color:var(--green)!important;border:1px solid var(--line)!important;box-shadow:none!important}.plant-manage-button.active{background:linear-gradient(135deg,#176b37,#104b29)!important;color:#fff!important}.manage-view{display:none}.manage-view.active{display:block}.stock-subcounts{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px}.stock-subcounts span{font-size:12px;border-radius:8px;padding:4px 8px;background:#f2f8ef;color:#34563a}.stock-subcounts .sold{background:#fff2e8;color:#9a3412}.admin-plant-edit-row{border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0;display:grid;grid-template-columns:minmax(0,1fr) minmax(120px,1fr);gap:8px;align-items:center}.admin-plant-edit-row input,.admin-plant-edit-row textarea{width:100%;min-width:0}.admin-plant-edit-row .wide{grid-column:1/-1}.admin-plant-edit-row img{width:90px;height:90px;object-fit:cover;border-radius:10px}.stock-name,.stock-count,.sale-amount{font-weight:500}
 .stock-count{padding:4px 8px}
 #owner .status{font-size:13px;padding:10px 12px}
 #owner label{font-size:14px;font-weight:500}
@@ -190,6 +190,16 @@ footer p{margin:5px}
 <div id="adminStockPane" class="admin-pane"><div class="admin-section-card"><h2>🌱 उपलब्ध पौधों का स्टॉक</h2><p class="admin-muted">यहाँ से पौधों को “अभी उपलब्ध नहीं / Sold Out” करें। वे ग्राहक की सूची और ऑर्डर विकल्प से हट जाएँगे; बाद में फिर उपलब्ध भी कर सकते हैं।</p><div id="ownerStockList">स्टॉक लोड हो रहा है…</div></div></div>
 <div id="adminManageplantsPane" class="admin-pane">
   <div class="admin-section-card">
+    <h2>🌱 पौधा प्रबंधन</h2>
+    <p class="admin-muted">पहले नीचे एक विकल्प चुनें। उसी का फॉर्म खुलेगा।</p>
+    <div class="plant-manage-buttons" role="tablist" aria-label="पौधा प्रबंधन विकल्प">
+      <button type="button" class="plant-manage-button active" data-manage-view="add">➕ नया पौधा जोड़ें</button>
+      <button type="button" class="plant-manage-button" data-manage-view="edit">✏️ कीमत / फोटो बदलें</button>
+      <button type="button" class="plant-manage-button" data-manage-view="list">📋 सभी पौधे देखें</button>
+    </div>
+  </div>
+  <div id="manageViewAdd" class="manage-view active">
+  <div class="admin-section-card">
     <h2>➕ नया पौधा जोड़ें</h2>
     <p class="admin-muted">यह सेक्शन स्टॉक से अलग है। यहाँ नाम, कीमत, मात्रा और फोटो जोड़ें। सेव होने के बाद ग्राहक की वेबसाइट पर पौधा तभी दिखेगा जब स्टॉक 0 से अधिक और उपलब्धता चालू हो।</p>
     <form id="newPlantForm">
@@ -205,10 +215,16 @@ footer p{margin:5px}
     </form>
     <div id="newPlantStatus" class="status" aria-live="polite"></div>
   </div>
+  </div>
+  <div id="manageViewEdit" class="manage-view">
   <div class="admin-section-card">
     <h2>🖼️ पौधों की फोटो, कीमत और स्टॉक बदलें</h2>
     <p class="admin-muted">हर पौधे की फोटो अलग अपलोड करें। यहाँ की कीमत और स्टॉक सेव करने से ग्राहक की सूची अपडेट होगी।</p>
     <div id="adminPlantEditor">पौधे लोड हो रहे हैं…</div>
+  </div>
+  </div>
+  <div id="manageViewList" class="manage-view">
+    <div class="admin-section-card"><h2>📋 सभी पौधे</h2><p class="admin-muted">नाम, कीमत, मौजूदा स्टॉक और उपलब्धता।</p><div id="adminPlantSimpleList">सूची लोड हो रही है…</div></div>
   </div>
 </div>
 <div id="adminSalesPane" class="admin-pane"><div class="admin-section-card"><h2>💰 बिक्री का हिसाब</h2><p class="admin-muted">आज की बिक्री और हाल की बिक्री एंट्री।</p><div id="ownerSalesList">बिक्री का हिसाब लोड हो रहा है…</div></div></div>
@@ -644,8 +660,28 @@ function showAdminTab(tabName) {
   document.getElementById(paneId).classList.add('active');
 }
 document.querySelectorAll('.admin-tab').forEach(button => {
-  button.addEventListener('click', () => { const tab = button.dataset.tab; showAdminTab(tab); if (tab === 'manageplants') renderAdminPlantEditor(); if (tab === 'stock') loadOwnerStats(); });
+  button.addEventListener('click', () => { const tab = button.dataset.tab; showAdminTab(tab); if (tab === 'manageplants') showManageView('add'); if (tab === 'stock') loadOwnerStats(); });
 });
+
+function showManageView(view) {
+  const allowed = ['add','edit','list'];
+  if (!allowed.includes(view)) view = 'add';
+  document.querySelectorAll('.plant-manage-button').forEach(b => b.classList.toggle('active', b.dataset.manageView === view));
+  document.querySelectorAll('.manage-view').forEach(v => v.classList.remove('active'));
+  const target = document.getElementById(({add:'manageViewAdd',edit:'manageViewEdit',list:'manageViewList'})[view]);
+  if (target) target.classList.add('active');
+  if (view === 'edit') renderAdminPlantEditor();
+  if (view === 'list') renderSimplePlantList();
+}
+document.querySelectorAll('.plant-manage-button').forEach(b => b.addEventListener('click', () => showManageView(b.dataset.manageView)));
+async function renderSimplePlantList(){
+  const box=document.getElementById('adminPlantSimpleList'); if(!box)return;
+  box.textContent='पौधों की सूची लोड हो रही है…';
+  const {data,error}=await db.from('plants').select('id,name,selling_price,stock_quantity,is_active').order('name');
+  if(error){box.textContent='सूची लोड नहीं हुई: '+error.message;return;}
+  if(!data||!data.length){box.textContent='अभी कोई पौधा नहीं है।';return;}
+  box.innerHTML=data.map(p=>`<div class="stock-row"><div><b>${safe(p.name)}</b><div class="sale-meta">₹${Number(p.selling_price||0).toFixed(2)} प्रति पौधा</div></div><span class="stock-count">स्टॉक ${Math.max(0,Number(p.stock_quantity)||0)}</span><span class="sale-meta">${p.is_active?'उपलब्ध':'Sold Out'}</span></div>`).join('');
+}
 
 function isNurseryOwner() {
   const u = db.auth.getUser();
@@ -724,10 +760,11 @@ async function loadOwnerStats() {
   try {
     const now = new Date();
     const dateText = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
-    const [salesResult, ordersResult, plantsResult] = await Promise.all([
+    const [salesResult, ordersResult, plantsResult, saleItemsResult] = await Promise.all([
       db.from('sales').select('id,sale_date,total_amount,payment_method,notes').order('sale_date',{ascending:false}).limit(100),
       db.from('order_requests').select('id,status,created_at'),
-      db.from('plants').select('id,name,stock_quantity,is_active').order('name')
+      db.from('plants').select('id,name,stock_quantity,is_active').order('name'),
+      db.from('sale_items').select('plant_id,quantity')
     ]);
     if (salesResult.error) throw salesResult.error;
     if (ordersResult.error) throw ordersResult.error;
@@ -735,6 +772,11 @@ async function loadOwnerStats() {
     const sales = salesResult.data || [];
     const orders = ordersResult.data || [];
     const allPlants = plantsResult.data || [];
+    // Sold count is aggregated from sale_items. If this table is not readable, show unknown rather than invent a number.
+    const saleItems = saleItemsResult && !saleItemsResult.error ? (saleItemsResult.data || []) : [];
+    const soldCountByPlant = new Map();
+    saleItems.forEach(item => { const key=String(item.plant_id); soldCountByPlant.set(key,(soldCountByPlant.get(key)||0)+Math.max(0,Number(item.quantity)||0)); });
+
     const availablePlants = allPlants.filter(p => p.is_active === true);
     const todaySales = sales.filter(s => s.sale_date && String(s.sale_date).slice(0,10) === dateText);
     const todayOrders = orders.filter(o => o.created_at && String(o.created_at).slice(0,10) === dateText && o.status === 'confirmed').length;
@@ -761,7 +803,7 @@ async function loadOwnerStats() {
     stockBox.innerHTML = allPlants.length ? allPlants.map(p => `
       <div class="stock-row" style="gap:10px;align-items:center;flex-wrap:wrap">
         <span class="stock-name">🌱 ${safe(p.name || 'पौधा')} <small style="display:block;font-weight:400;color:${p.is_active ? '#16803d' : '#b45309'}">${p.is_active ? 'उपलब्ध' : 'अभी उपलब्ध नहीं / Sold Out'}</small></span>
-        <span class="stock-count">${Math.max(0,Number(p.stock_quantity)||0)} पौधे</span>
+        <div><span class="stock-count">बाकी ${Math.max(0,Number(p.stock_quantity)||0)} पौधे</span><div class="stock-subcounts"><span class="sold">बिके: ${saleItemsResult && !saleItemsResult.error ? (soldCountByPlant.get(String(p.id))||0) : 'डेटा उपलब्ध नहीं'}</span><span>बाकी स्टॉक</span></div></div>
         <button type="button" class="availability-toggle" data-plant-id="${safe(p.id)}" data-active="${p.is_active ? 'true' : 'false'}" style="font-size:12px;padding:7px 10px;border-radius:8px;border:1px solid ${p.is_active ? '#dc2626' : '#15803d'};background:${p.is_active ? '#fff7f7' : '#f0fdf4'};color:${p.is_active ? '#b91c1c' : '#166534'}">${p.is_active ? 'Sold Out करें' : 'फिर उपलब्ध करें'}</button>
       </div>`).join('') : '<p>अभी कोई पौधा दर्ज नहीं है।</p>';
     stockBox.querySelectorAll('.availability-toggle').forEach(button => {
@@ -781,6 +823,7 @@ async function loadOwnerStats() {
         await loadPlants();
       });
     });
+    if (document.getElementById('manageViewList')?.classList.contains('active')) renderSimplePlantList();
     salesBox.innerHTML = sales.length ? sales.slice(0,30).map(s => `
       <div class="sale-row"><div><strong>बिक्री #${safe(s.id)}</strong><div class="sale-meta">${s.sale_date ? new Date(s.sale_date).toLocaleDateString('hi-IN') : 'तारीख उपलब्ध नहीं'}${s.payment_method ? ' • '+safe(s.payment_method) : ''}</div><div class="sale-meta">${safe(s.notes || '')}</div></div><div class="sale-amount">₹${Number(s.total_amount||0).toFixed(2)}</div></div>`).join('') : '<p>अभी बिक्री एंट्री नहीं मिली।</p>';
   } catch (error) {
