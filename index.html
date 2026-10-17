@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>श्री नीम करोली महाराज ग्रीन नर्सरी</title>
+<title>नीम करोली नर्सरी | चारावास</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--green:#176b37;--deep:#104b29;--leaf:#25884b;--mint:#edf7ed;--cream:#fbfdf8;--line:#dce9d8;--ink:#243b2a;--muted:#607464;--shadow:0 12px 32px rgba(20,70,35,.09)}
@@ -18,25 +18,6 @@ header p{margin:7px auto;max-width:800px;font-size:clamp(14px,2vw,18px)}
 nav{position:sticky;top:0;z-index:1000;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 14px;background:#ffffffed;backdrop-filter:blur(12px);box-shadow:0 4px 18px #0000000c;border-bottom:1px solid #e8f0e5}
 nav a{display:inline-block;min-width:110px;text-align:center;padding:9px 15px;border-radius:999px;background:#f0f7ed;color:var(--green);font-weight:700;text-decoration:none;transition:background .2s,transform .2s}
 nav a:hover{background:#dff0dc;transform:translateY(-1px)}
-.nav-menu-wrap{position:relative;display:inline-flex;align-items:center}
-#adminPanelNav{display:inline-block;min-width:110px;text-align:center;padding:9px 15px;border-radius:999px;background:#f0f7ed;color:var(--green);border:0;font-weight:700;box-shadow:none;font:inherit;font-weight:700;cursor:pointer;transition:background .2s,transform .2s}#adminPanelNav:hover{background:#dff0dc;transform:translateY(-1px)}
-#menuToggle{min-width:110px;padding:9px 15px;border-radius:999px;background:linear-gradient(135deg,#176b37,#104b29);color:#fff;border:0;font-weight:700;box-shadow:0 5px 14px #16844720}
-#menuDropdown{display:none;position:absolute;right:0;top:calc(100% + 8px);min-width:210px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px;box-shadow:0 16px 36px #173f2526;z-index:1200}
-#menuDropdown.open{display:block}
-#menuDropdown a{display:block;min-width:0;text-align:left;border-radius:10px;padding:11px 13px;margin:2px 0;background:#f4faf1;color:var(--green);text-decoration:none;font-weight:700}
-#menuDropdown a:hover{background:#e3f2df}
-#owner{display:none;scroll-margin-top:100px}
-#owner.login-visible{display:block;position:fixed;inset:0;z-index:2000;overflow-y:auto;background:rgba(10,35,19,.72);padding:clamp(12px,4vh,36px) 12px;border-radius:0;max-width:none;margin:0;box-shadow:none}
-#owner.login-visible>h2,#owner.login-visible>p,#owner.login-visible>form,#owner.login-visible>#logoutButton,#owner.login-visible>#ownerStatus,#owner.login-visible>#ownerPanelHeader,#owner.login-visible>#adminCustomerSearch,#owner.login-visible>#adminTabs,#owner.login-visible>.admin-pane{max-width:1000px;margin-left:auto;margin-right:auto}
-#owner.login-visible>h2:first-child{background:#fff;border-radius:18px 18px 0 0;padding:22px 24px 0;margin-top:0}
-#owner.login-visible>p:first-of-type,#owner.login-visible>#loginForm{background:#fff;padding-left:24px;padding-right:24px}
-#owner.login-visible>#loginForm{padding-bottom:24px;border-radius:0 0 18px 18px;margin-bottom:12px}
-#ownerCloseButton{float:right;margin:-4px 0 8px 12px;background:#edf5e9;color:var(--green);box-shadow:none;border:1px solid var(--line);padding:7px 12px}
-#logoutButton{display:none;align-items:center;gap:4px;margin-left:auto;padding:4px 9px!important;font-size:11px!important;font-weight:400!important;line-height:1.3;border-radius:8px;background:#ffffff12!important;color:#fff!important;border:1px solid #ffffff50!important;box-shadow:none!important;min-height:0}
-#logoutButton:hover{background:#ffffff25!important;transform:none!important}
-.admin-welcome{width:100%}.admin-welcome .admin-brand{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.admin-welcome .admin-chip{font-weight:400}
-@media(max-width:650px){.nav-menu-wrap{flex:1 1 28%;justify-content:center}#adminPanelNav{min-width:0;flex:1 1 100%;padding:8px 7px;font-size:12px;white-space:normal}
-#menuToggle{min-width:0;width:100%;padding:8px 7px;font-size:14px}#menuDropdown{right:0;min-width:190px}}
 main{max-width:1120px;margin:0 auto;padding:clamp(16px,3vw,30px) 16px}
 .card{background:#fff;border:1px solid #e2eddf;border-radius:22px;padding:clamp(18px,3vw,30px);margin-bottom:24px;box-shadow:var(--shadow)}
 .card h2{color:var(--green);font-size:clamp(21px,3vw,28px);line-height:1.4;margin:0 0 12px}
@@ -62,110 +43,46 @@ button:disabled{opacity:.55;cursor:wait;transform:none}
 .note{font-size:13px;color:var(--muted)}
 .order{background:#fbfef9;border:1px solid var(--line);padding:17px;border-radius:16px;margin:13px 0;box-shadow:0 4px 14px #174b2b08}
 .order strong{color:var(--green)}
-#ownerStats{display:none}#ownerOrders{display:none}#ownerPanelHeader{display:none;background:linear-gradient(135deg,#103f24,#25884b);color:#fff;border-radius:20px;padding:22px;margin:18px 0 14px;box-shadow:0 12px 28px #174b2b20}#ownerPanelHeader h3{margin:0 0 4px;font-size:clamp(22px,3vw,30px)}#ownerPanelHeader p{margin:0;color:#e9f7e9}.admin-welcome{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.admin-chip{background:#ffffff20;border:1px solid #ffffff45;border-radius:999px;padding:6px 12px;font-size:13px}.admin-tabs{display:none;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:16px 0}.admin-tab{width:100%;min-height:76px;display:flex;flex-direction:column;gap:3px;align-items:center;justify-content:center;background:#fff;color:var(--green);border:1px solid var(--line);box-shadow:0 5px 16px #174b2b0a;border-radius:16px;padding:10px 6px}.admin-tab .tab-icon{font-size:24px;line-height:1.2}.admin-tab .tab-label{font-size:14px}.admin-tab.active{background:linear-gradient(135deg,#176b37,#104b29);color:#fff;border-color:#176b37;box-shadow:0 8px 20px #176b3730}.admin-pane{display:none}.admin-pane.active{display:block}.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}.metric{background:linear-gradient(145deg,#f1f9ee,#fff);border:1px solid var(--line);border-radius:16px;padding:16px}.metric .metric-label{font-size:13px;color:var(--muted)}.metric .metric-value{font-size:clamp(22px,3vw,30px);font-weight:800;color:var(--green);line-height:1.35}.admin-section-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 5px 18px #174b2b0a}.stock-row,.sale-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 4px;border-bottom:1px solid #eaf1e7}.stock-row:last-child,.sale-row:last-child{border-bottom:0}.stock-name{font-weight:700}.stock-count{white-space:nowrap;background:#edf7ed;color:var(--green);padding:5px 10px;border-radius:999px;font-weight:800}.sale-row{align-items:flex-start}.sale-meta{font-size:13px;color:var(--muted)}.sale-amount{font-weight:800;color:var(--green);white-space:nowrap}.admin-action-row{display:flex;gap:10px;flex-wrap:wrap}.admin-action-row button{width:auto}.admin-muted{color:var(--muted);font-size:14px}
-.customer-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center}.customer-search-row input{margin:6px 0 12px}.customer-search-row button{white-space:nowrap}.secondary-btn{background:#edf5e9!important;color:var(--green)!important;border:1px solid var(--line)!important;box-shadow:none!important}.customer-result-card{border:1px solid var(--line);background:#fbfef9;border-radius:14px;padding:15px;margin:12px 0}.customer-result-card h3{margin:0 0 8px;color:var(--green)}.customer-order-row{padding:10px 0;border-top:1px solid #e4eee0}.customer-order-row:first-of-type{border-top:0}@media(max-width:650px){.customer-search-row{grid-template-columns:1fr 1fr}.customer-search-row input{grid-column:1/-1}.customer-search-row button{width:100%;padding:11px 8px}}
+#ownerStats{display:none}#ownerOrders{display:none}#ownerPanelHeader{display:none;background:linear-gradient(135deg,#104b29,#25884b);color:#fff;border-radius:18px;padding:18px;margin:18px 0 12px}#ownerPanelHeader h3{margin:0 0 4px;font-size:22px}#ownerPanelHeader p{margin:0;color:#e9f7e9}#ownerStats .card{background:linear-gradient(145deg,#f3faf0,#fff)}
+#ownerStats p{padding:8px 10px;border-radius:9px;background:#ffffffc9}
 #contact .btn{margin-top:6px}
 footer{background:linear-gradient(130deg,#174b2b,#0b3520);color:#fff;text-align:center;padding:30px 16px;border-radius:28px 28px 0 0;margin-top:26px}
 footer p{margin:5px}
-@media(max-width:650px){header{border-radius:0 0 24px 24px}nav{gap:6px;padding:9px 6px}nav a{min-width:0;flex:1 1 28%;padding:8px 7px;font-size:14px}main{padding:14px 10px}.card{padding:18px;border-radius:17px}.plant img{height:160px}button,.btn{max-width:100%}.admin-tabs{gap:6px}.admin-tab{min-height:70px;border-radius:12px;padding:8px 3px}.admin-tab .tab-icon{font-size:21px}.admin-tab .tab-label{font-size:11px}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{padding:12px}}
 
-/* एडमिन पैनल को साफ, छोटा और कम मोटे अक्षरों वाला रूप */
-#ownerStatus:empty{display:none!important}
-#customerSearchStatus:empty{display:none!important}
-#adminCustomerSearch{padding:10px 12px}
-#adminCustomerSearch .customer-search-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-#adminCustomerSearch input{grid-column:1/-1;margin:0;min-width:0}
-#adminCustomerSearch .customer-search-row button{width:100%;min-width:0;padding:10px 8px;font-size:14px}
-#adminCustomerSearch .status{margin-top:8px}
-#owner.login-visible>h2:first-child{font-size:20px;font-weight:600;padding-top:16px}
-#owner.login-visible>p:first-of-type{font-size:13px}
-#ownerPanelHeader{padding:16px;border-radius:15px}
-#ownerPanelHeader h3{font-size:clamp(18px,2.5vw,23px);font-weight:600}
-#ownerPanelHeader p{font-size:13px;font-weight:400}
-.admin-chip{font-weight:400}
-.admin-tab{min-height:64px;font-weight:500;border-radius:12px}
-.admin-tab .tab-icon{font-size:20px}
-.admin-tab .tab-label{font-size:13px;font-weight:500}
-.admin-section-card{padding:15px;border-radius:15px}
-.admin-section-card h2,.admin-pane h2{font-size:19px;font-weight:600;line-height:1.4}
-.admin-muted{font-size:13px;font-weight:400}
-.metric{padding:12px;border-radius:13px}
-.metric .metric-value{font-weight:600;font-size:clamp(20px,2.7vw,26px)}
-.stock-name,.stock-count,.sale-amount{font-weight:500}
-.stock-count{padding:4px 8px}
-#owner .status{font-size:13px;padding:10px 12px}
-#owner label{font-size:14px;font-weight:500}
-#owner input,#owner select,#owner textarea{font-size:15px;padding:10px 12px;border-radius:10px}
-#owner button,#owner .btn{font-size:14px;font-weight:500;padding:10px 14px;border-radius:10px;box-shadow:none}
-#owner .order{padding:13px}
-@media(max-width:650px){.admin-tab{min-height:58px}.admin-tab .tab-icon{font-size:18px}.admin-tab .tab-label{font-size:11px}.admin-section-card{padding:12px}#ownerPanelHeader{padding:13px}}
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin:14px 0}
+.admin-box{border:1px solid var(--line);border-radius:16px;padding:16px;background:#fbfef9;min-width:0}
+.admin-box h3{margin:0 0 10px;color:var(--green)}
+.admin-box button{margin:5px 0}
+.admin-plant-row{display:grid;grid-template-columns:1fr 100px 100px auto;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:10px 0}
+.admin-plant-row input{margin:0;min-width:0;padding:8px}
+.receipt-card{background:#fff;border:1px dashed #176b37;border-radius:14px;padding:16px;margin-top:10px}
+.receipt-card h3{margin-top:0;color:var(--green)}
+.qr-pay{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-top:12px}
+.qr-pay img{width:190px;max-width:100%;border:8px solid white;box-shadow:0 2px 12px #0001;border-radius:10px}
+@media(max-width:650px){.admin-plant-row{grid-template-columns:1fr 1fr}.admin-plant-row .plant-admin-name{grid-column:1/-1}}
 
-/* Final admin polish: centered nursery title, compact live customer search */
-#ownerPanelHeader .admin-welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px}
-#ownerPanelHeader .admin-welcome>div:first-child{width:100%;text-align:center}
-#ownerPanelHeader .admin-welcome h3,#ownerPanelHeader .admin-welcome p{text-align:center;width:100%}
-#ownerPanelHeader .admin-brand{justify-content:center;width:100%}
-#ownerPanelHeader .admin-chip{font-size:13px;letter-spacing:.15px}
-#logoutButton{margin:0!important;font-size:11px!important;font-weight:400!important;padding:4px 9px!important}
-#adminCustomerSearch{max-width:560px;margin:12px auto;padding:10px 12px}
-#adminCustomerSearch .customer-search-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
-#adminCustomerSearch input{grid-column:1/-1;max-width:100%;padding:8px 10px!important;font-size:14px!important;margin:0!important}
-#adminCustomerSearch #customerSearchButton{background:linear-gradient(135deg,#176b37,#104b29)!important;color:#fff!important}
-#adminCustomerSearch #customerSearchClear{background:#fff1e9!important;color:#a33b16!important;border:1px solid #f3c6b4!important}
-#adminCustomerSearch .customer-search-row button{padding:8px 9px!important;font-size:13px!important;min-height:34px}
-@media(max-width:650px){#adminCustomerSearch{width:100%;max-width:100%;padding:9px}#adminCustomerSearch .customer-search-row{grid-template-columns:1fr 1fr}#adminCustomerSearch input{grid-column:1/-1}}
-
-
-
-/* Elegant finishing touches for the owner dashboard and live-search field */
-#ownerPanelHeader{position:relative;overflow:hidden;background:linear-gradient(135deg,#0d3f25 0%,#176b37 52%,#2e8b57 100%);border:1px solid #ffffff30;box-shadow:0 14px 32px rgba(13,63,37,.22);}
-#ownerPanelHeader:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 12% 10%,#ffffff1b,transparent 32%),radial-gradient(circle at 90% 85%,#c5f6cf22,transparent 30%);pointer-events:none}
-#ownerPanelHeader .admin-welcome{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;width:100%}
-#ownerPanelHeader .admin-welcome>div:first-child{width:100%;text-align:center}
-#ownerPanelHeader .admin-welcome h3{width:100%;margin:0 auto 5px;text-align:center;font-size:clamp(21px,3vw,29px);font-weight:650;line-height:1.35;letter-spacing:.2px;text-shadow:0 2px 8px #00000020}
-#ownerPanelHeader .admin-welcome p{width:100%;margin:0 auto;text-align:center;font-size:13px;line-height:1.55;color:#e5f6e8;font-weight:400}
-#ownerPanelHeader .admin-brand{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;width:100%}
-#ownerPanelHeader .admin-chip{display:inline-flex;align-items:center;justify-content:center;min-height:32px;padding:6px 14px;background:#ffffff18;border:1px solid #ffffff45;border-radius:999px;color:#fff;font-size:13px;font-weight:500;letter-spacing:.25px;box-shadow:inset 0 1px 0 #ffffff10}
-#logoutButton{display:inline-flex;align-items:center;justify-content:center;min-height:30px;margin:0!important;padding:5px 11px!important;border:1px solid #ffffff75!important;border-radius:999px!important;background:#ffffff12!important;color:#fff!important;font-size:11px!important;font-weight:500!important;letter-spacing:.3px;line-height:1.2;box-shadow:none!important;transition:background .18s ease,border-color .18s ease,transform .18s ease}
-#logoutButton:hover{background:#ffffff25!important;border-color:#fff!important;transform:translateY(-1px)!important}
-#adminCustomerSearch{max-width:500px;margin:14px auto;padding:12px;border:1px solid #dce9d8;border-radius:17px;background:linear-gradient(145deg,#fff,#f8fcf6);box-shadow:0 8px 24px rgba(23,107,55,.08);transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
-#adminCustomerSearch:focus-within{border-color:#45a765;box-shadow:0 0 0 3px rgba(37,136,75,.12),0 12px 30px rgba(23,107,55,.14);transform:translateY(-1px)}
-#adminCustomerSearch .customer-search-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px}
-#adminCustomerSearch input{grid-column:1/-1;position:relative;width:100%;height:39px;padding:8px 12px!important;margin:0!important;border:1px solid #cbdcc7;border-radius:11px;background:#fff;color:#243b2a;font-size:14px!important;line-height:1.3;transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}
-#adminCustomerSearch input::placeholder{color:#849487;opacity:1}
-#adminCustomerSearch input:focus{outline:none;border-color:#25884b;background:#fcfffb;box-shadow:0 0 0 3px #25884b20}
-#adminCustomerSearch #customerSearchButton,#adminCustomerSearch #customerSearchClear{height:34px;min-height:34px;padding:7px 10px!important;border-radius:10px!important;font-size:12px!important;font-weight:550!important;transition:transform .18s ease,filter .18s ease,box-shadow .18s ease}
-#adminCustomerSearch #customerSearchButton{background:linear-gradient(135deg,#218449,#105b31)!important;color:#fff!important;box-shadow:0 4px 10px #176b3724!important}
-#adminCustomerSearch #customerSearchButton:hover{box-shadow:0 6px 14px #176b3733!important;transform:translateY(-1px)!important}
-#adminCustomerSearch #customerSearchClear{background:linear-gradient(135deg,#fff5ef,#ffe7db)!important;color:#9a3412!important;border:1px solid #f1c2ae!important;box-shadow:none!important}
-#adminCustomerSearch #customerSearchClear:hover{filter:saturate(1.08);transform:translateY(-1px)!important}
-#adminCustomerSearch .status{font-size:12px;padding:8px 10px;border-radius:10px}
-#customerSearchResults{animation:searchResultsIn .22s ease-out}
-@keyframes searchResultsIn{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-#adminCustomerSearch.searching #customerSearchPhone{background:linear-gradient(90deg,#f8fff8,#eaf8ec,#f8fff8);background-size:220% 100%;animation:searchGlow 1.15s linear infinite;border-color:#25884b}
-@keyframes searchGlow{0%{background-position:100% 0}100%{background-position:-120% 0}}
-@media(prefers-reduced-motion:reduce){#adminCustomerSearch.searching #customerSearchPhone,#customerSearchResults{animation:none!important}#adminCustomerSearch,#adminCustomerSearch *{transition:none!important}}
-@media(max-width:650px){#ownerPanelHeader{padding:16px 12px!important}#ownerPanelHeader .admin-welcome h3{font-size:21px}#ownerPanelHeader .admin-brand{gap:7px}#ownerPanelHeader .admin-chip{font-size:12px;padding:5px 11px}#logoutButton{font-size:10px!important;padding:5px 9px!important}#adminCustomerSearch{max-width:100%;padding:10px}#adminCustomerSearch input{height:37px}}
-
+@media(max-width:650px){header{border-radius:0 0 24px 24px}nav{gap:6px;padding:9px 6px}nav a{min-width:0;flex:1 1 28%;padding:8px 7px;font-size:14px}main{padding:14px 10px}.card{padding:18px;border-radius:17px}.plant img{height:160px}button,.btn{max-width:100%}}
 </style>
 </head>
 <body>
 <header>
-<h1>🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</h1>
-<p>हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए</p>
-<p>📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान</p>
+<h1 id="heroTitle">🌱 नीम करोली नर्सरी</h1>
+<p id="heroSubtitle">सब्जियों के स्वस्थ पौधे और ताज़ी हरी सब्जियाँ</p>
+<p id="heroAddress">📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान</p>
 </header>
 <nav>
 <a href="#plants">पौधे</a>
 <a href="#order">ऑर्डर</a>
 <a href="#contact">संपर्क</a>
-<button id="adminPanelNav" type="button" aria-label="नीम करोली महाराज नर्सरी, चारावास">नीम करोली महाराज नर्सरी, चारावास</button>
+<a href="#owner">मालिक लॉगिन</a>
+<a href="#customerDashboard">ग्राहक डैशबोर्ड</a>
+<a href="#owner">मालिक एडमिन पैनल</a>
 </nav>
 <main>
 <section class="card" id="welcome">
-<h2>🌿 प्रकृति से जुड़ें, स्वस्थ पौधे घर लाएँ</h2>
-<p>घर की क्यारी हो या खेत—सब्जियों के पौधों की जानकारी, कीमत और उपलब्ध स्टॉक यहाँ देखें।</p>
-<p class="note">ऑर्डर भेजने के बाद नर्सरी मालिक उपलब्धता और कीमत की पुष्टि करेंगे।</p>
+<h2 id="welcomeTitle">🌿 स्वस्थ पौधे, हरी-भरी शुरुआत</h2>
+<p id="welcomeText">घर की क्यारी हो या खेत—सब्जियों के पौधे और ताज़ी हरी सब्जियाँ यहाँ देखें।</p>
+<p class="note" id="welcomeNote">ऑर्डर भेजने के बाद नर्सरी मालिक उपलब्धता और कीमत की पुष्टि करेंगे।</p>
 </section>
 
 <section class="card" id="plants">
@@ -206,8 +123,9 @@ footer p{margin:5px}
 <a class="btn" href="https://wa.me/919887666626" target="_blank" rel="noopener">WhatsApp पर संपर्क करें</a>
 </section>
 
-<section class="card" id="owner" aria-hidden="true">
-<h2>🌿 नीम करोली महाराज नर्सरी, चारावास</h2>
+<section class="card" id="owner">
+<h2>🔐 नर्सरी मालिक लॉगिन</h2>
+<p class="note">यहाँ केवल अधिकृत मालिक लॉगिन करें।</p>
 <form id="loginForm">
 <label for="email">ईमेल</label>
 <input id="email" type="email" required autocomplete="username" placeholder="मालिक का ईमेल">
@@ -215,51 +133,10 @@ footer p{margin:5px}
 <input id="password" type="password" required autocomplete="current-password" placeholder="Supabase का पासवर्ड">
 <button type="submit">लॉगिन करें</button>
 </form>
-<div id="ownerStatus" class="status" aria-live="polite" style="display:none"></div>
-<div id="ownerPanelHeader"><div class="admin-welcome"><div><h3>🌿 नीम करोली नर्सरी</h3><p>आपका व्यवसाय, एक ही जगह — ऑर्डर, स्टॉक और बिक्री</p></div><div class="admin-brand"><span class="admin-chip">🌱 Anil Kumar Meena</span><button id="logoutButton" type="button" aria-label="Log Out">Log Out ↗</button></div></div></div>
-<div id="adminCustomerSearch" class="admin-section-card" style="display:none">
-  <form id="customerSearchForm" aria-label="ग्राहक मोबाइल नंबर खोजें">
-    <div class="customer-search-row"><input id="customerSearchPhone" type="tel" inputmode="numeric" autocomplete="off" aria-label="ग्राहक का मोबाइल नंबर" placeholder="ग्राहक का मोबाइल नंबर डालें"><button id="customerSearchButton" type="submit">🔍 खोजें</button><button id="customerSearchClear" class="secondary-btn" type="button">✕ साफ करें</button></div>
-  </form>
-  <div id="customerSearchStatus" class="status" aria-live="polite" style="display:none"></div>
-  <div id="customerSearchResults"></div>
-</div>
-<div id="adminTabs" class="admin-tabs" role="tablist" aria-label="एडमिन पैनल सेक्शन">
-  <button class="admin-tab active" type="button" data-tab="dashboard" role="tab" aria-selected="true"><span class="tab-icon">📊</span><span class="tab-label">डैशबोर्ड</span></button>
-  <button class="admin-tab" type="button" data-tab="orders" role="tab" aria-selected="false"><span class="tab-icon">🛒</span><span class="tab-label">ऑर्डर</span></button>
-  <button class="admin-tab" type="button" data-tab="stock" role="tab" aria-selected="false"><span class="tab-icon">🌱</span><span class="tab-label">पौधों का स्टॉक</span></button>
-  <button class="admin-tab" type="button" data-tab="sales" role="tab" aria-selected="false"><span class="tab-icon">💰</span><span class="tab-label">बिक्री हिसाब</span></button>
-  <button class="admin-tab" type="button" data-tab="dues" role="tab" aria-selected="false"><span class="tab-icon">⏰</span><span class="tab-label">उधार / बाकी</span></button>
-</div>
-<div id="adminDashboardPane" class="admin-pane active">
-  <div id="ownerStats"></div>
-</div>
-<div id="adminOrdersPane" class="admin-pane"><div class="admin-section-card"><h2>🛒 ग्राहक के ऑर्डर</h2><p class="admin-muted">लंबित ऑर्डर जाँचें; पुष्टि करने पर बिक्री दर्ज होगी और स्टॉक घटेगा।</p><div id="ownerOrders"></div></div></div>
-<div id="adminStockPane" class="admin-pane"><div class="admin-section-card"><h2>🌱 उपलब्ध पौधों का स्टॉक</h2><p class="admin-muted">यहाँ से पौधों को “अभी उपलब्ध नहीं / Sold Out” करें। वे ग्राहक की सूची और ऑर्डर विकल्प से हट जाएँगे; बाद में फिर उपलब्ध भी कर सकते हैं।</p><div id="ownerStockList">स्टॉक लोड हो रहा है…</div></div></div>
-<div id="adminSalesPane" class="admin-pane"><div class="admin-section-card"><h2>💰 बिक्री का हिसाब</h2><p class="admin-muted">आज की बिक्री और हाल की बिक्री एंट्री।</p><div id="ownerSalesList">बिक्री का हिसाब लोड हो रहा है…</div></div></div>
-<div id="adminDuesPane" class="admin-pane">
-  <div class="admin-section-card">
-    <h2>⏰ उधार / बाकी पैसे का रजिस्टर</h2>
-    <p class="admin-muted">जब ग्राहक पौधे ले जाए और कुछ पैसे बाद में देने हों, यहाँ कुल रकम, अभी मिली रकम और बाकी रकम दर्ज करें। तय तारीख निकलने पर रिकॉर्ड पर “तारीख निकल गई” दिखेगा।</p>
-    <div class="status"><strong>महत्वपूर्ण:</strong> इस शुरुआती संस्करण में उधार का रिकॉर्ड इसी ब्राउज़र/डिवाइस में सेव होगा, Supabase में नहीं। ब्राउज़र का डेटा साफ करने पर रिकॉर्ड मिट सकता है और दूसरे मोबाइल पर अपने-आप नहीं आएगा।</div>
-    <form id="dueForm">
-      <label for="dueName">ग्राहक का नाम</label><input id="dueName" required placeholder="ग्राहक का पूरा नाम">
-      <label for="duePhone">मोबाइल नंबर</label><input id="duePhone" type="tel" inputmode="numeric" required placeholder="10 अंकों का मोबाइल नंबर">
-      <label for="dueTotal">कुल पैसे (₹)</label><input id="dueTotal" type="number" min="1" step="0.01" required placeholder="जैसे 1000">
-      <label for="duePaid">अभी कितने पैसे मिले (₹)</label><input id="duePaid" type="number" min="0" step="0.01" value="0" required>
-      <label for="dueDate">बाकी पैसे देने की तारीख</label><input id="dueDate" type="date" required>
-      <label for="dueNotes">नोट (वैकल्पिक)</label><textarea id="dueNotes" rows="2" placeholder="कौन-से पौधे ले गए या कोई बात"></textarea>
-      <button type="submit">➕ उधार का रिकॉर्ड सेव करें</button>
-    </form>
-    <div id="dueFormStatus" class="status" aria-live="polite"></div>
-  </div>
-  <div class="admin-section-card">
-    <h2>📋 बाकी पैसे वाले ग्राहक</h2>
-    <div class="metric-grid"><div class="metric"><div class="metric-label">कुल बाकी रकम</div><div class="metric-value" id="dueOutstandingTotal">₹0</div></div><div class="metric"><div class="metric-label">बाकी वाले ग्राहक</div><div class="metric-value" id="dueCustomerCount">0</div></div><div class="metric"><div class="metric-label">तारीख निकल गई</div><div class="metric-value" id="dueOverdueCount">0</div></div></div>
-    <label for="dueSearch">नाम या मोबाइल से खोजें</label><input id="dueSearch" placeholder="नाम या मोबाइल नंबर लिखें">
-    <div id="dueList"></div>
-  </div>
-</div>
+<button id="logoutButton" type="button" style="display:none">लॉगआउट</button>
+<div id="ownerStatus" class="status" aria-live="polite">लॉगिन करने के बाद ऑर्डर दिखेंगे।</div>
+<div id="ownerPanelHeader"><h3>🔐 मालिक का एडमिन पैनल</h3><p>बिक्री का हिसाब • पौधों का स्टॉक • ग्राहक ऑर्डर</p></div>
+<div id="ownerOrders"></div>
 </section>
 </main>
 <footer>
@@ -268,13 +145,6 @@ footer p{margin:5px}
 </footer>
 
 <script>
-const ownerSection = document.getElementById('owner');
-document.getElementById('adminPanelNav').addEventListener('click', () => {
-  ownerSection.classList.add('login-visible');
-  ownerSection.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-  setTimeout(() => document.getElementById('email').focus(), 50);
-});
 const SUPABASE_URL = 'https://knwpnjzwknnzdkyboeuy.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ANudpZPHHiFcBeI3U7SaEA_QRzMOywA';
 const OWNER_UID = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9';
@@ -400,42 +270,38 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
   }
 
   button.disabled = true;
-  status.textContent = 'उपलब्धता जाँची जा रही है…';
+  status.textContent = 'ऑर्डर सेव हो रहा है…';
 
   try {
-    const {data: latestPlant, error: availabilityError} = await db.from('plants')
-      .select('id,name,selling_price,stock_quantity,is_active')
-      .eq('id', plantId).maybeSingle();
-    if (availabilityError) throw availabilityError;
-    if (!latestPlant || latestPlant.is_active !== true || Number(latestPlant.stock_quantity) < quantity) {
-      status.textContent = 'क्षमा करें, यह पौधा अभी उपलब्ध नहीं है या पर्याप्त स्टॉक नहीं है। कृपया दूसरा पौधा चुनें।';
-      await loadPlants();
-      button.disabled = false;
-      return;
-    }
-    p.selling_price = Number(latestPlant.selling_price);
-    p.stock_quantity = Number(latestPlant.stock_quantity);
-    status.textContent = 'ऑर्डर सेव हो रहा है…';
-    const {error} = await db.from('order_requests').insert({
+    const offer = getOfferSettings();
+    const subtotal = Number(p.selling_price) * quantity;
+    const discount = quantity >= offer.minQty ? subtotal * offer.discount / 100 : 0;
+    const payable = Math.max(0, subtotal - discount);
+    const orderNotes = [customerLocation ? 'MAPS_URL:' + customerLocation.mapsUrl : '', 'SUBTOTAL:' + subtotal.toFixed(2), 'DISCOUNT:' + discount.toFixed(2), 'PAYABLE:' + payable.toFixed(2), 'OFFER:' + (discount > 0 ? offer.name : 'कोई छूट नहीं')].filter(Boolean).join(' | ');
+    const {data: insertedOrder, error} = await db.from('order_requests').insert({
       plant_name: p.name,
       quantity: quantity,
       unit_price: Number(p.selling_price),
       customer_name: customerName,
       customer_phone: phone || null,
       customer_address: address,
-      notes: customerLocation ? 'MAPS_URL:' + customerLocation.mapsUrl : null,
+      notes: orderNotes || null,
       status: 'pending'
-    });
+    }).select('id').single();
     if (error) throw error;
 
-    status.textContent = '✅ ऑर्डर वेबसाइट में सेव हो गया। WhatsApp पर भी संदेश भेजें।';
+    status.textContent = '✅ ऑर्डर वेबसाइट में सेव हो गया। भुगतान की पुष्टि नर्सरी मालिक करेंगे।';
+    showCustomerReceipt({id: insertedOrder?.id, plantName:p.name, quantity, unitPrice:Number(p.selling_price), subtotal, discount, payable, offerName:discount > 0 ? offer.name : 'कोई छूट नहीं', customerName, phone, address, status:'भुगतान/ऑर्डर पुष्टि बाकी'});
 
     const message = 'नमस्ते, मैंने नर्सरी वेबसाइट पर ऑर्डर भेजा है।' +
       '\nनाम: ' + customerName +
       '\nमोबाइल: ' + (phone || 'नहीं दिया') +
       '\nपौधा: ' + p.name +
       '\nमात्रा: ' + quantity +
-      '\nवेबसाइट की कीमत: ₹' + Number(p.selling_price).toFixed(2) + ' प्रति पौधा' +
+      '\nप्रति पौधा कीमत: ₹' + Number(p.selling_price).toFixed(2) +
+      '\nमूल राशि: ₹' + subtotal.toFixed(2) +
+      '\nछूट: ₹' + discount.toFixed(2) +
+      '\nदेय राशि: ₹' + payable.toFixed(2) +
       '\nपता: ' + address +
       (customerLocation ? '\nलोकेशन: ' + customerLocation.mapsUrl : '') +
       '\nकृपया ऑर्डर और कुल कीमत की पुष्टि करें।';
@@ -455,7 +321,6 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
     status.textContent = '❌ ऑर्डर सेव नहीं हुआ: ' + error.message;
   } finally {
     button.disabled = false;
-    document.getElementById('adminCustomerSearch').classList.remove('searching');
   }
 });
 
@@ -483,12 +348,11 @@ document.getElementById('loginForm').addEventListener('submit', async event => {
   document.getElementById('logoutButton').style.display = 'inline-block';
   document.getElementById('ownerOrders').style.display = 'block';
   document.getElementById('ownerPanelHeader').style.display = 'block';
-  document.getElementById('adminCustomerSearch').style.display = 'block';
-  document.getElementById('adminTabs').style.display = 'grid';
-  showAdminTab('dashboard');
+  document.getElementById('adminControlPanel').style.display = 'block';
+  await renderAdminPlantEditor();
+  loadAdminSettingsIntoForm();
   const existingStats = document.getElementById('ownerStats');
   if (existingStats) existingStats.style.display = 'block';
-  status.style.display = 'block';
   status.textContent = 'लॉगिन सफल।';
   await loadOrders();
   await loadOwnerStats();
@@ -501,14 +365,7 @@ document.getElementById('logoutButton').addEventListener('click', async () => {
   document.getElementById('ownerOrders').innerHTML = '';
   document.getElementById('ownerOrders').style.display = 'none';
   document.getElementById('ownerPanelHeader').style.display = 'none';
-  document.getElementById('adminCustomerSearch').style.display = 'none';
-  document.getElementById('customerSearchResults').innerHTML = '';
-  document.getElementById('customerSearchStatus').textContent = '';
-  document.getElementById('customerSearchForm').reset();
-  document.getElementById('adminTabs').style.display = 'none';
-  document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active'));
-  document.getElementById('ownerStockList').innerHTML = '';
-  document.getElementById('ownerSalesList').innerHTML = '';
+  document.getElementById('adminControlPanel').style.display = 'none';
   const statsBox = document.getElementById('ownerStats');
   if (statsBox) { statsBox.innerHTML = ''; statsBox.style.display = 'none'; }
   document.getElementById('ownerStatus').textContent = 'आप लॉगआउट हो गए हैं।';
@@ -579,291 +436,150 @@ async function loadOrders() {
   });
 }
 
-// उधार रजिस्टर: इस संस्करण में डेटा केवल इसी ब्राउज़र में रहता है।
-const DUE_STORAGE_KEY = 'neemKaroliNurseryDues_v1';
-function readDueRecords() {
-  try { return JSON.parse(localStorage.getItem(DUE_STORAGE_KEY) || '[]'); }
-  catch (_) { return []; }
+// ग्राहक रसीद, UPI QR और एडमिन कंट्रोल पैनल
+const HOME_DEFAULTS = {heroTitle:'🌱 नीम करोली नर्सरी',heroSubtitle:'सब्जियों के स्वस्थ पौधे और ताज़ी हरी सब्जियाँ',heroAddress:'📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान',welcomeTitle:'🌿 स्वस्थ पौधे, हरी-भरी शुरुआत',welcomeText:'घर की क्यारी हो या खेत—सब्जियों के पौधे और ताज़ी हरी सब्जियाँ यहाँ देखें।',welcomeNote:'ऑर्डर भेजने के बाद नर्सरी मालिक उपलब्धता और कीमत की पुष्टि करेंगे।'};
+function getOfferSettings(){try{return Object.assign({minQty:100,discount:5,name:'थोक खरीद ऑफर'},JSON.parse(localStorage.getItem('nurseryOfferSettings')||'{}'));}catch{return {minQty:100,discount:5,name:'थोक खरीद ऑफर'};}}
+function getPaymentSettings(){try{return Object.assign({upiId:'BHARATPE2H0E0T6Z3P47445@unitype',upiName:'ANIL KUMAR MEENA'},JSON.parse(localStorage.getItem('nurseryPaymentSettings')||'{}'));}catch{return {upiId:'BHARATPE2H0E0T6Z3P47445@unitype',upiName:'ANIL KUMAR MEENA'};}}
+function showCustomerReceipt(o){
+  const pay=getPaymentSettings(); const upiUri='upi://pay?pa='+encodeURIComponent(pay.upiId)+'&pn='+encodeURIComponent(pay.upiName)+'&am='+encodeURIComponent(o.payable.toFixed(2))+'&cu=INR&tn='+encodeURIComponent('Nursery order '+(o.id||''));
+  const qr='https://api.qrserver.com/v1/create-qr-code/?size=240x240&data='+encodeURIComponent(upiUri);
+  const box=document.getElementById('customerReceipt');
+  box.innerHTML='<div class="receipt-card"><h3>🌱 नीम करोली नर्सरी — ऑर्डर रसीद</h3><p><b>ऑर्डर नंबर:</b> #'+safe(o.id||'अस्थायी')+'<br><b>ग्राहक:</b> '+safe(o.customerName)+'<br><b>मोबाइल:</b> '+safe(o.phone||'नहीं दिया')+'<br><b>पता:</b> '+safe(o.address)+'</p><hr><p><b>पौधा:</b> '+safe(o.plantName)+'<br><b>मात्रा:</b> '+o.quantity+'<br><b>प्रति इकाई कीमत:</b> ₹'+o.unitPrice.toFixed(2)+'<br><b>मूल राशि:</b> ₹'+o.subtotal.toFixed(2)+'<br><b>ऑफर:</b> '+safe(o.offerName)+'<br><b>छूट:</b> −₹'+o.discount.toFixed(2)+'</p><h3>कुल देय: ₹'+o.payable.toFixed(2)+'</h3><p class="note">स्थिति: '+safe(o.status)+'। भुगतान की पुष्टि होने तक इसे Paid न मानें।</p><div class="qr-pay"><div><b>UPI से भुगतान करें</b><br><img alt="UPI payment QR" src="'+qr+'"><p class="note">UPI ID: '+safe(pay.upiId)+'</p><a class="btn" href="'+safe(upiUri)+'">UPI ऐप से भुगतान करें</a></div></div><button type="button" onclick="window.print()">रसीद प्रिंट / PDF सेव करें</button></div>';
+  try{localStorage.setItem('nurseryLastReceipt',JSON.stringify(o));}catch{}
+  document.getElementById('customerDashboard').scrollIntoView({behavior:'smooth'});
 }
-function saveDueRecords(records) { localStorage.setItem(DUE_STORAGE_KEY, JSON.stringify(records)); }
-function moneyINR(value) { return '₹' + Number(value || 0).toLocaleString('en-IN', {maximumFractionDigits:2}); }
-function localTodayISO() {
-  const d = new Date();
-  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+async function getSharedSettings(){try{const {data,error}=await db.from('nursery_site_settings').select('settings').eq('id',1).maybeSingle();if(!error&&data&&data.settings)return data.settings;}catch{}try{return JSON.parse(localStorage.getItem('nurserySharedSettingsFallback')||'{}');}catch{return {};}}
+async function saveSharedSettings(key,value){const all=await getSharedSettings();all[key]=value;const {error}=await db.from('nursery_site_settings').upsert({id:1,settings:all,updated_at:new Date().toISOString()});if(error){localStorage.setItem('nurserySharedSettingsFallback',JSON.stringify(all));return {shared:false,error};}localStorage.setItem('nurserySharedSettingsFallback',JSON.stringify(all));return {shared:true};}
+async function loadAdminSettingsIntoForm(){
+  const shared=await getSharedSettings();
+  const settings=Object.assign({},HOME_DEFAULTS,shared.home||{});
+  const map={heroTitle:'editHeroTitle',heroSubtitle:'editHeroSubtitle',heroAddress:'editHeroAddress',welcomeTitle:'editWelcomeTitle',welcomeText:'editWelcomeText',welcomeNote:'editWelcomeNote'};
+  Object.entries(map).forEach(([k,id])=>{const el=document.getElementById(id);if(el)el.value=settings[k]||'';});
+  const offer=Object.assign({minQty:100,discount:5,name:'थोक खरीद ऑफर'},shared.offer||getOfferSettings());document.getElementById('offerMinQty').value=offer.minQty;document.getElementById('offerDiscount').value=offer.discount;document.getElementById('offerText').value=offer.name;document.getElementById('offerStatus').textContent=`वर्तमान ऑफर: ${offer.minQty} या अधिक पौधों पर ${offer.discount}% छूट`;
+  const pay=Object.assign({upiId:'BHARATPE2H0E0T6Z3P47445@unitype',upiName:'ANIL KUMAR MEENA'},shared.payment||getPaymentSettings());document.getElementById('upiId').value=pay.upiId;document.getElementById('upiName').value=pay.upiName;
+  applyHomeSettings(settings);
 }
-function renderDueRecords() {
-  const list = document.getElementById('dueList');
-  if (!list) return;
-  const records = readDueRecords();
-  const outstanding = records.reduce((sum, r) => sum + Math.max(0, Number(r.total)-Number(r.paid)), 0);
-  const active = records.filter(r => Number(r.total)-Number(r.paid) > 0.009);
-  const overdue = active.filter(r => r.dueDate < localTodayISO());
-  document.getElementById('dueOutstandingTotal').textContent = moneyINR(outstanding);
-  document.getElementById('dueCustomerCount').textContent = String(active.length);
-  document.getElementById('dueOverdueCount').textContent = String(overdue.length);
-  const query = (document.getElementById('dueSearch').value || '').replace(/\D/g,'');
-  const textQuery = (document.getElementById('dueSearch').value || '').trim().toLowerCase();
-  const shown = records.filter(r => (!textQuery || r.name.toLowerCase().includes(textQuery) || r.phone.replace(/\D/g,'').includes(query)));
-  if (!shown.length) { list.innerHTML = '<p class="admin-muted">अभी कोई रिकॉर्ड नहीं है। ऊपर ग्राहक का उधार दर्ज करें।</p>'; return; }
-  list.innerHTML = shown.slice().sort((a,b) => a.dueDate.localeCompare(b.dueDate)).map(r => {
-    const balance = Math.max(0, Number(r.total)-Number(r.paid));
-    const isOverdue = balance > 0.009 && r.dueDate < localTodayISO();
-    const paidOff = balance <= 0.009;
-    const reminder = 'नमस्ते ' + r.name + ' जी, श्री नीम करोली महाराज ग्रीन नर्सरी से लिए गए पौधों के ₹' + balance.toFixed(2) + ' बाकी हैं। कृपया भुगतान कर दें। धन्यवाद।';
-    const wa = 'https://wa.me/91' + r.phone.replace(/\D/g,'').slice(-10) + '?text=' + encodeURIComponent(reminder);
-    return '<div class="customer-result-card"><h3>' + safe(r.name) + ' ' + (paidOff ? '<span class="stock-count">पूरा भुगतान</span>' : isOverdue ? '<span style="color:#b42318;font-weight:800">⚠️ तारीख निकल गई</span>' : '<span class="stock-count">बाकी भुगतान</span>') + '</h3>' +
-      '<p>📱 ' + safe(r.phone) + '<br>कुल रकम: <strong>' + moneyINR(r.total) + '</strong><br>मिली रकम: <strong>' + moneyINR(r.paid) + '</strong><br>बाकी रकम: <strong style="color:' + (balance>0?'#b42318':'#176b37') + '">' + moneyINR(balance) + '</strong><br>देने की तारीख: ' + safe(r.dueDate) + (r.notes ? '<br>नोट: ' + safe(r.notes) : '') + '</p>' +
-      '<div class="admin-action-row">' + (balance>0 ? '<a class="btn" href="' + wa + '" target="_blank" rel="noopener">📲 WhatsApp रिमाइंडर</a><button type="button" data-due-paid="' + r.id + '" class="secondary-btn">💵 भुगतान दर्ज करें</button>' : '') + '<button type="button" data-due-delete="' + r.id + '" class="secondary-btn">रिकॉर्ड हटाएँ</button></div></div>';
-  }).join('');
-}
-document.getElementById('dueForm').addEventListener('submit', event => {
-  event.preventDefault();
-  const total = Number(document.getElementById('dueTotal').value);
-  const paid = Number(document.getElementById('duePaid').value);
-  const phone = document.getElementById('duePhone').value.trim();
-  if (!Number.isFinite(total) || total <= 0 || !Number.isFinite(paid) || paid < 0 || paid > total) {
-    document.getElementById('dueFormStatus').textContent = 'कुल रकम सही भरें। मिली रकम कुल रकम से ज्यादा नहीं हो सकती।'; return;
-  }
-  if (phone.replace(/\D/g,'').length < 10) { document.getElementById('dueFormStatus').textContent = 'सही मोबाइल नंबर भरें।'; return; }
-  const records = readDueRecords();
-  records.push({id: String(Date.now()) + Math.random().toString(16).slice(2,6), name: document.getElementById('dueName').value.trim(), phone, total, paid, dueDate: document.getElementById('dueDate').value, notes: document.getElementById('dueNotes').value.trim(), createdAt: new Date().toISOString()});
-  saveDueRecords(records);
-  document.getElementById('dueForm').reset(); document.getElementById('duePaid').value = '0';
-  document.getElementById('dueFormStatus').textContent = '✅ उधार का रिकॉर्ड इस ब्राउज़र में सेव हो गया।'; renderDueRecords();
+
+document.getElementById('saveHomeSettings').addEventListener('click',async()=>{
+ const settings={heroTitle:document.getElementById('editHeroTitle').value.trim(),heroSubtitle:document.getElementById('editHeroSubtitle').value.trim(),heroAddress:document.getElementById('editHeroAddress').value.trim(),welcomeTitle:document.getElementById('editWelcomeTitle').value.trim(),welcomeText:document.getElementById('editWelcomeText').value.trim(),welcomeNote:document.getElementById('editWelcomeNote').value.trim()};
+ try{const result=await saveSharedSettings('home',settings);localStorage.setItem('nurseryHomeSettings',JSON.stringify(settings));applyHomeSettings(settings);alert(result.shared?'होमपेज बदलाव डेटाबेस में सेव हुए और वेबसाइट पर साझा होंगे।':'डेटाबेस सेटअप/अनुमति नहीं मिली। बदलाव केवल इस ब्राउज़र में सेव हुए: '+(result.error?.message||''));}catch(e){alert('सेव नहीं हुआ: '+e.message);}
 });
-document.getElementById('dueSearch').addEventListener('input', renderDueRecords);
-document.getElementById('dueList').addEventListener('click', event => {
-  const payButton = event.target.closest('[data-due-paid]');
-  const deleteButton = event.target.closest('[data-due-delete]');
-  if (payButton) {
-    const id = payButton.getAttribute('data-due-paid'); const records = readDueRecords(); const r = records.find(x => x.id === id); if (!r) return;
-    const balance = Math.max(0, Number(r.total)-Number(r.paid));
-    const entered = prompt('कितने रुपये और मिले? बाकी रकम ' + balance.toFixed(2) + ' है।', String(balance));
-    if (entered === null) return; const amount = Number(entered);
-    if (!Number.isFinite(amount) || amount <= 0 || amount > balance) { alert('रकम सही भरें; यह बाकी रकम से ज्यादा नहीं हो सकती।'); return; }
-    r.paid = Number(r.paid) + amount; saveDueRecords(records); renderDueRecords();
-  }
-  if (deleteButton) {
-    if (!confirm('क्या आप यह उधार रिकॉर्ड हटाना चाहते हैं?')) return;
-    const id = deleteButton.getAttribute('data-due-delete'); saveDueRecords(readDueRecords().filter(r => r.id !== id)); renderDueRecords();
-  }
-});
-renderDueRecords();
+function applyHomeSettings(v){const map={heroTitle:'heroTitle',heroSubtitle:'heroSubtitle',heroAddress:'heroAddress',welcomeTitle:'welcomeTitle',welcomeText:'welcomeText',welcomeNote:'welcomeNote'};Object.entries(map).forEach(([k,id])=>{const el=document.getElementById(id);if(el)el.textContent=v[k]||'';});}
+try{applyHomeSettings(Object.assign({},HOME_DEFAULTS,JSON.parse(localStorage.getItem('nurseryHomeSettings')||'{}')));}catch{}
+getSharedSettings().then(shared=>{if(shared.home){applyHomeSettings(Object.assign({},HOME_DEFAULTS,shared.home));localStorage.setItem('nurseryHomeSettings',JSON.stringify(shared.home));}if(shared.offer)localStorage.setItem('nurseryOfferSettings',JSON.stringify(shared.offer));if(shared.payment)localStorage.setItem('nurseryPaymentSettings',JSON.stringify(shared.payment));}).catch(()=>{});
+document.getElementById('saveOffer').addEventListener('click',async()=>{const minQty=Math.max(1,Math.floor(Number(document.getElementById('offerMinQty').value)));const discount=Math.min(90,Math.max(0,Number(document.getElementById('offerDiscount').value)));const name=document.getElementById('offerText').value.trim()||'थोक खरीद ऑफर';if(!Number.isFinite(minQty)||!Number.isFinite(discount)){alert('सही मात्रा और छूट भरें।');return;}localStorage.setItem('nurseryOfferSettings',JSON.stringify({minQty,discount,name}));const result=await saveSharedSettings('offer',{minQty,discount,name});document.getElementById('offerStatus').textContent=`सेव: ${minQty} या अधिक पौधों पर ${discount}% छूट`;alert(result.shared?'थोक ऑफर डेटाबेस में सेव हुआ।':'ऑफर केवल इस ब्राउज़र में सेव हुआ; डेटाबेस सेटअप/अनुमति जाँचें।');});
+document.getElementById('savePaymentSettings').addEventListener('click',async()=>{const upiId=document.getElementById('upiId').value.trim();const upiName=document.getElementById('upiName').value.trim();if(!upiId.includes('@')||!upiName){alert('सही UPI ID और भुगतान नाम भरें।');return;}localStorage.setItem('nurseryPaymentSettings',JSON.stringify({upiId,upiName}));const result=await saveSharedSettings('payment',{upiId,upiName});alert((result.shared?'UPI विवरण डेटाबेस में सेव हुआ।':'UPI विवरण केवल इस ब्राउज़र में सेव हुआ; डेटाबेस सेटअप/अनुमति जाँचें।')+' QR भुगतान की सफलता अपने-आप सत्यापित नहीं होती।');});
+async function renderAdminPlantEditor(){
+ const box=document.getElementById('adminPlantEditor');if(!box)return;box.textContent='पौधे लोड हो रहे हैं…';
+ const {data,error}=await db.from('plants').select('id,name,selling_price,stock_quantity,is_active').order('name');
+ if(error){box.textContent='पौधे नहीं पढ़ सके: '+error.message;return;}if(!data||!data.length){box.textContent='plants टेबल में अभी रिकॉर्ड नहीं हैं।';return;}
+ box.innerHTML='';data.forEach(p=>{const row=document.createElement('div');row.className='admin-plant-row';row.innerHTML='<div class="plant-admin-name"><b>'+safe(p.name)+'</b><br><small>'+(p.is_active?'उपलब्ध':'बंद')+'</small></div><input type="number" min="0" step="0.01" aria-label="कीमत" value="'+Number(p.selling_price)+'" class="admin-price"><input type="number" min="0" step="1" aria-label="स्टॉक" value="'+Number(p.stock_quantity)+'" class="admin-stock"><button type="button">सेव</button>';row.querySelector('button').addEventListener('click',async()=>{const price=Number(row.querySelector('.admin-price').value),stock=Number(row.querySelector('.admin-stock').value),btn=row.querySelector('button');if(!Number.isFinite(price)||price<0||!Number.isInteger(stock)||stock<0){alert('कीमत और स्टॉक सही भरें।');return;}btn.disabled=true;const {error:updateError}=await db.from('plants').update({selling_price:price,stock_quantity:stock}).eq('id',p.id);btn.disabled=false;if(updateError){alert('अपडेट नहीं हुआ: '+updateError.message);return;}alert(p.name+' की कीमत और स्टॉक अपडेट हुए।');await loadPlants();await renderAdminPlantEditor();});box.appendChild(row);});
+}
+// पहले से बनी रसीद इसी ब्राउज़र में फिर दिखाएँ।
+try{const last=JSON.parse(localStorage.getItem('nurseryLastReceipt')||'null');if(last)showCustomerReceipt(last);}catch{}
 
 loadPlants();
 
-function showAdminTab(tabName) {
-  const allowed = ['dashboard', 'orders', 'stock', 'sales', 'dues'];
-  if (!allowed.includes(tabName)) tabName = 'dashboard';
-  document.querySelectorAll('.admin-tab').forEach(button => {
-    const active = button.dataset.tab === tabName;
-    button.classList.toggle('active', active);
-    button.setAttribute('aria-selected', active ? 'true' : 'false');
-  });
-  document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active'));
-  const paneId = {
-    dashboard: 'adminDashboardPane', orders: 'adminOrdersPane',
-    stock: 'adminStockPane', sales: 'adminSalesPane', dues: 'adminDuesPane'
-  }[tabName];
-  document.getElementById(paneId).classList.add('active');
-}
-document.querySelectorAll('.admin-tab').forEach(button => {
-  button.addEventListener('click', () => showAdminTab(button.dataset.tab));
-});
-
 async function loadOwnerStats() {
+  const ownerBox = document.getElementById("ownerOrders");
+  if (!ownerBox) return;
+
+  // सुरक्षा: सही मालिक का सक्रिय लॉगिन होने पर ही हिसाब दिखाएँ।
   const { data: sessionData, error: sessionError } = await db.auth.getSession();
   const currentUser = sessionData && sessionData.session && sessionData.session.user;
   const isOwner = !sessionError && currentUser &&
     currentUser.id === OWNER_UID && currentUser.email === OWNER_EMAIL;
-  const statsBox = document.getElementById('ownerStats');
-  const stockBox = document.getElementById('ownerStockList');
-  const salesBox = document.getElementById('ownerSalesList');
+  let statsBox = document.getElementById("ownerStats");
   if (!isOwner) {
-    statsBox.innerHTML = ''; statsBox.style.display = 'none';
-    stockBox.innerHTML = ''; salesBox.innerHTML = '';
+    if (statsBox) {
+      statsBox.innerHTML = "";
+      statsBox.style.display = "none";
+    }
     return;
   }
-  statsBox.style.display = 'block';
-  statsBox.innerHTML = '<div class="admin-section-card">हिसाब लोड हो रहा है…</div>';
-  stockBox.textContent = 'स्टॉक लोड हो रहा है…';
-  salesBox.textContent = 'बिक्री का हिसाब लोड हो रहा है…';
+
+  if (!statsBox) {
+    statsBox = document.createElement("div");
+    statsBox.id = "ownerStats";
+    ownerBox.parentNode.insertBefore(statsBox, ownerBox);
+  }
+
+  statsBox.style.display = "block";
+  statsBox.innerHTML = "<p>बिक्री का हिसाब लोड हो रहा है...</p>";
+
   try {
     const now = new Date();
-    const dateText = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
-    const [salesResult, ordersResult, plantsResult] = await Promise.all([
-      db.from('sales').select('id,sale_date,total_amount,payment_method,notes').order('sale_date',{ascending:false}).limit(100),
-      db.from('order_requests').select('id,status,created_at'),
-      db.from('plants').select('id,name,stock_quantity,is_active').order('name')
-    ]);
+    const dateText =
+      now.getFullYear() + "-" +
+      String(now.getMonth() + 1).padStart(2, "0") + "-" +
+      String(now.getDate()).padStart(2, "0");
+
+    const [salesResult, ordersResult, plantsResult] =
+      await Promise.all([
+        db.from("sales")
+          .select("id,sale_date,total_amount"),
+
+        db.from("order_requests")
+          .select("id,status,created_at"),
+
+        db.from("plants")
+          .select("name,stock_quantity")
+          .eq("is_active", true)
+      ]);
+
     if (salesResult.error) throw salesResult.error;
     if (ordersResult.error) throw ordersResult.error;
     if (plantsResult.error) throw plantsResult.error;
+
     const sales = salesResult.data || [];
     const orders = ordersResult.data || [];
-    const allPlants = plantsResult.data || [];
-    const availablePlants = allPlants.filter(p => p.is_active === true);
-    const todaySales = sales.filter(s => s.sale_date && String(s.sale_date).slice(0,10) === dateText);
-    const todayOrders = orders.filter(o => o.created_at && String(o.created_at).slice(0,10) === dateText && o.status === 'confirmed').length;
-    const pendingOrders = orders.filter(o => o.status === 'pending').length;
-    const total = todaySales.reduce((sum,s) => sum + Number(s.total_amount || 0), 0);
-    const totalStock = availablePlants.reduce((sum,p) => sum + Math.max(0,Number(p.stock_quantity)||0), 0);
-    statsBox.innerHTML = `
-      <div class="admin-section-card">
-        <h2>📊 आज का सारांश</h2>
-        <p class="admin-muted">${now.toLocaleDateString('hi-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</p>
-        <div class="metric-grid">
-          <div class="metric"><div class="metric-label">आज की बिक्री</div><div class="metric-value">₹${total.toFixed(2)}</div></div>
-          <div class="metric"><div class="metric-label">बिक्री एंट्री</div><div class="metric-value">${todaySales.length}</div></div>
-          <div class="metric"><div class="metric-label">आज कन्फर्म ऑर्डर</div><div class="metric-value">${todayOrders}</div></div>
-          <div class="metric"><div class="metric-label">लंबित ऑर्डर</div><div class="metric-value">${pendingOrders}</div></div>
-          <div class="metric"><div class="metric-label">सक्रिय पौधों की किस्में</div><div class="metric-value">${availablePlants.length}</div></div>
-          <div class="metric"><div class="metric-label">कुल उपलब्ध पौधे</div><div class="metric-value">${totalStock}</div></div>
-        </div>
-        <div class="admin-action-row"><button type="button" id="refreshOwnerStats">🔄 हिसाब रीफ्रेश करें</button><button type="button" id="goPendingOrders">🛒 लंबित ऑर्डर देखें</button></div>
-      </div>`;
-    document.getElementById('refreshOwnerStats').addEventListener('click', async () => { await loadOwnerStats(); });
-    document.getElementById('goPendingOrders').addEventListener('click', () => { showAdminTab('orders'); });
+    const availablePlants = plantsResult.data || [];
 
-    stockBox.innerHTML = allPlants.length ? allPlants.map(p => `
-      <div class="stock-row" style="gap:10px;align-items:center;flex-wrap:wrap">
-        <span class="stock-name">🌱 ${safe(p.name || 'पौधा')} <small style="display:block;font-weight:400;color:${p.is_active ? '#16803d' : '#b45309'}">${p.is_active ? 'उपलब्ध' : 'अभी उपलब्ध नहीं / Sold Out'}</small></span>
-        <span class="stock-count">${Math.max(0,Number(p.stock_quantity)||0)} पौधे</span>
-        <button type="button" class="availability-toggle" data-plant-id="${safe(p.id)}" data-active="${p.is_active ? 'true' : 'false'}" style="font-size:12px;padding:7px 10px;border-radius:8px;border:1px solid ${p.is_active ? '#dc2626' : '#15803d'};background:${p.is_active ? '#fff7f7' : '#f0fdf4'};color:${p.is_active ? '#b91c1c' : '#166534'}">${p.is_active ? 'Sold Out करें' : 'फिर उपलब्ध करें'}</button>
-      </div>`).join('') : '<p>अभी कोई पौधा दर्ज नहीं है।</p>';
-    stockBox.querySelectorAll('.availability-toggle').forEach(button => {
-      button.addEventListener('click', async () => {
-        const plantId = button.dataset.plantId;
-        const currentlyActive = button.dataset.active === 'true';
-        const nextActive = !currentlyActive;
-        if (!confirm(nextActive ? 'क्या इस पौधे को फिर उपलब्ध करना चाहते हैं?' : 'क्या इस पौधे को Sold Out करना चाहते हैं? यह ग्राहक की सूची और नए ऑर्डर विकल्प से हट जाएगा।')) return;
-        button.disabled = true;
-        const {error: updateError} = await db.from('plants').update({is_active: nextActive}).eq('id', plantId);
-        if (updateError) {
-          alert('स्थिति बदली नहीं जा सकी: ' + updateError.message);
-          button.disabled = false;
-          return;
-        }
-        await loadOwnerStats();
-        await loadPlants();
-      });
-    });
-    salesBox.innerHTML = sales.length ? sales.slice(0,30).map(s => `
-      <div class="sale-row"><div><strong>बिक्री #${safe(s.id)}</strong><div class="sale-meta">${s.sale_date ? new Date(s.sale_date).toLocaleDateString('hi-IN') : 'तारीख उपलब्ध नहीं'}${s.payment_method ? ' • '+safe(s.payment_method) : ''}</div><div class="sale-meta">${safe(s.notes || '')}</div></div><div class="sale-amount">₹${Number(s.total_amount||0).toFixed(2)}</div></div>`).join('') : '<p>अभी बिक्री एंट्री नहीं मिली।</p>';
+    const todaySales = sales.filter(s =>
+      s.sale_date && s.sale_date.slice(0, 10) === dateText
+    );
+
+    const todayOrders = orders.filter(o =>
+      o.created_at &&
+      o.created_at.slice(0, 10) === dateText &&
+      o.status === "confirmed"
+    ).length;
+
+    const total = todaySales.reduce(
+      (sum, s) => sum + Number(s.total_amount || 0), 0
+    );
+
+    statsBox.innerHTML = `
+      <div class="card">
+        <h2>📊 नर्सरी का बिक्री हिसाब</h2>
+        <p>आज की कुल बिक्री:
+          <strong>₹${total.toFixed(2)}</strong>
+        </p>
+        <p>आज की बिक्री एंट्री:
+          <strong>${todaySales.length}</strong>
+        </p>
+        <p>आज कन्फर्म ऑर्डर:
+          <strong>${todayOrders}</strong>
+        </p>
+        <h3>🌱 उपलब्ध पौधों का स्टॉक</h3>
+        ${availablePlants.map(p => `
+          <p>${p.name}: <strong>${p.stock_quantity} पौधे</strong></p>
+        `).join("")}
+        <button type="button" id="refreshOwnerStats">
+          🔄 हिसाब फिर से देखें
+        </button>
+      </div>
+    `;
+
+    document.getElementById("refreshOwnerStats")
+      .addEventListener("click", loadOwnerStats);
+
   } catch (error) {
-    const message = safe(error.message || error);
-    statsBox.innerHTML = '<div class="admin-section-card">हिसाब लोड नहीं हुआ: ' + message + '</div>';
-    stockBox.innerHTML = '<p>स्टॉक लोड नहीं हुआ: ' + message + '</p>';
-    salesBox.innerHTML = '<p>बिक्री का हिसाब लोड नहीं हुआ: ' + message + '</p>';
+    statsBox.innerHTML =
+      "<p>हिसाब लोड नहीं हुआ: " +
+      String(error.message || error) + "</p>";
   }
 }
-
-document.getElementById('customerSearchClear').addEventListener('click', () => {
-  document.getElementById('customerSearchPhone').value = '';
-  document.getElementById('customerSearchResults').innerHTML = '';
-  document.getElementById('customerSearchStatus').textContent = '';
-  document.getElementById('customerSearchPhone').focus();
-  lastAutoSearchedDigits = '';
-  if (customerSearchTimer) clearTimeout(customerSearchTimer);
-});
-
-document.getElementById('customerSearchForm').addEventListener('submit', async event => {
-  event.preventDefault();
-  const status = document.getElementById('customerSearchStatus');
-  const results = document.getElementById('customerSearchResults');
-  const button = document.getElementById('customerSearchButton');
-  const {data: sessionData, error: sessionError} = await db.auth.getSession();
-  const currentUser = sessionData && sessionData.session && sessionData.session.user;
-  if (sessionError || !currentUser || currentUser.id !== OWNER_UID || currentUser.email !== OWNER_EMAIL) {
-    status.textContent = 'यह जानकारी केवल अधिकृत मालिक लॉगिन के बाद खोजी जा सकती है।';
-    results.innerHTML = '';
-    return;
-  }
-  const rawPhone = document.getElementById('customerSearchPhone').value.trim();
-  const digits = rawPhone.replace(/\D/g, '');
-  if (digits.length < 6) {
-    status.textContent = 'कृपया मोबाइल नंबर के कम से कम 6 अंक लिखें।';
-    results.innerHTML = '';
-    return;
-  }
-  button.disabled = true;
-  document.getElementById('adminCustomerSearch').classList.add('searching');
-  status.textContent = 'ग्राहक की जानकारी खोजी जा रही है…';
-  results.innerHTML = '';
-  try {
-    const pattern = '%' + digits + '%';
-    const [ordersResult, customersResult] = await Promise.all([
-      db.from('order_requests')
-        .select('id,plant_name,quantity,unit_price,customer_name,customer_phone,customer_address,notes,status,created_at')
-        .ilike('customer_phone', pattern)
-        .order('created_at', {ascending:false})
-        .limit(50),
-      db.from('customers')
-        .select('id,name,phone,address')
-        .ilike('phone', pattern)
-        .limit(20)
-    ]);
-    if (ordersResult.error) throw ordersResult.error;
-    if (customersResult.error) throw customersResult.error;
-    const orders = ordersResult.data || [];
-    const customers = customersResult.data || [];
-    if (!orders.length && !customers.length) {
-      status.textContent = 'इस नंबर से कोई ग्राहक या ऑर्डर नहीं मिला। नंबर की जाँच करें या ग्राहक के पुराने ऑर्डर में मोबाइल नंबर दर्ज न होने की संभावना देखें।';
-      return;
-    }
-    const escaped = value => safe(value == null ? '' : value);
-    const uniqueCustomers = [];
-    const seen = new Set();
-    customers.concat(orders.map(o => ({name:o.customer_name, phone:o.customer_phone, address:o.customer_address}))).forEach(c => {
-      const key = [String(c.phone||''),String(c.name||''),String(c.address||'')].join('|');
-      if (!seen.has(key)) { seen.add(key); uniqueCustomers.push(c); }
-    });
-    status.textContent = `मिला: ${uniqueCustomers.length} ग्राहक रिकॉर्ड और ${orders.length} ऑर्डर।`;
-    results.innerHTML = uniqueCustomers.map(c => `
-      <div class="customer-result-card">
-        <h3>👤 ${escaped(c.name || 'नाम उपलब्ध नहीं')}</h3>
-        <p><strong>मोबाइल:</strong> ${escaped(c.phone || 'नहीं दिया')}</p>
-        <p><strong>पता:</strong> ${escaped(c.address || 'पता उपलब्ध नहीं')}</p>
-      </div>`).join('') + (orders.length ? `
-      <div class="customer-result-card"><h3>🛒 खरीद / ऑर्डर इतिहास</h3>
-        ${orders.map(o => `
-          <div class="customer-order-row">
-            <strong>ऑर्डर #${escaped(o.id)} — ${escaped(o.status || 'स्थिति उपलब्ध नहीं')}</strong>
-            <p>${escaped(o.plant_name || 'पौधा')} • ${Number(o.quantity)||0} पौधे • ₹${(Number(o.unit_price||0)*Number(o.quantity||0)).toFixed(2)}</p>
-            <p><strong>पता:</strong> ${escaped(o.customer_address || 'नहीं दिया')}</p>
-            <p class="admin-muted">${o.created_at ? new Date(o.created_at).toLocaleString('hi-IN') : ''}</p>
-            ${String(o.notes||'').includes('MAPS_URL:https://www.google.com/maps?q=') ? `<p><a href="${escaped((String(o.notes).match(/MAPS_URL:(https:\/\/www\.google\.com\/maps\?q=[0-9.,-]+)/)||[])[1]||'#')}" target="_blank" rel="noopener">📍 Google Maps लोकेशन खोलें</a></p>` : ''}
-          </div>`).join('')}
-      </div>` : '');
-  } catch (error) {
-    status.textContent = 'ग्राहक की जानकारी नहीं खुली: ' + (error.message || error) + '। डेटाबेस अनुमति (RLS) भी जाँचनी पड़ सकती है।';
-  } finally {
-    button.disabled = false;
-  }
-});
-
-
-// मोबाइल नंबर के 4 अंक लिखते ही ग्राहक खोज अपने-आप शुरू हो; एक साथ कई अनुरोध न भेजें।
-let customerSearchTimer = null;
-let lastAutoSearchedDigits = '';
-document.getElementById('customerSearchPhone').addEventListener('input', () => {
-  const input = document.getElementById('customerSearchPhone');
-  const digits = input.value.replace(/\D/g, '');
-  const results = document.getElementById('customerSearchResults');
-  const status = document.getElementById('customerSearchStatus');
-  if (customerSearchTimer) clearTimeout(customerSearchTimer);
-  if (digits.length < 4) {
-    lastAutoSearchedDigits = '';
-    results.innerHTML = '';
-    status.textContent = '';
-    return;
-  }
-  if (digits === lastAutoSearchedDigits) return;
-  customerSearchTimer = setTimeout(() => {
-    lastAutoSearchedDigits = digits;
-    document.getElementById('customerSearchForm').requestSubmit();
-  }, 450);
-});
 
 db.auth.onAuthStateChange((event, session) => {
   const user = session && session.user;
@@ -875,24 +591,14 @@ db.auth.onAuthStateChange((event, session) => {
     if (ordersBox) { ordersBox.innerHTML = ""; ordersBox.style.display = "none"; }
     document.getElementById("loginForm").style.display = "block";
     document.getElementById("logoutButton").style.display = "none";
-    document.getElementById("ownerPanelHeader").style.display = "none";
-    document.getElementById("adminCustomerSearch").style.display = "none";
-    document.getElementById("customerSearchResults").innerHTML = "";
-    document.getElementById("adminTabs").style.display = "none";
-    ownerSection.classList.remove('login-visible');
-    ownerSection.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-    document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active'));
     return;
   }
   document.getElementById("loginForm").style.display = "none";
   document.getElementById("logoutButton").style.display = "inline-block";
-  document.getElementById("ownerPanelHeader").style.display = "block";
-  document.getElementById("adminCustomerSearch").style.display = "block";
-  document.getElementById("adminTabs").style.display = "grid";
-  showAdminTab('dashboard');
   if (ordersBox) ordersBox.style.display = "block";
-  setTimeout(() => { loadOrders(); loadOwnerStats(); renderDueRecords(); }, 0);
+  document.getElementById('adminControlPanel').style.display = 'block';
+  setTimeout(() => { renderAdminPlantEditor(); loadAdminSettingsIntoForm(); }, 0);
+  setTimeout(() => { loadOrders(); loadOwnerStats(); }, 0);
 });
 </script>
 </body>
