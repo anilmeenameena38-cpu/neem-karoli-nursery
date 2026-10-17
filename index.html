@@ -98,6 +98,28 @@ footer p{margin:5px}
 #owner button,#owner .btn{font-size:14px;font-weight:500;padding:10px 14px;border-radius:10px;box-shadow:none}
 #owner .order{padding:13px}
 @media(max-width:650px){.admin-tab{min-height:58px}.admin-tab .tab-icon{font-size:18px}.admin-tab .tab-label{font-size:11px}.admin-section-card{padding:12px}#ownerPanelHeader{padding:13px}}
+
+/* Website control center: no-code customer website customization */
+:root{--site-title-scale:1;--site-nav-scale:1;--site-body-scale:1;--site-button-scale:1;--site-card-scale:1}
+body{font-size:calc(16px * var(--site-body-scale))}
+header h1{font-size:calc(clamp(25px,4.5vw,42px) * var(--site-title-scale))}
+nav a,nav #adminPanelNav,nav #menuToggle{font-size:calc(14px * var(--site-nav-scale))}
+button,.btn{font-size:calc(16px * var(--site-button-scale))}
+.card{padding:calc(clamp(18px,3vw,30px) * var(--site-card-scale))}
+.site-control-subnav{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:9px;margin:12px 0 18px}
+.site-control-subnav button{background:#f0f8ed;color:var(--green);border:1px solid var(--line);box-shadow:none}
+.site-control-subnav button.active{background:var(--green);color:#fff}
+.site-control-view{display:none}.site-control-view.active{display:block}
+.site-control-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px}
+.site-control-field{border:1px solid var(--line);border-radius:14px;padding:13px;background:#fbfef9;margin:10px 0}
+.site-control-field input[type=range]{padding:0;margin:10px 0;accent-color:var(--green)}
+.site-control-field .step-buttons{display:flex;gap:6px;flex-wrap:wrap}
+.site-control-field .step-buttons button{padding:7px 10px;font-size:13px}
+.site-control-preview{background:#edf7ed;border-radius:12px;padding:10px;margin-top:8px;color:var(--green)}
+.site-control-logo-preview{width:110px;height:110px;object-fit:contain;border:1px dashed #b7cfb2;border-radius:12px;background:#fff;display:block;margin:8px 0}
+.site-control-toggle{display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #e7f0e3}.site-control-toggle input{width:auto;margin:0}
+@media(max-width:650px){.site-control-subnav{grid-template-columns:repeat(2,minmax(0,1fr))}.site-control-field{padding:11px}}
+
 </style>
 </head>
 <body>
@@ -183,6 +205,7 @@ footer p{margin:5px}
   <button class="admin-tab" type="button" data-tab="sales" role="tab" aria-selected="false"><span class="tab-icon">💰</span><span class="tab-label">बिक्री हिसाब</span></button>
   <button class="admin-tab" type="button" data-tab="dues" role="tab" aria-selected="false"><span class="tab-icon">⏰</span><span class="tab-label">उधार / बाकी</span></button>
   <button class="admin-tab" type="button" data-tab="chatgpt" role="tab" aria-selected="false"><span class="tab-icon">🤖</span><span class="tab-label">ChatGPT मदद</span></button>
+  <button class="admin-tab" type="button" data-tab="sitecontrol" role="tab" aria-selected="false"><span class="tab-icon">🎨</span><span class="tab-label">वेबसाइट कंट्रोल</span></button>
 </div>
 <div id="adminDashboardPane" class="admin-pane active">
   <div id="ownerStats"></div>
@@ -243,6 +266,49 @@ footer p{margin:5px}
     <div id="nurseryChatStatus" class="status" aria-live="polite">नर्सरी वेबसाइट के बारे में सवाल लिखें। अपना Supabase पासवर्ड या गुप्त API key कभी न लिखें।</div>
     <p class="admin-muted">नोट: वेबसाइट सीधे इस बातचीत में जवाब नहीं भेज सकती। ChatGPT अलग टैब में खुलेगा; वहाँ सवाल पेस्ट करके भेजें।</p>
   </div>
+</div>
+<div id="adminSitecontrolPane" class="admin-pane">
+ <div class="admin-section-card">
+  <h2>🎨 ग्राहक वेबसाइट कंट्रोल सेंटर</h2>
+  <p class="admin-muted">यहाँ से लोगो, नर्सरी का नाम, मोबाइल नंबर, आकार और ग्राहक वेबसाइट के सेक्शन बदलें। सेव करने पर सेटिंग Supabase में साझा होगी, अगर nursery_site_settings टेबल और अनुमति सही हैं।</p>
+  <div class="site-control-subnav" role="tablist" aria-label="वेबसाइट सेटिंग्स">
+   <button type="button" class="active" data-site-view="branding">🏷️ नाम और लोगो</button>
+   <button type="button" data-site-view="contact">📞 मोबाइल / पता</button>
+   <button type="button" data-site-view="sizes">🔠 आकार बदलें</button>
+   <button type="button" data-site-view="sections">🧩 सेक्शन दिखाएँ</button>
+  </div>
+  <div id="siteViewBranding" class="site-control-view active">
+   <div class="site-control-grid">
+    <div class="site-control-field"><label for="siteBrandTitle">वेबसाइट का नाम</label><input id="siteBrandTitle" maxlength="120" placeholder="नीम करोली नर्सरी"><label for="siteBrandSubtitle">नाम के नीचे लाइन</label><input id="siteBrandSubtitle" maxlength="180" placeholder="सब्जियों के स्वस्थ पौधे और ताज़ी हरी सब्जियाँ"><label for="siteWelcomeTitle">होमपेज का मुख्य संदेश</label><input id="siteWelcomeTitle" maxlength="160"><label for="siteWelcomeText">मुख्य संदेश का विवरण</label><textarea id="siteWelcomeText" rows="3" maxlength="500"></textarea><label for="siteWelcomeNote">छोटा नोट</label><input id="siteWelcomeNote" maxlength="250"></div>
+    <div class="site-control-field"><label for="siteLogoFile">अपना लोगो अपलोड करें</label><input id="siteLogoFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"><img id="siteLogoPreview" class="site-control-logo-preview" alt="लोगो प्रीव्यू" style="display:none"><label for="siteLogoUrl">या लोगो का URL</label><input id="siteLogoUrl" type="url" placeholder="https://..."><p class="admin-muted">अपलोड करने पर लोगो Supabase Storage में सेव होगा।</p><label class="site-control-toggle"><input id="siteShowLogo" type="checkbox" checked> ग्राहक वेबसाइट पर लोगो दिखाएँ</label></div>
+   </div>
+  </div>
+  <div id="siteViewContact" class="site-control-view">
+   <div class="site-control-grid"><div class="site-control-field"><label for="sitePhone">नर्सरी मोबाइल नंबर</label><input id="sitePhone" type="tel" inputmode="numeric" maxlength="16" placeholder="मोबाइल नंबर"><label for="siteAddress">नर्सरी का पता</label><textarea id="siteAddress" rows="3" maxlength="250" placeholder="गाँव, तहसील, जिला, राज्य"></textarea><label for="siteWhatsapp">WhatsApp नंबर (देश कोड सहित नहीं)</label><input id="siteWhatsapp" type="tel" inputmode="numeric" maxlength="16" placeholder="जैसे 9198XXXXXXXX"><p class="admin-muted">सेव करने के बाद ग्राहक वेबसाइट के संपर्क सेक्शन और WhatsApp लिंक में अपडेट लागू होगा।</p></div></div>
+  </div>
+  <div id="siteViewSizes" class="site-control-view">
+   <p class="admin-muted">हर आकार को स्लाइडर से बदलें या 1%, 5%, 10% बटन दबाकर धीरे-धीरे बढ़ाएँ/घटाएँ। 100% मूल आकार है।</p>
+   <div class="site-control-grid">
+    <div class="site-control-field"><label for="siteTitleScale">मुख्य नाम / हेडर का आकार <b id="siteTitleScaleVal">100%</b></label><input id="siteTitleScale" type="range" min="70" max="150" step="1" value="100"><div class="step-buttons"><button type="button" data-scale="siteTitleScale" data-step="-10">−10%</button><button type="button" data-scale="siteTitleScale" data-step="-5">−5%</button><button type="button" data-scale="siteTitleScale" data-step="-1">−1%</button><button type="button" data-scale="siteTitleScale" data-step="1">+1%</button><button type="button" data-scale="siteTitleScale" data-step="5">+5%</button><button type="button" data-scale="siteTitleScale" data-step="10">+10%</button></div></div>
+    <div class="site-control-field"><label for="siteNavScale">मेन्यू बटन का आकार <b id="siteNavScaleVal">100%</b></label><input id="siteNavScale" type="range" min="70" max="150" step="1" value="100"><div class="step-buttons"><button type="button" data-scale="siteNavScale" data-step="-10">−10%</button><button type="button" data-scale="siteNavScale" data-step="-5">−5%</button><button type="button" data-scale="siteNavScale" data-step="-1">−1%</button><button type="button" data-scale="siteNavScale" data-step="1">+1%</button><button type="button" data-scale="siteNavScale" data-step="5">+5%</button><button type="button" data-scale="siteNavScale" data-step="10">+10%</button></div></div>
+    <div class="site-control-field"><label for="siteBodyScale">सामान्य लिखावट का आकार <b id="siteBodyScaleVal">100%</b></label><input id="siteBodyScale" type="range" min="70" max="150" step="1" value="100"><div class="step-buttons"><button type="button" data-scale="siteBodyScale" data-step="-10">−10%</button><button type="button" data-scale="siteBodyScale" data-step="-5">−5%</button><button type="button" data-scale="siteBodyScale" data-step="-1">−1%</button><button type="button" data-scale="siteBodyScale" data-step="1">+1%</button><button type="button" data-scale="siteBodyScale" data-step="5">+5%</button><button type="button" data-scale="siteBodyScale" data-step="10">+10%</button></div></div>
+    <div class="site-control-field"><label for="siteButtonScale">बटन पर लिखावट का आकार <b id="siteButtonScaleVal">100%</b></label><input id="siteButtonScale" type="range" min="70" max="150" step="1" value="100"><div class="step-buttons"><button type="button" data-scale="siteButtonScale" data-step="-10">−10%</button><button type="button" data-scale="siteButtonScale" data-step="-5">−5%</button><button type="button" data-scale="siteButtonScale" data-step="-1">−1%</button><button type="button" data-scale="siteButtonScale" data-step="1">+1%</button><button type="button" data-scale="siteButtonScale" data-step="5">+5%</button><button type="button" data-scale="siteButtonScale" data-step="10">+10%</button></div></div>
+    <div class="site-control-field"><label for="siteCardScale">कार्ड के अंदर खाली जगह <b id="siteCardScaleVal">100%</b></label><input id="siteCardScale" type="range" min="70" max="150" step="1" value="100"><div class="step-buttons"><button type="button" data-scale="siteCardScale" data-step="-10">−10%</button><button type="button" data-scale="siteCardScale" data-step="-5">−5%</button><button type="button" data-scale="siteCardScale" data-step="-1">−1%</button><button type="button" data-scale="siteCardScale" data-step="1">+1%</button><button type="button" data-scale="siteCardScale" data-step="5">+5%</button><button type="button" data-scale="siteCardScale" data-step="10">+10%</button></div></div>
+   </div>
+   <div class="site-control-field"><button type="button" id="siteResetSizes" class="secondary-btn">↩️ सभी आकार 100% करें</button></div>
+  </div>
+  <div id="siteViewSections" class="site-control-view">
+   <p class="admin-muted">इन चेकबॉक्स से ग्राहक वेबसाइट के हिस्से दिखाएँ या छिपाएँ।</p>
+   <label class="site-control-toggle"><input id="siteShowWelcome" type="checkbox" checked> मुख्य स्वागत संदेश दिखाएँ</label>
+   <label class="site-control-toggle"><input id="siteShowPlants" type="checkbox" checked> उपलब्ध पौधे दिखाएँ</label>
+   <label class="site-control-toggle"><input id="siteShowOrder" type="checkbox" checked> ऑर्डर फॉर्म दिखाएँ</label>
+   <label class="site-control-toggle"><input id="siteShowContact" type="checkbox" checked> संपर्क सेक्शन दिखाएँ</label>
+   <label class="site-control-toggle"><input id="siteShowFooter" type="checkbox" checked> वेबसाइट का नीचे वाला Footer दिखाएँ</label>
+   <p class="admin-muted">सावधानी: ऑर्डर फॉर्म छिपाने से ग्राहक वेबसाइट से ऑर्डर नहीं कर पाएँगे।</p>
+  </div>
+  <div class="site-control-field" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button type="button" id="sitePreviewApply" class="secondary-btn">👁️ पहले बदलाव देखें</button><button type="button" id="siteSaveAll">💾 वेबसाइट की सेटिंग सेव करें</button><button type="button" id="siteReloadSettings" class="secondary-btn">↻ सेव सेटिंग दोबारा लाएँ</button></div>
+  <div id="siteControlStatus" class="status" aria-live="polite">बदलाव करने के बाद सेव करें। सेव होने पर ग्राहक वेबसाइट पर भी लागू होंगे।</div>
+ </div>
 </div>
 <div id="adminDuesPane" class="admin-pane">
   <div class="admin-section-card">
@@ -688,7 +754,7 @@ loadPlants();
 })();
 
 function showAdminTab(tabName) {
-  const allowed = ['dashboard', 'orders', 'stock', 'manageplants', 'sales', 'dues', 'chatgpt'];
+  const allowed = ['dashboard', 'orders', 'stock', 'manageplants', 'sales', 'dues', 'chatgpt', 'sitecontrol'];
   if (!allowed.includes(tabName)) tabName = 'dashboard';
   document.querySelectorAll('.admin-tab').forEach(button => {
     const active = button.dataset.tab === tabName;
@@ -698,12 +764,12 @@ function showAdminTab(tabName) {
   document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active'));
   const paneId = {
     dashboard: 'adminDashboardPane', orders: 'adminOrdersPane',
-    stock: 'adminStockPane', manageplants: 'adminManageplantsPane', sales: 'adminSalesPane', dues: 'adminDuesPane', chatgpt: 'adminChatgptPane'
+    stock: 'adminStockPane', manageplants: 'adminManageplantsPane', sales: 'adminSalesPane', dues: 'adminDuesPane', chatgpt: 'adminChatgptPane', sitecontrol: 'adminSitecontrolPane'
   }[tabName];
   document.getElementById(paneId).classList.add('active');
 }
 document.querySelectorAll('.admin-tab').forEach(button => {
-  button.addEventListener('click', () => { const tab = button.dataset.tab; showAdminTab(tab); if (tab === 'manageplants') showManageView('add'); if (tab === 'stock') loadOwnerStats(); });
+  button.addEventListener('click', () => { const tab = button.dataset.tab; showAdminTab(tab); if (tab === 'manageplants') showManageView('add'); if (tab === 'stock') loadOwnerStats(); if (tab === 'sitecontrol') loadSiteControlForm(); });
 });
 
 function showManageView(view) {
@@ -958,6 +1024,47 @@ document.getElementById('customerSearchForm').addEventListener('submit', async e
   }
 });
 
+
+// Shared no-code website customization settings
+const SITE_CONTROL_DEFAULTS = {
+ brandTitle:'🌱 श्री नीम करोली महाराज ग्रीन नर्सरी', brandSubtitle:'हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए', address:'📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान', phone:'9887666626', whatsapp:'919887666626', logoUrl:'', showLogo:false,
+ welcomeTitle:'🌿 प्रकृति से जुड़ें, स्वस्थ पौधे घर लाएँ', welcomeText:'घर की क्यारी हो या खेत—सब्जियों के पौधों की जानकारी, कीमत और उपलब्ध स्टॉक यहाँ देखें।', welcomeNote:'ऑर्डर भेजने के बाद नर्सरी मालिक उपलब्धता और कीमत की पुष्टि करेंगे।',
+ titleScale:100, navScale:100, bodyScale:100, buttonScale:100, cardScale:100,
+ showWelcome:true, showPlants:true, showOrder:true, showContact:true, showFooter:true
+};
+function siteSettingsFromForm(){return {
+ brandTitle:document.getElementById('siteBrandTitle').value.trim(),brandSubtitle:document.getElementById('siteBrandSubtitle').value.trim(),address:document.getElementById('siteAddress').value.trim(),phone:document.getElementById('sitePhone').value.trim(),whatsapp:document.getElementById('siteWhatsapp').value.trim(),logoUrl:document.getElementById('siteLogoUrl').value.trim(),showLogo:document.getElementById('siteShowLogo').checked,
+ welcomeTitle:document.getElementById('siteWelcomeTitle').value.trim(),welcomeText:document.getElementById('siteWelcomeText').value.trim(),welcomeNote:document.getElementById('siteWelcomeNote').value.trim(),
+ titleScale:Number(document.getElementById('siteTitleScale').value),navScale:Number(document.getElementById('siteNavScale').value),bodyScale:Number(document.getElementById('siteBodyScale').value),buttonScale:Number(document.getElementById('siteButtonScale').value),cardScale:Number(document.getElementById('siteCardScale').value),
+ showWelcome:document.getElementById('siteShowWelcome').checked,showPlants:document.getElementById('siteShowPlants').checked,showOrder:document.getElementById('siteShowOrder').checked,showContact:document.getElementById('siteShowContact').checked,showFooter:document.getElementById('siteShowFooter').checked
+};}
+function setSiteControlForm(v){const x=Object.assign({},SITE_CONTROL_DEFAULTS,v||{});const map={brandTitle:'siteBrandTitle',brandSubtitle:'siteBrandSubtitle',address:'siteAddress',phone:'sitePhone',whatsapp:'siteWhatsapp',logoUrl:'siteLogoUrl',welcomeTitle:'siteWelcomeTitle',welcomeText:'siteWelcomeText',welcomeNote:'siteWelcomeNote',titleScale:'siteTitleScale',navScale:'siteNavScale',bodyScale:'siteBodyScale',buttonScale:'siteButtonScale',cardScale:'siteCardScale',showLogo:'siteShowLogo',showWelcome:'siteShowWelcome',showPlants:'siteShowPlants',showOrder:'siteShowOrder',showContact:'siteShowContact',showFooter:'siteShowFooter'};Object.entries(map).forEach(([k,id])=>{const e=document.getElementById(id);if(!e)return;if(e.type==='checkbox')e.checked=!!x[k];else e.value=x[k]??'';});updateScaleLabels();const prev=document.getElementById('siteLogoPreview');if(prev){prev.src=x.logoUrl||'';prev.style.display=x.logoUrl?'block':'none';}}
+function updateScaleLabels(){[['siteTitleScale','siteTitleScaleVal'],['siteNavScale','siteNavScaleVal'],['siteBodyScale','siteBodyScaleVal'],['siteButtonScale','siteButtonScaleVal'],['siteCardScale','siteCardScaleVal']].forEach(([a,b])=>{const x=document.getElementById(a),y=document.getElementById(b);if(x&&y)y.textContent=(x.value||100)+'%';});}
+function applySiteControlSettings(v){const x=Object.assign({},SITE_CONTROL_DEFAULTS,v||{});document.documentElement.style.setProperty('--site-title-scale',Number(x.titleScale||100)/100);document.documentElement.style.setProperty('--site-nav-scale',Number(x.navScale||100)/100);document.documentElement.style.setProperty('--site-body-scale',Number(x.bodyScale||100)/100);document.documentElement.style.setProperty('--site-button-scale',Number(x.buttonScale||100)/100);document.documentElement.style.setProperty('--site-card-scale',Number(x.cardScale||100)/100);
+ const h=document.querySelector('body>header h1');if(h&&x.brandTitle)h.textContent=x.brandTitle;
+ const hp=document.querySelector('body>header p');if(hp&&x.brandSubtitle)hp.textContent=x.brandSubtitle;
+ const head=document.querySelector('body>header');if(head){let logo=document.getElementById('customerSiteLogo');if(x.showLogo&&x.logoUrl){if(!logo){logo=document.createElement('img');logo.id='customerSiteLogo';logo.alt='नर्सरी लोगो';logo.style.cssText='display:block;width:clamp(58px,9vw,100px);height:clamp(58px,9vw,100px);object-fit:contain;margin:0 auto 10px;background:#ffffff18;border-radius:14px;padding:5px';head.insertBefore(logo,head.firstChild);}logo.src=x.logoUrl;logo.style.display='block';}else if(logo)logo.style.display='none';}
+ const welcome=document.getElementById('welcome');if(welcome){welcome.style.display=x.showWelcome?'':'none';const h2=welcome.querySelector('h2');const ps=welcome.querySelectorAll('p');if(h2&&x.welcomeTitle)h2.textContent=x.welcomeTitle;if(ps[0]&&x.welcomeText)ps[0].textContent=x.welcomeText;if(ps[1]&&x.welcomeNote)ps[1].textContent=x.welcomeNote;}
+ [['plants','showPlants'],['order','showOrder'],['contact','showContact']].forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.style.display=x[k]?'':'none';});const foot=document.querySelector('body>footer');if(foot)foot.style.display=x.showFooter?'':'none';
+ const contact=document.getElementById('contact');if(contact){const ps=contact.querySelectorAll('p');if(ps[0])ps[0].textContent='नर्सरी मोबाइल: '+(x.phone||'');const wa=contact.querySelector('a[href*="wa.me"]');if(wa){const n=(x.whatsapp||x.phone||'').replace(/\D/g,'');wa.href='https://wa.me/'+n;}}
+ const headerPs=document.querySelectorAll('body>header p');if(headerPs[1]&&x.address)headerPs[1].textContent=x.address;
+}
+async function getSiteSettingsShared(){try{const {data,error}=await db.from('nursery_site_settings').select('settings').eq('id',1).maybeSingle();if(!error&&data&&data.settings)return data.settings.siteControl||{};}catch(e){}try{return JSON.parse(localStorage.getItem('nurserySiteControlFallback')||'{}');}catch(e){return {};}}
+async function loadSiteControlForm(){const status=document.getElementById('siteControlStatus');if(status)status.textContent='सेव की गई वेबसाइट सेटिंग लोड हो रही हैं…';const shared=await getSharedSettings();const x=Object.assign({},SITE_CONTROL_DEFAULTS,shared.siteControl||{});setSiteControlForm(x);if(status)status.textContent='सेव की गई सेटिंग लोड हो गईं। बदलाव करने के बाद “वेबसाइट की सेटिंग सेव करें” दबाएँ।';}
+function applySitePreview(){const x=siteSettingsFromForm();applySiteControlSettings(x);const status=document.getElementById('siteControlStatus');if(status)status.textContent='प्रीव्यू लागू हुआ। ग्राहक वेबसाइट पर बदलाव स्थायी करने के लिए “वेबसाइट की सेटिंग सेव करें” दबाएँ।';}
+document.querySelectorAll('[data-site-view]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-site-view]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.site-control-view').forEach(v=>v.classList.remove('active'));const target=document.getElementById(({branding:'siteViewBranding',contact:'siteViewContact',sizes:'siteViewSizes',sections:'siteViewSections'})[b.dataset.siteView]);if(target)target.classList.add('active');}));
+document.querySelectorAll('[data-scale]').forEach(b=>b.addEventListener('click',()=>{const input=document.getElementById(b.dataset.scale);if(!input)return;input.value=Math.max(Number(input.min),Math.min(Number(input.max),Number(input.value)+Number(b.dataset.step)));updateScaleLabels();applySitePreview();}));
+['siteTitleScale','siteNavScale','siteBodyScale','siteButtonScale','siteCardScale'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>{updateScaleLabels();applySitePreview();}));
+document.getElementById('siteResetSizes')?.addEventListener('click',()=>{['siteTitleScale','siteNavScale','siteBodyScale','siteButtonScale','siteCardScale'].forEach(id=>document.getElementById(id).value=100);updateScaleLabels();applySitePreview();});
+document.getElementById('siteLogoFile')?.addEventListener('change',()=>{const f=document.getElementById('siteLogoFile').files?.[0],img=document.getElementById('siteLogoPreview');if(!f||!img)return;const url=URL.createObjectURL(f);img.src=url;img.style.display='block';});
+document.getElementById('siteLogoUrl')?.addEventListener('input',()=>{const u=document.getElementById('siteLogoUrl').value.trim(),img=document.getElementById('siteLogoPreview');if(img&&u){img.src=u;img.style.display='block';}});
+document.getElementById('sitePreviewApply')?.addEventListener('click',applySitePreview);
+document.getElementById('siteReloadSettings')?.addEventListener('click',loadSiteControlForm);
+document.getElementById('siteSaveAll')?.addEventListener('click',async()=>{const status=document.getElementById('siteControlStatus'),btn=document.getElementById('siteSaveAll');try{btn.disabled=true;status.textContent='सेटिंग सेव हो रही हैं…';let x=siteSettingsFromForm();const {data:userData,error:userError}=await db.auth.getUser();if(userError||!userData.user||userData.user.id!==OWNER_UID||userData.user.email!==OWNER_EMAIL)throw new Error('सेटिंग सेव करने के लिए मालिक के खाते से लॉगिन करें।');const file=document.getElementById('siteLogoFile').files?.[0];if(file){if(!file.type.startsWith('image/'))throw new Error('कृपया इमेज फाइल चुनें।');if(file.size>5*1024*1024)throw new Error('लोगो 5 MB से छोटा रखें।');const ext=(file.name.split('.').pop()||'png').toLowerCase().replace(/[^a-z0-9]/g,'')||'png';const path=OWNER_UID+'/branding/logo-'+Date.now()+'.'+ext;const {error:upErr}=await db.storage.from('plant-images').upload(path,file,{upsert:true,contentType:file.type||'image/png'});if(upErr)throw upErr;const {data:urlData}=db.storage.from('plant-images').getPublicUrl(path);x.logoUrl=urlData.publicUrl;document.getElementById('siteLogoUrl').value=x.logoUrl;document.getElementById('siteLogoFile').value='';}
+ const all=await (async()=>{try{const {data,error}=await db.from('nursery_site_settings').select('settings').eq('id',1).maybeSingle();if(!error&&data?.settings)return data.settings;}catch(e){}return {};})();all.siteControl=x;const {error:saveErr}=await db.from('nursery_site_settings').upsert({id:1,settings:all,updated_at:new Date().toISOString()});if(saveErr)throw saveErr;localStorage.setItem('nurserySiteControlFallback',JSON.stringify(x));applySiteControlSettings(x);status.textContent='✅ वेबसाइट सेटिंग Supabase में सेव हो गईं। ग्राहक वेबसाइट पर लागू होने के लिए पेज रिफ्रेश करके जाँचें।';}catch(e){status.textContent='सेव नहीं हुआ: '+(e.message||e)+'। यदि nursery_site_settings टेबल या Storage अनुमति में समस्या है, स्क्रीनशॉट भेजें।';}finally{btn.disabled=false;}});
+// Public visitors also load the shared visual settings from Supabase.
+getSiteSettingsShared().then(v=>{if(v&&Object.keys(v).length){applySiteControlSettings(Object.assign({},SITE_CONTROL_DEFAULTS,v));localStorage.setItem('nurserySiteControlFallback',JSON.stringify(v));}else{try{const local=JSON.parse(localStorage.getItem('nurserySiteControlFallback')||'{}');if(Object.keys(local).length)applySiteControlSettings(Object.assign({},SITE_CONTROL_DEFAULTS,local));}catch(e){}}}).catch(()=>{});
+
 db.auth.onAuthStateChange((event, session) => {
   const user = session && session.user;
   const isOwner = !!(user && user.id === OWNER_UID && user.email === OWNER_EMAIL);
@@ -984,6 +1091,7 @@ db.auth.onAuthStateChange((event, session) => {
   document.getElementById("adminCustomerSearch").style.display = "block";
   document.getElementById("adminTabs").style.display = "grid";
   showAdminTab('dashboard');
+  setTimeout(loadSiteControlForm, 100);
   if (ordersBox) ordersBox.style.display = "block";
   setTimeout(() => { loadOrders(); loadOwnerStats(); renderDueRecords(); }, 0);
 });
