@@ -600,6 +600,11 @@ function closeOrderModal(){
   if (form) form.reset();
   updateOrderTotal();
   
+
+updateUpiPaymentLink();
+}
+
+
 // Customer order tracking: phone number only. RPC returns all orders matching the phone.
 const customerTrackForm = document.getElementById('customerTrackForm');
 if (customerTrackForm) customerTrackForm.addEventListener('submit', async (event) => {
@@ -669,8 +674,6 @@ if (customerTrackForm) customerTrackForm.addEventListener('submit', async (event
   } finally { button.disabled = false; }
 });
 
-updateUpiPaymentLink();
-}
 document.getElementById('closeOrderModal').addEventListener('click',closeOrderModal);
 document.getElementById('order').addEventListener('click',event=>{if(event.target===document.getElementById('order'))closeOrderModal();});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!document.getElementById('order').hidden)closeOrderModal();});
