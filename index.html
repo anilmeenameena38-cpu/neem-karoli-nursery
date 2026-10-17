@@ -194,39 +194,43 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
 <input id="qty" type="number" min="1" step="1" value="1" required>
 <div id="orderTotalPreview" class="status" aria-live="polite">कुल राशि दिखेगी।</div>
 <div id="selectedOrderSummary" class="status" aria-live="polite">पौधा, संख्या और कुल राशि।</div>
-<div id="bharatpePaymentBox" class="status" style="text-align:center">
+<div id="prePaymentCustomerInfo" class="status" style="margin-top:14px">
+  <h3>📍 डिलीवरी की जानकारी</h3>
+  <p>पहले अपना नाम, मोबाइल और पता भरें। लोकेशन मिलने के बाद भुगतान का विकल्प खुलेगा।</p>
+  <label for="customer">ग्राहक / गाड़ी धनी का नाम</label>
+  <input id="customer" type="text" required autocomplete="name" placeholder="पूरा नाम">
+  <label for="phone">मोबाइल नंबर</label>
+  <input id="phone" type="tel" required inputmode="tel" autocomplete="tel" pattern="[0-9+() -]{10,15}" placeholder="10 अंकों का मोबाइल नंबर">
+  <label for="village">गाँव / ढाणी</label>
+  <input id="village" type="text" required autocomplete="address-level2" placeholder="गाँव / ढाणी">
+  <label for="address">पूरा पता</label>
+  <textarea id="address" rows="2" required autocomplete="street-address" placeholder="मकान / गली / पहचान की जगह"></textarea>
+  <div class="location-row">
+    <button id="locationButton" type="button">📍 मेरी लोकेशन शेयर करें</button>
+    <span id="locationStatus" class="location-status" aria-live="polite">लोकेशन मिलने पर भुगतान खुलेगा।</span>
+  </div>
+</div>
+<div id="bharatpePaymentBox" class="status" style="text-align:center;display:none">
   <h3>💳 UPI भुगतान</h3>
-  <p>UPI से भुगतान करें। भुगतान की पुष्टि नर्सरी करेगी।</p>
-<p><strong>UPI ID:</strong> BHARATPE2H0E0T6Z3P47445@unitype</p>
+  <p>जानकारी मिल गई। अब UPI से भुगतान करें। भुगतान की पुष्टि नर्सरी करेगी।</p>
+  <p><strong>UPI ID:</strong> BHARATPE2H0E0T6Z3P47445@unitype</p>
   <p id="upiAmountHint">राशि अपने-आप भरने की कोशिश होगी।</p>
   <a id="upiPayButton" class="btn" href="#" role="button" style="display:block;margin:12px auto;max-width:340px">💳 UPI से भुगतान करें</a>
   <p style="font-size:13px">भुगतान के बाद इस वेबसाइट पर वापस आएँ।</p>
   <button id="paymentDoneButton" type="button" class="btn" style="display:none;margin:12px auto;max-width:340px;background:#176b35">✅ मैंने भुगतान कर दिया</button>
-  <p id="paymentReturnHint" style="font-size:13px">10 सेकंड बाद आगे बढ़ने का विकल्प खुलेगा।</p>
+  <p id="paymentReturnHint" style="font-size:13px">UPI ऐप खोलने पर 10 सेकंड का टाइमर शुरू होगा।</p>
   <div id="upiCountdown" class="status" role="timer" aria-live="polite" style="display:none;text-align:center;font-size:22px;font-weight:800;color:#176b35">00:10</div>
   <p><strong>कुल देय राशि:</strong> <span id="bharatpeTotalAmount">पौधा और मात्रा चुनें</span></p>
   <small>भुगतान से पहले सही राशि जाँच लें।</small>
 </div>
 <div id="postPaymentForm" style="display:none">
-<div class="status" id="paymentCountdownStatus" role="status" aria-live="polite" style="text-align:center;font-weight:700">10 सेकंड बाद भुगतान की जानकारी भरें।</div>
-<label for="customer">नाम</label>
-<input id="customer" type="text" required placeholder="अपना नाम लिखें">
-<label for="phone">मोबाइल नंबर</label>
-<input id="phone" type="tel" required inputmode="tel" pattern="[0-9+() -]{10,15}" placeholder="मोबाइल नंबर">
-<label for="village">गाँव / ढाणी</label>
-<input id="village" type="text" required placeholder="गाँव / ढाणी">
-<label for="address">पूरा पता</label>
-<textarea id="address" rows="3" required placeholder="डिलीवरी का पूरा पता"></textarea>
-<div class="location-row">
-  <button id="locationButton" type="button">📍 लोकेशन शेयर करें</button>
-  <span id="locationStatus" class="location-status" aria-live="polite">डिलीवरी के लिए लोकेशन दें।</span>
-</div>
+  <div class="status" id="paymentCountdownStatus" role="status" aria-live="polite" style="text-align:center;font-weight:700">10 सेकंड बाद स्क्रीनशॉट अपलोड करें।</div>
 <div id="paymentProofSection" class="status" style="margin-top:14px;display:none"><h3>📸 भुगतान स्क्रीनशॉट</h3><p>भुगतान का स्क्रीनशॉट चुनें।</p><label for="paymentProofFile">स्क्रीनशॉट (JPG/PNG/WebP, 5 MB तक)</label><input id="paymentProofFile" type="file" accept="image/jpeg,image/png,image/webp" required><div id="paymentProofPreview" aria-live="polite" style="margin-top:8px"></div></div>
 <button id="orderButton" type="submit" style="display:none">Submit &amp; Send Order</button>
 </div>
 </form>
 <div id="orderStatus" class="status" aria-live="polite"></div>
-<p class="note">UPI भुगतान करें → स्क्रीनशॉट चुनें → ऑर्डर भेजें। भुगतान की पुष्टि नर्सरी करेगी।</p>
+<p class="note">पता भरें → लोकेशन शेयर करें → UPI भुगतान करें → स्क्रीनशॉट भेजें।</p>
 </div>
 </section>
 
@@ -437,7 +441,9 @@ document.getElementById('locationButton').addEventListener('click', () => {
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
     customerLocation = { lat, lon, mapsUrl: `https://www.google.com/maps?q=${lat},${lon}` };
-    locationStatus.textContent = '✅ लोकेशन मिल गई। यह ऑर्डर के साथ भेजी जाएगी।';
+    locationStatus.textContent = '✅ लोकेशन मिल गई! अब UPI भुगतान करें।';
+    document.getElementById('bharatpePaymentBox').style.display = 'block';
+    document.getElementById('bharatpePaymentBox').scrollIntoView({behavior:'smooth',block:'center'});
   }, error => {
     customerLocation = null;
     const messages = {
@@ -445,7 +451,8 @@ document.getElementById('locationButton').addEventListener('click', () => {
       2: 'लोकेशन अभी नहीं मिल सकी। दोबारा कोशिश करें या पता लिखें।',
       3: 'लोकेशन मिलने में समय लगा। दोबारा कोशिश करें या पता लिखें।'
     };
-    locationStatus.textContent = messages[error.code] || 'लोकेशन नहीं मिली। कृपया पता लिखें।';
+    locationStatus.textContent = messages[error.code] || 'लोकेशन नहीं मिली। कृपया फिर कोशिश करें।';
+    document.getElementById('bharatpePaymentBox').style.display = 'none';
   }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
 });
 
@@ -514,7 +521,7 @@ async function loadPlants() {
       const orderSection = document.getElementById('order');
       orderSection.hidden = false;
       document.body.classList.add('order-modal-open');
-      document.getElementById('orderStatus').textContent = 'कृपया नाम, मोबाइल नंबर, गाँव, पूरा पता भरें और चाहें तो लोकेशन शेयर करें।';
+      document.getElementById('orderStatus').textContent = 'पहले नाम, मोबाइल नंबर, गाँव और पूरा पता भरें; फिर लोकेशन शेयर करें।';
       document.getElementById('selectedOrderSummary').innerHTML = '<b>आपका चुना हुआ पौधा:</b> ' + safe(p.name) + '<br><b>मात्रा:</b> ' + q + ' पौधे<br><b>प्रति पौधा कीमत:</b> ₹' + unitPrice.toFixed(2) + '<br><b>कुल राशि:</b> ₹' + (unitPrice * q).toFixed(2);
       setTimeout(() => document.getElementById('customer').focus({preventScroll:true}), 150);
     });
@@ -562,6 +569,11 @@ function closeOrderModal(){
   const proofPreview = document.getElementById('paymentProofPreview');
   const orderButton = document.getElementById('orderButton');
   if (gate) gate.style.display = 'none';
+  const paymentBox = document.getElementById('bharatpePaymentBox');
+  if (paymentBox) paymentBox.style.display = 'none';
+  customerLocation = null;
+  const locStatus = document.getElementById('locationStatus');
+  if (locStatus) locStatus.textContent = 'लोकेशन मिलने पर भुगतान खुलेगा।';
   if (done) done.style.display = 'none';
   if (countdown) { countdown.style.display = 'none'; countdown.textContent = '00:10'; }
   if (proofSection) proofSection.style.display = 'none';
