@@ -182,6 +182,7 @@ footer p{margin:5px}
   <button class="admin-tab" type="button" data-tab="manageplants" role="tab" aria-selected="false"><span class="tab-icon">➕</span><span class="tab-label">नया पौधा / कीमत</span></button>
   <button class="admin-tab" type="button" data-tab="sales" role="tab" aria-selected="false"><span class="tab-icon">💰</span><span class="tab-label">बिक्री हिसाब</span></button>
   <button class="admin-tab" type="button" data-tab="dues" role="tab" aria-selected="false"><span class="tab-icon">⏰</span><span class="tab-label">उधार / बाकी</span></button>
+  <button class="admin-tab" type="button" data-tab="chatgpt" role="tab" aria-selected="false"><span class="tab-icon">🤖</span><span class="tab-label">ChatGPT मदद</span></button>
 </div>
 <div id="adminDashboardPane" class="admin-pane active">
   <div id="ownerStats"></div>
@@ -228,6 +229,20 @@ footer p{margin:5px}
   </div>
 </div>
 <div id="adminSalesPane" class="admin-pane"><div class="admin-section-card"><h2>💰 बिक्री का हिसाब</h2><p class="admin-muted">आज की बिक्री और हाल की बिक्री एंट्री।</p><div id="ownerSalesList">बिक्री का हिसाब लोड हो रहा है…</div></div></div>
+<div id="adminChatgptPane" class="admin-pane">
+  <div class="admin-section-card">
+    <h2>🤖 ChatGPT से नर्सरी की मदद लें</h2>
+    <p class="admin-muted">यहाँ अपनी समस्या या बदलाव लिखें। बटन दबाने पर सवाल कॉपी होगा और ChatGPT नए टैब में खुलेगा। वहाँ सवाल पेस्ट करके भेजें।</p>
+    <label for="nurseryChatQuestion"><strong>आप क्या पूछना या बदलवाना चाहते हैं?</strong></label>
+    <textarea id="nurseryChatQuestion" rows="5" placeholder="उदाहरण: टमाटर का स्टॉक 50 है, बिके हुए पौधे और बाकी स्टॉक दिखाने का तरीका ठीक करें…" style="width:100%;max-width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;box-sizing:border-box"></textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+      <button type="button" id="nurseryAskChatGPT">🤖 सवाल कॉपी करें और ChatGPT खोलें</button>
+      <button type="button" id="nurseryCopyQuestion" class="secondary">📋 सिर्फ सवाल कॉपी करें</button>
+    </div>
+    <div id="nurseryChatStatus" class="status" aria-live="polite">नर्सरी वेबसाइट के बारे में सवाल लिखें। अपना Supabase पासवर्ड या गुप्त API key कभी न लिखें।</div>
+    <p class="admin-muted">नोट: वेबसाइट सीधे इस बातचीत में जवाब नहीं भेज सकती। ChatGPT अलग टैब में खुलेगा; वहाँ सवाल पेस्ट करके भेजें।</p>
+  </div>
+</div>
 <div id="adminDuesPane" class="admin-pane">
   <div class="admin-section-card">
     <h2>⏰ उधार / बाकी पैसे का रजिस्टर</h2>
@@ -644,8 +659,35 @@ renderDueRecords();
 
 loadPlants();
 
+
+// ChatGPT helper: copy the user's question and open ChatGPT in a separate tab.
+(function setupNurseryChatGPT(){
+  const questionBox = document.getElementById('nurseryChatQuestion');
+  const statusBox = document.getElementById('nurseryChatStatus');
+  const makeQuestion = () => {
+    const question = questionBox ? questionBox.value.trim() : '';
+    if (!question) { if(statusBox) statusBox.textContent = 'पहले अपना सवाल लिखें।'; return ''; }
+    return 'मेरी वेबसाइट "नीम करोली नर्सरी" GitHub Pages और Supabase पर बनी है। कृपया नीचे दिए गए सवाल का आसान हिंदी में, चरण-दर-चरण जवाब दें। मौजूदा लॉगिन, ऑर्डर, स्टॉक और एडमिन सुविधाएँ सुरक्षित रखने का ध्यान रखें।\n\nमेरा सवाल: ' + question;
+  };
+  async function copyQuestion(){
+    const q = makeQuestion(); if(!q) return false;
+    try { await navigator.clipboard.writeText(q); if(statusBox) statusBox.textContent='सवाल कॉपी हो गया। अब ChatGPT में पेस्ट करके भेजें।'; return true; }
+    catch(e) { if(statusBox) { statusBox.textContent='अपने सवाल को नीचे से चुनकर कॉपी करें और ChatGPT में पेस्ट करें: ' + q; } return false; }
+  }
+  const copyBtn=document.getElementById('nurseryCopyQuestion');
+  const askBtn=document.getElementById('nurseryAskChatGPT');
+  if(copyBtn) copyBtn.addEventListener('click',copyQuestion);
+  if(askBtn) askBtn.addEventListener('click',async()=>{
+    const q=makeQuestion(); if(!q) return;
+    const chatTab=window.open('https://chatgpt.com/','_blank','noopener');
+    const copied=await copyQuestion();
+    if(statusBox) statusBox.textContent = copied ? 'ChatGPT खुल गया और सवाल कॉपी हो गया। ChatGPT में जाकर सवाल पेस्ट करें।' : 'ChatGPT खुल गया। सवाल नीचे दिख रहा है—इसे कॉपी करके ChatGPT में पेस्ट करें।';
+    if(!chatTab && statusBox) statusBox.textContent='ब्राउज़र ने नया टैब रोका हो सकता है। ChatGPT खोलें और नीचे दिए सवाल को कॉपी करके पेस्ट करें: ' + q;
+  });
+})();
+
 function showAdminTab(tabName) {
-  const allowed = ['dashboard', 'orders', 'stock', 'manageplants', 'sales', 'dues'];
+  const allowed = ['dashboard', 'orders', 'stock', 'manageplants', 'sales', 'dues', 'chatgpt'];
   if (!allowed.includes(tabName)) tabName = 'dashboard';
   document.querySelectorAll('.admin-tab').forEach(button => {
     const active = button.dataset.tab === tabName;
@@ -655,7 +697,7 @@ function showAdminTab(tabName) {
   document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active'));
   const paneId = {
     dashboard: 'adminDashboardPane', orders: 'adminOrdersPane',
-    stock: 'adminStockPane', manageplants: 'adminManageplantsPane', sales: 'adminSalesPane', dues: 'adminDuesPane'
+    stock: 'adminStockPane', manageplants: 'adminManageplantsPane', sales: 'adminSalesPane', dues: 'adminDuesPane', chatgpt: 'adminChatgptPane'
   }[tabName];
   document.getElementById(paneId).classList.add('active');
 }
