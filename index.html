@@ -547,7 +547,36 @@ document.getElementById('orderNavLink').addEventListener('click', event => {
   document.getElementById('plants').scrollIntoView({behavior:'smooth', block:'start'});
   document.getElementById('plantStatus').textContent = 'पहले पौधा और मात्रा चुनें, फिर Buy Now दबाएँ।';
 });
-function closeOrderModal(){document.getElementById('order').hidden=true;document.body.classList.remove('order-modal-open');}
+function closeOrderModal(){
+  // Closing the order modal must fully cancel the current payment attempt.
+  if (upiCountdownInterval) { clearInterval(upiCountdownInterval); upiCountdownInterval = null; }
+  try { sessionStorage.removeItem('nursery_upi_wait_deadline'); } catch(e) {}
+  const order = document.getElementById('order');
+  order.hidden = true;
+  document.body.classList.remove('order-modal-open');
+  const gate = document.getElementById('postPaymentForm');
+  const done = document.getElementById('paymentDoneButton');
+  const countdown = document.getElementById('upiCountdown');
+  const proofSection = document.getElementById('paymentProofSection');
+  const proofFile = document.getElementById('paymentProofFile');
+  const proofPreview = document.getElementById('paymentProofPreview');
+  const orderButton = document.getElementById('orderButton');
+  if (gate) gate.style.display = 'none';
+  if (done) done.style.display = 'none';
+  if (countdown) { countdown.style.display = 'none'; countdown.textContent = '00:10'; }
+  if (proofSection) proofSection.style.display = 'none';
+  if (proofFile) proofFile.value = '';
+  if (proofPreview) proofPreview.innerHTML = '';
+  if (orderButton) orderButton.style.display = 'none';
+  const status = document.getElementById('paymentCountdownStatus');
+  if (status) status.textContent = 'UPI ऐप खोलने के बाद 10 सेकंड की प्रतीक्षा शुरू होगी। समय पूरा होने पर नीचे का फॉर्म खुलेगा।';
+  const hint = document.getElementById('paymentReturnHint');
+  if (hint) hint.textContent = 'UPI ऐप खोलने पर 10 सेकंड का टाइमर शुरू होगा। समय पूरा होने पर नीचे जानकारी भरने का फॉर्म खुलेगा।';
+  const form = document.getElementById('orderForm');
+  if (form) form.reset();
+  updateOrderTotal();
+  updateUpiPaymentLink();
+}
 document.getElementById('closeOrderModal').addEventListener('click',closeOrderModal);
 document.getElementById('order').addEventListener('click',event=>{if(event.target===document.getElementById('order'))closeOrderModal();});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!document.getElementById('order').hidden)closeOrderModal();});
