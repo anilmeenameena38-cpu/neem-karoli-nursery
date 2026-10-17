@@ -241,7 +241,7 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
 <p>ऑर्डर करते समय दिया गया मोबाइल नंबर लिखें। आपके ऑर्डर और स्थिति यहाँ दिखेगी।</p>
 <form id="customerTrackingForm">
 <label for="trackingPhone">मोबाइल नंबर</label>
-<input id="trackingPhone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="ऑर्डर वाला मोबाइल नंबर">
+<input id="trackingPhone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="10 अंकों का मोबाइल नंबर ( +91 नहीं )">
 <button type="submit" class="btn">मेरे ऑर्डर देखें</button>
 </form>
 <div id="customerTrackingStatus" class="status" aria-live="polite"></div>
@@ -446,9 +446,14 @@ function safe(value) {
 // ग्राहक ट्रैकिंग: केवल मोबाइल नंबर से ऑर्डर स्थिति और सुरक्षित भुगतान स्क्रीनशॉट दिखाएँ।
 document.getElementById('customerTrackingForm')?.addEventListener('submit', async (ev) => {
   ev.preventDefault();
-  const phone = document.getElementById('trackingPhone').value.trim();
+  const rawPhone = document.getElementById('trackingPhone').value.trim();
+  let phoneDigits = rawPhone.replace(/\D/g, '');
+  if (phoneDigits.length === 12 && phoneDigits.startsWith('91')) phoneDigits = phoneDigits.slice(2);
+  if (phoneDigits.length === 11 && phoneDigits.startsWith('0')) phoneDigits = phoneDigits.slice(1);
+  const phone = phoneDigits;
   const statusEl = document.getElementById('customerTrackingStatus');
   const results = document.getElementById('customerTrackingResults');
+  if (phone.length !== 10) { statusEl.textContent = 'कृपया 10 अंकों का मोबाइल नंबर भरें। +91 लगाने की जरूरत नहीं है।'; results.innerHTML = ''; return; }
   statusEl.textContent = 'ऑर्डर खोजे जा रहे हैं…'; results.innerHTML = '';
   try {
     const {data, error} = await db.rpc('get_customer_orders_by_phone', {p_phone: phone});
@@ -1032,6 +1037,37 @@ async function loadOrders() {
         await loadOwnerStats();
       });
       div.appendChild(button);
+      const cancelButton = document.createElement('button');
+      cancelButton.type = 'button';
+      cancelButton.className = 'btn';
+      cancelButton.style.marginTop = '8px';
+      cancelButton.style.background = '#b42318';
+      cancelButton.textContent = '❌ ऑर्डर कैंसिल करें';
+      cancelButton.addEventListener('click', async () => {
+        if (!confirm('क्या आप इस Pending ऑर्डर को कैंसिल करना चाहते हैं? ग्राहक की ट्रैकिंग में Cancelled दिखेगा।')) return;
+        cancelButton.disabled = true;
+        const {error: updateError} = await db.from('order_requests').update({status:'cancelled'}).eq('id', order.id).eq('status','pending');
+        if (updateError) { document.getElementById('ownerStatus').textContent = 'ऑर्डर कैंसिल नहीं हुआ: ' + updateError.message; cancelButton.disabled=false; return; }
+        document.getElementById('ownerStatus').textContent = 'ऑर्डर #' + order.id + ' कैंसिल कर दिया गया।';
+        await loadOrders(); await loadOwnerStats();
+      });
+      div.appendChild(cancelButton);
+    } else if (order.status === 'confirmed') {
+      const unconfirmButton = document.createElement('button');
+      unconfirmButton.type = 'button';
+      unconfirmButton.className = 'btn';
+      unconfirmButton.style.marginTop = '8px';
+      unconfirmButton.style.background = '#b7791f';
+      unconfirmButton.textContent = '↩️ ऑर्डर अनकन्फर्म करें';
+      unconfirmButton.addEventListener('click', async () => {
+        if (!confirm('सावधानी: यह ऑर्डर का स्टेटस वापस Pending करेगा। क्या आपने बिक्री/स्टॉक का हिसाब अलग से ठीक कर लिया है? जारी रखें?')) return;
+        unconfirmButton.disabled = true;
+        const {error: updateError} = await db.from('order_requests').update({status:'pending'}).eq('id', order.id).eq('status','confirmed');
+        if (updateError) { document.getElementById('ownerStatus').textContent = 'ऑर्डर अनकन्फर्म नहीं हुआ: ' + updateError.message; unconfirmButton.disabled=false; return; }
+        document.getElementById('ownerStatus').textContent = 'ऑर्डर #' + order.id + ' Pending किया गया। ध्यान दें: बिक्री/स्टॉक अपने-आप वापस नहीं बदले।';
+        await loadOrders(); await loadOwnerStats();
+      });
+      div.appendChild(unconfirmButton);
     }
     container.appendChild(div);
   });
