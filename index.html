@@ -48,6 +48,7 @@ main{max-width:1120px;margin:0 auto;padding:clamp(16px,3vw,30px) 16px}
 .plant{min-width:0;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;text-align:center;box-shadow:0 5px 18px #174b2b0b;transition:transform .2s,box-shadow .2s}
 .plant:hover{transform:translateY(-4px);box-shadow:0 14px 28px #174b2b18}
 .plant img{display:block;width:100%;height:185px;object-fit:cover;border-radius:13px;background:#eef5eb;margin-bottom:12px}
+.plant-buy-box{background:#f5faf2;border:1px solid var(--line);border-radius:13px;padding:10px;margin-top:12px;text-align:left}.plant-buy-box label{font-size:13px;margin:0 0 4px}.plant-buy-box input{margin:4px 0 8px;padding:9px 10px}.plant-total{font-weight:800;color:var(--green);font-size:15px;margin:4px 0 10px}.plant-buy-button{width:100%;padding:10px 12px!important}.stock-hint{font-size:12px;color:var(--muted);margin:0 0 8px}
 .plant h3{color:var(--green);font-size:21px;margin:8px 0}
 .price{font-weight:800;color:#138044;font-size:25px;margin:8px 0}
 label{display:block;font-weight:700;margin:12px 0 3px;color:#294d32}
@@ -157,6 +158,7 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
 </select>
 <label for="qty">पौधों की संख्या</label>
 <input id="qty" type="number" min="1" step="1" value="1" required>
+<div id="orderTotalPreview" class="status" aria-live="polite">कुल राशि: पौधा और मात्रा चुनें।</div>
 <label for="customer">आपका नाम</label>
 <input id="customer" type="text" required placeholder="पूरा नाम">
 <label for="phone">मोबाइल नंबर</label>
@@ -421,20 +423,43 @@ async function loadPlants() {
   plants.forEach(p => {
     const card = document.createElement('div');
     card.className = 'plant';
-    
-     
-      
-      const plantImage = p.image_url || '';
-      card.innerHTML = (plantImage
+    const plantImage = p.image_url || '';
+    const unitPrice = Number(p.selling_price) || 0;
+    const stockQty = Math.max(0, Number(p.stock_quantity) || 0);
+    card.innerHTML = (plantImage
         ? '<img src="' + safe(plantImage) + '" alt="' + safe(p.name) + '" loading="lazy" onerror="this.style.display=\'none\'">'
         : '<div style="height:185px;display:flex;align-items:center;justify-content:center;background:#eef5eb;border-radius:13px;font-size:48px;margin-bottom:12px">🌱</div>') +
         '<h3>' + safe(p.name) + '</h3><div>' +
         safe(p.variety || p.category || '') +
-        '</div><p class="price">₹' +
-        Number(p.selling_price).toFixed(2) +
-        '</p><p class="note">' +
-        safe(p.description || '') + '</p>';
+        '</div><p class="price">₹' + unitPrice.toFixed(2) + '</p>' +
+        '<p class="note">' + safe(p.description || '') + '</p>' +
+        '<div class="plant-buy-box"><label for="cardQty-' + safe(p.id) + '">कितनी मात्रा चाहिए?</label>' +
+        '<input class="card-quantity" id="cardQty-' + safe(p.id) + '" type="number" min="1" max="' + stockQty + '" step="1" value="1" inputmode="numeric" data-plant-id="' + safe(p.id) + '">' +
+        '<p class="stock-hint">उपलब्ध स्टॉक: ' + stockQty + ' पौधे</p>' +
+        '<div class="plant-total" id="cardTotal-' + safe(p.id) + '">कुल: ₹' + unitPrice.toFixed(2) + '</div>' +
+        '<button class="plant-buy-button" type="button" data-buy-plant="' + safe(p.id) + '">🛒 Buy Now / अभी खरीदें</button></div>';
 
+    const cardQty = card.querySelector('.card-quantity');
+    const totalLabel = card.querySelector('.plant-total');
+    cardQty.addEventListener('input', () => {
+      let q = Number(cardQty.value);
+      if (!Number.isFinite(q) || q < 1) q = 1;
+      totalLabel.textContent = 'कुल: ₹' + (unitPrice * q).toFixed(2);
+    });
+    card.querySelector('[data-buy-plant]').addEventListener('click', () => {
+      const q = Number(cardQty.value);
+      if (!Number.isInteger(q) || q < 1 || q > stockQty) {
+        alert('कृपया 1 से ' + stockQty + ' के बीच सही मात्रा लिखें।');
+        cardQty.focus();
+        return;
+      }
+      select.value = String(p.id);
+      document.getElementById('qty').value = String(q);
+      updateOrderTotal();
+      document.getElementById('orderStatus').textContent = 'आपने ' + p.name + ' के ' + q + ' पौधे चुने हैं। कृपया अपना नाम, मोबाइल और पता भरकर ऑर्डर भेजें।';
+      document.getElementById('order').scrollIntoView({behavior:'smooth', block:'start'});
+      setTimeout(() => document.getElementById('customer').focus({preventScroll:true}), 450);
+    });
     list.appendChild(card);
 
     const option = document.createElement('option');
@@ -444,6 +469,20 @@ async function loadPlants() {
   });
   status.textContent = 'पौधों की सूची डेटाबेस से अपडेट हुई।';
 }
+
+function updateOrderTotal() {
+  const plantId = Number(document.getElementById('plant').value);
+  const p = plants.find(item => Number(item.id) === plantId);
+  const qty = Number(document.getElementById('qty').value);
+  const box = document.getElementById('orderTotalPreview');
+  if (!p || !Number.isInteger(qty) || qty < 1) {
+    box.textContent = 'कुल राशि: पौधा और सही मात्रा चुनें।';
+    return;
+  }
+  box.textContent = 'कुल राशि: ₹' + (Number(p.selling_price) * qty).toFixed(2) + ' (' + qty + ' × ₹' + Number(p.selling_price).toFixed(2) + ') — अंतिम पुष्टि नर्सरी मालिक करेंगे।';
+}
+document.getElementById('plant').addEventListener('change', updateOrderTotal);
+document.getElementById('qty').addEventListener('input', updateOrderTotal);
 
 document.getElementById('orderForm').addEventListener('submit', async event => {
   event.preventDefault();
