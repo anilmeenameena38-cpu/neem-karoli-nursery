@@ -5,13 +5,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>श्री नीम करोली महाराज ग्रीन नर्सरी</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
 document.getElementById('paymentProofFile').addEventListener('change', function () {
   const file = this.files && this.files[0], preview = document.getElementById('paymentProofPreview');
-  if (!preview) return; preview.textContent = ''; if (!file) return;
-  if (!['image/jpeg','image/png','image/webp'].includes(file.type) || file.size > 5*1024*1024) { preview.textContent='❌ JPG, PNG या WebP स्क्रीनशॉट चुनें, अधिकतम 5 MB।'; this.value=''; return; }
-  const image=document.createElement('img'); image.alt='भुगतान स्क्रीनशॉट पूर्वावलोकन'; image.style.cssText='display:block;max-width:100%;max-height:260px;margin:8px auto;border-radius:10px;border:1px solid #ddd'; image.src=URL.createObjectURL(file); image.onload=()=>URL.revokeObjectURL(image.src); preview.appendChild(image);
-  const note=document.createElement('div'); note.textContent='स्क्रीनशॉट चुना गया: '+file.name; preview.appendChild(note);
+  const submitButton = document.getElementById('orderButton');
+  if (submitButton) submitButton.style.display = 'none';
+  if (!preview) return;
+  preview.textContent = '';
+  if (!file) return;
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type) || file.size > 5 * 1024 * 1024) {
+    preview.textContent = '❌ कृपया JPG, PNG या WebP स्क्रीनशॉट चुनें, आकार 5 MB से अधिक न हो।';
+    this.value = ''; return;
+  }
+  const image = document.createElement('img'); image.alt = 'भुगतान स्क्रीनशॉट का पूर्वावलोकन';
+  image.style.cssText = 'display:block;max-width:100%;max-height:260px;margin:8px auto;border-radius:10px;border:1px solid #ddd';
+  image.src = URL.createObjectURL(file); image.onload = () => URL.revokeObjectURL(image.src); preview.appendChild(image);
+  const note = document.createElement('div'); note.textContent = '✅ स्क्रीनशॉट चुना गया: ' + file.name; preview.appendChild(note);
+  if (submitButton) { submitButton.style.display = 'block'; submitButton.textContent = 'Submit & Send Order'; }
 });
 </script>
 <style>
@@ -136,6 +147,8 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
 @media(max-width:650px){.site-control-subnav{grid-template-columns:repeat(2,minmax(0,1fr))}.site-control-field{padding:11px}}
 
 #paymentProofSection{border:1px solid #c8dfc2;background:#f7fff4;border-radius:12px;padding:14px}#paymentProofFile{display:block;width:100%;margin:10px 0;padding:10px;background:#fff}#paymentProofPreview{font-size:14px;color:#176b35;overflow-wrap:anywhere}#paymentProofSection input[type=file]::file-selector-button{padding:9px 12px;border:0;border-radius:8px;background:#e3f3df;color:#14532d;margin-right:8px}
+#postPaymentForm{margin-top:12px}#upiCountdown{letter-spacing:2px}
+.order-confirmation-box{background:#f0fff4;border:1px solid #86c99a;border-radius:14px;padding:16px;margin:12px 0;color:#174b2a;line-height:1.65}.order-confirmation-box h3{margin:0 0 10px;color:#166534}.order-confirmation-box p{margin:8px 0}#orderButton{width:100%;margin-top:12px}
 </style>
 </head>
 <body>
@@ -184,11 +197,14 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
   <p id="upiAmountHint">आपके ऑर्डर की कुल राशि अपने आप भरी जाएगी।</p>
   <a id="upiPayButton" class="btn" href="#" role="button" style="display:block;margin:12px auto;max-width:340px">💳 UPI ऐप खोलें और भुगतान करें</a>
   <p style="font-size:13px">यदि फोन पूछे, तो Google Pay, PhonePe, Paytm या अपने दूसरे UPI ऐप को चुनें। भुगतान पूरा करने के बाद इस वेबसाइट पर वापस आएँ।</p>
-  <button id="paymentDoneButton" type="button" class="btn" style="display:block;margin:12px auto;max-width:340px;background:#176b35">✅ मैंने भुगतान कर दिया</button>
-  <p id="paymentReturnHint" style="font-size:13px">भुगतान करने के बाद ही “मैंने भुगतान कर दिया” दबाएँ।</p>
+  <button id="paymentDoneButton" type="button" class="btn" style="display:none;margin:12px auto;max-width:340px;background:#176b35">✅ मैंने भुगतान कर दिया</button>
+  <p id="paymentReturnHint" style="font-size:13px">UPI ऐप खोलने पर 3 मिनट का टाइमर शुरू होगा। समय पूरा होने पर नीचे जानकारी भरने का फॉर्म खुलेगा।</p>
+  <div id="upiCountdown" class="status" role="timer" aria-live="polite" style="display:none;text-align:center;font-size:22px;font-weight:800;color:#176b35">03:00</div>
   <p><strong>कुल देय राशि:</strong> <span id="bharatpeTotalAmount">पौधा और मात्रा चुनें</span></p>
   <small>यदि UPI ऐप राशि अपने-आप न भरे, तो भुगतान करने से पहले सही कुल राशि जाँचकर दर्ज करें।</small>
 </div>
+<div id="postPaymentForm" style="display:none">
+<div class="status" id="paymentCountdownStatus" role="status" aria-live="polite" style="text-align:center;font-weight:700">UPI ऐप खोलने के बाद 3:00 मिनट की प्रतीक्षा शुरू होगी। समय पूरा होने पर नीचे का फॉर्म खुलेगा।</div>
 <label for="customer">आपका नाम</label>
 <input id="customer" type="text" required placeholder="अपना पूरा नाम">
 <label for="phone">मोबाइल नंबर</label>
@@ -201,8 +217,9 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
   <button id="locationButton" type="button">📍 मेरी लोकेशन शेयर करें (अनिवार्य)</button>
   <span id="locationStatus" class="location-status" aria-live="polite">ऑर्डर के लिए GPS लोकेशन अनिवार्य है।</span>
 </div>
-<div id="paymentProofSection" class="status" style="margin-top:14px;display:none"><h3>📸 भुगतान का स्क्रीनशॉट अपलोड करें</h3><p>UPI ऐप में भुगतान पूरा करने के बाद सफल भुगतान का स्क्रीनशॉट चुनें। स्क्रीनशॉट अपलोड किए बिना ऑर्डर सबमिट नहीं होगा।</p><label for="paymentProofFile">भुगतान स्क्रीनशॉट (JPG, PNG या WebP; अधिकतम 5 MB)</label><input id="paymentProofFile" type="file" accept="image/jpeg,image/png,image/webp" required><div id="paymentProofPreview" aria-live="polite" style="margin-top:8px"></div></div>
-<button id="orderButton" type="submit">Submit &amp; Send Order</button>
+<div id="paymentProofSection" class="status" style="margin-top:14px;display:none"><h3>📸 भुगतान का स्क्रीनशॉट अपलोड करें</h3><p>UPI ऐप में भुगतान पूरा करने के बाद सफल भुगतान का स्क्रीनशॉट चुनें। स्क्रीनशॉट चुनने के बाद नीचे “Submit &amp; Send Order” बटन खुलेगा।</p><label for="paymentProofFile">भुगतान स्क्रीनशॉट (JPG, PNG या WebP; अधिकतम 5 MB)</label><input id="paymentProofFile" type="file" accept="image/jpeg,image/png,image/webp" required><div id="paymentProofPreview" aria-live="polite" style="margin-top:8px"></div></div>
+<button id="orderButton" type="submit" style="display:none">Submit &amp; Send Order</button>
+</div>
 </form>
 <div id="orderStatus" class="status" aria-live="polite"></div>
 <p class="note">पहले UPI से भुगतान करें, फिर सफल भुगतान का स्क्रीनशॉट अपलोड करके Submit & Send Order दबाएँ। स्क्रीनशॉट केवल जाँच के लिए है; भुगतान की पुष्टि नर्सरी BharatPe में करेगी।</p>
@@ -553,22 +570,79 @@ function updateUpiPaymentLink(){
   payButton.textContent = '💳 ₹' + total + ' का भुगतान करें';
   hint.textContent = 'आपको अभी कुल ₹' + total + ' भुगतान करना है। UPI ऐप में राशि जाँचकर भुगतान पूरा करें।';
 }
+const UPI_WAIT_MS = 3 * 60 * 1000;
+let upiCountdownInterval = null;
+function revealPostPaymentForm(){
+  const gate = document.getElementById('postPaymentForm');
+  const done = document.getElementById('paymentDoneButton');
+  const countdown = document.getElementById('upiCountdown');
+  if (gate) gate.style.display = 'block';
+  if (done) done.style.display = 'block';
+  if (countdown) { countdown.style.display = 'none'; countdown.textContent = '00:00'; }
+  const status = document.getElementById('paymentCountdownStatus');
+  if (status) status.textContent = '3 मिनट पूरे हुए। यदि भुगतान सफल हुआ है, तो “मैंने भुगतान कर दिया” दबाकर अपनी जानकारी और स्क्रीनशॉट भरें।';
+  const hint = document.getElementById('paymentReturnHint');
+  if (hint) hint.textContent = 'समय पूरा हुआ। भुगतान सफल होने पर “मैंने भुगतान कर दिया” दबाएँ; भुगतान की पुष्टि नर्सरी करेगी।';
+  if (upiCountdownInterval) { clearInterval(upiCountdownInterval); upiCountdownInterval = null; }
+}
+function startUpiCountdown(){
+  const countdown = document.getElementById('upiCountdown');
+  const status = document.getElementById('paymentCountdownStatus');
+  const gate = document.getElementById('postPaymentForm');
+  const done = document.getElementById('paymentDoneButton');
+  if (gate) gate.style.display = 'none';
+  if (done) done.style.display = 'none';
+  if (countdown) countdown.style.display = 'block';
+  const deadline = Date.now() + UPI_WAIT_MS;
+  try { sessionStorage.setItem('nursery_upi_wait_deadline', String(deadline)); } catch(e) {}
+  function tick(){
+    const left = Math.max(0, deadline - Date.now());
+    const seconds = Math.ceil(left / 1000);
+    if (countdown) countdown.textContent = String(Math.floor(seconds/60)).padStart(2,'0') + ':' + String(seconds%60).padStart(2,'0');
+    if (status) status.textContent = 'भुगतान के लिए समय: ' + (countdown ? countdown.textContent : '') + ' — समय पूरा होने पर ग्राहक जानकारी का फॉर्म खुलेगा।';
+    if (left <= 0) revealPostPaymentForm();
+  }
+  if (upiCountdownInterval) clearInterval(upiCountdownInterval);
+  tick();
+  upiCountdownInterval = setInterval(tick, 250);
+}
+function restoreUpiCountdown(){
+  try {
+    const deadline = Number(sessionStorage.getItem('nursery_upi_wait_deadline'));
+    if (!deadline) return;
+    const left = deadline - Date.now();
+    if (left <= 0) { revealPostPaymentForm(); return; }
+    const countdown = document.getElementById('upiCountdown');
+    const gate = document.getElementById('postPaymentForm');
+    const done = document.getElementById('paymentDoneButton');
+    if (gate) gate.style.display = 'none';
+    if (done) done.style.display = 'none';
+    if (countdown) countdown.style.display = 'block';
+    if (upiCountdownInterval) clearInterval(upiCountdownInterval);
+    upiCountdownInterval = setInterval(() => {
+      const remaining = Math.max(0, deadline - Date.now());
+      const sec = Math.ceil(remaining/1000);
+      if (countdown) countdown.textContent = String(Math.floor(sec/60)).padStart(2,'0') + ':' + String(sec%60).padStart(2,'0');
+      const status = document.getElementById('paymentCountdownStatus');
+      if (status) status.textContent = 'भुगतान के लिए समय: ' + (countdown ? countdown.textContent : '');
+      if (remaining <= 0) revealPostPaymentForm();
+    }, 250);
+  } catch(e) {}
+}
 document.getElementById('upiPayButton').addEventListener('click', function(e){
-  // Recalculate at the moment of tapping so the currently selected quantity is used.
   updateUpiPaymentLink();
   if (this.getAttribute('aria-disabled') === 'true' || this.getAttribute('href') === '#') {
     e.preventDefault();
     document.getElementById('orderStatus').textContent='पहले पौधा और सही मात्रा चुनें।';
     return;
   }
-  // Standard UPI deep link opens the phone's default UPI app, or the app chooser,
-  // with payee, exact order amount, currency, and note pre-filled where supported.
   const paymentUri = this.getAttribute('href');
   if (!paymentUri || !paymentUri.startsWith('upi://pay?')) {
     e.preventDefault();
     document.getElementById('orderStatus').textContent='UPI भुगतान लिंक तैयार नहीं हुआ। कृपया पौधा और मात्रा दोबारा चुनें।';
     return;
   }
+  startUpiCountdown();
   e.preventDefault();
   window.location.href = paymentUri;
 });
@@ -585,6 +659,7 @@ document.getElementById('paymentDoneButton').addEventListener('click', function(
   document.getElementById('paymentProofSection').scrollIntoView({behavior:'smooth',block:'center'});
   document.getElementById('paymentProofFile').focus({preventScroll:true});
 });
+restoreUpiCountdown();
 document.getElementById('plant').addEventListener('change', () => {
   updateOrderTotal();
   updateUpiPaymentLink();
@@ -696,11 +771,14 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
       '\nभुगतान स्क्रीनशॉट: ' + proofUrl +
       '\nकृपया BharatPe में वास्तविक भुगतान जाँचकर ही ऑर्डर कन्फर्म करें।';
 
-    status.innerHTML = '<strong>✅ आपका ऑर्डर अनुरोध वेबसाइट पर सेव हो गया है।</strong><br><br>' +
-      '<strong style="color:#9a3412">भुगतान अभी नर्सरी द्वारा जाँचा जाना बाकी है।</strong><br>' +
-      'हम BharatPe में भुगतान की पुष्टि करके आपको WhatsApp पर जवाब देंगे। कृपया हमारी पुष्टि होने तक प्रतीक्षा करें।<br><br>' +
-      '<strong>अब नीचे बटन दबाकर WhatsApp में ऑर्डर संदेश भेजें।</strong><br>' +
-      'WhatsApp खुलने के बाद संदेश भेजने के लिए Send भी दबाना होगा।';
+    status.innerHTML = '<div class="order-confirmation-box">' +
+      '<h3>✅ आपका ऑर्डर अनुरोध मिल गया है!</h3>' +
+      '<p><strong>भुगतान की स्थिति: जाँच बाकी (Pending Verification)</strong></p>' +
+      '<p>हम आपकी भेजी गई जानकारी और भुगतान स्क्रीनशॉट की जाँच कर रहे हैं। भुगतान BharatPe में सत्यापित होने के बाद हम आपको WhatsApp पर जवाब देंगे।</p>' +
+      '<p>आपको ऑर्डर कब मिलेगा, इसकी जानकारी भी पौधों/सब्जियों की उपलब्धता और भुगतान की पुष्टि के बाद WhatsApp पर दी जाएगी।</p>' +
+      '<p><strong>कृपया हमारी WhatsApp पुष्टि आने तक प्रतीक्षा करें।</strong></p>' +
+      '<p>ऑर्डर WhatsApp पर भेजने के लिए नीचे बटन दबाएँ। WhatsApp खुलने पर संदेश भेजने के लिए Send भी दबाना होगा।</p>' +
+      '</div>';
     const link = document.createElement('a');
     link.href = 'https://wa.me/919887666626?text=' + encodeURIComponent(message);
     link.target = '_blank'; link.rel = 'noopener'; link.className = 'btn';
