@@ -7,7 +7,10 @@
 <title>श्री नीम करोली महाराज ग्रीन नर्सरी</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-document.getElementById('paymentProofFile').addEventListener('change', function () {
+document.addEventListener('DOMContentLoaded', function () {
+const paymentProofInput = document.getElementById('paymentProofFile');
+if (!paymentProofInput) return;
+paymentProofInput.addEventListener('change', function () {
   const file = this.files && this.files[0], preview = document.getElementById('paymentProofPreview');
   const submitButton = document.getElementById('orderButton');
   if (submitButton) submitButton.style.display = 'none';
@@ -23,6 +26,7 @@ document.getElementById('paymentProofFile').addEventListener('change', function 
   image.src = URL.createObjectURL(file); image.onload = () => URL.revokeObjectURL(image.src); preview.appendChild(image);
   const note = document.createElement('div'); note.textContent = '✅ स्क्रीनशॉट चुना गया: ' + file.name; preview.appendChild(note);
   if (submitButton) { submitButton.style.display = 'block'; submitButton.textContent = 'Submit & Send Order'; }
+});
 });
 </script>
 <style>
