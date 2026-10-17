@@ -127,6 +127,36 @@ button,.btn{font-size:calc(16px * var(--site-button-scale))}
 .site-control-toggle{display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #e7f0e3}.site-control-toggle input{width:auto;margin:0}
 @media(max-width:650px){.site-control-subnav{grid-template-columns:repeat(2,minmax(0,1fr))}.site-control-field{padding:11px}}
 
+
+/* Responsive layout refinements only; existing order and Supabase logic is preserved. */
+img, video, canvas, iframe { max-width: 100%; }
+input, select, textarea, button { max-width: 100%; }
+button, .btn, a.btn { overflow-wrap: anywhere; }
+.card, .plant, .order, .admin-pane, .admin-card { min-width: 0; }
+pre, code, table { max-width: 100%; }
+.table-wrap, .orders-table-wrap, .admin-table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+@media (max-width: 768px) {
+  body { font-size: 15px; }
+  main, .container, .section, .admin-container { width: 100%; max-width: 100%; padding-left: 12px; padding-right: 12px; }
+  header { padding: 28px 14px 36px; border-radius: 0 0 22px 22px; }
+  header h1 { font-size: clamp(22px, 6vw, 32px); }
+  nav { gap: 6px; padding: 8px; }
+  nav a, #adminPanelNav { min-width: 0; padding: 8px 11px; font-size: 14px; }
+  .plants { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .plant, .card, .order { padding: 12px; }
+  input, select, textarea { font-size: 16px; }
+  button, .btn { min-height: 42px; }
+  #adminTabs { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .admin-pane, .admin-card, .card { overflow-wrap: anywhere; }
+  table { display: block; overflow-x: auto; white-space: nowrap; }
+}
+@media (max-width: 420px) {
+  .plants { grid-template-columns: minmax(0, 1fr); }
+  nav a, #adminPanelNav { flex: 1 1 42%; }
+  #adminTabs { grid-template-columns: minmax(0, 1fr) !important; }
+  button, .btn { width: 100%; }
+}
+
 </style>
 </head>
 <body>
