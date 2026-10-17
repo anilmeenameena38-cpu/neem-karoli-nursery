@@ -268,7 +268,9 @@ footer p{margin:5px}
     <label for="newProductName">नाम</label><input id="newProductName" required placeholder="जैसे टमाटर का पौधा / ताज़ा टमाटर">
     <label for="newProductVariety">किस्म (वैकल्पिक)</label><input id="newProductVariety" placeholder="जैसे हाइब्रिड">
     <label for="newProductCategory">श्रेणी</label><select id="newProductCategory"><option value="plant">पौधा</option><option value="vegetable">हरी सब्जी</option></select>
-    <label for="newProductPrice">प्रति इकाई कीमत (₹)</label><input id="newProductPrice" type="number" min="0" step="0.01" required>
+    <label for="newProductPrice">प्रति इकाई कीमत (₹) — ऑफर में FREE लिखें</label><input id="newProductPrice" type="text" inputmode="decimal" required placeholder="जैसे 5 या FREE">
+    <label for="newProductImage">पौधे / सब्जी की फोटो अपलोड करें</label><input id="newProductImage" type="file" accept="image/*">
+    <img id="newProductImagePreview" alt="फोटो प्रीव्यू" style="display:none;max-width:180px;max-height:150px;object-fit:cover;border-radius:12px;border:1px solid var(--line)">
     <label for="newProductStock">शुरुआती स्टॉक</label><input id="newProductStock" type="number" min="0" step="1" value="0" required>
     <label for="newProductDescription">विवरण (वैकल्पिक)</label><textarea id="newProductDescription" rows="2"></textarea>
     <button type="submit" id="addProductButton">उत्पाद सेव करें</button></form><div id="productFormStatus" class="status" aria-live="polite"></div></div>
@@ -366,18 +368,18 @@ async function loadPlants() {
     
      
       
-      const plantImage = p.name.includes('टमाटर')
+      const plantImage = p.image_url || (p.name.includes('टमाटर')
         ? 'https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=600'
         : p.name.includes('बैंगन')
         ? 'baingan.jpg'
-        : 'https://images.unsplash.com/photo-1588252303782-cb80119abd6d?w=600';
+        : 'https://images.unsplash.com/photo-1588252303782-cb80119abd6d?w=600');
 
       card.innerHTML = '<img src="' + plantImage +
         '" alt="' + safe(p.name) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
         '<h3>' + safe(p.name) + '</h3><div>' +
         safe(p.variety || p.category || '') +
         '</div><p class="price">₹' +
-        Number(p.selling_price).toFixed(2) +
+        (Number(p.selling_price)===0 ? 'FREE' : Number(p.selling_price).toFixed(2)) +
         '</p><p class="note">' +
         safe(p.description || '') + '</p>';
 
@@ -385,7 +387,7 @@ async function loadPlants() {
 
     const option = document.createElement('option');
     option.value = String(p.id);
-    option.textContent = p.name + ' — ₹' + Number(p.selling_price).toFixed(2);
+    option.textContent = p.name + ' — ' + (Number(p.selling_price)===0 ? 'FREE' : '₹'+Number(p.selling_price).toFixed(2));
     select.appendChild(option);
   });
   status.textContent = 'पौधों की सूची डेटाबेस से अपडेट हुई।';
@@ -455,7 +457,7 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
       '\nमोबाइल: ' + (phone || 'नहीं दिया') +
       '\nपौधा: ' + p.name +
       '\nमात्रा: ' + quantity +
-      '\nवेबसाइट की कीमत: ₹' + Number(p.selling_price).toFixed(2) + ' प्रति पौधा' +
+      '\nवेबसाइट की कीमत: ' + (Number(p.selling_price)===0 ? 'FREE' : '₹'+Number(p.selling_price).toFixed(2)) + ' प्रति इकाई' +
       '\nपता: ' + address +
       (customerLocation ? '\nलोकेशन: ' + customerLocation.mapsUrl : '') +
       '\nकृपया ऑर्डर और कुल कीमत की पुष्टि करें।';
@@ -892,36 +894,62 @@ async function loadEditableProducts() {
   const box = document.getElementById('priceProductList');
   if (!box) return;
   box.textContent = 'उत्पाद लोड हो रहे हैं…';
-  const {data, error} = await db.from('plants').select('id,name,variety,category,selling_price,stock_quantity,description,is_active').order('name');
+  const {data, error} = await db.from('plants').select('id,name,variety,category,selling_price,stock_quantity,description,is_active,image_url').order('name');
   if (error) { box.textContent = 'उत्पाद लोड नहीं हुए: ' + error.message; return; }
   if (!data || !data.length) { box.textContent = 'अभी कोई उत्पाद दर्ज नहीं है। नीचे फॉर्म से जोड़ें।'; return; }
   box.innerHTML = data.map(p => `<form class="product-edit-row" data-product-id="${safe(p.id)}" style="border-bottom:1px solid var(--line);padding:12px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;align-items:end">
-    <div><strong>${safe(p.name)}</strong><div class="admin-muted">ID: ${safe(p.id)} · ${p.is_active ? 'उपलब्ध' : 'बंद'}</div></div>
-    <label>रेट ₹<input name="price" type="number" min="0" step="0.01" value="${Number(p.selling_price)||0}" required></label>
+    <div>${p.image_url ? `<img src="${safe(p.image_url)}" alt="${safe(p.name)}" style="width:90px;height:70px;object-fit:cover;border-radius:9px;display:block;margin-bottom:6px">` : ''}<strong>${safe(p.name)}</strong><div class="admin-muted">ID: ${safe(p.id)} · ${p.is_active ? 'उपलब्ध' : 'बंद'}</div></div>
+    <label>रेट ₹ / FREE<input name="price" type="text" inputmode="decimal" value="${Number(p.selling_price)===0?'FREE':Number(p.selling_price)}" required></label>
     <label>स्टॉक<input name="stock" type="number" min="0" step="1" value="${Math.max(0,Number(p.stock_quantity)||0)}" required></label>
     <button type="submit">सेव करें</button></form>`).join('');
   box.querySelectorAll('.product-edit-row').forEach(form => form.addEventListener('submit', async ev => {
     ev.preventDefault();
     const btn=form.querySelector('button'); btn.disabled=true;
-    const price=Number(form.elements.price.value), stock=Number(form.elements.stock.value);
+    const priceText=String(form.elements.price.value).trim();
+    const price=priceText.toUpperCase()==='FREE' ? 0 : Number(priceText);
+    const stock=Number(form.elements.stock.value);
     if (!Number.isFinite(price)||price<0||!Number.isInteger(stock)||stock<0) { alert('रेट और स्टॉक सही भरें।');btn.disabled=false;return; }
     const {error:updateError}=await db.from('plants').update({selling_price:price,stock_quantity:stock}).eq('id',form.dataset.productId);
     if(updateError){alert('सेव नहीं हुआ: '+updateError.message);btn.disabled=false;return;}
     await loadEditableProducts(); await loadPlants(); await loadOwnerStats();
-    document.getElementById('productFormStatus').textContent='✅ कीमत और स्टॉक सेव हो गए।';
+    document.getElementById('productFormStatus').textContent='✅ कीमत और स्टॉक सेव हो गए। ₹0 की कीमत वेबसाइट पर FREE दिखेगी।';
   }));
 }
+document.getElementById('newProductImage').addEventListener('change', event => {
+  const file=event.target.files[0], preview=document.getElementById('newProductImagePreview');
+  if(!file){preview.style.display='none';preview.removeAttribute('src');return;}
+  if(!file.type.startsWith('image/')){alert('कृपया इमेज फ़ाइल चुनें।');event.target.value='';return;}
+  preview.src=URL.createObjectURL(file); preview.style.display='block';
+});
 document.getElementById('addProductForm').addEventListener('submit', async ev => {
   ev.preventDefault(); const btn=document.getElementById('addProductButton'), status=document.getElementById('productFormStatus');
   const name=document.getElementById('newProductName').value.trim(), variety=document.getElementById('newProductVariety').value.trim(), category=document.getElementById('newProductCategory').value;
-  const price=Number(document.getElementById('newProductPrice').value), stock=Number(document.getElementById('newProductStock').value), description=document.getElementById('newProductDescription').value.trim();
-  if(!name||!Number.isFinite(price)||price<0||!Number.isInteger(stock)||stock<0){status.textContent='नाम, कीमत और स्टॉक सही भरें।';return;}
-  btn.disabled=true; status.textContent='उत्पाद सेव हो रहा है…';
-  const row={name,variety:variety||null,category,selling_price:price,stock_quantity:stock,description:description||null,is_active:stock>0};
-  const {error}=await db.from('plants').insert(row);
-  if(error){status.textContent='उत्पाद सेव नहीं हुआ: '+error.message+' (plants टेबल की अनुमति/कॉलम जाँचें।)';btn.disabled=false;return;}
-  status.textContent='✅ नया उत्पाद डेटाबेस में सेव हो गया।'; ev.target.reset(); document.getElementById('newProductStock').value='0';
-  await loadEditableProducts(); await loadPlants(); await loadOwnerStats(); btn.disabled=false;
+  const priceText=document.getElementById('newProductPrice').value.trim();
+  const price=priceText.toUpperCase()==='FREE' ? 0 : Number(priceText);
+  const stock=Number(document.getElementById('newProductStock').value), description=document.getElementById('newProductDescription').value.trim();
+  const imageFile=document.getElementById('newProductImage').files[0];
+  if(!name||!Number.isFinite(price)||price<0||!Number.isInteger(stock)||stock<0){status.textContent='नाम, कीमत (या FREE) और स्टॉक सही भरें।';return;}
+  btn.disabled=true; status.textContent='उत्पाद और फोटो सेव हो रहे हैं…';
+  try {
+    let imageUrl=null;
+    if(imageFile){
+      if(!imageFile.type.startsWith('image/')) throw new Error('कृपया फोटो फ़ाइल चुनें।');
+      if(imageFile.size>5*1024*1024) throw new Error('फोटो 5 MB से छोटी रखें।');
+      const ext=(imageFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+      const path='products/'+Date.now()+'-'+Math.random().toString(36).slice(2,9)+'.'+ext;
+      const {error:uploadError}=await db.storage.from('plant-images').upload(path,imageFile,{cacheControl:'3600',upsert:false,contentType:imageFile.type});
+      if(uploadError) throw new Error('फोटो अपलोड नहीं हुई: '+uploadError.message+'। Supabase में plant-images storage bucket/नीतियाँ सेट करें।');
+      imageUrl=db.storage.from('plant-images').getPublicUrl(path).data.publicUrl;
+    }
+    const row={name,variety:variety||null,category,selling_price:price,stock_quantity:stock,description:description||null,is_active:stock>0,image_url:imageUrl};
+    const {error}=await db.from('plants').insert(row);
+    if(error) throw new Error('उत्पाद सेव नहीं हुआ: '+error.message+'। image_url कॉलम और plants की अनुमति जाँचें।');
+    status.textContent='✅ नया उत्पाद प्रकाशित हो गया। वेबसाइट की सूची अपडेट की जा रही है। ₹0 की कीमत FREE दिखेगी।';
+    ev.target.reset(); document.getElementById('newProductStock').value='0';
+    const preview=document.getElementById('newProductImagePreview'); preview.style.display='none'; preview.removeAttribute('src');
+    await loadEditableProducts(); await loadPlants(); await loadOwnerStats();
+  } catch(error){status.textContent='❌ '+error.message;}
+  finally {btn.disabled=false;}
 });
 
 async function loadDeliverySettings(){
