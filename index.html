@@ -38,9 +38,10 @@ header{position:relative;overflow:hidden;text-align:center;color:#fff;padding:cl
 header:after{content:"🌿  🌱  🍃";display:block;margin-top:18px;font-size:24px;letter-spacing:10px;opacity:.9}
 header h1{font-size:clamp(25px,4.5vw,42px);line-height:1.35;margin:0 auto 12px;max-width:950px}
 header p{margin:7px auto;max-width:800px;font-size:clamp(14px,2vw,18px)}
-nav{position:sticky;top:0;z-index:1000;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 14px;background:#ffffffed;backdrop-filter:blur(12px);box-shadow:0 4px 18px #0000000c;border-bottom:1px solid #e8f0e5}
-nav a{display:inline-block;min-width:110px;text-align:center;padding:9px 15px;border-radius:999px;background:#f0f7ed;color:var(--green);font-weight:700;text-decoration:none;transition:background .2s,transform .2s}
+nav{position:sticky;top:0;z-index:1000;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;padding:10px 14px;background:#ffffffed;backdrop-filter:blur(12px);box-shadow:0 4px 18px #0000000c;border-bottom:1px solid #e8f0e5}
+nav a{display:inline-block;min-width:110px;text-align:center;padding:11px 16px;border:1px solid #cfe3c9;border-radius:14px;background:linear-gradient(180deg,#f7fcf4,#eaf5e6);color:var(--green);font-weight:800;box-shadow:0 3px 9px #174b2b12;text-decoration:none;transition:background .2s,transform .2s}
 nav a:hover{background:#dff0dc;transform:translateY(-1px)}
+nav a:focus-visible,nav button:focus-visible{outline:3px solid #83bf75;outline-offset:2px}
 .nav-menu-wrap{position:relative;display:inline-flex;align-items:center}
 #adminPanelNav{display:inline-block;min-width:110px;text-align:center;padding:9px 15px;border-radius:999px;background:#f0f7ed;color:var(--green);border:0;font-weight:700;box-shadow:none;font:inherit;font-weight:700;cursor:pointer;transition:background .2s,transform .2s}#adminPanelNav:hover{background:#dff0dc;transform:translateY(-1px)}
 #menuToggle{min-width:110px;padding:9px 15px;border-radius:999px;background:linear-gradient(135deg,#176b37,#104b29);color:#fff;border:0;font-weight:700;box-shadow:0 5px 14px #16844720}
@@ -66,6 +67,14 @@ main{max-width:1120px;margin:0 auto;padding:clamp(16px,3vw,30px) 16px}
 .card p{margin:9px 0}
 #plants>p:first-of-type{color:var(--muted)}
 #plants{background:linear-gradient(145deg,#fff,#fbfef9)}
+#plantList{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding:4px 2px 12px;scrollbar-width:thin}
+#plantList .plant{flex:0 0 clamp(190px,27%,250px);scroll-snap-align:start}
+#plantList .plant:hover{transform:translateY(-2px)}
+#about{background:linear-gradient(135deg,#fff,#f0f8eb);border-left:4px solid #25884b}
+#about h2{margin-bottom:8px}
+#careTips{background:#f7fbf4}
+@media(max-width:600px){#plantList .plant{flex-basis:72%;}.plant img{height:135px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 #order{border-top:5px solid #25884b}
 #order:not([hidden]){position:fixed;inset:0;z-index:9999;margin:0!important;border:0;border-radius:0;background:rgba(8,25,13,.68);padding:18px;display:flex;align-items:center;justify-content:center;overflow:auto;box-shadow:none}
 #order .order-modal-card{position:relative;width:min(100%,620px);max-height:calc(100dvh - 36px);overflow:auto;background:#fff;border-radius:22px;padding:clamp(18px,3vw,28px);box-shadow:0 22px 70px #0005;border-top:5px solid #25884b}
@@ -73,13 +82,13 @@ main{max-width:1120px;margin:0 auto;padding:clamp(16px,3vw,30px) 16px}
 #order #plant{display:none}#order label[for="plant"]{display:none}
 body.order-modal-open{overflow:hidden}
 @media(max-width:600px){#order:not([hidden]){padding:10px;align-items:center}#order .order-modal-card{max-height:calc(100dvh - 20px);padding:16px;border-radius:17px}}
-.plants{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:18px;margin-top:18px}
-.plant{min-width:0;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;text-align:center;box-shadow:0 5px 18px #174b2b0b;transition:transform .2s,box-shadow .2s}
+.plants{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;margin-top:12px}
+.plant{min-width:0;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:16px;padding:9px;text-align:center;box-shadow:0 5px 18px #174b2b0b;transition:transform .2s,box-shadow .2s}
 .plant:hover{transform:translateY(-4px);box-shadow:0 14px 28px #174b2b18}
-.plant img{display:block;width:100%;height:185px;object-fit:cover;border-radius:13px;background:#eef5eb;margin-bottom:12px}
-.plant-buy-box{background:#f5faf2;border:1px solid var(--line);border-radius:13px;padding:10px;margin-top:12px;text-align:left}.plant-buy-box label{font-size:13px;margin:0 0 4px}.plant-buy-box input{margin:4px 0 8px;padding:9px 10px}.plant-total{font-weight:800;color:var(--green);font-size:15px;margin:4px 0 10px}.plant-buy-button{width:100%;padding:10px 12px!important}.stock-hint{font-size:12px;color:var(--muted);margin:0 0 8px}
-.plant h3{color:var(--green);font-size:21px;margin:8px 0}
-.price{font-weight:800;color:#138044;font-size:25px;margin:8px 0}
+.plant img{display:block;width:100%;height:155px;object-fit:cover;border-radius:11px;background:#eef5eb;margin-bottom:5px}
+.plant-buy-box{background:#f5faf2;border:1px solid var(--line);border-radius:11px;padding:7px;margin-top:5px;text-align:left}.plant-buy-box label{font-size:13px;margin:0 0 4px}.plant-buy-box input{margin:2px 0 4px;padding:6px 8px}.plant-total{font-weight:800;color:var(--green);font-size:14px;margin:3px 0 5px}.plant-buy-button{width:100%;padding:7px 9px!important;font-size:13px!important;border-radius:9px!important}.stock-hint{font-size:12px;color:var(--muted);margin:0 0 8px}
+.plant h3{color:var(--green);font-size:18px;margin:4px 0}
+.price{font-weight:800;color:#138044;font-size:21px;margin:3px 0}
 label{display:block;font-weight:700;margin:12px 0 3px;color:#294d32}
 input,select,textarea{display:block;width:100%;padding:13px 14px;margin:6px 0 12px;border:1px solid #c9ddc4;border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-size:16px}
 input:focus,select:focus,textarea:focus{outline:3px solid #25884b25;border-color:#25884b}
@@ -211,15 +220,30 @@ footer small{display:block;margin-top:6px;color:#d9f4d5;font-size:11px}
 <nav>
 <a href="#plants">🌱 पौधे</a>
 <a href="#order" id="orderNavLink">🛒 ऑर्डर</a>
+<a href="#about">🌿 हमारे बारे में</a>
 <a href="#contact">📞 संपर्क</a>
 <a href="#customerTracking" id="customerTrackingNav">📦 ट्रैकिंग</a>
 <button id="adminPanelNav" type="button" aria-label="एडमिन लॉगिन खोलें">🔐 एडमिन</button>
 </nav>
 <main>
+<section class="card" id="about">
+<h2>🌿 श्री नीम करोली महाराज ग्रीन नर्सरी में आपका स्वागत है</h2>
+<p>हर घर और खेत में हरियाली बढ़े—इसी भावना के साथ हम सब्जियों के पौधे और नर्सरी से जुड़ी जानकारी आप तक पहुँचाने का प्रयास करते हैं।</p>
+<p>यहाँ उपलब्ध पौधों के नाम, कीमत और स्टॉक देखकर अपनी जरूरत के अनुसार ऑर्डर करें। डिलीवरी की उपलब्धता और कुल राशि भुगतान से पहले स्पष्ट दिखाई जाएगी।</p>
+<p class="note">आपका विश्वास और पौधों की अच्छी देखभाल हमारे लिए महत्वपूर्ण है।</p>
+</section>
+
 <section class="card" id="welcome">
 <h2>🌿 प्रकृति से जुड़ें, स्वस्थ पौधे घर लाएँ</h2>
 <p>घर की क्यारी हो या खेत—सब्जियों के पौधों की जानकारी, कीमत और उपलब्ध स्टॉक यहाँ देखें।</p>
 <p class="note">ऑर्डर भेजने के बाद नर्सरी मालिक उपलब्धता और कीमत की पुष्टि करेंगे।</p>
+</section>
+
+<section class="card" id="careTips">
+<h2>🌱 पौधों की देखभाल के आसान सुझाव</h2>
+<p>☀️ पौधों को उनकी जरूरत के अनुसार धूप दें।</p>
+<p>💧 मिट्टी की नमी देखकर पानी दें; जरूरत से ज्यादा पानी न भरें।</p>
+<p>🌿 पौधों को लगाते समय मिट्टी और दूरी का ध्यान रखें। अलग-अलग पौधों की जरूरत अलग हो सकती है।</p>
 </section>
 
 <section class="card" id="plants">
@@ -468,6 +492,7 @@ footer small{display:block;margin-top:6px;color:#d9f4d5;font-size:11px}
 
 <script>
 const ownerSection = document.getElementById('owner');
+document.getElementById('plant')?.addEventListener('change',()=>{document.getElementById('qty').readOnly=false;});
 document.getElementById('adminPanelNav').addEventListener('click', () => {
   ownerSection.classList.add('login-visible');
   ownerSection.setAttribute('aria-hidden', 'false');
@@ -658,6 +683,7 @@ async function loadPlants() {
       }
       select.value = String(p.id);
       document.getElementById('qty').value = String(q);
+      document.getElementById('qty').readOnly = true;
       updateOrderTotal();
       const orderSection = document.getElementById('order');
       orderSection.hidden = false;
@@ -1584,6 +1610,30 @@ db.auth.onAuthStateChange((event, session) => {
   closeBtn?.addEventListener('click',closeTracking);
   document.addEventListener('keydown',e=>{if(e.key==='Escape') closeTracking();});
   tracking?.addEventListener('click',e=>{if(e.target===tracking) closeTracking();});
+})();
+</script>
+
+<script>
+(function(){
+  const list=document.getElementById('plantList');
+  if(!list) return;
+  let timer=null;
+  function start(){
+    if(timer) clearInterval(timer);
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    timer=setInterval(()=>{
+      const cards=list.querySelectorAll('.plant');
+      if(cards.length<2 || list.matches(':hover')) return;
+      const first=cards[0];
+      const step=first.getBoundingClientRect().width+12;
+      if(list.scrollLeft+list.clientWidth>=list.scrollWidth-8){list.scrollTo({left:0,behavior:'smooth'});}
+      else list.scrollBy({left:step,behavior:'smooth'});
+    },3500);
+  }
+  new MutationObserver(start).observe(list,{childList:true});
+  list.addEventListener('mouseenter',()=>{if(timer)clearInterval(timer);timer=null});
+  list.addEventListener('mouseleave',start);
+  start();
 })();
 </script>
 
