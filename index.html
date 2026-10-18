@@ -80,6 +80,24 @@ main{max-width:1120px;margin:0 auto;padding:clamp(16px,3vw,30px) 16px}
 #order .order-modal-card{position:relative;width:min(100%,620px);max-height:calc(100dvh - 36px);overflow:auto;background:#fff;border-radius:22px;padding:clamp(18px,3vw,28px);box-shadow:0 22px 70px #0005;border-top:5px solid #25884b}
 #order .order-modal-close{position:sticky;top:0;float:right;width:auto;margin:-6px -5px 6px 10px;padding:8px 12px;background:#edf5e9;color:#174b2b;box-shadow:none}
 #order #plant{display:none}#order label[for="plant"]{display:none}
+#order .order-modal-card{border-top:4px solid #25884b;background:linear-gradient(180deg,#fff 0%,#fbfef9 100%)}
+#order .order-intro{color:#5d6b5d;font-size:13px;margin:-4px 0 14px}
+#order .order-summary-card{background:#f3f9ef;border:1px solid #dbead4;border-radius:15px;padding:13px;margin:10px 0 16px}
+#order .order-summary-head{display:flex;align-items:center;gap:8px;font-weight:800;color:#185b30;margin-bottom:10px}
+#order .qty-row{display:flex;align-items:center;gap:10px;margin:5px 0 10px}
+#order .qty-row label{margin:0;flex:1;font-size:14px}
+#order #qty{width:96px;margin:0;text-align:center;font-weight:700;padding:9px}
+#order .summary-line{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:7px 0;font-size:14px}
+#order .summary-line strong{color:#176b37;white-space:nowrap}
+#order .summary-line.total{border-top:1px solid #d7e7d0;margin-top:5px;padding-top:11px;font-size:16px;font-weight:800}
+#order #orderTotalPreview{background:#fff;border:1px solid #e0ebdb;border-radius:12px;padding:10px;margin:8px 0;font-size:13px}
+#order #selectedOrderSummary{display:none}
+#order #prePaymentCustomerInfo{background:transparent;border:0;padding:0;margin-top:12px!important}
+#order #deliveryEstimate{background:#f1f8ed;border:1px solid #d7e8cf;border-radius:12px;padding:11px;margin-top:10px}
+#order .location-row{display:grid;gap:7px}
+#order #locationButton{width:100%;padding:12px;border-radius:12px}
+#order #bharatpePaymentBox{border:1px solid #d7e8cf;background:#f5faf2;border-radius:14px;padding:14px;margin-top:14px}
+@media(max-width:600px){#order .order-modal-card{padding:14px}#order .order-summary-card{padding:11px}#order .qty-row{gap:8px}}
 body.order-modal-open{overflow:hidden}
 @media(max-width:600px){#order:not([hidden]){padding:10px;align-items:center}#order .order-modal-card{max-height:calc(100dvh - 20px);padding:16px;border-radius:17px}}
 .plants{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;margin-top:12px}
@@ -290,14 +308,21 @@ body.about-page-active #about{display:block}
 <div class="order-modal-card">
 <button class="order-modal-close" id="closeOrderModal" type="button" aria-label="ऑर्डर फॉर्म बंद करें">✕ बंद करें</button>
 <h2 id="orderModalTitle">🛒 आपका पौधा ऑर्डर करें</h2>
+<p class="order-intro">एक ही जगह ऑर्डर की जानकारी भरें। पहले पौधों का मूल्य, फिर लोकेशन जाँच के बाद डिलीवरी सहित अंतिम राशि दिखेगी।</p>
 <form id="orderForm">
 <label for="plant">पौधा चुनें</label>
 <select id="plant" required>
 <option value="">पहले पौधों की सूची लोड होने दें</option>
 </select>
-<label for="qty">पौधों की संख्या</label>
-<input id="qty" type="number" min="1" step="1" value="1" required>
-<div id="orderTotalPreview" class="status" aria-live="polite">कुल राशि दिखेगी।</div>
+<div class="order-summary-card" aria-live="polite">
+  <div class="order-summary-head">🌱 आपके ऑर्डर का सारांश</div>
+  <div id="orderSelectedPlant" style="font-weight:700;margin-bottom:8px">पौधा चुनें</div>
+  <div class="qty-row"><label for="qty">पौधों की संख्या</label><input id="qty" type="number" min="1" step="1" value="1" required></div>
+  <div class="summary-line"><span>पौधों का मूल्य</span><strong id="plantAmountDisplay">₹0.00</strong></div>
+  <div class="summary-line"><span>डिलीवरी चार्ज</span><strong id="deliveryAmountDisplay">लोकेशन जाँच के बाद</strong></div>
+  <div class="summary-line total"><span>कुल भुगतान</span><strong id="grandTotalDisplay">लोकेशन जाँच के बाद</strong></div>
+</div>
+<div id="orderTotalPreview" class="status" aria-live="polite">पहले पौधा और मात्रा चुनें।</div>
 <div id="selectedOrderSummary" class="status" aria-live="polite">पौधा, संख्या और कुल राशि।</div>
 <div id="prePaymentCustomerInfo" class="status" style="margin-top:14px">
   <h3>📍 डिलीवरी की जानकारी</h3>
@@ -750,9 +775,20 @@ function updateOrderTotal() {
   const plantTotal = Number(p.selling_price) * qty;
   const hasDelivery = deliveryFee !== null && Number.isFinite(deliveryFee);
   const grandTotal = plantTotal + (hasDelivery ? deliveryFee : 0);
-  box.textContent = 'पौधों का मूल्य: ₹' + plantTotal.toFixed(2) + (hasDelivery ? ' | डिलीवरी: ₹' + deliveryFee.toFixed(2) + ' | कुल देय: ₹' + grandTotal.toFixed(2) : ' | लोकेशन जाँच के बाद डिलीवरी चार्ज और अंतिम कुल राशि दिखाई जाएगी।');
+  const selectedName = document.getElementById('orderSelectedPlant');
+  const plantDisplay = document.getElementById('plantAmountDisplay');
+  const deliveryDisplay = document.getElementById('deliveryAmountDisplay');
+  const grandDisplay = document.getElementById('grandTotalDisplay');
+  if (selectedName) selectedName.textContent = p.name + ' · प्रति पौधा ₹' + Number(p.selling_price).toFixed(2);
+  if (plantDisplay) plantDisplay.textContent = '₹' + plantTotal.toFixed(2);
+  if (deliveryDisplay) deliveryDisplay.textContent = hasDelivery ? '₹' + deliveryFee.toFixed(2) : 'लोकेशन जाँच के बाद';
+  if (grandDisplay) grandDisplay.textContent = hasDelivery ? '₹' + grandTotal.toFixed(2) : 'लोकेशन जाँच के बाद';
+  box.textContent = hasDelivery ? 'डिलीवरी सहित कुल राशि: ₹' + grandTotal.toFixed(2) : 'पौधों का मूल्य: ₹' + plantTotal.toFixed(2) + ' · लोकेशन जाँच के बाद डिलीवरी और अंतिम कुल राशि दिखेगी।';
   if (payTotal) payTotal.textContent = hasDelivery ? '₹' + grandTotal.toFixed(2) : 'पहले डिलीवरी जाँचें';
 }
+
+document.getElementById('plant').addEventListener('change', () => { deliveryFee = null; deliveryDistanceKm = null; document.getElementById('bharatpePaymentBox').style.display='none'; updateOrderTotal(); updateUpiPaymentLink(); });
+document.getElementById('qty').addEventListener('input', () => { updateOrderTotal(); updateUpiPaymentLink(); });
 document.getElementById('orderNavLink').addEventListener('click', event => {
   event.preventDefault();
   document.getElementById('plants').scrollIntoView({behavior:'smooth', block:'start'});
