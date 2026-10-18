@@ -209,6 +209,21 @@ footer p{margin:4px 0;font-size:13px}
 footer small{display:block;margin-top:6px;color:#d9f4d5;font-size:11px}
 @media(max-width:600px){nav{gap:5px;padding:8px 6px}nav a,nav #adminPanelNav,nav #menuToggle{flex:1 1 calc(20% - 5px);padding:8px 3px;font-size:11px;white-space:nowrap;border-radius:9px}.plants{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.plant{padding:8px}.plant img{height:125px}.plant h3{font-size:15px}.price{font-size:18px}.plant-buy-box label{font-size:12px}.plant-buy-button{min-width:0!important;width:100%!important;padding:7px 5px!important;font-size:12px!important}.card{padding:14px;border-radius:15px}#customerTracking{padding:16px;width:calc(100% - 20px);max-height:calc(100dvh - 20px)}}
 
+/* About page: opens as a full page inside the site, not as a popup */
+#about{display:none;position:relative;width:100%;max-width:1050px;margin:18px auto;padding:clamp(16px,3vw,30px);background:#fff;border:1px solid #d8e9d1;border-radius:20px;box-shadow:0 8px 28px #174b2b12;}
+#about.about-page-open{display:block}
+#about .about-page-hero{padding:clamp(18px,3vw,30px);border-radius:17px;background:linear-gradient(135deg,#e8f6df,#f8fff4);border:1px solid #d5e9ca;margin-bottom:18px}
+#about .about-page-hero h2{font-size:clamp(23px,3vw,32px);line-height:1.4;margin:0 0 10px;color:#176b37}
+#about .about-subsection{margin-top:16px;padding:clamp(15px,2.5vw,24px);border:1px solid #e0edda;border-left:5px solid #25884b;border-radius:15px;background:linear-gradient(135deg,#fff,#f6fbf2)}
+#about .about-subsection h2{font-size:clamp(19px,2.4vw,24px);margin:0 0 10px;color:#176b37}
+#about .about-subsection p,#about .about-subsection li{font-size:15px;line-height:1.8}
+#about .about-subsection ul{padding-left:22px;margin:8px 0}
+#about .about-page-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:16px}
+#about .about-page-grid .about-subsection{margin-top:0}
+body.about-page-active main>section:not(#about){display:none!important}
+body.about-page-active #about{display:block}
+@media(max-width:600px){#about{margin:10px auto;padding:12px;border-radius:14px}#about .about-subsection{padding:13px;border-radius:12px}}
+
 </style>
 </head>
 <body>
@@ -226,24 +241,43 @@ footer small{display:block;margin-top:6px;color:#d9f4d5;font-size:11px}
 <button id="adminPanelNav" type="button" aria-label="एडमिन लॉगिन खोलें">🔐 एडमिन</button>
 </nav>
 <main>
-<section class="card" id="about">
-<h2>🌿 श्री नीम करोली महाराज ग्रीन नर्सरी में आपका स्वागत है</h2>
-<p>हर घर और खेत में हरियाली बढ़े—इसी भावना के साथ हम सब्जियों के पौधे और नर्सरी से जुड़ी जानकारी आप तक पहुँचाने का प्रयास करते हैं।</p>
-<p>यहाँ उपलब्ध पौधों के नाम, कीमत और स्टॉक देखकर अपनी जरूरत के अनुसार ऑर्डर करें। डिलीवरी की उपलब्धता और कुल राशि भुगतान से पहले स्पष्ट दिखाई जाएगी।</p>
-<p class="note">आपका विश्वास और पौधों की अच्छी देखभाल हमारे लिए महत्वपूर्ण है।</p>
-</section>
-
-<section class="card" id="welcome">
+<section class="card" id="about" aria-hidden="true" aria-labelledby="aboutTitle">
+<div class="about-page-hero">
+<h2 id="aboutTitle">🌿 श्री नीम करोली महाराज ग्रीन नर्सरी में आपका स्वागत है</h2>
+<p>हमारा उद्देश्य घरों, खेतों और बगीचों तक स्वस्थ पौधों, हरियाली और उपयोगी बागवानी जानकारी को पहुँचाना है। यहाँ ग्राहक उपलब्ध पौधों की जानकारी देख सकते हैं, जरूरत के अनुसार ऑर्डर कर सकते हैं और पौधों की देखभाल के सरल सुझाव प्राप्त कर सकते हैं।</p>
+<p><strong>हमारा संकल्प:</strong> सही जानकारी, पौधों की जिम्मेदार देखभाल और ग्राहक को ऑर्डर व डिलीवरी की स्पष्ट जानकारी।</p>
+</div>
+<div class="about-page-grid">
+<div class="about-subsection" id="welcome">
 <h2>🌿 प्रकृति से जुड़ें, स्वस्थ पौधे घर लाएँ</h2>
-<p>घर की क्यारी हो या खेत—सब्जियों के पौधों की जानकारी, कीमत और उपलब्ध स्टॉक यहाँ देखें।</p>
-<p class="note">ऑर्डर भेजने के बाद नर्सरी मालिक उपलब्धता और कीमत की पुष्टि करेंगे।</p>
-</section>
-
-<section class="card" id="careTips">
+<p>घर की क्यारी, छत, आँगन या खेत—हर जगह पौधे लगाकर हरियाली बढ़ाई जा सकती है। अपनी जगह, मौसम और जरूरत के अनुसार पौधा चुनें।</p>
+<ul><li>उपलब्ध पौधों के नाम, कीमत और स्टॉक देखें।</li><li>ऑर्डर करने से पहले पौधे की संख्या और कुल कीमत जाँचें।</li><li>डिलीवरी की उपलब्धता और चार्ज की पुष्टि के बाद ही भुगतान करें।</li><li>पौधों को लगाने के बाद नियमित निरीक्षण और देखभाल करें।</li></ul>
+</div>
+<div class="about-subsection" id="nurseryInfo">
+<h2>🪴 हमारी वेबसाइट पर क्या मिलेगा?</h2>
+<ul><li><strong>उपलब्ध पौधे:</strong> वेबसाइट में दिखाई देने वाली सूची, कीमत और उपलब्ध स्टॉक देखें।</li><li><strong>ऑर्डर:</strong> पौधा और संख्या चुनकर ऑर्डर की जानकारी भरें।</li><li><strong>ऑर्डर ट्रैकिंग:</strong> अपने ऑर्डर की स्थिति देखने के लिए ट्रैकिंग मेनू का उपयोग करें।</li><li><strong>संपर्क:</strong> किसी सवाल या ऑर्डर की पुष्टि के लिए नर्सरी से संपर्क करें।</li></ul>
+<p>पौधों की उपलब्धता मौसम और स्टॉक के अनुसार बदल सकती है। ऑर्डर की अंतिम पुष्टि नर्सरी से प्राप्त करें।</p>
+</div>
+</div>
+<div class="about-subsection" id="careTips">
 <h2>🌱 पौधों की देखभाल के आसान सुझाव</h2>
-<p>☀️ पौधों को उनकी जरूरत के अनुसार धूप दें।</p>
-<p>💧 मिट्टी की नमी देखकर पानी दें; जरूरत से ज्यादा पानी न भरें।</p>
-<p>🌿 पौधों को लगाते समय मिट्टी और दूरी का ध्यान रखें। अलग-अलग पौधों की जरूरत अलग हो सकती है।</p>
+<ul>
+<li><strong>☀️ धूप:</strong> पौधे की किस्म के अनुसार धूप दें। नई रोपाई को तेज धूप में अचानक न रखें; धीरे-धीरे अभ्यस्त करें।</li>
+<li><strong>💧 पानी:</strong> पानी देने से पहले मिट्टी की ऊपरी परत की नमी जाँचें। मिट्टी लगातार पानी से भरी न रहे और गमले/ग्रो बैग से अतिरिक्त पानी निकल सके।</li>
+<li><strong>🪴 मिट्टी:</strong> ऐसी मिट्टी या मिश्रण रखें जिसमें पानी का निकास अच्छा हो और जड़ों को हवा मिले।</li>
+<li><strong>🌿 रोपाई:</strong> पौधे को जड़ों सहित सावधानी से लगाएँ। रोपाई के बाद हल्का पानी दें और शुरुआती दिनों में तनाव से बचाएँ।</li>
+<li><strong>📏 दूरी:</strong> पौधों के बीच उचित दूरी रखें ताकि हवा और रोशनी मिल सके। दूरी फसल के अनुसार अलग होती है।</li>
+<li><strong>🪲 कीट-जाँच:</strong> पत्तियों के ऊपर-नीचे नियमित देखें। समस्या दिखने पर पहले कारण पहचानें; बिना पहचान के दवा का छिड़काव न करें।</li>
+<li><strong>🌾 खाद:</strong> खाद या उर्वरक पौधे की जरूरत और उत्पाद के निर्देश के अनुसार ही दें। अधिक खाद जड़ों को नुकसान पहुँचा सकती है।</li>
+<li><strong>🌦️ मौसम:</strong> भारी बारिश, तेज हवा या ठंड में छोटे पौधों को जरूरत के अनुसार सुरक्षा दें।</li>
+</ul>
+<p><strong>ध्यान दें:</strong> ये सामान्य सुझाव हैं। टमाटर, मिर्च, बैंगन और अन्य पौधों की जरूरत मौसम, मिट्टी और पौधे की अवस्था के अनुसार अलग हो सकती है। किसी समस्या की फोटो और जानकारी के आधार पर सलाह लेना बेहतर है।</p>
+</div>
+<div class="about-subsection" id="ourCommitment">
+<h2>🤝 ग्राहक सेवा और हमारी जिम्मेदारी</h2>
+<p>हम चाहते हैं कि ग्राहक ऑर्डर देने से पहले पौधों की कीमत, उपलब्धता, डिलीवरी और कुल राशि समझ लें। इसलिए वेबसाइट पर दिखाई गई जानकारी ध्यान से जाँचें। डिलीवरी की पुष्टि और कुल भुगतान राशि स्पष्ट होने के बाद ही आगे बढ़ें।</p>
+<p>किसी जानकारी, पौधे या ऑर्डर को लेकर सवाल हो तो वेबसाइट के <strong>संपर्क</strong> विकल्प का उपयोग करें। पौधों की अच्छी शुरुआत के लिए सही रोपाई, उचित पानी और नियमित देखभाल जरूरी है।</p>
+</div>
 </section>
 
 <section class="card" id="plants">
@@ -1637,6 +1671,29 @@ db.auth.onAuthStateChange((event, session) => {
 })();
 </script>
 
+
+<script>
+(function(){
+  const about=document.getElementById('about');
+  const openAbout=document.querySelector('nav a[href="#about"]');
+  function showAbout(e){
+    if(e)e.preventDefault();
+    document.body.classList.add('about-page-active');
+    about.classList.add('about-page-open');
+    about.setAttribute('aria-hidden','false');
+    history.replaceState(null,'',location.pathname+location.search+'#about');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function showNormalPage(){
+    document.body.classList.remove('about-page-active');
+    if(about){about.classList.remove('about-page-open');about.setAttribute('aria-hidden','true');}
+  }
+  if(openAbout)openAbout.addEventListener('click',showAbout);
+  document.querySelectorAll('nav a:not([href="#about"])').forEach(function(link){link.addEventListener('click',showNormalPage);});
+  document.getElementById('adminPanelNav')?.addEventListener('click',showNormalPage);
+  if(location.hash==='#about')showAbout();
+})();
+</script>
 </body>
 </html>
 
