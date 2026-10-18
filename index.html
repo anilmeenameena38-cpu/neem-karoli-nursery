@@ -254,7 +254,8 @@ footer small{display:block;margin-top:6px;color:#d9f4d5;font-size:11px}
   <textarea id="address" rows="2" required autocomplete="street-address" placeholder="मकान / गली / पहचान की जगह"></textarea>
   <div class="location-row">
     <button id="locationButton" type="button">📍 मेरी लोकेशन शेयर करें</button>
-    <span id="locationStatus" class="location-status" aria-live="polite">लोकेशन मिलने पर भुगतान खुलेगा।</span>
+    <span id="locationStatus" class="location-status" aria-live="polite">लोकेशन मिलने पर डिलीवरी क्षेत्र जाँचा जाएगा।</span>
+  <div id="deliveryEstimate" class="status" style="display:none" aria-live="polite"></div>
   </div>
 </div>
 <div id="bharatpePaymentBox" class="status" style="text-align:center;display:none">
@@ -486,6 +487,24 @@ const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let plants = [];
 let customerLocation = null;
+let deliveryFee = null;
+let deliveryDistanceKm = null;
+const NURSERY_LOCATION = { lat: 28.010476, lon: 75.653594 };
+const MAX_DELIVERY_DISTANCE_KM = 50;
+const DELIVERY_RATE_PER_KM = 10;
+function distanceKm(lat1, lon1, lat2, lon2) {
+  const rad = d => d * Math.PI / 180;
+  const dLat = rad(lat2-lat1), dLon = rad(lon2-lon1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(rad(lat1))*Math.cos(rad(lat2))*Math.sin(dLon/2)**2;
+  return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+function setDeliveryUnavailable(message) {
+  deliveryFee = null; deliveryDistanceKm = null;
+  const estimate = document.getElementById("deliveryEstimate");
+  if (estimate) { estimate.style.display = "block"; estimate.textContent = message; }
+  document.getElementById("bharatpePaymentBox").style.display = "none";
+  updateOrderTotal(); updateUpiPaymentLink();
+}
 
 function safe(value) {
   return String(value ?? '').replace(/[&<>"']/g, c => ({
@@ -543,12 +562,25 @@ document.getElementById('locationButton').addEventListener('click', () => {
   navigator.geolocation.getCurrentPosition(position => {
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
-    customerLocation = { lat, lon, mapsUrl: `https://www.google.com/maps?q=${lat},${lon}` };
-    locationStatus.textContent = '✅ लोकेशन मिल गई! अब UPI भुगतान करें।';
+    const oneWayKm = distanceKm(NURSERY_LOCATION.lat, NURSERY_LOCATION.lon, lat, lon);
+    customerLocation = { lat, lon, oneWayKm, mapsUrl: `https://www.google.com/maps?q=${lat},${lon}` };
+    if (oneWayKm > MAX_DELIVERY_DISTANCE_KM) {
+      locationStatus.textContent = '❌ आपकी लोकेशन डिलीवरी क्षेत्र से बाहर है।';
+      setDeliveryUnavailable('क्षमा करें! आपकी लोकेशन नर्सरी से ' + oneWayKm.toFixed(1) + ' किमी दूर (सीधी GPS दूरी) है। हमारी डिलीवरी सीमा 50 किमी है, इसलिए अभी इस पते पर डिलीवरी उपलब्ध नहीं है। भुगतान विकल्प बंद है।');
+      return;
+    }
+    deliveryDistanceKm = oneWayKm;
+    deliveryFee = Math.ceil(oneWayKm * 2 * DELIVERY_RATE_PER_KM);
+    locationStatus.textContent = '✅ लोकेशन मिल गई और डिलीवरी क्षेत्र में है।';
+    const estimate = document.getElementById('deliveryEstimate');
+    estimate.style.display = 'block';
+    estimate.innerHTML = '<strong>📍 डिलीवरी की दूरी और शुल्क</strong><br>नर्सरी से एक तरफ की GPS दूरी: ' + oneWayKm.toFixed(1) + ' किमी<br>आना-जाना: ' + (oneWayKm*2).toFixed(1) + ' किमी<br>डिलीवरी चार्ज (₹10/किमी): <strong>₹' + deliveryFee.toFixed(2) + '</strong><br><small>यह GPS की सीधी दूरी पर आधारित अनुमान है; सड़क की वास्तविक दूरी अलग हो सकती है। आगे बढ़ने से पहले नीचे कुल राशि जाँचें।</small>';
+    updateOrderTotal(); updateUpiPaymentLink();
     document.getElementById('bharatpePaymentBox').style.display = 'block';
     document.getElementById('bharatpePaymentBox').scrollIntoView({behavior:'smooth',block:'center'});
   }, error => {
     customerLocation = null;
+    setDeliveryUnavailable('लोकेशन की पुष्टि नहीं हुई, इसलिए डिलीवरी शुल्क और भुगतान विकल्प नहीं खोले गए।');
     const messages = {
       1: 'लोकेशन की अनुमति नहीं मिली। ब्राउज़र में अनुमति दें या पता लिखें।',
       2: 'लोकेशन अभी नहीं मिल सकी। दोबारा कोशिश करें या पता लिखें।',
@@ -655,8 +687,11 @@ function updateOrderTotal() {
     if (payTotal) payTotal.textContent = 'पौधा और मात्रा चुनें';
     return;
   }
-  box.textContent = 'कुल राशि: ₹' + (Number(p.selling_price) * qty).toFixed(2) + ' (' + qty + ' × ₹' + Number(p.selling_price).toFixed(2) + ') — अंतिम पुष्टि नर्सरी मालिक करेंगे।';
-  if (payTotal) payTotal.textContent = '₹' + (Number(p.selling_price) * qty).toFixed(2);
+  const plantTotal = Number(p.selling_price) * qty;
+  const hasDelivery = deliveryFee !== null && Number.isFinite(deliveryFee);
+  const grandTotal = plantTotal + (hasDelivery ? deliveryFee : 0);
+  box.textContent = 'पौधों का मूल्य: ₹' + plantTotal.toFixed(2) + (hasDelivery ? ' | डिलीवरी: ₹' + deliveryFee.toFixed(2) + ' | कुल देय: ₹' + grandTotal.toFixed(2) : ' | लोकेशन जाँच के बाद डिलीवरी चार्ज और अंतिम कुल राशि दिखाई जाएगी।');
+  if (payTotal) payTotal.textContent = hasDelivery ? '₹' + grandTotal.toFixed(2) : 'पहले डिलीवरी जाँचें';
 }
 document.getElementById('orderNavLink').addEventListener('click', event => {
   event.preventDefault();
@@ -681,6 +716,8 @@ function closeOrderModal(){
   const paymentBox = document.getElementById('bharatpePaymentBox');
   if (paymentBox) paymentBox.style.display = 'none';
   customerLocation = null;
+  deliveryFee = null; deliveryDistanceKm = null;
+  const estimateBox = document.getElementById('deliveryEstimate'); if (estimateBox) { estimateBox.style.display = 'none'; estimateBox.textContent = ''; }
   const locStatus = document.getElementById('locationStatus');
   if (locStatus) locStatus.textContent = 'लोकेशन मिलने पर भुगतान खुलेगा।';
   if (done) done.style.display = 'none';
@@ -707,13 +744,14 @@ function updateUpiPaymentLink(){
   const plantId = Number(document.getElementById('plant').value);
   const p = plants.find(item => Number(item.id) === plantId);
   const qty = Number(document.getElementById('qty').value) || 0;
-  const amount = p && qty > 0 ? (Number(p.selling_price) * qty) : 0;
+  const plantAmount = p && qty > 0 ? (Number(p.selling_price) * qty) : 0;
+  const amount = plantAmount + (deliveryFee !== null && Number.isFinite(deliveryFee) ? deliveryFee : 0);
   const payButton = document.getElementById('upiPayButton');
   const hint = document.getElementById('upiAmountHint');
   if (!payButton || !hint) return;
-  if (!p || amount <= 0 || !Number.isFinite(amount)) {
+  if (!p || plantAmount <= 0 || !Number.isFinite(amount) || deliveryFee === null) {
     payButton.href = '#'; payButton.setAttribute('aria-disabled','true');
-    hint.textContent = 'पहले पौधा और मात्रा चुनें; कुल राशि अपने आप निकलेगी.';
+    hint.textContent = 'पहले पौधा और मात्रा चुनें, फिर लोकेशन की डिलीवरी जाँच पूरी करें।';
     payButton.textContent = '💳 UPI से भुगतान करें';
     return;
   }
@@ -862,7 +900,7 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
     status.textContent = 'कृपया सही मोबाइल नंबर दर्ज करें।';
     return;
   }
-  if (!customerLocation || !customerLocation.mapsUrl) {
+  if (!customerLocation || !customerLocation.mapsUrl || deliveryFee === null || deliveryDistanceKm === null || deliveryDistanceKm > MAX_DELIVERY_DISTANCE_KM) {
     status.textContent = 'ऑर्डर भेजने से पहले “मेरी लोकेशन शेयर करें” दबाकर GPS लोकेशन लेना अनिवार्य है।';
     document.getElementById('locationButton').focus();
     return;
@@ -905,13 +943,14 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
       customer_name: customerName,
       customer_phone: phone || null,
       customer_address: fullAddress,
-      notes: [(customerLocation ? 'MAPS_URL:' + customerLocation.mapsUrl : ''), 'TOTAL_QTY:' + quantity, 'UNIT_PRICE:' + Number(p.selling_price).toFixed(2), 'TOTAL_AMOUNT:' + (Number(p.selling_price) * quantity).toFixed(2), 'PAYMENT_PROOF_PATH:' + proofPath, 'PAYMENT_PROOF_SIGNED_URL:' + proofUrl].filter(Boolean).join(' | '),
+      notes: [(customerLocation ? 'MAPS_URL:' + customerLocation.mapsUrl : ''), 'TOTAL_QTY:' + quantity, 'UNIT_PRICE:' + Number(p.selling_price).toFixed(2), 'PLANT_TOTAL:' + (Number(p.selling_price) * quantity).toFixed(2), 'DELIVERY_DISTANCE_ONE_WAY_KM:' + Number(deliveryDistanceKm).toFixed(2), 'DELIVERY_FEE_ROUND_TRIP:' + Number(deliveryFee).toFixed(2), 'TOTAL_AMOUNT:' + (Number(p.selling_price) * quantity + Number(deliveryFee)).toFixed(2), 'PAYMENT_PROOF_PATH:' + proofPath, 'PAYMENT_PROOF_SIGNED_URL:' + proofUrl].filter(Boolean).join(' | '),
       status: 'pending'
     });
     if (error) throw error;
     orderSaved = true;
 
-    const totalAmount = (Number(p.selling_price) * quantity).toFixed(2);
+    const plantTotalAmount = Number(p.selling_price) * quantity;
+    const totalAmount = (plantTotalAmount + Number(deliveryFee)).toFixed(2);
     const message = 'नया नर्सरी ऑर्डर अनुरोध' +
       '\nस्थिति: PAYMENT PENDING — एडमिन की पुष्टि बाकी' +
       '\nनाम: ' + customerName +
@@ -919,7 +958,10 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
       '\nपौधा: ' + p.name +
       '\nमात्रा: ' + quantity +
       '\nप्रति पौधा कीमत: ₹' + Number(p.selling_price).toFixed(2) +
-      '\nकुल अनुमानित राशि: ₹' + totalAmount +
+      '\nपौधों का कुल मूल्य: ₹' + plantTotalAmount.toFixed(2) +
+      '\nएक तरफ GPS दूरी: ' + Number(deliveryDistanceKm).toFixed(1) + ' किमी' +
+      '\nआना-जाना डिलीवरी चार्ज: ₹' + Number(deliveryFee).toFixed(2) +
+      '\nकुल अनुमानित राशि (पौधे + डिलीवरी): ₹' + totalAmount +
       '\nगाँव/ढाणी और पूरा पता: ' + fullAddress +
       '\nGPS लोकेशन: ' + customerLocation.mapsUrl +
       '\nभुगतान स्क्रीनशॉट: ' + proofUrl +
