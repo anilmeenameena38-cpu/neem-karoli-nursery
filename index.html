@@ -1076,6 +1076,14 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
     link.target = '_blank'; link.rel = 'noopener'; link.className = 'btn';
     link.textContent = '📲 Submit करें — WhatsApp पर ऑर्डर भेजें';
     link.style.display = 'block'; link.style.marginTop = '12px'; status.appendChild(link);
+    // Order is already saved before this link appears. When the customer taps it,
+    // open WhatsApp in a new tab and return the website to its home/top view.
+    link.addEventListener('click', () => {
+      closeOrderModal();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const homeLink = document.querySelector('a[href="#home"], a[href="#top"]');
+      if (homeLink) homeLink.focus({preventScroll:true});
+    });
     button.textContent = 'ऑर्डर वेबसाइट पर सेव हो गया'; button.disabled = true;
   } catch (error) {
     status.textContent = '❌ ऑर्डर सेव नहीं हुआ: ' + error.message;
