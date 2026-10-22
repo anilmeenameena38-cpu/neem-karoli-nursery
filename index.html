@@ -409,7 +409,7 @@ body.admin-modal-open:after{content:"";position:fixed;inset:0;background:rgba(7,
 <button type="submit">लॉगिन करें</button>
 </form>
 <div id="ownerStatus" class="status" aria-live="polite" style="display:none"></div>
-<div id="ownerPanelHeader"><div class="admin-welcome"><div><h3>🌿 नीम करोली नर्सरी</h3><p>आपका व्यवसाय, एक ही जगह — ऑर्डर, स्टॉक और बिक्री</p></div><div class="admin-brand"><span class="admin-chip">🌱 Neem Karoli Nursery</span><button id="popupModeToggle" type="button" class="admin-chip" style="cursor:pointer;color:#fff;background:#ffffff20;border:1px solid #ffffff45">🪟 पॉप-अप: बंद</button><button id="logoutButton" type="button" aria-label="लॉगआउट">लॉग आउट ↗</button></div></div></div>
+<div id="ownerPanelHeader"><div class="admin-welcome"><div><h3>🌿 नीम करोली नर्सरी</h3><p>आपका व्यवसाय, एक ही जगह — ऑर्डर, स्टॉक और बिक्री</p></div><div class="admin-brand"><span class="admin-chip">🌱 Neem Karoli Nursery</span><button id="logoutButton" type="button" aria-label="लॉगआउट">लॉग आउट ↗</button></div></div></div>
 <div id="adminCustomerSearch" class="admin-section-card" style="display:none">
   <form id="customerSearchForm" aria-label="ग्राहक मोबाइल नंबर खोजें">
     <div class="customer-search-row"><input id="customerSearchPhone" type="tel" inputmode="numeric" autocomplete="off" aria-label="ग्राहक का मोबाइल नंबर" placeholder="ग्राहक का मोबाइल नंबर डालें" required><button id="customerSearchButton" type="submit">🔍 खोजें</button></div>
@@ -422,51 +422,42 @@ body.admin-modal-open:after{content:"";position:fixed;inset:0;background:rgba(7,
   <button class="admin-tab" type="button" data-tab="orders" role="tab" aria-selected="false"><span class="tab-icon">🛒</span><span class="tab-label">ऑर्डर</span></button>
   <button class="admin-tab" type="button" data-tab="stock" role="tab" aria-selected="false"><span class="tab-icon">🌱</span><span class="tab-label">पौधों का स्टॉक</span></button>
   <button class="admin-tab" type="button" data-tab="stockalerts" role="tab" aria-selected="false"><span class="tab-icon">🔔</span><span class="tab-label">स्टॉक अलर्ट <span id="stockAlertBadge" style="display:none;background:#b91c1c;color:#fff;border-radius:999px;padding:1px 6px;font-size:11px">0</span></span></button>
+  <button class="admin-tab" type="button" data-tab="mandi" role="tab" aria-selected="false"><span class="tab-icon">📈</span><span class="tab-label">मंडी भाव / मुनाफा</span></button>
   <button class="admin-tab" type="button" data-tab="manageplants" role="tab" aria-selected="false"><span class="tab-icon">➕</span><span class="tab-label">नया पौधा / कीमत</span></button>
   <button class="admin-tab" type="button" data-tab="sales" role="tab" aria-selected="false"><span class="tab-icon">💰</span><span class="tab-label">बिक्री हिसाब</span></button>
   <button class="admin-tab" type="button" data-tab="dues" role="tab" aria-selected="false"><span class="tab-icon">⏰</span><span class="tab-label">उधार / बाकी</span></button>
   <button class="admin-tab" type="button" data-tab="chatgpt" role="tab" aria-selected="false"><span class="tab-icon">🤖</span><span class="tab-label">ChatGPT मदद</span></button>
-  <button class="admin-tab" type="button" data-tab="mandibhav" role="tab" aria-selected="false"><span class="tab-icon">📍</span><span class="tab-label">मंडी भाव</span></button>
   <button class="admin-tab" type="button" data-tab="sitecontrol" role="tab" aria-selected="false"><span class="tab-icon">🎨</span><span class="tab-label">वेबसाइट कंट्रोल</span></button>
 </div>
 <div id="adminDashboardPane" class="admin-pane active">
   <div id="ownerStats"></div>
 
 </div>
-<div id="adminMandibhavPane" class="admin-pane">
- <div class="admin-section-card">
-  <h2>📍 राजस्थान सब्ज़ी मंडी भाव</h2>
-  <p class="admin-muted">जिले पर क्लिक करें और सब्ज़ी चुनें। नीचे दिखे भाव उपलब्ध ऑनलाइन मंडी रिपोर्ट से हैं; हर मंडी की रिपोर्ट की तारीख अलग हो सकती है। थोक मंडी भाव खुदरा खरीद भाव से अलग हो सकता है।</p>
-  <label for="mandiDistrictSelect">जिला चुनें</label>
-  <select id="mandiDistrictSelect"><option value="Jhunjhunu">झुंझुनू</option><option value="Churu">चूरू</option><option value="Sikar">सीकर</option><option value="Jaipur">जयपुर</option></select>
-  <div id="mandiDistrictButtons" class="plant-manage-buttons" aria-label="जिले चुनें"></div>
-  <label for="mandiVegSelect">सब्ज़ी चुनें</label>
-  <select id="mandiVegSelect"><option value="Tomato">टमाटर</option><option value="Cucumber">खीरा</option><option value="Potato">आलू</option><option value="Onion">प्याज</option><option value="Brinjal">बैंगन</option><option value="Bitter gourd">करेला</option><option value="Bottle gourd">लौकी</option><option value="Cauliflower">फूलगोभी</option><option value="Cabbage">पत्ता गोभी</option><option value="Bhindi(Ladies Finger)">भिंडी</option></select>
-  <div id="mandiPriceResult" class="site-control-preview" aria-live="polite"></div>
-  <div class="admin-section-card" style="margin-top:14px">
-    <h2>🧮 मेरी 15 किमी बिक्री और मुनाफा कैलकुलेटर</h2>
-    <p class="admin-muted">अपना असली खरीद भाव भरें। मंडी का भाव केवल तुलना के लिए है; सही हिसाब खरीद बिल और आपके खर्च से निकलेगा।</p>
-    <div class="site-control-grid">
-      <div><label for="myBuyPrice">मेरा खरीद भाव (₹/किलो)</label><input id="myBuyPrice" type="number" min="0" step="0.01" placeholder="जैसे 18"></div>
-      <div><label for="myExtraCost">ढुलाई + पैकिंग + अन्य खर्च (₹/किलो)</label><input id="myExtraCost" type="number" min="0" step="0.01" value="2"></div>
-      <div><label for="myWastePercent">खराबा / वजन घटने का अनुमान (%)</label><input id="myWastePercent" type="number" min="0" max="100" step="0.5" value="0"></div>
-      <div><label for="myProfitPerKg">मेरा मुनाफा (₹/किलो)</label><select id="myProfitPerKg"><option value="1">₹1 प्रति किलो</option><option value="2" selected>₹2 प्रति किलो</option><option value="3">₹3 प्रति किलो</option><option value="5">₹5 प्रति किलो</option></select></div>
-    </div>
-    <button type="button" id="calculateMyRetailPrice">💰 मेरा सही बिक्री भाव निकालें</button>
-    <div id="myRetailPriceResult" class="status" aria-live="polite">खरीद भाव भरकर हिसाब निकालें।</div>
-    <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
-    <h2>🌐 ऑनलाइन वेबसाइट की कीमत बदलें</h2>
-    <p class="admin-muted">सही भाव तय करने के बाद ही नीचे से उत्पाद चुनकर नई कीमत Supabase में सेव करें। इससे ग्राहक वेबसाइट पर उस उत्पाद का प्रति किलो भाव बदलेगा। यह बटन केवल लॉगिन किए हुए एडमिन के लिए इस्तेमाल करें।</p>
-    <label for="onlineVegPriceProduct">वेबसाइट पर मौजूद सब्ज़ी चुनें</label><select id="onlineVegPriceProduct"><option value="">पहले सूची लोड करें</option></select>
-    <label for="approvedVegPrice">मंजूर बिक्री भाव (₹/किलो)</label><input id="approvedVegPrice" type="number" min="0" step="0.01" placeholder="कैलकुलेटर से भाव यहाँ भरें">
-    <div class="admin-action-row"><button type="button" id="loadOnlineVegProducts" class="secondary-btn">🔄 ऑनलाइन सब्ज़ियाँ लोड करें</button><button type="button" id="saveOnlineVegPrice">✅ मंजूर भाव वेबसाइट पर सेव करें</button></div>
-    <div id="onlineVegPriceStatus" class="status" aria-live="polite"></div>
-  </div>
-  <div class="admin-action-row" style="margin-top:12px"><button type="button" id="mandiOpenSource">🌐 इस सब्ज़ी के मंडी भाव खोलें</button><button type="button" id="mandiProfitCalc">🧮 मंडी भाव + ₹1/₹2 तुलना</button></div>
-  <div id="mandiProfitResult" class="status" aria-live="polite"></div>
-  <p class="admin-muted">नोट: यह पैनल अभी उपलब्ध रिपोर्ट का उदाहरण/संदर्भ दिखाता है; यह आपकी वेबसाइट की बिक्री कीमत अपने-आप नहीं बदलता। वास्तविक ऑटो-अपडेट के लिए भरोसेमंद API/सर्वर कनेक्शन जोड़ना होगा।</p>
- </div>
+<div id="adminMandiPane" class="admin-pane"><div class="admin-section-card">
+<h2>📈 मंडी भाव और 15 किमी बिक्री मुनाफा</h2>
+<p class="admin-muted">जिला और सब्जी चुनें। मंडी के भाव स्रोत से जाँचकर भरें; नीचे बिक्री मूल्य और अनुमानित मुनाफा अपने-आप निकलेगा। यह कैलकुलेटर अभी लाइव मंडी API से जुड़ा नहीं है, इसलिए बिना पुष्टि कोई भाव लाइव/आज का नहीं माना जाएगा।</p>
+<div class="site-control-grid">
+<div><label for="mandiDistrict">जिला</label><select id="mandiDistrict"><option>झुंझुनू</option><option>सीकर</option><option>चूरू</option><option>जयपुर</option></select></div>
+<div><label for="mandiMarket">मंडी का नाम</label><input id="mandiMarket" placeholder="जैसे झुंझुनू मंडी"></div>
+<div><label for="mandiVeg">सब्जी</label><select id="mandiVeg"><option>टमाटर</option><option>खीरा</option><option>बैंगन</option><option>हरी मिर्च</option><option>आलू</option><option>प्याज</option><option>गोभी</option><option>भिंडी</option><option>अन्य</option></select></div>
+<div><label for="mandiDate">भाव की तारीख</label><input id="mandiDate" type="date"></div>
+<div><label for="mandiMin">न्यूनतम मंडी भाव (₹/किलो)</label><input id="mandiMin" type="number" min="0" step="0.01" placeholder="जैसे 12"></div>
+<div><label for="mandiModal">मॉडल / प्रचलित भाव (₹/किलो)</label><input id="mandiModal" type="number" min="0" step="0.01" placeholder="जैसे 18"></div>
+<div><label for="mandiMax">अधिकतम मंडी भाव (₹/किलो)</label><input id="mandiMax" type="number" min="0" step="0.01" placeholder="जैसे 24"></div>
+<div><label for="myBuyPrice">आपका असली खरीद भाव (₹/किलो)</label><input id="myBuyPrice" type="number" min="0" step="0.01" placeholder="बिल के अनुसार"></div>
+<div><label for="myTransport">ढुलाई + पैकिंग + अन्य खर्च (₹/किलो)</label><input id="myTransport" type="number" min="0" step="0.01" value="0"></div>
+<div><label for="myWaste">खराबा/बर्बादी (%)</label><input id="myWaste" type="number" min="0" max="100" step="0.5" value="0"></div>
+<div><label for="myProfit">लक्षित मुनाफा (₹/किलो)</label><select id="myProfit"><option value="1">₹1</option><option value="2" selected>₹2</option><option value="3">₹3</option><option value="5">₹5</option></select></div>
 </div>
+<div class="metric-grid" style="margin-top:14px">
+<div class="metric"><div class="metric-label">अनुमानित लागत / किलो</div><div class="metric-value" id="mandiCostResult">₹0.00</div></div>
+<div class="metric"><div class="metric-label">सुझाया बिक्री भाव / किलो</div><div class="metric-value" id="mandiSellResult">₹0.00</div></div>
+<div class="metric"><div class="metric-label">मुनाफा / किलो</div><div class="metric-value" id="mandiProfitResult">₹0.00</div></div>
+</div>
+<div class="admin-action-row"><button type="button" id="calculateMandiProfit">🧮 हिसाब लगाएँ</button><button type="button" class="secondary-btn" id="openMandiSource">🌐 सरकारी मंडी भाव स्रोत खोलें</button></div>
+<p id="mandiProfitNote" class="status" aria-live="polite">खरीद भाव और खर्च भरें। मुनाफे का हिसाब अनुमान है; ग्राहक की वेबसाइट पर कीमत अपने-आप नहीं बदलेगी।</p>
+<p class="admin-muted">स्रोत: <a href="https://agmarknet.gov.in/" target="_blank" rel="noopener">AGMARKNET</a> / <a href="https://www.data.gov.in/" target="_blank" rel="noopener">data.gov.in</a>. मंडी रिपोर्ट के थोक भाव और आपके क्षेत्र के खुदरा भाव अलग हो सकते हैं। 15 किमी डिलीवरी के लिए अपनी वास्तविक ढुलाई लागत जरूर जोड़ें।</p>
+</div></div>
 <div id="adminStockalertsPane" class="admin-pane"><div class="admin-section-card" id="stockAlertPanel"><h2>🔔 स्टॉक और समस्या रिमाइंडर</h2><p class="admin-muted">यह अलग पैनल बताता है कि कौन-सा पौधा/सब्जी खत्म है, किसका स्टॉक 5 या उससे कम है, या कौन-सा उत्पाद वेबसाइट पर बंद है। अलर्ट देखने के लिए अलग HTML फाइल खोलने की जरूरत नहीं।</p><div class="admin-action-row"><button type="button" id="enableStockNotifications">📱 मोबाइल नोटिफिकेशन चालू करें</button><button type="button" id="refreshStockAlerts">🔄 अभी जाँचें</button></div><div id="stockAlertList" style="margin-top:12px">स्टॉक अलर्ट लोड हो रहे हैं…</div><p class="admin-muted" id="stockNotificationStatus">वेबसाइट खुली रहने पर यह पैनल लगभग हर मिनट स्टॉक जाँचेगा। मोबाइल ब्राउज़र अलर्ट के लिए अनुमति दें।</p></div></div>
 <div id="adminOrdersPane" class="admin-pane"><div class="admin-section-card"><h2>🛒 ग्राहक के ऑर्डर</h2><p class="admin-muted">लंबित ऑर्डर जाँचें; पुष्टि करने पर बिक्री दर्ज होगी और स्टॉक घटेगा।</p><div id="ownerOrders"></div></div></div>
 <div id="adminStockPane" class="admin-pane"><div class="admin-section-card"><h2>🌱 पौधे और सब्जियों का स्टॉक</h2><p class="admin-muted">यहाँ पौधों और सब्जियों का कुल स्टॉक, बिक चुकी मात्रा और बाकी मात्रा अलग-अलग दिखेगी।</p><div id="stockTypeSummary" class="metric-grid"></div><div id="ownerStockList">स्टॉक लोड हो रहा है…</div></div></div>
@@ -634,7 +625,7 @@ let deliveryFee = null;
 let deliveryDistanceKm = null;
 const NURSERY_LOCATION = { lat: 28.010476, lon: 75.653594 };
 const MAX_PLANT_DELIVERY_DISTANCE_KM = 50;
-const MAX_VEG_DELIVERY_DISTANCE_KM = 15;
+const MAX_VEG_DELIVERY_DISTANCE_KM = 10;
 const VEG_DELIVERY_TARGET_MINUTES = 60;
 function maxDeliveryDistanceFor(p) { return isVegItem(p) ? MAX_VEG_DELIVERY_DISTANCE_KM : MAX_PLANT_DELIVERY_DISTANCE_KM; }
 const DELIVERY_RATE_PER_KM = 10;
@@ -1384,24 +1375,13 @@ loadPlants();
   });
 })();
 
-function popupModeEnabled(){
-  try { return localStorage.getItem('nurseryAdminPopupMode') === 'on'; }
-  catch(e) { return false; }
-}
-function updatePopupModeButton(){
-  const button=document.getElementById('popupModeToggle');
-  if(!button)return;
-  const enabled=popupModeEnabled();
-  button.textContent=enabled?'🪟 पॉप-अप: चालू':'🪟 पॉप-अप: बंद';
-  button.setAttribute('aria-pressed',enabled?'true':'false');
-}
 function closeAdminPopup(){
-  document.querySelectorAll('.admin-pane').forEach(p=>p.classList.remove('active','admin-popup-active'));
+  document.querySelectorAll('.admin-pane').forEach(p=>{p.classList.remove('active','admin-popup-active');});
   document.body.classList.remove('admin-modal-open');
   document.querySelectorAll('.admin-tab').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false');});
 }
 function showAdminTab(tabName) {
-  const allowed = ['dashboard', 'orders', 'stock', 'stockalerts', 'manageplants', 'sales', 'dues', 'chatgpt', 'sitecontrol', 'mandibhav'];
+  const allowed = ['dashboard', 'orders', 'stock', 'stockalerts', 'mandi', 'manageplants', 'sales', 'dues', 'chatgpt', 'sitecontrol'];
   if (!allowed.includes(tabName)) tabName = 'dashboard';
   document.querySelectorAll('.admin-tab').forEach(button => {
     const active = button.dataset.tab === tabName;
@@ -1409,36 +1389,26 @@ function showAdminTab(tabName) {
     button.setAttribute('aria-selected', active ? 'true' : 'false');
   });
   document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active','admin-popup-active'));
-  document.body.classList.remove('admin-modal-open');
   const paneId = {
     dashboard: 'adminDashboardPane', orders: 'adminOrdersPane',
-    stock: 'adminStockPane', stockalerts: 'adminStockalertsPane', mandibhav: 'adminMandibhavPane', manageplants: 'adminManageplantsPane', sales: 'adminSalesPane', dues: 'adminDuesPane', chatgpt: 'adminChatgptPane', sitecontrol: 'adminSitecontrolPane'
+    stock: 'adminStockPane', stockalerts: 'adminStockalertsPane', mandi: 'adminMandiPane', manageplants: 'adminManageplantsPane', sales: 'adminSalesPane', dues: 'adminDuesPane', chatgpt: 'adminChatgptPane', sitecontrol: 'adminSitecontrolPane'
   }[tabName];
   const pane=document.getElementById(paneId);
   if(!pane)return;
-  pane.classList.add('active');
-  if(popupModeEnabled() && tabName !== 'dashboard'){
-    pane.classList.add('admin-popup-active');
-    document.body.classList.add('admin-modal-open');
-    if(!pane.querySelector('.admin-popup-close')){
-      const closeWrap=document.createElement('div');closeWrap.className='admin-popup-close';
-      const closeBtn=document.createElement('button');closeBtn.type='button';closeBtn.textContent='✕ पैनल बंद करें';closeBtn.setAttribute('aria-label','एडमिन पैनल बंद करें');closeBtn.addEventListener('click',closeAdminPopup);
-      closeWrap.appendChild(closeBtn);pane.prepend(closeWrap);
-    }
-    const heading=pane.querySelector('h2');
-    let title=pane.querySelector('.admin-popup-title');
-    if(!title){title=document.createElement('div');title.className='admin-popup-title';pane.insertBefore(title,pane.children[1]||null);}
-    title.textContent=heading?heading.textContent.trim():tabName;
+  pane.classList.add('active','admin-popup-active');
+  document.body.classList.add('admin-modal-open');
+  if(!pane.querySelector('.admin-popup-close')){
+    const closeWrap=document.createElement('div');closeWrap.className='admin-popup-close';
+    const closeBtn=document.createElement('button');closeBtn.type='button';closeBtn.textContent='✕ पैनल बंद करें';closeBtn.setAttribute('aria-label','एडमिन पैनल बंद करें');closeBtn.addEventListener('click',closeAdminPopup);
+    closeWrap.appendChild(closeBtn);pane.prepend(closeWrap);
   }
+  const heading=pane.querySelector('h2');
+  let title=pane.querySelector('.admin-popup-title');
+  if(!title){title=document.createElement('div');title.className='admin-popup-title';pane.insertBefore(title,pane.children[1]||null);}
+  title.textContent=heading?heading.textContent.trim():({dashboard:'📊 डैशबोर्ड',orders:'🛒 ऑर्डर',stock:'📦 स्टॉक',stockalerts:'🔔 स्टॉक और समस्या रिमाइंडर',manageplants:'🌱 पौधे और 🥬 सब्जियाँ',sales:'💰 बिक्री हिसाब',dues:'⏰ उधार / बाकी',chatgpt:'🤖 ChatGPT मदद',sitecontrol:'🎨 वेबसाइट कंट्रोल'}[tabName]);
 }
-document.getElementById('popupModeToggle')?.addEventListener('click',()=>{
-  try { localStorage.setItem('nurseryAdminPopupMode',popupModeEnabled()?'off':'on'); } catch(e) {}
-  updatePopupModeButton();
-  showAdminTab('dashboard');
-});
-updatePopupModeButton();
 document.querySelectorAll('.admin-tab').forEach(button => {
-  button.addEventListener('click', () => { const tab = button.dataset.tab; showAdminTab(tab); if (tab === 'manageplants') showManageView('add'); if (tab === 'stock') loadOwnerStats(); if (tab === 'stockalerts') refreshStockAlerts(false); if (tab === 'sitecontrol') loadSiteControlForm(); if (tab === 'mandibhav') initMandiPanel(); });
+  button.addEventListener('click', () => { const tab = button.dataset.tab; showAdminTab(tab); if (tab === 'manageplants') showManageView('add'); if (tab === 'stock') loadOwnerStats(); if (tab === 'stockalerts') refreshStockAlerts(false); if (tab === 'mandi') calculateMandiProfit(); if (tab === 'sitecontrol') loadSiteControlForm(); });
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('admin-modal-open'))closeAdminPopup();});
 
@@ -1944,35 +1914,32 @@ db.auth.onAuthStateChange((event, session) => {
 
 <script>
 (function(){
- const records={
-  'Tomato':{'Jaipur':{min:11,max:22,modal:16.5,date:'21 Oct 2026',market:'Jaipur (F&V) APMC',url:'https://www.maikisaan.com/mandi-bhav/tomato/rajasthan/'},'Sikar':{min:null,max:null,modal:null,date:'डेटा उपलब्ध नहीं',market:'सीकर',url:'https://mandibhavindia.in/en/commodity/tomato/rajasthan'},'Jhunjhunu':{min:17,max:22,modal:20,date:'रिपोर्ट में दी गई तारीख की पुष्टि करें',market:'Jhunjhunu Mandi',url:'https://mandibhav.khetigyan.in/mandi/jhunjhunu/'},'Jalore':{min:12,max:15,modal:13,date:'21 Oct 2026',market:'Jalore APMC',url:'https://www.maikisaan.com/mandi-bhav/tomato/rajasthan/'},'Hanumangarh':{min:15,max:22,modal:18,date:'21 Oct 2026',market:'Rawatsar APMC',url:'https://www.maikisaan.com/mandi-bhav/tomato/rajasthan/'},'Ganganagar':{min:null,max:null,modal:null,date:'डेटा उपलब्ध नहीं',market:'श्रीगंगानगर',url:'https://agriplus.in/prices/all/rajasthan/jaipur'},'Rajsamand':{min:10,max:18,modal:14,date:'21 Oct 2026',market:'Rajsamand APMC',url:'https://www.maikisaan.com/mandi-bhav/tomato/rajasthan/'}},
-  'Cucumber':{'Jaipur':{min:14,max:25,modal:19.5,date:'21 Oct 2026',market:'Jaipur (F&V) APMC',url:'https://mandibhavindia.in/en/commodity/cucumber/rajasthan'},'Sikar':{min:12,max:20,modal:16,date:'21 Oct 2026',market:'Sikar APMC',url:'https://mandibhavindia.in/en/commodity/cucumber/rajasthan'},'Jalore':{min:10,max:12,modal:11,date:'21 Oct 2026',market:'Jalore APMC',url:'https://mandibhavindia.in/en/commodity/cucumber/rajasthan'},'Ganganagar':{min:23,max:27,modal:25,date:'21 Oct 2026',market:'Sriganganagar (F&V) APMC',url:'https://mandibhavindia.in/en/commodity/cucumber/rajasthan'}},
-  'Potato':{'Jaipur':{min:24,max:26,modal:25,date:'21 Oct 2026',market:'Bassi APMC',url:'https://agriplus.in/prices/all/rajasthan/jaipur'},'Jhunjhunu':{min:13,max:15,modal:13,date:'16 Oct 2026',market:'Jhunjhunu APMC',url:'https://acrop.app/mandi/rajasthan/jhunjhunu/jhunjhunu'}},
-  'Onion':{'Jaipur':{min:48,max:50,modal:49,date:'21 Oct 2026',market:'Bassi APMC',url:'https://agriplus.in/prices/all/rajasthan/jaipur'}},
-  'Brinjal':{'Jaipur':{min:15,max:25,modal:20,date:'21 Oct 2026',market:'Jaipur (F&V) APMC',url:'https://agriplus.in/prices/all/rajasthan/jaipur'}},
-  'Bitter gourd':{'Jaipur':{min:25,max:30,modal:27.5,date:'21 Oct 2026',market:'Jaipur (F&V) APMC',url:'https://agriplus.in/prices/all/rajasthan/jaipur'}},
-  'Bottle gourd':{'Jaipur':{min:10,max:16,modal:13,date:'21 Oct 2026',market:'Jaipur (F&V) APMC',url:'https://agriplus.in/prices/all/rajasthan/jaipur'}},
-  'Cauliflower':{'Jaipur':{min:14,max:18,modal:16,date:'21 Oct 2026',market:'Jaipur (F&V) APMC',url:'https://agriplus.in/prices/all/rajasthan/jaipur'}},
-  'Cabbage':{'Jaipur':{min:10,max:12,modal:11,date:'21 Oct 2026',market:'Jaipur (F&V) APMC',url:'https://agriplus.in/prices/all/rajasthan/jaipur'}},
-  'Bhindi(Ladies Finger)':{'Jaipur':{min:18,max:24,modal:21,date:'21 Oct 2026',market:'Jaipur (F&V) APMC',url:'https://agriplus.in/prices/all/rajasthan/jaipur'}}
- };
- const districtNames={Jhunjhunu:'झुंझुनू',Churu:'चूरू',Sikar:'सीकर',Jaipur:'जयपुर',Jalore:'जालोर',Hanumangarh:'हनुमानगढ़',Ganganagar:'श्रीगंगानगर',Rajsamand:'राजसमंद'};
- const vegNames={'Tomato':'टमाटर','Cucumber':'खीरा','Potato':'आलू','Onion':'प्याज','Brinjal':'बैंगन','Bitter gourd':'करेला','Bottle gourd':'लौकी','Cauliflower':'फूलगोभी','Cabbage':'पत्ता गोभी','Bhindi(Ladies Finger)':'भिंडी'};
- const district=document.getElementById('mandiDistrictSelect'),veg=document.getElementById('mandiVegSelect'),result=document.getElementById('mandiPriceResult'),profit=document.getElementById('mandiProfitResult');
- function render(){if(!district||!veg||!result)return;const d=district.value,v=veg.value,r=(records[v]||{})[d];if(!r||r.modal==null){result.innerHTML='<strong>'+districtNames[d]+' — '+vegNames[v]+'</strong><p>इस जिले/सब्ज़ी का ताज़ा भरोसेमंद भाव इस पैनल में उपलब्ध नहीं है। नीचे स्रोत खोलकर नवीनतम रिपोर्ट जाँचें।</p><p>रिपोर्ट की तारीख: उपलब्ध नहीं</p>';result.dataset.url=({Churu:'https://bhavtoday.in/churu-vegetable-mandi-price',Sikar:'https://mandibhav.khetigyan.in/mandi/sikar/',Jhunjhunu:'https://mandibhav.khetigyan.in/mandi/jhunjhunu/',Jaipur:'https://aajkamandi.com/mandi/rajasthan/jaipur/'})[d]||((records[v]||{}).Jaipur||{}).url||'https://data.gov.in/resource/current-daily-price-various-commodities-various-markets-mandi';}else{result.innerHTML='<strong>📍 '+districtNames[d]+' — '+vegNames[v]+'</strong><div class="metric-grid"><div class="metric"><div class="metric-label">न्यूनतम</div><div class="metric-value">₹'+r.min+'/kg</div></div><div class="metric"><div class="metric-label">अधिकतम</div><div class="metric-value">₹'+r.max+'/kg</div></div><div class="metric"><div class="metric-label">मॉडल भाव</div><div class="metric-value">₹'+r.modal+'/kg</div></div></div><p>मंडी: '+r.market+'</p><p>रिपोर्ट तारीख: '+r.date+'</p><p class="admin-muted">यह थोक भाव है; स्थानीय खरीद/ढुलाई के कारण आपका भाव अलग हो सकता है।</p>';result.dataset.url=r.url;}if(profit)profit.textContent='मुनाफा देखने के लिए “₹1–₹2 मुनाफा जोड़कर देखें” दबाएँ।';}
- function init(){if(!district||district.dataset.ready)return;district.dataset.ready='1';const wrap=document.getElementById('mandiDistrictButtons');Object.keys(districtNames).forEach(k=>{const b=document.createElement('button');b.type='button';b.className='plant-manage-button'+(k===district.value?' active':'');b.textContent=districtNames[k];b.addEventListener('click',()=>{district.value=k;wrap.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x.dataset.district===k));b.classList.add('active');render();});b.dataset.district=k;wrap.appendChild(b);});district.addEventListener('change',()=>{wrap.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x.dataset.district===district.value));render();});veg.addEventListener('change',render);document.getElementById('mandiOpenSource')?.addEventListener('click',()=>window.open(result.dataset.url||'https://agriplus.in/prices/all/rajasthan/jaipur','_blank','noopener'));document.getElementById('mandiProfitCalc')?.addEventListener('click',()=>{const r=(records[veg.value]||{})[district.value];profit.textContent=r&&r.modal!=null?'मंडी का मॉडल थोक भाव ₹'+r.modal+'/kg है। सिर्फ तुलना के लिए ₹1 जोड़ें तो ₹'+(r.modal+1).toFixed(2)+'/kg और ₹2 जोड़ें तो ₹'+(r.modal+2).toFixed(2)+'/kg। सही कीमत निकालने के लिए अपना खरीद भाव व खर्च नीचे भरें।':'इस जिले/सब्ज़ी का भाव इस पैनल में उपलब्ध नहीं है। स्रोत खोलकर नया भाव जाँचें; अनुमानित भाव अपने-आप नहीं भरा जाएगा।';});
- const buy=document.getElementById('myBuyPrice'),extra=document.getElementById('myExtraCost'),waste=document.getElementById('myWastePercent'),margin=document.getElementById('myProfitPerKg'),calcBtn=document.getElementById('calculateMyRetailPrice'),calcOut=document.getElementById('myRetailPriceResult'),approved=document.getElementById('approvedVegPrice');
- calcBtn?.addEventListener('click',()=>{const b=Number(buy.value),e=Number(extra.value||0),w=Number(waste.value||0),m=Number(margin.value||2);if(buy.value===''||!Number.isFinite(b)||b<0||!Number.isFinite(e)||e<0||!Number.isFinite(w)||w<0||w>=100){calcOut.textContent='कृपया सही खरीद भाव, खर्च और 0 से 99.5% के बीच खराबा भरें।';return;}const effectiveCost=(b+e)/(1-w/100),sell=Math.ceil((effectiveCost+m)*100)/100;calcOut.innerHTML='<strong>आपका सुझाया बिक्री भाव: ₹'+sell.toFixed(2)+'/किलो</strong><p>खरीद भाव: ₹'+b.toFixed(2)+' + खर्च: ₹'+e.toFixed(2)+' प्रति किलो</p><p>खराबा सहित अनुमानित लागत: ₹'+effectiveCost.toFixed(2)+'/किलो</p><p>अनुमानित मुनाफा: ₹'+(sell-effectiveCost).toFixed(2)+'/किलो</p><p class="admin-muted">यह अनुमान है। 15 किमी के अंदर डिलीवरी का खर्च ऊपर प्रति किलो खर्च में शामिल करें या अलग से अपने हिसाब में जोड़ें।</p>';if(approved)approved.value=sell.toFixed(2);});
- const productSelect=document.getElementById('onlineVegPriceProduct'),onlineStatus=document.getElementById('onlineVegPriceStatus');
- async function loadOnlineVegProducts(){if(!productSelect)return;onlineStatus.textContent='ऑनलाइन सब्ज़ियाँ लोड हो रही हैं…';try{const {data,error}=await db.from('plants').select('id,name,category,selling_price,is_active').eq('category','सब्जी').order('name');if(error)throw error;productSelect.innerHTML='<option value="">सब्ज़ी चुनें</option>';(data||[]).forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=p.name+' — अभी ₹'+Number(p.selling_price||0).toFixed(2)+'/kg'+(p.is_active?'':' (बंद)');o.dataset.name=p.name;productSelect.appendChild(o);});onlineStatus.textContent=(data||[]).length?'सूची लोड हो गई। नई कीमत सेव करने से पहले उत्पाद और भाव जाँचें।':'कोई सब्ज़ी नहीं मिली। पहले एडमिन पैनल में श्रेणी “सब्जी” में उत्पाद जोड़ें।';}catch(err){onlineStatus.textContent='ऑनलाइन सूची नहीं लोड हुई: '+(err.message||'Supabase से संपर्क नहीं हो पाया')+'. एडमिन लॉगिन और Supabase अनुमति जाँचें।';}}
- document.getElementById('loadOnlineVegProducts')?.addEventListener('click',loadOnlineVegProducts);
- document.getElementById('saveOnlineVegPrice')?.addEventListener('click',async()=>{const id=productSelect?.value,price=Number(approved?.value);if(!id){onlineStatus.textContent='पहले ऑनलाइन सब्ज़ी चुनें।';return;}if(!approved.value||!Number.isFinite(price)||price<0){onlineStatus.textContent='मंजूर बिक्री भाव सही भरें।';return;}if(!confirm('क्या चुनी हुई सब्ज़ी का भाव ₹'+price.toFixed(2)+'/किलो ग्राहक वेबसाइट पर सेव करना है?'))return;onlineStatus.textContent='कीमत सेव हो रही है…';try{const {data,error}=await db.from('plants').update({selling_price:price,unit_type:'kg'}).eq('id',id).eq('category','सब्जी').select('id,name,selling_price').single();if(error)throw error;onlineStatus.textContent='✅ '+data.name+' की नई कीमत ₹'+Number(data.selling_price).toFixed(2)+'/किलो Supabase में सेव हो गई। ग्राहक वेबसाइट पर नया भाव दिखने के लिए पेज रीफ्रेश करना पड़ सकता है।';}catch(err){onlineStatus.textContent='कीमत सेव नहीं हुई: '+(err.message||'Supabase अनुमति/लॉगिन जाँचें')+'. पुराना भाव नहीं बदला होगा।';}});
- render();}
-
- window.initMandiPanel=init;
+ const ids=['mandiMin','mandiModal','mandiMax','myBuyPrice','myTransport','myWaste','myProfit'];
+ const money=n=>'₹'+(Number.isFinite(n)?n:0).toFixed(2);
+ function calc(){
+  const buy=Math.max(0,Number(document.getElementById('myBuyPrice')?.value)||0);
+  const extra=Math.max(0,Number(document.getElementById('myTransport')?.value)||0);
+  const waste=Math.min(100,Math.max(0,Number(document.getElementById('myWaste')?.value)||0));
+  const profit=Math.max(0,Number(document.getElementById('myProfit')?.value)||0);
+  const cost=(buy+extra)/(1-waste/100||1);
+  const sell=cost+profit;
+  document.getElementById('mandiCostResult').textContent=money(cost);
+  document.getElementById('mandiSellResult').textContent=money(sell);
+  document.getElementById('mandiProfitResult').textContent=money(sell-cost);
+  const district=document.getElementById('mandiDistrict').value, veg=document.getElementById('mandiVeg').value, market=document.getElementById('mandiMarket').value||district+' मंडी', date=document.getElementById('mandiDate').value||'तारीख नहीं भरी';
+  const model=document.getElementById('mandiModal').value, min=document.getElementById('mandiMin').value, max=document.getElementById('mandiMax').value;
+  document.getElementById('mandiProfitNote').textContent=`${district} • ${market} • ${veg} • रिपोर्ट तारीख: ${date}. दर्ज मंडी भाव: न्यूनतम ${min?money(Number(min)):'—'}, मॉडल ${model?money(Number(model)):'—'}, अधिकतम ${max?money(Number(max)):'—'} प्रति किलो। अनुमानित बिक्री भाव ${money(sell)}/किलो है। मंडी भाव मैन्युअल रूप से सत्यापित कर भरें; यह लाइव API नहीं है।`;
+ }
+ window.calculateMandiProfit=calc;
+ document.addEventListener('DOMContentLoaded',function(){
+  ids.forEach(id=>document.getElementById(id)?.addEventListener('input',calc));
+  ['mandiDistrict','mandiVeg','mandiMarket','mandiDate'].forEach(id=>document.getElementById(id)?.addEventListener('change',calc));
+  document.getElementById('calculateMandiProfit')?.addEventListener('click',calc);
+  document.getElementById('openMandiSource')?.addEventListener('click',()=>window.open('https://agmarknet.gov.in/','_blank','noopener'));
+  calc();
+ });
 })();
 </script>
 
 </body>
 </html>
- 
