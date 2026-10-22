@@ -425,9 +425,13 @@ body.about-page-active #about{display:block}
 <div id="adminStockPane" class="admin-pane"><div class="admin-section-card"><h2>🌱 पौधे और सब्जियों का स्टॉक</h2><p class="admin-muted">यहाँ पौधों और सब्जियों का कुल स्टॉक, बिक चुकी मात्रा और बाकी मात्रा अलग-अलग दिखेगी।</p><div id="stockTypeSummary" class="metric-grid"></div><div id="ownerStockList">स्टॉक लोड हो रहा है…</div></div></div>
 <div id="adminManageplantsPane" class="admin-pane">
   <div class="admin-section-card">
-    <h2>🌱 पौधे और 🥬 खाने वाली सब्ज़ियाँ प्रबंधन</h2>
-    <p class="admin-muted">पहले नीचे एक विकल्प चुनें। उसी का फॉर्म खुलेगा।</p>
-    <div class="plant-manage-buttons" role="tablist" aria-label="पौधा प्रबंधन विकल्प">
+    <h2>📦 अलग-अलग प्रबंधन</h2>
+    <p class="admin-muted">पहले तय करें कि पौधों का काम करना है या खाने वाली सब्जियों का। उसके बाद उसी श्रेणी का नया आइटम, भाव, फोटो और स्टॉक बदलें।</p>
+    <div class="plant-manage-buttons" role="tablist" aria-label="पौधे या सब्ज़ी चुनें">
+      <button type="button" class="plant-manage-button active" data-product-category="पौधा">🌱 पौधों का पैनल</button>
+      <button type="button" class="plant-manage-button" data-product-category="सब्जी">🥬 सब्जियों का पैनल</button>
+    </div>
+    <div class="plant-manage-buttons" role="tablist" aria-label="प्रबंधन विकल्प">
       <button type="button" class="plant-manage-button active" data-manage-view="add">➕ नया पौधा जोड़ें</button>
       <button type="button" class="plant-manage-button" data-manage-view="edit">✏️ कीमत / फोटो बदलें</button>
       <button type="button" class="plant-manage-button" data-manage-view="list">📋 सभी पौधे देखें</button>
@@ -435,11 +439,11 @@ body.about-page-active #about{display:block}
   </div>
   <div id="manageViewAdd" class="manage-view active">
   <div class="admin-section-card">
-    <h2>➕ नया पौधा या खाने वाली सब्ज़ी जोड़ें</h2>
-    <p class="admin-muted">यहाँ चुनें कि आप नर्सरी का पौधा जोड़ रहे हैं या खाने/बेचने वाली सब्जी। देसी या हाइब्रिड प्रकार भी चुनें। सेव होने के बाद रिकॉर्ड स्टॉक में अलग श्रेणी में दिखेगा।</p>
+    <h2 id="newProductHeading">➕ नया पौधा जोड़ें</h2>
+    <p class="admin-muted" id="newProductHelp">पौधे का नाम, प्रति पौधा भाव, शुरुआती स्टॉक और फोटो भरें। यह रिकॉर्ड पौधों की सूची में ही रहेगा।</p>
     <form id="newPlantForm">
       <label for="newPlantName">पौधे / सब्ज़ी का नाम</label><input id="newPlantName" required maxlength="100" placeholder="जैसे खीरा, टमाटर, बैंगन">
-      <label for="newPlantCategory">क्या जोड़ रहे हैं?</label><select id="newPlantCategory" required><option value="पौधा">पौधा (नर्सरी का पौधा)</option><option value="सब्जी">सब्जी (तैयार सब्जी)</option></select>
+      <label for="newPlantCategory">श्रेणी</label><select id="newPlantCategory" required disabled><option value="पौधा">पौधा (नर्सरी का पौधा)</option><option value="सब्जी">सब्जी (तैयार सब्जी)</option></select><p class="admin-muted" id="newProductCategoryNote">वर्तमान पैनल: पौधे</p>
       <label for="newPlantType">बीज / किस्म का प्रकार</label><select id="newPlantType" required><option value="देसी">देसी</option><option value="हाइब्रिड">हाइब्रिड</option><option value="अन्य">अन्य / पता नहीं</option></select>
       <label for="newPlantVariety">किस्म का नाम (वैकल्पिक)</label><input id="newPlantVariety" maxlength="100" placeholder="जैसे अरका सम्राट, देसी टमाटर">
       <label for="newPlantPrice" id="newPlantPriceLabel">प्रति पौधा कीमत (₹)</label><input id="newPlantPrice" type="number" min="0" step="0.01" required placeholder="जैसे 5">
@@ -454,13 +458,13 @@ body.about-page-active #about{display:block}
   </div>
   <div id="manageViewEdit" class="manage-view">
   <div class="admin-section-card">
-    <h2>🖼️ पौधे / सब्ज़ी की फोटो, कीमत और स्टॉक बदलें</h2>
-    <p class="admin-muted">हर पौधे की फोटो अलग अपलोड करें। यहाँ की कीमत और स्टॉक सेव करने से ग्राहक की सूची अपडेट होगी।</p>
+    <h2 id="editProductsHeading">🖼️ पौधों की फोटो, कीमत और स्टॉक बदलें</h2>
+    <p class="admin-muted" id="editProductsHelp">इस सूची में केवल पौधे दिखेंगे। सेव करने पर ग्राहक की वेबसाइट अपडेट होगी।</p>
     <div id="adminPlantEditor">पौधे लोड हो रहे हैं…</div>
   </div>
   </div>
   <div id="manageViewList" class="manage-view">
-    <div class="admin-section-card"><h2>📋 सभी पौधे</h2><p class="admin-muted">नाम, कीमत, मौजूदा स्टॉक और उपलब्धता।</p><div id="adminPlantSimpleList">सूची लोड हो रही है…</div></div>
+    <div class="admin-section-card"><h2 id="simpleListHeading">📋 सभी पौधे</h2><p class="admin-muted">नाम, सही इकाई में भाव, मौजूदा स्टॉक और उपलब्धता।</p><div id="adminPlantSimpleList">सूची लोड हो रही है…</div></div>
   </div>
 </div>
 <div id="adminSalesPane" class="admin-pane"><div class="admin-section-card"><h2>💰 बिक्री का हिसाब</h2><p class="admin-muted">आज की बिक्री और हाल की बिक्री एंट्री।</p><div id="ownerSalesList">बिक्री का हिसाब लोड हो रहा है…</div></div></div>
@@ -1339,10 +1343,36 @@ document.querySelectorAll('.admin-tab').forEach(button => {
   button.addEventListener('click', () => { const tab = button.dataset.tab; showAdminTab(tab); if (tab === 'manageplants') showManageView('add'); if (tab === 'stock') loadOwnerStats(); if (tab === 'sitecontrol') loadSiteControlForm(); });
 });
 
+let activeManageCategory = 'पौधा';
+function setManageCategory(category) {
+  activeManageCategory = category === 'सब्जी' ? 'सब्जी' : 'पौधा';
+  document.querySelectorAll('[data-product-category]').forEach(b => b.classList.toggle('active', b.dataset.productCategory === activeManageCategory));
+  const veg = activeManageCategory === 'सब्जी';
+  const cat = document.getElementById('newPlantCategory');
+  if (cat) cat.value = activeManageCategory;
+  const heading = document.getElementById('newProductHeading');
+  const help = document.getElementById('newProductHelp');
+  const note = document.getElementById('newProductCategoryNote');
+  const editHeading = document.getElementById('editProductsHeading');
+  const editHelp = document.getElementById('editProductsHelp');
+  const listHeading = document.getElementById('simpleListHeading');
+  if (heading) heading.textContent = veg ? '➕ नई खाने वाली सब्ज़ी जोड़ें' : '➕ नया पौधा जोड़ें';
+  if (help) help.textContent = veg ? 'सब्ज़ी का नाम, प्रति किलो भाव, शुरुआती स्टॉक किलो में और फोटो भरें।' : 'पौधे का नाम, प्रति पौधा भाव, शुरुआती स्टॉक पौधों में और फोटो भरें।';
+  if (note) note.textContent = veg ? 'वर्तमान पैनल: खाने वाली सब्जियाँ (भाव ₹/किलो, स्टॉक किलो में)' : 'वर्तमान पैनल: नर्सरी के पौधे (भाव ₹/पौधा, स्टॉक पौधों में)';
+  if (editHeading) editHeading.textContent = veg ? '🥬 सब्जियों की फोटो, कीमत और स्टॉक बदलें' : '🌱 पौधों की फोटो, कीमत और स्टॉक बदलें';
+  if (editHelp) editHelp.textContent = veg ? 'यहाँ केवल खाने वाली सब्जियाँ दिखेंगी। भाव ₹/किलो और स्टॉक किलो में बदलें।' : 'यहाँ केवल नर्सरी के पौधे दिखेंगे। भाव ₹/पौधा और स्टॉक पौधों में बदलें।';
+  if (listHeading) listHeading.textContent = veg ? '📋 सभी खाने वाली सब्जियाँ' : '📋 सभी पौधे';
+  updateNewProductUnitFields();
+  const activeView = document.querySelector('.manage-view.active');
+  if (activeView && activeView.id === 'manageViewEdit') renderAdminPlantEditor();
+  if (activeView && activeView.id === 'manageViewList') renderSimplePlantList();
+}
+document.querySelectorAll('[data-product-category]').forEach(b => b.addEventListener('click', () => setManageCategory(b.dataset.productCategory)));
+
 function showManageView(view) {
   const allowed = ['add','edit','list'];
   if (!allowed.includes(view)) view = 'add';
-  document.querySelectorAll('.plant-manage-button').forEach(b => b.classList.toggle('active', b.dataset.manageView === view));
+  document.querySelectorAll('.plant-manage-button[data-manage-view]').forEach(b => b.classList.toggle('active', b.dataset.manageView === view));
   document.querySelectorAll('.manage-view').forEach(v => v.classList.remove('active'));
   const target = document.getElementById(({add:'manageViewAdd',edit:'manageViewEdit',list:'manageViewList'})[view]);
   if (target) target.classList.add('active');
@@ -1355,8 +1385,9 @@ async function renderSimplePlantList(){
   box.textContent='पौधों की सूची लोड हो रही है…';
   const {data,error}=await db.from('plants').select('id,name,category,selling_price,stock_quantity,is_active').order('name');
   if(error){box.textContent='सूची लोड नहीं हुई: '+error.message;return;}
-  if(!data||!data.length){box.textContent='अभी कोई पौधा नहीं है।';return;}
-  box.innerHTML=data.map(p=>`<div class="stock-row"><div><b>${isVegItem(p)?'🥬':'🌱'} ${safe(p.name)}</b><div class="sale-meta">₹${Number(p.selling_price||0).toFixed(2)} प्रति ${isVegItem(p)?'किलो':'पौधा'}</div></div><span class="stock-count">स्टॉक ${formatQty(Math.max(0,Number(p.stock_quantity)||0))} ${isVegItem(p)?'किलो':'पौधे'}</span><span class="sale-meta">${p.is_active?'उपलब्ध':'Sold Out'}</span></div>`).join('');
+  const filtered=(data||[]).filter(p => (isVegItem(p)?'सब्जी':'पौधा')===activeManageCategory);
+  if(!filtered.length){box.textContent=activeManageCategory==='सब्जी'?'अभी खाने वाली सब्जियाँ नहीं हैं। ऊपर “नई खाने वाली सब्ज़ी जोड़ें” फॉर्म इस्तेमाल करें।':'अभी पौधे नहीं हैं। ऊपर “नया पौधा जोड़ें” फॉर्म इस्तेमाल करें।';return;}
+  box.innerHTML=filtered.map(p=>`<div class="stock-row"><div><b>${isVegItem(p)?'🥬':'🌱'} ${safe(p.name)}</b><div class="sale-meta">₹${Number(p.selling_price||0).toFixed(2)} प्रति ${isVegItem(p)?'किलो':'पौधा'}</div></div><span class="stock-count">स्टॉक ${formatQty(Math.max(0,Number(p.stock_quantity)||0))} ${isVegItem(p)?'किलो':'पौधे'}</span><span class="sale-meta">${p.is_active?'उपलब्ध':'Sold Out'}</span></div>`).join('');
 }
 
 function isNurseryOwner() {
@@ -1386,9 +1417,10 @@ async function renderAdminPlantEditor() {
   box.textContent = 'पौधे लोड हो रहे हैं…';
   const {data,error} = await db.from('plants').select('id,name,variety,category,selling_price,stock_quantity,description,is_active,image_url').order('name');
   if (error) { box.textContent = 'पौधे नहीं लोड हुए: ' + error.message; return; }
-  if (!data || !data.length) { box.textContent = 'अभी पौधे नहीं हैं। ऊपर “नया पौधा जोड़ें” फॉर्म इस्तेमाल करें।'; return; }
+  const filtered = (data || []).filter(p => (isVegItem(p) ? 'सब्जी' : 'पौधा') === activeManageCategory);
+  if (!filtered.length) { box.textContent = activeManageCategory === 'सब्जी' ? 'अभी खाने वाली सब्जियाँ नहीं हैं। पहले सब्जियों के पैनल से जोड़ें।' : 'अभी पौधे नहीं हैं। पहले पौधों के पैनल से जोड़ें।'; return; }
   box.innerHTML = '';
-  data.forEach(p => {
+  filtered.forEach(p => {
     const row = document.createElement('div'); row.className = 'admin-plant-edit-row';
     const img = p.image_url ? '<img src="'+safe(p.image_url)+'" alt="'+safe(p.name)+' की फोटो">' : '<div style="font-size:36px">🌱</div>';
     row.innerHTML = '<div class="wide"><strong>'+safe(p.name)+'</strong> <small>('+ (p.is_active ? 'उपलब्ध' : 'Sold Out') +')</small></div>' +
@@ -1750,5 +1782,4 @@ db.auth.onAuthStateChange((event, session) => {
 </script>
 </body>
 </html>
-
 
