@@ -251,7 +251,7 @@ body.about-page-active #about{display:block}
 <p>📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान</p>
 </header>
 <nav>
-<a href="#plants">🌱 पौधे</a>
+<a href="#plants">🌱 पौधे और 🥬 सब्ज़ियाँ</a>
 <a href="#order" id="orderNavLink">🛒 ऑर्डर</a>
 <a href="#about">🌿 हमारे बारे में</a>
 <a href="#contact">📞 संपर्क</a>
@@ -299,26 +299,31 @@ body.about-page-active #about{display:block}
 </section>
 
 <section class="card" id="plants">
-<h2>🌱 उपलब्ध पौधे</h2>
-<div id="plantList" class="plants">पौधों की सूची लोड हो रही है…</div>
+<h2>🌱 नर्सरी के पौधे</h2>
+<p>खेत, गमले या घर में लगाने के लिए पौधे। कीमत प्रति पौधा है।</p>
+<div id="plantOnlyList" class="plants">पौधों की सूची लोड हो रही है…</div>
+<h2 style="margin-top:28px">🥬 खाने के लिए ताज़ी सब्ज़ियाँ</h2>
+<p>रसोई में इस्तेमाल के लिए तैयार सब्ज़ियाँ। कीमत प्रति किलो है; ऑर्डर पूरे किलो में करें।</p>
+<div id="vegOnlyList" class="plants">सब्ज़ियों की सूची लोड हो रही है…</div>
+<div id="plantList" class="plants" hidden></div>
 <div id="plantStatus" class="status" aria-live="polite"></div>
 </section>
 
 <section class="card" id="order" hidden aria-modal="true" role="dialog" aria-labelledby="orderModalTitle">
 <div class="order-modal-card">
 <button class="order-modal-close" id="closeOrderModal" type="button" aria-label="ऑर्डर फॉर्म बंद करें">✕ बंद करें</button>
-<h2 id="orderModalTitle">🛒 आपका पौधा ऑर्डर करें</h2>
-<p class="order-intro">एक ही जगह ऑर्डर की जानकारी भरें। पहले पौधों का मूल्य, फिर लोकेशन जाँच के बाद डिलीवरी सहित अंतिम राशि दिखेगी।</p>
+<h2 id="orderModalTitle">🛒 पौधा या सब्ज़ी ऑर्डर करें</h2>
+<p class="order-intro">पौधे संख्या में और खाने वाली सब्ज़ियाँ किलो में चुनें। सब्ज़ियों के लिए केवल पूरे किलो (1, 2, 3…) की मात्रा मान्य है।</p>
 <form id="orderForm">
-<label for="plant">पौधा चुनें</label>
+<label for="plant">पौधा या खाने वाली सब्ज़ी चुनें</label>
 <select id="plant" required>
-<option value="">पहले पौधों की सूची लोड होने दें</option>
+<option value="">पहले सूची लोड होने दें</option>
 </select>
 <div class="order-summary-card" aria-live="polite">
-  <div class="order-summary-head">🌱 आपके ऑर्डर का सारांश</div>
-  <div id="orderSelectedPlant" style="font-weight:700;margin-bottom:8px">पौधा चुनें</div>
-  <div class="qty-row"><label for="qty">पौधों की संख्या</label><input id="qty" type="number" min="1" step="1" value="1" required></div>
-  <div class="summary-line"><span>पौधों का मूल्य</span><strong id="plantAmountDisplay">₹0.00</strong></div>
+  <div class="order-summary-head">🛒 आपके ऑर्डर का सारांश</div>
+  <div id="orderSelectedPlant" style="font-weight:700;margin-bottom:8px">पौधा या सब्ज़ी चुनें</div>
+  <div class="qty-row"><label for="qty" id="qtyLabel">पौधों की संख्या</label><input id="qty" type="number" min="1" step="1" value="1" required></div>
+  <div class="summary-line"><span id="itemsAmountLabel">उत्पाद का मूल्य</span><strong id="plantAmountDisplay">₹0.00</strong></div>
   <div class="summary-line"><span>डिलीवरी चार्ज</span><strong id="deliveryAmountDisplay">लोकेशन जाँच के बाद</strong></div>
   <div class="summary-line total"><span>कुल भुगतान</span><strong id="grandTotalDisplay">लोकेशन जाँच के बाद</strong></div>
 </div>
@@ -420,7 +425,7 @@ body.about-page-active #about{display:block}
 <div id="adminStockPane" class="admin-pane"><div class="admin-section-card"><h2>🌱 पौधे और सब्जियों का स्टॉक</h2><p class="admin-muted">यहाँ पौधों और सब्जियों का कुल स्टॉक, बिक चुकी मात्रा और बाकी मात्रा अलग-अलग दिखेगी।</p><div id="stockTypeSummary" class="metric-grid"></div><div id="ownerStockList">स्टॉक लोड हो रहा है…</div></div></div>
 <div id="adminManageplantsPane" class="admin-pane">
   <div class="admin-section-card">
-    <h2>🌱 पौधा प्रबंधन</h2>
+    <h2>🌱 पौधे और 🥬 खाने वाली सब्ज़ियाँ प्रबंधन</h2>
     <p class="admin-muted">पहले नीचे एक विकल्प चुनें। उसी का फॉर्म खुलेगा।</p>
     <div class="plant-manage-buttons" role="tablist" aria-label="पौधा प्रबंधन विकल्प">
       <button type="button" class="plant-manage-button active" data-manage-view="add">➕ नया पौधा जोड़ें</button>
@@ -430,26 +435,26 @@ body.about-page-active #about{display:block}
   </div>
   <div id="manageViewAdd" class="manage-view active">
   <div class="admin-section-card">
-    <h2>➕ नया पौधा जोड़ें</h2>
+    <h2>➕ नया पौधा या खाने वाली सब्ज़ी जोड़ें</h2>
     <p class="admin-muted">यहाँ चुनें कि आप नर्सरी का पौधा जोड़ रहे हैं या खाने/बेचने वाली सब्जी। देसी या हाइब्रिड प्रकार भी चुनें। सेव होने के बाद रिकॉर्ड स्टॉक में अलग श्रेणी में दिखेगा।</p>
     <form id="newPlantForm">
-      <label for="newPlantName">पौधे का नाम</label><input id="newPlantName" required maxlength="100" placeholder="जैसे खीरा, टमाटर, बैंगन">
+      <label for="newPlantName">पौधे / सब्ज़ी का नाम</label><input id="newPlantName" required maxlength="100" placeholder="जैसे खीरा, टमाटर, बैंगन">
       <label for="newPlantCategory">क्या जोड़ रहे हैं?</label><select id="newPlantCategory" required><option value="पौधा">पौधा (नर्सरी का पौधा)</option><option value="सब्जी">सब्जी (तैयार सब्जी)</option></select>
       <label for="newPlantType">बीज / किस्म का प्रकार</label><select id="newPlantType" required><option value="देसी">देसी</option><option value="हाइब्रिड">हाइब्रिड</option><option value="अन्य">अन्य / पता नहीं</option></select>
       <label for="newPlantVariety">किस्म का नाम (वैकल्पिक)</label><input id="newPlantVariety" maxlength="100" placeholder="जैसे अरका सम्राट, देसी टमाटर">
-      <label for="newPlantPrice">प्रति पौधा कीमत (₹)</label><input id="newPlantPrice" type="number" min="0" step="0.01" required placeholder="जैसे 5">
-      <label for="newPlantStock">शुरुआती स्टॉक (पौधे)</label><input id="newPlantStock" type="number" min="0" step="1" required value="0">
+      <label for="newPlantPrice" id="newPlantPriceLabel">प्रति पौधा कीमत (₹)</label><input id="newPlantPrice" type="number" min="0" step="0.01" required placeholder="जैसे 5">
+      <label for="newPlantStock" id="newPlantStockLabel">शुरुआती स्टॉक (पौधे)</label><input id="newPlantStock" type="number" min="0" step="1" required value="0">
       <label for="newPlantDescription">विवरण (वैकल्पिक)</label><textarea id="newPlantDescription" rows="2" maxlength="500" placeholder="पौधे के बारे में जानकारी"></textarea>
-      <label for="newPlantImage">पौधे की अपनी फोटो (वैकल्पिक)</label><input id="newPlantImage" type="file" accept="image/*">
+      <label for="newPlantImage">पौधे / सब्ज़ी की फोटो (वैकल्पिक)</label><input id="newPlantImage" type="file" accept="image/*">
       <img id="newPlantPreview" alt="फोटो प्रीव्यू" style="display:none;width:150px;max-height:150px;object-fit:cover;border-radius:12px;margin:4px 0 12px">
-      <button id="newPlantSaveButton" type="submit">💾 पौधा सेव करें</button>
+      <button id="newPlantSaveButton" type="submit">💾 उत्पाद सेव करें</button>
     </form>
     <div id="newPlantStatus" class="status" aria-live="polite"></div>
   </div>
   </div>
   <div id="manageViewEdit" class="manage-view">
   <div class="admin-section-card">
-    <h2>🖼️ पौधों की फोटो, कीमत और स्टॉक बदलें</h2>
+    <h2>🖼️ पौधे / सब्ज़ी की फोटो, कीमत और स्टॉक बदलें</h2>
     <p class="admin-muted">हर पौधे की फोटो अलग अपलोड करें। यहाँ की कीमत और स्टॉक सेव करने से ग्राहक की सूची अपडेट होगी।</p>
     <div id="adminPlantEditor">पौधे लोड हो रहे हैं…</div>
   </div>
@@ -611,7 +616,7 @@ document.getElementById('customerTrackingForm')?.addEventListener('submit', asyn
     for (const o of data) {
       const card = document.createElement('div'); card.className='status';
       const total = (Number(o.unit_price)||0) * (Number(o.quantity)||0);
-      card.innerHTML = '<h3>ऑर्डर #' + safe(o.id) + '</h3><p><strong>पौधा:</strong> '+safe(o.plant_name)+'<br><strong>मात्रा:</strong> '+safe(o.quantity)+'<br><strong>राशि:</strong> ₹'+total.toFixed(2)+'<br><strong>स्थिति:</strong> '+safe(o.status)+'<br><strong>तारीख:</strong> '+(o.created_at?new Date(o.created_at).toLocaleString('hi-IN'):'—')+'</p>';
+      card.innerHTML = '<h3>ऑर्डर #' + safe(o.id) + '</h3><p><strong>उत्पाद:</strong> '+safe(o.plant_name)+'<br><strong>मात्रा:</strong> '+safe(o.quantity)+' '+(String(o.notes||'').includes('UNIT:किलो')?'किलो':'पौधे')+'<br><strong>राशि:</strong> ₹'+total.toFixed(2)+'<br><strong>स्थिति:</strong> '+safe(o.status)+'<br><strong>तारीख:</strong> '+(o.created_at?new Date(o.created_at).toLocaleString('hi-IN'):'—')+'</p>';
       const note = String(o.notes||''); const match = note.match(/PAYMENT_PROOF_PATH:([^|]+)/);
       if (match) {
         const proof = document.createElement('div'); proof.className='status'; proof.textContent='📸 भुगतान स्क्रीनशॉट लोड हो रहा है…'; card.appendChild(proof);
@@ -681,113 +686,93 @@ document.addEventListener('DOMContentLoaded', () => {
   if (paymentBox) paymentBox.style.display = 'none';
 });
 
+function isVegItem(p) { return /सब्जी|vegetable|veg/i.test(String(p && p.category || '')); }
+function itemUnit(p) { return isVegItem(p) ? 'किलो' : 'पौधा'; }
+function itemUnitPriceLabel(p) { return isVegItem(p) ? 'प्रति किलो' : 'प्रति पौधा'; }
+function validQuantity(p, q) { return Number.isFinite(q) && Number.isInteger(q) && q > 0 && q <= Number(p.stock_quantity); }
+function formatQty(q) { return Number(q).toLocaleString('en-IN', {maximumFractionDigits: 2}); }
+
 async function loadPlants() {
   const list = document.getElementById('plantList');
+  const plantOnlyList = document.getElementById('plantOnlyList');
+  const vegOnlyList = document.getElementById('vegOnlyList');
   const select = document.getElementById('plant');
   const status = document.getElementById('plantStatus');
-
   const {data, error} = await db.from('plants')
     .select('id,name,variety,category,selling_price,stock_quantity,description,is_active,image_url')
     .eq('is_active', true).order('name');
-
   if (error) {
-    list.textContent = 'पौधों की सूची लोड नहीं हुई। डेटाबेस की अनुमति जाँचनी होगी।';
+    [list,plantOnlyList,vegOnlyList].filter(Boolean).forEach(el=>el.textContent='सूची लोड नहीं हुई। डेटाबेस की अनुमति जाँचनी होगी।');
     status.textContent = 'त्रुटि: ' + error.message;
     select.innerHTML = '<option value="">सूची उपलब्ध नहीं</option>';
     return;
   }
-
   plants = (data || []).filter(p => Number(p.stock_quantity) > 0);
-  list.innerHTML = '';
-  select.innerHTML = '<option value="">पौधा चुनें</option>';
-
+  [list,plantOnlyList,vegOnlyList].filter(Boolean).forEach(el=>el.innerHTML='');
+  select.innerHTML = '<option value="">पौधा या सब्ज़ी चुनें</option>';
   if (!plants.length) {
-    list.textContent = 'अभी डेटाबेस में उपलब्ध स्टॉक वाले पौधे दर्ज नहीं हैं।';
-    status.textContent = 'Supabase की plants टेबल में पौधों की कीमत और स्टॉक दर्ज करें।';
+    plantOnlyList.textContent = 'अभी उपलब्ध पौधे दर्ज नहीं हैं।';
+    vegOnlyList.textContent = 'अभी उपलब्ध खाने वाली सब्ज़ियाँ दर्ज नहीं हैं।';
+    status.textContent = 'एडमिन पैनल से उत्पाद, कीमत और स्टॉक दर्ज करें।';
     return;
   }
-
   plants.forEach(p => {
-    const card = document.createElement('div');
-    card.className = 'plant';
-    const plantImage = p.image_url || '';
-    const unitPrice = Number(p.selling_price) || 0;
-    const stockQty = Math.max(0, Number(p.stock_quantity) || 0);
+    const veg = isVegItem(p), unit = itemUnit(p), unitPrice = Number(p.selling_price)||0;
+    const stockQty = Math.max(0,Number(p.stock_quantity)||0);
+    const target = veg ? vegOnlyList : plantOnlyList;
+    const card = document.createElement('div'); card.className='plant';
+    const plantImage=p.image_url||'';
     card.innerHTML = (plantImage
-        ? '<img src="' + safe(plantImage) + '" alt="' + safe(p.name) + '" loading="lazy" onerror="this.style.display=\'none\'">'
-        : '<div style="height:185px;display:flex;align-items:center;justify-content:center;background:#eef5eb;border-radius:13px;font-size:48px;margin-bottom:12px">🌱</div>') +
-        '<h3>' + safe(p.name) + '</h3><div>' +
-        safe(p.variety || p.category || '') +
-        '</div><p class="price">₹' + unitPrice.toFixed(2) + '</p>' +
-        '<p class="note">' + safe(p.description || '') + '</p>' +
-        '<div class="plant-buy-box"><label for="cardQty-' + safe(p.id) + '">कितनी मात्रा चाहिए?</label>' +
-        '<input class="card-quantity" id="cardQty-' + safe(p.id) + '" type="number" min="1" max="' + stockQty + '" step="1" value="1" inputmode="numeric" data-plant-id="' + safe(p.id) + '">' +
-        '<p class="stock-hint">उपलब्ध स्टॉक: ' + stockQty + ' पौधे</p>' +
-        '<div class="plant-total" id="cardTotal-' + safe(p.id) + '">कुल: ₹' + unitPrice.toFixed(2) + '</div>' +
-        '<button class="plant-buy-button" type="button" data-buy-plant="' + safe(p.id) + '">🛒 Buy Now / अभी खरीदें</button></div>';
-
-    const cardQty = card.querySelector('.card-quantity');
-    const totalLabel = card.querySelector('.plant-total');
-    cardQty.addEventListener('input', () => {
-      let q = Number(cardQty.value);
-      if (!Number.isFinite(q) || q < 1) q = 1;
-      totalLabel.textContent = 'कुल: ₹' + (unitPrice * q).toFixed(2);
+      ? '<img src="'+safe(plantImage)+'" alt="'+safe(p.name)+'" loading="lazy" onerror="this.style.display=\'none\'">'
+      : '<div style="height:185px;display:flex;align-items:center;justify-content:center;background:#eef5eb;border-radius:13px;font-size:48px;margin-bottom:12px">'+(veg?'🥬':'🌱')+'</div>')+
+      '<h3>'+safe(p.name)+'</h3><div>'+safe(p.variety||'')+'</div><p class="price">₹'+unitPrice.toFixed(2)+' / '+unit+'</p><p class="note">'+safe(p.description||'')+'</p>'+
+      '<div class="plant-buy-box"><label for="cardQty-'+safe(p.id)+'">'+(veg?'कितने किलो चाहिए?':'कितने पौधे चाहिए?')+'</label>'+
+      '<input class="card-quantity" id="cardQty-'+safe(p.id)+'" type="number" min="1" max="'+stockQty+'" step="1" value="1" inputmode="numeric" data-plant-id="'+safe(p.id)+'">'+
+      '<p class="stock-hint">उपलब्ध स्टॉक: '+formatQty(stockQty)+' '+unit+'</p><div class="plant-total" id="cardTotal-'+safe(p.id)+'">कुल: ₹'+unitPrice.toFixed(2)+'</div>'+
+      '<button class="plant-buy-button" type="button" data-buy-plant="'+safe(p.id)+'">🛒 अभी खरीदें</button></div>';
+    const cardQty=card.querySelector('.card-quantity'), totalLabel=card.querySelector('.plant-total');
+    cardQty.addEventListener('input',()=>{const q=Number(cardQty.value);totalLabel.textContent='कुल: ₹'+(Number.isFinite(q)&&q>0?unitPrice*q:0).toFixed(2);});
+    card.querySelector('[data-buy-plant]').addEventListener('click',()=>{
+      const q=Number(cardQty.value);
+      if(!validQuantity(p,q)){alert(veg?'कृपया पूरे किलो में मात्रा लिखें और स्टॉक से अधिक न चुनें।':'कृपया उपलब्ध स्टॉक के भीतर पूरे पौधों की संख्या लिखें।');cardQty.focus();return;}
+      select.value=String(p.id); const qtyInput=document.getElementById('qty');qtyInput.value=String(q);qtyInput.readOnly=true;
+      updateQuantityControls(p);updateOrderTotal();
+      const orderSection=document.getElementById('order');orderSection.hidden=false;document.body.classList.add('order-modal-open');
+      document.getElementById('orderStatus').textContent='पहले नाम, मोबाइल नंबर, गाँव और पूरा पता भरें; फिर लोकेशन शेयर करें।';
+      document.getElementById('selectedOrderSummary').innerHTML='<b>चुना हुआ उत्पाद:</b> '+safe(p.name)+'<br><b>मात्रा:</b> '+formatQty(q)+' '+unit+'<br><b>'+itemUnitPriceLabel(p)+' कीमत:</b> ₹'+unitPrice.toFixed(2)+'<br><b>कुल राशि:</b> ₹'+(unitPrice*q).toFixed(2);
+      setTimeout(()=>document.getElementById('customer').focus({preventScroll:true}),150);
     });
-    card.querySelector('[data-buy-plant]').addEventListener('click', () => {
-      const q = Number(cardQty.value);
-      if (!Number.isInteger(q) || q < 1 || q > stockQty) {
-        alert('कृपया 1 से ' + stockQty + ' के बीच सही मात्रा लिखें।');
-        cardQty.focus();
-        return;
-      }
-      select.value = String(p.id);
-      document.getElementById('qty').value = String(q);
-      document.getElementById('qty').readOnly = true;
-      updateOrderTotal();
-      const orderSection = document.getElementById('order');
-      orderSection.hidden = false;
-      document.body.classList.add('order-modal-open');
-      document.getElementById('orderStatus').textContent = 'पहले नाम, मोबाइल नंबर, गाँव और पूरा पता भरें; फिर लोकेशन शेयर करें।';
-      document.getElementById('selectedOrderSummary').innerHTML = '<b>आपका चुना हुआ पौधा:</b> ' + safe(p.name) + '<br><b>मात्रा:</b> ' + q + ' पौधे<br><b>प्रति पौधा कीमत:</b> ₹' + unitPrice.toFixed(2) + '<br><b>कुल राशि:</b> ₹' + (unitPrice * q).toFixed(2);
-      setTimeout(() => document.getElementById('customer').focus({preventScroll:true}), 150);
-    });
-    list.appendChild(card);
-
-    const option = document.createElement('option');
-    option.value = String(p.id);
-    option.textContent = p.name + ' — ₹' + Number(p.selling_price).toFixed(2);
-    select.appendChild(option);
+    target.appendChild(card);
+    const option=document.createElement('option');option.value=String(p.id);option.textContent=(veg?'🥬 ':'🌱 ')+p.name+' — ₹'+unitPrice.toFixed(2)+' / '+unit;select.appendChild(option);
   });
-  status.textContent = 'पौधों की सूची डेटाबेस से अपडेट हुई।';
+  if(!plantOnlyList.children.length) plantOnlyList.textContent='अभी कोई पौधा उपलब्ध नहीं है।';
+  if(!vegOnlyList.children.length) vegOnlyList.textContent='अभी खाने वाली सब्ज़ियाँ उपलब्ध नहीं हैं।';
+  status.textContent='पौधों और सब्ज़ियों की सूची डेटाबेस से अपडेट हुई।';
+}
+function updateQuantityControls(p) {
+  const qty=document.getElementById('qty'), label=document.getElementById('qtyLabel'), amountLabel=document.getElementById('itemsAmountLabel');
+  if(!p) { qty.min='1';qty.step='1';qty.value='1';qty.readOnly=false;if(label)label.textContent='पौधों की संख्या';if(amountLabel)amountLabel.textContent='उत्पाद का मूल्य';return; }
+  const veg=isVegItem(p);qty.min='1';qty.step='1';qty.readOnly=false;
+  if(!validQuantity(p,Number(qty.value)))qty.value='1';
+  if(label)label.textContent=veg?'सब्ज़ी की मात्रा (किलो)':'पौधों की संख्या';
+  if(amountLabel)amountLabel.textContent=veg?'सब्ज़ियों का मूल्य':'पौधों का मूल्य';
 }
 
 function updateOrderTotal() {
-  const plantId = Number(document.getElementById('plant').value);
-  const p = plants.find(item => Number(item.id) === plantId);
-  const qty = Number(document.getElementById('qty').value);
-  const box = document.getElementById('orderTotalPreview');
-  const payTotal = document.getElementById('bharatpeTotalAmount');
-  if (!p || !Number.isInteger(qty) || qty < 1) {
-    box.textContent = 'कुल राशि: पौधा और सही मात्रा चुनें।';
-    if (payTotal) payTotal.textContent = 'पौधा और मात्रा चुनें';
-    return;
-  }
-  const plantTotal = Number(p.selling_price) * qty;
-  const hasDelivery = deliveryFee !== null && Number.isFinite(deliveryFee);
-  const grandTotal = plantTotal + (hasDelivery ? deliveryFee : 0);
-  const selectedName = document.getElementById('orderSelectedPlant');
-  const plantDisplay = document.getElementById('plantAmountDisplay');
-  const deliveryDisplay = document.getElementById('deliveryAmountDisplay');
-  const grandDisplay = document.getElementById('grandTotalDisplay');
-  if (selectedName) selectedName.textContent = p.name + ' · प्रति पौधा ₹' + Number(p.selling_price).toFixed(2);
-  if (plantDisplay) plantDisplay.textContent = '₹' + plantTotal.toFixed(2);
-  if (deliveryDisplay) deliveryDisplay.textContent = hasDelivery ? '₹' + deliveryFee.toFixed(2) : 'लोकेशन जाँच के बाद';
-  if (grandDisplay) grandDisplay.textContent = hasDelivery ? '₹' + grandTotal.toFixed(2) : 'लोकेशन जाँच के बाद';
-  box.textContent = hasDelivery ? 'डिलीवरी सहित कुल राशि: ₹' + grandTotal.toFixed(2) : 'पौधों का मूल्य: ₹' + plantTotal.toFixed(2) + ' · लोकेशन जाँच के बाद डिलीवरी और अंतिम कुल राशि दिखेगी।';
-  if (payTotal) payTotal.textContent = hasDelivery ? '₹' + grandTotal.toFixed(2) : 'पहले डिलीवरी जाँचें';
+  const plantId=Number(document.getElementById('plant').value), p=plants.find(item=>Number(item.id)===plantId);
+  const qty=Number(document.getElementById('qty').value), box=document.getElementById('orderTotalPreview'), payTotal=document.getElementById('bharatpeTotalAmount');
+  const selectedName=document.getElementById('orderSelectedPlant'),plantDisplay=document.getElementById('plantAmountDisplay'),deliveryDisplay=document.getElementById('deliveryAmountDisplay'),grandDisplay=document.getElementById('grandTotalDisplay');
+  if(!p || !validQuantity(p,qty)) { box.textContent='कुल राशि: उत्पाद और सही मात्रा चुनें।';if(payTotal)payTotal.textContent='उत्पाद और मात्रा चुनें';return; }
+  const unit=itemUnit(p), veg=isVegItem(p), total=Number(p.selling_price)*qty, hasDelivery=deliveryFee!==null&&Number.isFinite(deliveryFee),grand=total+(hasDelivery?deliveryFee:0);
+  if(selectedName)selectedName.textContent=p.name+' · '+itemUnitPriceLabel(p)+' ₹'+Number(p.selling_price).toFixed(2);
+  if(plantDisplay)plantDisplay.textContent='₹'+total.toFixed(2);
+  if(deliveryDisplay)deliveryDisplay.textContent=hasDelivery?'₹'+deliveryFee.toFixed(2):'लोकेशन जाँच के बाद';
+  if(grandDisplay)grandDisplay.textContent=hasDelivery?'₹'+grand.toFixed(2):'लोकेशन जाँच के बाद';
+  box.textContent=hasDelivery?'डिलीवरी सहित कुल राशि: ₹'+grand.toFixed(2):(veg?'सब्ज़ियों का मूल्य':'पौधों का मूल्य')+': ₹'+total.toFixed(2)+' · लोकेशन जाँच के बाद डिलीवरी और अंतिम कुल राशि दिखेगी।';
+  if(payTotal)payTotal.textContent=hasDelivery?'₹'+grand.toFixed(2):'पहले डिलीवरी जाँचें';
 }
 
-document.getElementById('plant').addEventListener('change', () => { deliveryFee = null; deliveryDistanceKm = null; document.getElementById('bharatpePaymentBox').style.display='none'; updateOrderTotal(); updateUpiPaymentLink(); });
+document.getElementById('plant').addEventListener('change', () => { deliveryFee = null; deliveryDistanceKm = null; document.getElementById('bharatpePaymentBox').style.display='none'; updateQuantityControls(plants.find(item=>Number(item.id)===Number(document.getElementById('plant').value))); updateOrderTotal(); updateUpiPaymentLink(); });
 document.getElementById('qty').addEventListener('input', () => { updateOrderTotal(); updateUpiPaymentLink(); });
 document.getElementById('orderNavLink').addEventListener('click', event => {
   event.preventDefault();
@@ -852,7 +837,7 @@ function updateUpiPaymentLink(){
     return;
   }
   const total = amount.toFixed(2);
-  const params = new URLSearchParams({pa:NURSERY_UPI_ID,pn:'ANIL KUMAR MEENA',am:total,cu:'INR',tn:'Nursery plant order'});
+  const params = new URLSearchParams({pa:NURSERY_UPI_ID,pn:'ANIL KUMAR MEENA',am:total,cu:'INR',tn:'Nursery product order'});
   payButton.href = 'upi://pay?' + params.toString();
   payButton.removeAttribute('aria-disabled');
   payButton.textContent = '💳 ₹' + total + ' का भुगतान करें';
@@ -953,14 +938,14 @@ document.getElementById('plant').addEventListener('change', () => {
   updateUpiPaymentLink();
   const p = plants.find(item => Number(item.id) === Number(document.getElementById('plant').value));
   const q = Number(document.getElementById('qty').value) || 0;
-  document.getElementById('selectedOrderSummary').innerHTML = p ? '<b>चुना हुआ पौधा:</b> ' + safe(p.name) + '<br><b>मात्रा:</b> ' + q + ' पौधे<br><b>प्रति पौधा कीमत:</b> ₹' + Number(p.selling_price).toFixed(2) + '<br><b>कुल राशि:</b> ₹' + (Number(p.selling_price)*q).toFixed(2) : 'पौधा, संख्या और कुल राशि।';
+  document.getElementById('selectedOrderSummary').innerHTML = p ? '<b>चुना हुआ उत्पाद:</b> ' + safe(p.name) + '<br><b>मात्रा:</b> ' + formatQty(q) + ' ' + itemUnit(p) + '<br><b>' + itemUnitPriceLabel(p) + ' कीमत:</b> ₹' + Number(p.selling_price).toFixed(2) + '<br><b>कुल राशि:</b> ₹' + (Number(p.selling_price)*q).toFixed(2) : 'उत्पाद, मात्रा और कुल राशि।';
 });
 document.getElementById('qty').addEventListener('input', () => {
   updateOrderTotal();
   updateUpiPaymentLink();
   const p = plants.find(item => Number(item.id) === Number(document.getElementById('plant').value));
   const q = Number(document.getElementById('qty').value) || 0;
-  document.getElementById('selectedOrderSummary').innerHTML = p ? '<b>चुना हुआ पौधा:</b> ' + safe(p.name) + '<br><b>मात्रा:</b> ' + q + ' पौधे<br><b>प्रति पौधा कीमत:</b> ₹' + Number(p.selling_price).toFixed(2) + '<br><b>कुल राशि:</b> ₹' + (Number(p.selling_price)*q).toFixed(2) : 'चुना हुआ पौधा, मात्रा और कुल राशि यहाँ दिखेगी。';
+  document.getElementById('selectedOrderSummary').innerHTML = p ? '<b>चुना हुआ उत्पाद:</b> ' + safe(p.name) + '<br><b>मात्रा:</b> ' + formatQty(q) + ' ' + itemUnit(p) + '<br><b>' + itemUnitPriceLabel(p) + ' कीमत:</b> ₹' + Number(p.selling_price).toFixed(2) + '<br><b>कुल राशि:</b> ₹' + (Number(p.selling_price)*q).toFixed(2) : 'उत्पाद, मात्रा और कुल राशि यहाँ दिखेगी。';
 });
 
 document.getElementById('orderForm').addEventListener('submit', async event => {
@@ -977,11 +962,11 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
   const fullAddress = village + ', ' + address;
 
   if (!p) {
-    status.textContent = 'कृपया सूची में से उपलब्ध पौधा चुनें।';
+    status.textContent = 'कृपया सूची में से उपलब्ध पौधा या सब्ज़ी चुनें।';
     return;
   }
-  if (!Number.isInteger(quantity) || quantity < 1) {
-    status.textContent = 'पौधों की सही संख्या लिखें।';
+  if (!validQuantity(p, quantity)) {
+    status.textContent = isVegItem(p) ? 'सब्ज़ियों की मात्रा पूरे किलो में और उपलब्ध स्टॉक के भीतर लिखें।' : 'पौधों की सही पूर्ण संख्या लिखें।';
     return;
   }
   if (quantity > Number(p.stock_quantity)) {
@@ -1012,10 +997,10 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
 
   try {
     const {data: latestPlant, error: availabilityError} = await db.from('plants')
-      .select('id,name,selling_price,stock_quantity,is_active')
+      .select('id,name,category,selling_price,stock_quantity,is_active')
       .eq('id', plantId).maybeSingle();
     if (availabilityError) throw availabilityError;
-    if (!latestPlant || latestPlant.is_active !== true || Number(latestPlant.stock_quantity) < quantity) {
+    if (!latestPlant || latestPlant.is_active !== true || Number(latestPlant.stock_quantity) < quantity || (isVegItem(latestPlant) !== isVegItem(p))) {
       status.textContent = 'क्षमा करें, यह पौधा अभी उपलब्ध नहीं है या पर्याप्त स्टॉक नहीं है। कृपया दूसरा पौधा चुनें।';
       await loadPlants();
       button.disabled = false;
@@ -1034,12 +1019,13 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
     status.textContent = 'ऑर्डर सेव हो रहा है…';
     const {error} = await db.from('order_requests').insert({
       plant_name: p.name,
+      unit_type: isVegItem(p) ? 'kg' : 'plant',
       quantity: quantity,
       unit_price: Number(p.selling_price),
       customer_name: customerName,
       customer_phone: phone || null,
       customer_address: fullAddress,
-      notes: [(customerLocation ? 'MAPS_URL:' + customerLocation.mapsUrl : ''), 'TOTAL_QTY:' + quantity, 'UNIT_PRICE:' + Number(p.selling_price).toFixed(2), 'PLANT_TOTAL:' + (Number(p.selling_price) * quantity).toFixed(2), 'DELIVERY_DISTANCE_ONE_WAY_KM:' + Number(deliveryDistanceKm).toFixed(2), 'DELIVERY_FEE_ROUND_TRIP:' + Number(deliveryFee).toFixed(2), 'TOTAL_AMOUNT:' + (Number(p.selling_price) * quantity + Number(deliveryFee)).toFixed(2), 'PAYMENT_PROOF_PATH:' + proofPath, 'PAYMENT_PROOF_SIGNED_URL:' + proofUrl].filter(Boolean).join(' | '),
+      notes: [(customerLocation ? 'MAPS_URL:' + customerLocation.mapsUrl : ''), 'UNIT:' + itemUnit(p), 'CATEGORY:' + (isVegItem(p)?'सब्जी':'पौधा'), 'TOTAL_QTY:' + quantity, 'UNIT_PRICE:' + Number(p.selling_price).toFixed(2), 'PLANT_TOTAL:' + (Number(p.selling_price) * quantity).toFixed(2), 'DELIVERY_DISTANCE_ONE_WAY_KM:' + Number(deliveryDistanceKm).toFixed(2), 'DELIVERY_FEE_ROUND_TRIP:' + Number(deliveryFee).toFixed(2), 'TOTAL_AMOUNT:' + (Number(p.selling_price) * quantity + Number(deliveryFee)).toFixed(2), 'PAYMENT_PROOF_PATH:' + proofPath, 'PAYMENT_PROOF_SIGNED_URL:' + proofUrl].filter(Boolean).join(' | '),
       status: 'pending'
     });
     if (error) throw error;
@@ -1051,10 +1037,11 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
       '\nस्थिति: PAYMENT PENDING — एडमिन की पुष्टि बाकी' +
       '\nनाम: ' + customerName +
       '\nमोबाइल: ' + phone +
-      '\nपौधा: ' + p.name +
-      '\nमात्रा: ' + quantity +
-      '\nप्रति पौधा कीमत: ₹' + Number(p.selling_price).toFixed(2) +
-      '\nपौधों का कुल मूल्य: ₹' + plantTotalAmount.toFixed(2) +
+      '\nउत्पाद: ' + p.name +
+      '\nश्रेणी: ' + (isVegItem(p)?'खाने वाली सब्ज़ी':'नर्सरी का पौधा') +
+      '\nमात्रा: ' + formatQty(quantity) + ' ' + itemUnit(p) +
+      '\n' + itemUnitPriceLabel(p) + ' कीमत: ₹' + Number(p.selling_price).toFixed(2) +
+      '\nउत्पाद का कुल मूल्य: ₹' + plantTotalAmount.toFixed(2) +
       '\nएक तरफ GPS दूरी: ' + Number(deliveryDistanceKm).toFixed(1) + ' किमी' +
       '\nआना-जाना डिलीवरी चार्ज: ₹' + Number(deliveryFee).toFixed(2) +
       '\nकुल अनुमानित राशि (पौधे + डिलीवरी): ₹' + totalAmount +
@@ -1179,8 +1166,8 @@ async function loadOrders() {
     div.innerHTML = '<strong>ऑर्डर #' + order.id + ' — ' + safe(order.status) +
       '</strong><p>ग्राहक: ' + safe(order.customer_name) +
       '<br>मोबाइल: ' + safe(order.customer_phone || 'नहीं दिया') +
-      '<br>पौधा: ' + safe(order.plant_name) +
-      '<br>मात्रा: ' + order.quantity +
+      '<br>उत्पाद: ' + safe(order.plant_name) +
+      '<br>मात्रा: ' + formatQty(order.quantity) + ' ' + (String(order.notes||'').includes('UNIT:किलो')?'किलो':'पौधे') +
       '<br>दर्ज कीमत से राशि: ₹' + total.toFixed(2) +
       '<br>पता: ' + safe(order.customer_address || 'नहीं दिया') +
       locationHtml +
@@ -1366,10 +1353,10 @@ document.querySelectorAll('.plant-manage-button').forEach(b => b.addEventListene
 async function renderSimplePlantList(){
   const box=document.getElementById('adminPlantSimpleList'); if(!box)return;
   box.textContent='पौधों की सूची लोड हो रही है…';
-  const {data,error}=await db.from('plants').select('id,name,selling_price,stock_quantity,is_active').order('name');
+  const {data,error}=await db.from('plants').select('id,name,category,selling_price,stock_quantity,is_active').order('name');
   if(error){box.textContent='सूची लोड नहीं हुई: '+error.message;return;}
   if(!data||!data.length){box.textContent='अभी कोई पौधा नहीं है।';return;}
-  box.innerHTML=data.map(p=>`<div class="stock-row"><div><b>${safe(p.name)}</b><div class="sale-meta">₹${Number(p.selling_price||0).toFixed(2)} प्रति पौधा</div></div><span class="stock-count">स्टॉक ${Math.max(0,Number(p.stock_quantity)||0)}</span><span class="sale-meta">${p.is_active?'उपलब्ध':'Sold Out'}</span></div>`).join('');
+  box.innerHTML=data.map(p=>`<div class="stock-row"><div><b>${isVegItem(p)?'🥬':'🌱'} ${safe(p.name)}</b><div class="sale-meta">₹${Number(p.selling_price||0).toFixed(2)} प्रति ${isVegItem(p)?'किलो':'पौधा'}</div></div><span class="stock-count">स्टॉक ${formatQty(Math.max(0,Number(p.stock_quantity)||0))} ${isVegItem(p)?'किलो':'पौधे'}</span><span class="sale-meta">${p.is_active?'उपलब्ध':'Sold Out'}</span></div>`).join('');
 }
 
 function isNurseryOwner() {
@@ -1405,7 +1392,7 @@ async function renderAdminPlantEditor() {
     const row = document.createElement('div'); row.className = 'admin-plant-edit-row';
     const img = p.image_url ? '<img src="'+safe(p.image_url)+'" alt="'+safe(p.name)+' की फोटो">' : '<div style="font-size:36px">🌱</div>';
     row.innerHTML = '<div class="wide"><strong>'+safe(p.name)+'</strong> <small>('+ (p.is_active ? 'उपलब्ध' : 'Sold Out') +')</small></div>' +
-      '<div>'+img+'</div><div><label>कीमत ₹</label><input class="edit-price" type="number" min="0" step="0.01" value="'+Number(p.selling_price||0)+'"><label>स्टॉक</label><input class="edit-stock" type="number" min="0" step="1" value="'+Math.max(0,Number(p.stock_quantity)||0)+'"></div>' +
+      '<div>'+img+'</div><div><label>कीमत (₹ / '+(isVegItem(p)?'किलो':'पौधा')+')</label><input class="edit-price" type="number" min="0" step="0.01" value="'+Number(p.selling_price||0)+'"><label>स्टॉक ('+(isVegItem(p)?'किलो':'पौधे')+')</label><input class="edit-stock" type="number" min="0" step="1" value="'+Math.max(0,Number(p.stock_quantity)||0)+'"></div>' +
       '<div class="wide"><label>नई फोटो चुनें</label><input class="edit-image" type="file" accept="image/*"><label>या फोटो URL</label><input class="edit-url" type="url" placeholder="https://…" value="'+safe(p.image_url||'')+'"></div>' +
       '<button class="wide save-plant-edit" type="button">💾 कीमत / स्टॉक / फोटो सेव करें</button><div class="wide edit-status" aria-live="polite"></div>';
     const fileInput = row.querySelector('.edit-image');
@@ -1413,10 +1400,10 @@ async function renderAdminPlantEditor() {
     row.querySelector('.save-plant-edit').addEventListener('click',async()=>{
       const btn=row.querySelector('.save-plant-edit'), status=row.querySelector('.edit-status');
       const price=Number(row.querySelector('.edit-price').value), stock=Number(row.querySelector('.edit-stock').value), file=fileInput.files&&fileInput.files[0], typedUrl=row.querySelector('.edit-url').value.trim();
-      if(!Number.isFinite(price)||price<0||!Number.isInteger(stock)||stock<0){status.textContent='कीमत या स्टॉक सही नहीं है।';return;}
+      if(!Number.isFinite(price)||price<0||!Number.isFinite(stock)||stock<0||!Number.isInteger(stock)){status.textContent=isVegItem(p)?'कीमत सही रखें और सब्ज़ी का स्टॉक पूरे किलो में भरें।':'कीमत सही रखें और स्टॉक पूरे पौधों में भरें।';return;}
       btn.disabled=true;status.textContent='सेव हो रहा है…';
       try { let imageUrl=typedUrl || p.image_url || null; if(file) imageUrl=await uploadPlantPhoto(file,p.id);
-        const updates={selling_price:price,stock_quantity:stock}; if(imageUrl) updates.image_url=imageUrl;
+        const updates={selling_price:price,stock_quantity:stock,unit_type:isVegItem(p)?'kg':'plant'}; if(imageUrl) updates.image_url=imageUrl;
         const {error:updateError}=await db.from('plants').update(updates).eq('id',p.id); if(updateError)throw updateError;
         status.textContent='सेव हो गया। ग्राहक की वेबसाइट अपडेट की जा रही है।'; await loadPlants(); await loadOwnerStats(); await renderAdminPlantEditor();
       } catch(e){status.textContent='सेव नहीं हुआ: '+(e.message||e);} finally {btn.disabled=false;}
@@ -1427,7 +1414,30 @@ async function renderAdminPlantEditor() {
 const newImageInput=document.getElementById('newPlantImage');
 if(newImageInput){newImageInput.addEventListener('change',()=>{const f=newImageInput.files&&newImageInput.files[0], preview=document.getElementById('newPlantPreview');if(!f){preview.style.display='none';return;}if(!f.type.startsWith('image/')){alert('कृपया फोटो चुनें।');newImageInput.value='';return;}const reader=new FileReader();reader.onload=()=>{preview.src=reader.result;preview.style.display='block';};reader.readAsDataURL(f);});}
 const newPlantForm=document.getElementById('newPlantForm');
-if(newPlantForm){newPlantForm.addEventListener('submit',async e=>{e.preventDefault();const btn=document.getElementById('newPlantSaveButton'),status=document.getElementById('newPlantStatus');const name=document.getElementById('newPlantName').value.trim(),price=Number(document.getElementById('newPlantPrice').value),stock=Number(document.getElementById('newPlantStock').value),file=newImageInput.files&&newImageInput.files[0];if(!name||!Number.isFinite(price)||price<0||!Number.isInteger(stock)||stock<0){status.textContent='नाम, कीमत और स्टॉक सही भरें।';return;}btn.disabled=true;status.textContent='पौधा सेव हो रहा है…';try{const {data:userData,error:userError}=await db.auth.getUser();if(userError||!userData.user||userData.user.id!==OWNER_UID||userData.user.email!==OWNER_EMAIL)throw new Error('मालिक के खाते से लॉगिन करें।');const cropVariety=document.getElementById('newPlantVariety').value.trim();const varietyType=document.getElementById('newPlantType').value;const payload={name,variety:(varietyType+(cropVariety?' — '+cropVariety:'')),category:document.getElementById('newPlantCategory').value,selling_price:price,stock_quantity:stock,description:document.getElementById('newPlantDescription').value.trim()||null,is_active:true};const {data,error}=await db.from('plants').insert(payload).select('id').single();if(error)throw error;if(file){try{const url=await uploadPlantPhoto(file,data.id);const {error:imgErr}=await db.from('plants').update({image_url:url}).eq('id',data.id);if(imgErr)throw imgErr;}catch(imgErr){status.textContent='पौधा जुड़ गया, लेकिन फोटो अपलोड नहीं हुई: '+(imgErr.message||imgErr)+'। नीचे से उसी पौधे की फोटो दोबारा अपलोड करें।';await loadPlants();await loadOwnerStats();await renderAdminPlantEditor();return;}}status.textContent='पौधा सफलतापूर्वक जुड़ गया।';newPlantForm.reset();document.getElementById('newPlantPreview').style.display='none';await loadPlants();await loadOwnerStats();await renderAdminPlantEditor();}catch(err){status.textContent='पौधा सेव नहीं हुआ: '+(err.message||err);}finally{btn.disabled=false;}});}
+function updateNewProductUnitFields(){
+  const veg=document.getElementById('newPlantCategory').value==='सब्जी';
+  document.getElementById('newPlantPriceLabel').textContent=veg?'प्रति किलो कीमत (₹)':'प्रति पौधा कीमत (₹)';
+  document.getElementById('newPlantStockLabel').textContent=veg?'शुरुआती स्टॉक (किलो)':'शुरुआती स्टॉक (पौधे)';
+  document.getElementById('newPlantStock').step='1';
+  document.getElementById('newPlantPrice').placeholder=veg?'जैसे 30 प्रति किलो':'जैसे 5 प्रति पौधा';
+  document.getElementById('newPlantStock').value='0';
+  document.getElementById('newPlantSaveButton').textContent=veg?'💾 सब्ज़ी सेव करें':'💾 पौधा सेव करें';
+}
+document.getElementById('newPlantCategory').addEventListener('change',updateNewProductUnitFields);
+updateNewProductUnitFields();
+if(newPlantForm){newPlantForm.addEventListener('submit',async e=>{
+  e.preventDefault();const btn=document.getElementById('newPlantSaveButton'),status=document.getElementById('newPlantStatus');
+  const name=document.getElementById('newPlantName').value.trim(),price=Number(document.getElementById('newPlantPrice').value),stock=Number(document.getElementById('newPlantStock').value),file=newImageInput.files&&newImageInput.files[0],category=document.getElementById('newPlantCategory').value,veg=category==='सब्जी';
+  if(!name||!Number.isFinite(price)||price<0||!Number.isFinite(stock)||stock<0||!Number.isInteger(stock)){status.textContent=veg?'नाम, प्रति किलो भाव और स्टॉक पूरे किलो में सही भरें।':'नाम, प्रति पौधा भाव और पूरे पौधों का स्टॉक सही भरें।';return;}
+  btn.disabled=true;status.textContent=(veg?'सब्ज़ी':'पौधा')+' सेव हो रहा है…';
+  try{const {data:userData,error:userError}=await db.auth.getUser();if(userError||!userData.user||userData.user.id!==OWNER_UID||userData.user.email!==OWNER_EMAIL)throw new Error('मालिक के खाते से लॉगिन करें।');
+    const cropVariety=document.getElementById('newPlantVariety').value.trim(),varietyType=document.getElementById('newPlantType').value;
+    const payload={name,variety:(varietyType+(cropVariety?' — '+cropVariety:'')),category,unit_type:veg?'kg':'plant',selling_price:price,stock_quantity:stock,description:document.getElementById('newPlantDescription').value.trim()||null,is_active:true};
+    const {data,error}=await db.from('plants').insert(payload).select('id').single();if(error)throw error;
+    if(file){try{const url=await uploadPlantPhoto(file,data.id);const {error:imgErr}=await db.from('plants').update({image_url:url}).eq('id',data.id);if(imgErr)throw imgErr;}catch(imgErr){status.textContent=(veg?'सब्ज़ी':'पौधा')+' जुड़ गया, लेकिन फोटो अपलोड नहीं हुई: '+(imgErr.message||imgErr)+'। एडिट पैनल से फोटो दोबारा अपलोड करें।';await loadPlants();await loadOwnerStats();await renderAdminPlantEditor();return;}}
+    status.textContent=(veg?'सब्ज़ी':'पौधा')+' सफलतापूर्वक जुड़ गया।';newPlantForm.reset();document.getElementById('newPlantPreview').style.display='none';updateNewProductUnitFields();await loadPlants();await loadOwnerStats();await renderAdminPlantEditor();
+  }catch(err){status.textContent='सेव नहीं हुआ: '+(err.message||err);}finally{btn.disabled=false;}
+});}
 
 async function loadOwnerStats() {
   const { data: sessionData, error: sessionError } = await db.auth.getSession();
@@ -1471,7 +1481,7 @@ async function loadOwnerStats() {
     const todayOrders = orders.filter(o => o.created_at && String(o.created_at).slice(0,10) === dateText && o.status === 'confirmed').length;
     const pendingOrders = orders.filter(o => o.status === 'pending').length;
     const total = todaySales.reduce((sum,s) => sum + Number(s.total_amount || 0), 0);
-    const totalStock = availablePlants.reduce((sum,p) => sum + Math.max(0,Number(p.stock_quantity)||0), 0);
+    const totalStock = availablePlants.length;
     statsBox.innerHTML = `
       <div class="admin-section-card">
         <h2>📊 आज का सारांश</h2>
@@ -1482,7 +1492,7 @@ async function loadOwnerStats() {
           <div class="metric"><div class="metric-label">आज कन्फर्म ऑर्डर</div><div class="metric-value">${todayOrders}</div></div>
           <div class="metric"><div class="metric-label">लंबित ऑर्डर</div><div class="metric-value">${pendingOrders}</div></div>
           <div class="metric"><div class="metric-label">सक्रिय पौधों की किस्में</div><div class="metric-value">${availablePlants.length}</div></div>
-          <div class="metric"><div class="metric-label">कुल उपलब्ध पौधे</div><div class="metric-value">${totalStock}</div></div>
+          <div class="metric"><div class="metric-label">उपलब्ध उत्पाद रिकॉर्ड</div><div class="metric-value">${totalStock}</div></div>
         </div>
         <div class="admin-action-row"><button type="button" id="refreshOwnerStats">🔄 हिसाब रीफ्रेश करें</button><button type="button" id="goPendingOrders">🛒 लंबित ऑर्डर देखें</button></div>
       </div>`;
@@ -1499,7 +1509,7 @@ async function loadOwnerStats() {
     stockBox.innerHTML = allPlants.length ? allPlants.map(p => `
       <div class="stock-row" style="gap:10px;align-items:center;flex-wrap:wrap">
         <span class="stock-name">${isVegItem(p)?'🥒':'🌱'} ${safe(p.name || 'पौधा')} <small style="display:block;font-weight:400;color:#52715a">${safe(p.category || 'पौधा')} • ${safe(p.variety || 'किस्म नहीं बताई')}</small><small style="display:block;font-weight:400;color:${p.is_active ? '#16803d' : '#b45309'}">${p.is_active ? 'उपलब्ध' : 'अभी उपलब्ध नहीं / Sold Out'}</small></span>
-        <div><span class="stock-count">बाकी ${Math.max(0,Number(p.stock_quantity)||0)} ${isVegItem(p)?'इकाई':'पौधे'}</span><div class="stock-subcounts"><span class="sold">${isVegItem(p)?'बिकी':'बिके'}: ${saleItemsResult && !saleItemsResult.error ? (soldCountByPlant.get(String(p.id))||0) : 'डेटा उपलब्ध नहीं'}</span></div></div>
+        <div><span class="stock-count">बाकी ${Math.max(0,Number(p.stock_quantity)||0)} ${isVegItem(p)?'किलो':'पौधे'}</span><div class="stock-subcounts"><span class="sold">${isVegItem(p)?'बिकी':'बिके'}: ${saleItemsResult && !saleItemsResult.error ? (soldCountByPlant.get(String(p.id))||0) : 'डेटा उपलब्ध नहीं'}</span></div></div>
         <button type="button" class="availability-toggle" data-plant-id="${safe(p.id)}" data-active="${p.is_active ? 'true' : 'false'}" style="font-size:12px;padding:7px 10px;border-radius:8px;border:1px solid ${p.is_active ? '#dc2626' : '#15803d'};background:${p.is_active ? '#fff7f7' : '#f0fdf4'};color:${p.is_active ? '#b91c1c' : '#166534'}">${p.is_active ? 'Sold Out करें' : 'फिर उपलब्ध करें'}</button>
       </div>`).join('') : '<p>अभी कोई पौधा या सब्जी दर्ज नहीं है।</p>';
     stockBox.querySelectorAll('.availability-toggle').forEach(button => {
@@ -1591,7 +1601,7 @@ document.getElementById('customerSearchForm').addEventListener('submit', async e
         ${orders.map(o => `
           <div class="customer-order-row">
             <strong>ऑर्डर #${escaped(o.id)} — ${escaped(o.status || 'स्थिति उपलब्ध नहीं')}</strong>
-            <p>${escaped(o.plant_name || 'पौधा')} • ${Number(o.quantity)||0} पौधे • ₹${(Number(o.unit_price||0)*Number(o.quantity||0)).toFixed(2)}</p>
+            <p>${escaped(o.plant_name || 'उत्पाद')} • ${formatQty(o.quantity)} ${String(o.notes||'').includes('UNIT:किलो') ? 'किलो' : 'पौधे'} • ₹${(Number(o.unit_price||0)*Number(o.quantity||0)).toFixed(2)}</p>
             <p><strong>पता:</strong> ${escaped(o.customer_address || 'नहीं दिया')}</p>
             <p class="admin-muted">${o.created_at ? new Date(o.created_at).toLocaleString('hi-IN') : ''}</p>
             ${String(o.notes||'').includes('MAPS_URL:https://www.google.com/maps?q=') ? `<p><a href="${escaped((String(o.notes).match(/MAPS_URL:(https:\/\/www\.google\.com\/maps\?q=[0-9.,-]+)/)||[])[1]||'#')}" target="_blank" rel="noopener">📍 Google Maps लोकेशन खोलें</a></p>` : ''}
