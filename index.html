@@ -1,6 +1,3 @@
-```
-
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -51,7 +48,7 @@ nav a:focus-visible,nav button:focus-visible{outline:3px solid #83bf75;outline-o
 #menuDropdown.open{display:block}
 #menuDropdown a{display:block;min-width:0;text-align:left;border-radius:10px;padding:11px 13px;margin:2px 0;background:#f4faf1;color:var(--green);text-decoration:none;font-weight:700}
 #menuDropdown a:hover{background:#e3f2df}
-#owner{display:none;scroll-margin-top:100px}#owner.admin-dashboard-visible{display:block;position:relative;inset:auto;z-index:1;overflow:visible;background:transparent;padding:0;border-radius:0;max-width:1120px;margin:18px auto;box-shadow:none}
+#owner{display:none;scroll-margin-top:100px}
 #owner.login-visible{display:block;position:fixed;inset:0;z-index:2000;overflow-y:auto;background:rgba(10,35,19,.72);padding:clamp(12px,4vh,36px) 12px;border-radius:0;max-width:none;margin:0;box-shadow:none}
 #owner.login-visible>h2,#owner.login-visible>p,#owner.login-visible>form,#owner.login-visible>#logoutButton,#owner.login-visible>#ownerStatus,#owner.login-visible>#ownerPanelHeader,#owner.login-visible>#adminCustomerSearch,#owner.login-visible>#adminTabs,#owner.login-visible>.admin-pane{max-width:1000px;margin-left:auto;margin-right:auto}
 #owner.login-visible>h2:first-child{background:#fff;border-radius:18px 18px 0 0;padding:22px 24px 0;margin-top:0}
@@ -412,7 +409,7 @@ body.admin-modal-open:after{content:"";position:fixed;inset:0;background:rgba(7,
 <button type="submit">लॉगिन करें</button>
 </form>
 <div id="ownerStatus" class="status" aria-live="polite" style="display:none"></div>
-<div id="ownerPanelHeader"><div class="admin-welcome"><div><h3>🌿 नीम करोली नर्सरी</h3><p>आपका व्यवसाय, एक ही जगह — ऑर्डर, स्टॉक और बिक्री</p></div><div class="admin-brand"><span class="admin-chip">🌱 Neem Karoli Nursery</span><button id="popupModeToggle" type="button" class="admin-chip" style="cursor:pointer;color:#fff;background:#ffffff20">🪟 पॉप-अप: बंद</button><button id="logoutButton" type="button" aria-label="लॉगआउट">लॉग आउट ↗</button></div></div></div>
+<div id="ownerPanelHeader"><div class="admin-welcome"><div><h3>🌿 नीम करोली नर्सरी</h3><p>आपका व्यवसाय, एक ही जगह — ऑर्डर, स्टॉक और बिक्री</p></div><div class="admin-brand"><span class="admin-chip">🌱 Neem Karoli Nursery</span><button id="popupModeToggle" type="button" class="admin-chip" style="cursor:pointer;color:#fff;background:#ffffff20;border:1px solid #ffffff45">🪟 पॉप-अप: बंद</button><button id="logoutButton" type="button" aria-label="लॉगआउट">लॉग आउट ↗</button></div></div></div>
 <div id="adminCustomerSearch" class="admin-section-card" style="display:none">
   <form id="customerSearchForm" aria-label="ग्राहक मोबाइल नंबर खोजें">
     <div class="customer-search-row"><input id="customerSearchPhone" type="tel" inputmode="numeric" autocomplete="off" aria-label="ग्राहक का मोबाइल नंबर" placeholder="ग्राहक का मोबाइल नंबर डालें" required><button id="customerSearchButton" type="submit">🔍 खोजें</button></div>
@@ -580,31 +577,13 @@ body.admin-modal-open:after{content:"";position:fixed;inset:0;background:rgba(7,
 const ownerSection = document.getElementById('owner');
 document.getElementById('plant')?.addEventListener('change',()=>{document.getElementById('qty').readOnly=false;});
 document.getElementById('adminPanelNav').addEventListener('click', () => {
-  const session = db.auth.getSession();
-  Promise.resolve(session).then(({data}) => {
-    if (data && data.session && data.session.user && data.session.user.id === OWNER_UID && data.session.user.email === OWNER_EMAIL) {
-      ownerSection.classList.remove('login-visible');
-      ownerSection.classList.add('admin-dashboard-visible');
-      ownerSection.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = '';
-      showAdminTab('dashboard');
-      ownerSection.scrollIntoView({behavior:'smooth',block:'start'});
-    } else {
-      ownerSection.classList.remove('admin-dashboard-visible');
-      ownerSection.classList.add('login-visible');
-      ownerSection.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-      setTimeout(() => document.getElementById('email').focus(), 50);
-    }
-  }).catch(() => {
-    ownerSection.classList.add('login-visible');
-    ownerSection.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    setTimeout(() => document.getElementById('email').focus(), 50);
-  });
+  ownerSection.classList.add('login-visible');
+  ownerSection.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('email').focus(), 50);
 });
 document.getElementById('ownerCloseButton').addEventListener('click', () => {
-  ownerSection.classList.remove('login-visible','admin-dashboard-visible');
+  ownerSection.classList.remove('login-visible');
   ownerSection.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
 });
@@ -1370,16 +1349,21 @@ loadPlants();
   });
 })();
 
-function popupModeEnabled(){ return localStorage.getItem('nurseryAdminPopupMode') === 'on'; }
+function popupModeEnabled(){
+  try { return localStorage.getItem('nurseryAdminPopupMode') === 'on'; }
+  catch(e) { return false; }
+}
 function updatePopupModeButton(){
-  const b=document.getElementById('popupModeToggle');
-  if(b){const on=popupModeEnabled();b.textContent=on?'🪟 पॉप-अप: चालू':'🪟 पॉप-अप: बंद';b.setAttribute('aria-pressed',on?'true':'false');}
+  const button=document.getElementById('popupModeToggle');
+  if(!button)return;
+  const enabled=popupModeEnabled();
+  button.textContent=enabled?'🪟 पॉप-अप: चालू':'🪟 पॉप-अप: बंद';
+  button.setAttribute('aria-pressed',enabled?'true':'false');
 }
 function closeAdminPopup(){
   document.querySelectorAll('.admin-pane').forEach(p=>p.classList.remove('active','admin-popup-active'));
   document.body.classList.remove('admin-modal-open');
   document.querySelectorAll('.admin-tab').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false');});
-  if(ownerSection.classList.contains('admin-dashboard-visible')) showAdminTab('dashboard');
 }
 function showAdminTab(tabName) {
   const allowed = ['dashboard', 'orders', 'stock', 'stockalerts', 'manageplants', 'sales', 'dues', 'chatgpt', 'sitecontrol'];
@@ -1413,35 +1397,11 @@ function showAdminTab(tabName) {
   }
 }
 document.getElementById('popupModeToggle')?.addEventListener('click',()=>{
-  localStorage.setItem('nurseryAdminPopupMode',popupModeEnabled()?'off':'on');
+  try { localStorage.setItem('nurseryAdminPopupMode',popupModeEnabled()?'off':'on'); } catch(e) {}
   updatePopupModeButton();
   showAdminTab('dashboard');
 });
 updatePopupModeButton();
-document.querySelectorAll('.admin-tab').forEach(button => {
-    const active = button.dataset.tab === tabName;
-    button.classList.toggle('active', active);
-    button.setAttribute('aria-selected', active ? 'true' : 'false');
-  });
-  document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active','admin-popup-active'));
-  const paneId = {
-    dashboard: 'adminDashboardPane', orders: 'adminOrdersPane',
-    stock: 'adminStockPane', stockalerts: 'adminStockalertsPane', manageplants: 'adminManageplantsPane', sales: 'adminSalesPane', dues: 'adminDuesPane', chatgpt: 'adminChatgptPane', sitecontrol: 'adminSitecontrolPane'
-  }[tabName];
-  const pane=document.getElementById(paneId);
-  if(!pane)return;
-  pane.classList.add('active','admin-popup-active');
-  document.body.classList.add('admin-modal-open');
-  if(!pane.querySelector('.admin-popup-close')){
-    const closeWrap=document.createElement('div');closeWrap.className='admin-popup-close';
-    const closeBtn=document.createElement('button');closeBtn.type='button';closeBtn.textContent='✕ पैनल बंद करें';closeBtn.setAttribute('aria-label','एडमिन पैनल बंद करें');closeBtn.addEventListener('click',closeAdminPopup);
-    closeWrap.appendChild(closeBtn);pane.prepend(closeWrap);
-  }
-  const heading=pane.querySelector('h2');
-  let title=pane.querySelector('.admin-popup-title');
-  if(!title){title=document.createElement('div');title.className='admin-popup-title';pane.insertBefore(title,pane.children[1]||null);}
-  title.textContent=heading?heading.textContent.trim():({dashboard:'📊 डैशबोर्ड',orders:'🛒 ऑर्डर',stock:'📦 स्टॉक',stockalerts:'🔔 स्टॉक और समस्या रिमाइंडर',manageplants:'🌱 पौधे और 🥬 सब्जियाँ',sales:'💰 बिक्री हिसाब',dues:'⏰ उधार / बाकी',chatgpt:'🤖 ChatGPT मदद',sitecontrol:'🎨 वेबसाइट कंट्रोल'}[tabName]);
-}
 document.querySelectorAll('.admin-tab').forEach(button => {
   button.addEventListener('click', () => { const tab = button.dataset.tab; showAdminTab(tab); if (tab === 'manageplants') showManageView('add'); if (tab === 'stock') loadOwnerStats(); if (tab === 'stockalerts') refreshStockAlerts(false); if (tab === 'sitecontrol') loadSiteControlForm(); });
 });
@@ -1867,7 +1827,7 @@ db.auth.onAuthStateChange((event, session) => {
     document.getElementById("adminCustomerSearch").style.display = "none";
     document.getElementById("customerSearchResults").innerHTML = "";
     document.getElementById("adminTabs").style.display = "none";
-    ownerSection.classList.remove('login-visible','admin-dashboard-visible');
+    ownerSection.classList.remove('login-visible');
     ownerSection.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active'));
@@ -1878,12 +1838,7 @@ db.auth.onAuthStateChange((event, session) => {
   document.getElementById("ownerPanelHeader").style.display = "block";
   document.getElementById("adminCustomerSearch").style.display = "block";
   document.getElementById("adminTabs").style.display = "grid";
-  ownerSection.classList.remove('login-visible');
-  ownerSection.classList.add('admin-dashboard-visible');
-  ownerSection.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = '';
   showAdminTab('dashboard');
-  updatePopupModeButton();
   setTimeout(loadSiteControlForm, 100);
   if (ordersBox) ordersBox.style.display = "block";
   setTimeout(() => { loadOrders(); loadOwnerStats(); renderDueRecords(); }, 0);
@@ -1953,5 +1908,3 @@ db.auth.onAuthStateChange((event, session) => {
 </script>
 </body>
 </html>
-
-```
