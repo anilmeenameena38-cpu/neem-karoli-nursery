@@ -422,6 +422,7 @@ body.admin-modal-open:after{content:"";position:fixed;inset:0;background:rgba(7,
   <button class="admin-tab active" type="button" data-tab="dashboard" role="tab" aria-selected="true"><span class="tab-icon">📊</span><span class="tab-label">डैशबोर्ड</span></button>
   <button class="admin-tab" type="button" data-tab="orders" role="tab" aria-selected="false"><span class="tab-icon">🛒</span><span class="tab-label">ऑर्डर</span></button>
   <button class="admin-tab" type="button" data-tab="stock" role="tab" aria-selected="false"><span class="tab-icon">🌱</span><span class="tab-label">पौधों का स्टॉक</span></button>
+  <button class="admin-tab" type="button" data-tab="stockalerts" role="tab" aria-selected="false"><span class="tab-icon">🔔</span><span class="tab-label">स्टॉक अलर्ट <span id="stockAlertBadge" style="display:none;background:#b91c1c;color:#fff;border-radius:999px;padding:1px 6px;font-size:11px">0</span></span></button>
   <button class="admin-tab" type="button" data-tab="manageplants" role="tab" aria-selected="false"><span class="tab-icon">➕</span><span class="tab-label">नया पौधा / कीमत</span></button>
   <button class="admin-tab" type="button" data-tab="sales" role="tab" aria-selected="false"><span class="tab-icon">💰</span><span class="tab-label">बिक्री हिसाब</span></button>
   <button class="admin-tab" type="button" data-tab="dues" role="tab" aria-selected="false"><span class="tab-icon">⏰</span><span class="tab-label">उधार / बाकी</span></button>
@@ -430,7 +431,9 @@ body.admin-modal-open:after{content:"";position:fixed;inset:0;background:rgba(7,
 </div>
 <div id="adminDashboardPane" class="admin-pane active">
   <div id="ownerStats"></div>
+
 </div>
+<div id="adminStockalertsPane" class="admin-pane"><div class="admin-section-card" id="stockAlertPanel"><h2>🔔 स्टॉक और समस्या रिमाइंडर</h2><p class="admin-muted">यह अलग पैनल बताता है कि कौन-सा पौधा/सब्जी खत्म है, किसका स्टॉक 5 या उससे कम है, या कौन-सा उत्पाद वेबसाइट पर बंद है। अलर्ट देखने के लिए अलग HTML फाइल खोलने की जरूरत नहीं।</p><div class="admin-action-row"><button type="button" id="enableStockNotifications">📱 मोबाइल नोटिफिकेशन चालू करें</button><button type="button" id="refreshStockAlerts">🔄 अभी जाँचें</button></div><div id="stockAlertList" style="margin-top:12px">स्टॉक अलर्ट लोड हो रहे हैं…</div><p class="admin-muted" id="stockNotificationStatus">वेबसाइट खुली रहने पर यह पैनल लगभग हर मिनट स्टॉक जाँचेगा। मोबाइल ब्राउज़र अलर्ट के लिए अनुमति दें।</p></div></div>
 <div id="adminOrdersPane" class="admin-pane"><div class="admin-section-card"><h2>🛒 ग्राहक के ऑर्डर</h2><p class="admin-muted">लंबित ऑर्डर जाँचें; पुष्टि करने पर बिक्री दर्ज होगी और स्टॉक घटेगा।</p><div id="ownerOrders"></div></div></div>
 <div id="adminStockPane" class="admin-pane"><div class="admin-section-card"><h2>🌱 पौधे और सब्जियों का स्टॉक</h2><p class="admin-muted">यहाँ पौधों और सब्जियों का कुल स्टॉक, बिक चुकी मात्रा और बाकी मात्रा अलग-अलग दिखेगी।</p><div id="stockTypeSummary" class="metric-grid"></div><div id="ownerStockList">स्टॉक लोड हो रहा है…</div></div></div>
 <div id="adminManageplantsPane" class="admin-pane">
@@ -525,7 +528,10 @@ body.admin-modal-open:after{content:"";position:fixed;inset:0;background:rgba(7,
   <div id="siteViewSections" class="site-control-view">
    <p class="admin-muted">इन चेकबॉक्स से ग्राहक वेबसाइट के हिस्से दिखाएँ या छिपाएँ।</p>
    <label class="site-control-toggle"><input id="siteShowWelcome" type="checkbox" checked> मुख्य स्वागत संदेश दिखाएँ</label>
-   <label class="site-control-toggle"><input id="siteShowPlants" type="checkbox" checked> उपलब्ध पौधे दिखाएँ</label>
+   <label class="site-control-toggle"><input id="siteShowPlants" type="checkbox" checked> पौधों का सेक्शन दिखाएँ</label>
+   <label class="site-control-toggle"><input id="siteSellPlants" type="checkbox" checked> 🌱 पौधों की बिक्री चालू रखें</label>
+   <label class="site-control-toggle"><input id="siteSellVegetables" type="checkbox" checked> 🥬 हरी सब्जियों की बिक्री चालू रखें</label>
+   <p class="admin-muted">बिक्री बंद करने पर उस श्रेणी के उत्पाद ग्राहक सूची और ऑर्डर चयन में नहीं दिखेंगे। दोबारा चालू करने पर फिर दिखेंगे। बदलाव के बाद “वेबसाइट की सेटिंग सेव करें” दबाएँ।</p>
    <label class="site-control-toggle"><input id="siteShowOrder" type="checkbox" checked> ऑर्डर फॉर्म दिखाएँ</label>
    <label class="site-control-toggle"><input id="siteShowContact" type="checkbox" checked> संपर्क सेक्शन दिखाएँ</label>
    <label class="site-control-toggle"><input id="siteShowFooter" type="checkbox" checked> वेबसाइट का नीचे वाला Footer दिखाएँ</label>
@@ -593,7 +599,10 @@ let customerLocation = null;
 let deliveryFee = null;
 let deliveryDistanceKm = null;
 const NURSERY_LOCATION = { lat: 28.010476, lon: 75.653594 };
-const MAX_DELIVERY_DISTANCE_KM = 50;
+const MAX_PLANT_DELIVERY_DISTANCE_KM = 50;
+const MAX_VEG_DELIVERY_DISTANCE_KM = 10;
+const VEG_DELIVERY_TARGET_MINUTES = 60;
+function maxDeliveryDistanceFor(p) { return isVegItem(p) ? MAX_VEG_DELIVERY_DISTANCE_KM : MAX_PLANT_DELIVERY_DISTANCE_KM; }
 const DELIVERY_RATE_PER_KM = 10;
 function distanceKm(lat1, lon1, lat2, lon2) {
   const rad = d => d * Math.PI / 180;
@@ -661,15 +670,17 @@ document.getElementById('locationButton').addEventListener('click', () => {
     locationStatus.textContent = 'इस ब्राउज़र में लोकेशन की सुविधा उपलब्ध नहीं है।';
     return;
   }
+  const selectedProduct = plants.find(item => Number(item.id) === Number(document.getElementById('plant').value));
+  const maxDistanceKm = maxDeliveryDistanceFor(selectedProduct);
   locationStatus.textContent = 'लोकेशन प्राप्त की जा रही है…';
   navigator.geolocation.getCurrentPosition(position => {
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
     const oneWayKm = distanceKm(NURSERY_LOCATION.lat, NURSERY_LOCATION.lon, lat, lon);
     customerLocation = { lat, lon, oneWayKm, mapsUrl: `https://www.google.com/maps?q=${lat},${lon}` };
-    if (oneWayKm > MAX_DELIVERY_DISTANCE_KM) {
+    if (oneWayKm > maxDistanceKm) {
       locationStatus.textContent = '❌ आपकी लोकेशन डिलीवरी क्षेत्र से बाहर है।';
-      setDeliveryUnavailable('क्षमा करें! आपकी लोकेशन नर्सरी से ' + oneWayKm.toFixed(1) + ' किमी दूर (सीधी GPS दूरी) है। हमारी डिलीवरी सीमा 50 किमी है, इसलिए अभी इस पते पर डिलीवरी उपलब्ध नहीं है। भुगतान विकल्प बंद है।');
+      setDeliveryUnavailable('क्षमा करें! आपकी लोकेशन नर्सरी से ' + oneWayKm.toFixed(1) + ' किमी दूर (सीधी GPS दूरी) है। ' + (isVegItem(selectedProduct) ? 'हरी सब्जियों की डिलीवरी सीमा 10 किमी' : 'पौधों की डिलीवरी सीमा 50 किमी') + ' है, इसलिए अभी इस पते पर डिलीवरी उपलब्ध नहीं है। भुगतान विकल्प बंद है।');
       return;
     }
     deliveryDistanceKm = oneWayKm;
@@ -677,7 +688,8 @@ document.getElementById('locationButton').addEventListener('click', () => {
     locationStatus.textContent = '✅ लोकेशन मिल गई और डिलीवरी क्षेत्र में है।';
     const estimate = document.getElementById('deliveryEstimate');
     estimate.style.display = 'block';
-    estimate.innerHTML = '<strong>📍 डिलीवरी की दूरी और शुल्क</strong><br>नर्सरी से एक तरफ की GPS दूरी: ' + oneWayKm.toFixed(1) + ' किमी<br>आना-जाना: ' + (oneWayKm*2).toFixed(1) + ' किमी<br>डिलीवरी चार्ज (₹10/किमी): <strong>₹' + deliveryFee.toFixed(2) + '</strong><br><small>यह GPS की सीधी दूरी पर आधारित अनुमान है; सड़क की वास्तविक दूरी अलग हो सकती है। आगे बढ़ने से पहले नीचे कुल राशि जाँचें।</small>';
+    const timeNote = isVegItem(selectedProduct) ? '<br><strong>⏱️ हरी सब्जियों का डिलीवरी लक्ष्य: ऑर्डर स्वीकार होने के बाद 60 मिनट के अंदर</strong><br><small>यह लक्ष्य स्टॉक, तैयारी और डिलीवरी कर्मचारी की उपलब्धता पर निर्भर है; व्यस्त समय में पहले पुष्टि की जाएगी।</small>' : '';
+    estimate.innerHTML = '<strong>📍 डिलीवरी की दूरी और शुल्क</strong><br>नर्सरी से एक तरफ की GPS दूरी: ' + oneWayKm.toFixed(1) + ' किमी<br>आना-जाना: ' + (oneWayKm*2).toFixed(1) + ' किमी<br>डिलीवरी चार्ज (₹10/किमी): <strong>₹' + deliveryFee.toFixed(2) + '</strong>' + timeNote + '<br><small>यह GPS की सीधी दूरी पर आधारित अनुमान है; सड़क की वास्तविक दूरी अलग हो सकती है। आगे बढ़ने से पहले नीचे कुल राशि जाँचें।</small>';
     updateOrderTotal(); updateUpiPaymentLink();
     document.getElementById('bharatpePaymentBox').style.display = 'block';
     document.getElementById('bharatpePaymentBox').scrollIntoView({behavior:'smooth',block:'center'});
@@ -721,12 +733,16 @@ async function loadPlants() {
     select.innerHTML = '<option value="">सूची उपलब्ध नहीं</option>';
     return;
   }
-  plants = (data || []).filter(p => Number(p.stock_quantity) > 0);
+  let serviceSettings = {};
+  try { serviceSettings = await getSiteSettingsShared(); } catch (e) { serviceSettings = {}; }
+  const plantsServiceOn = serviceSettings.sellPlants !== false;
+  const vegetablesServiceOn = serviceSettings.sellVegetables !== false;
+  plants = (data || []).filter(p => Number(p.stock_quantity) > 0 && (isVegItem(p) ? vegetablesServiceOn : plantsServiceOn));
   [list,plantOnlyList,vegOnlyList].filter(Boolean).forEach(el=>el.innerHTML='');
   select.innerHTML = '<option value="">पौधा या सब्ज़ी चुनें</option>';
   if (!plants.length) {
-    plantOnlyList.textContent = 'अभी उपलब्ध पौधे दर्ज नहीं हैं।';
-    vegOnlyList.textContent = 'अभी उपलब्ध खाने वाली सब्ज़ियाँ दर्ज नहीं हैं।';
+    plantOnlyList.textContent = plantsServiceOn ? 'अभी उपलब्ध पौधे दर्ज नहीं हैं।' : 'आज पौधों की बिक्री बंद है।';
+    vegOnlyList.textContent = vegetablesServiceOn ? 'अभी उपलब्ध खाने वाली सब्ज़ियाँ दर्ज नहीं हैं।' : 'आज हरी सब्ज़ियों की बिक्री बंद है।';
     status.textContent = 'एडमिन पैनल से उत्पाद, कीमत और स्टॉक दर्ज करें।';
     return;
   }
@@ -995,7 +1011,7 @@ document.getElementById('orderForm').addEventListener('submit', async event => {
     status.textContent = 'कृपया सही मोबाइल नंबर दर्ज करें।';
     return;
   }
-  if (!customerLocation || !customerLocation.mapsUrl || deliveryFee === null || deliveryDistanceKm === null || deliveryDistanceKm > MAX_DELIVERY_DISTANCE_KM) {
+  if (!customerLocation || !customerLocation.mapsUrl || deliveryFee === null || deliveryDistanceKm === null || deliveryDistanceKm > maxDeliveryDistanceFor(p)) {
     status.textContent = 'ऑर्डर भेजने से पहले “मेरी लोकेशन शेयर करें” दबाकर GPS लोकेशन लेना अनिवार्य है।';
     document.getElementById('locationButton').focus();
     return;
@@ -1340,7 +1356,7 @@ function closeAdminPopup(){
   document.querySelectorAll('.admin-tab').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false');});
 }
 function showAdminTab(tabName) {
-  const allowed = ['dashboard', 'orders', 'stock', 'manageplants', 'sales', 'dues', 'chatgpt', 'sitecontrol'];
+  const allowed = ['dashboard', 'orders', 'stock', 'stockalerts', 'manageplants', 'sales', 'dues', 'chatgpt', 'sitecontrol'];
   if (!allowed.includes(tabName)) tabName = 'dashboard';
   document.querySelectorAll('.admin-tab').forEach(button => {
     const active = button.dataset.tab === tabName;
@@ -1350,7 +1366,7 @@ function showAdminTab(tabName) {
   document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active','admin-popup-active'));
   const paneId = {
     dashboard: 'adminDashboardPane', orders: 'adminOrdersPane',
-    stock: 'adminStockPane', manageplants: 'adminManageplantsPane', sales: 'adminSalesPane', dues: 'adminDuesPane', chatgpt: 'adminChatgptPane', sitecontrol: 'adminSitecontrolPane'
+    stock: 'adminStockPane', stockalerts: 'adminStockalertsPane', manageplants: 'adminManageplantsPane', sales: 'adminSalesPane', dues: 'adminDuesPane', chatgpt: 'adminChatgptPane', sitecontrol: 'adminSitecontrolPane'
   }[tabName];
   const pane=document.getElementById(paneId);
   if(!pane)return;
@@ -1364,10 +1380,10 @@ function showAdminTab(tabName) {
   const heading=pane.querySelector('h2');
   let title=pane.querySelector('.admin-popup-title');
   if(!title){title=document.createElement('div');title.className='admin-popup-title';pane.insertBefore(title,pane.children[1]||null);}
-  title.textContent=heading?heading.textContent.trim():({dashboard:'📊 डैशबोर्ड',orders:'🛒 ऑर्डर',stock:'📦 स्टॉक',manageplants:'🌱 पौधे और 🥬 सब्जियाँ',sales:'💰 बिक्री हिसाब',dues:'⏰ उधार / बाकी',chatgpt:'🤖 ChatGPT मदद',sitecontrol:'🎨 वेबसाइट कंट्रोल'}[tabName]);
+  title.textContent=heading?heading.textContent.trim():({dashboard:'📊 डैशबोर्ड',orders:'🛒 ऑर्डर',stock:'📦 स्टॉक',stockalerts:'🔔 स्टॉक और समस्या रिमाइंडर',manageplants:'🌱 पौधे और 🥬 सब्जियाँ',sales:'💰 बिक्री हिसाब',dues:'⏰ उधार / बाकी',chatgpt:'🤖 ChatGPT मदद',sitecontrol:'🎨 वेबसाइट कंट्रोल'}[tabName]);
 }
 document.querySelectorAll('.admin-tab').forEach(button => {
-  button.addEventListener('click', () => { const tab = button.dataset.tab; showAdminTab(tab); if (tab === 'manageplants') showManageView('add'); if (tab === 'stock') loadOwnerStats(); if (tab === 'sitecontrol') loadSiteControlForm(); });
+  button.addEventListener('click', () => { const tab = button.dataset.tab; showAdminTab(tab); if (tab === 'manageplants') showManageView('add'); if (tab === 'stock') loadOwnerStats(); if (tab === 'stockalerts') refreshStockAlerts(false); if (tab === 'sitecontrol') loadSiteControlForm(); });
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('admin-modal-open'))closeAdminPopup();});
 
@@ -1498,6 +1514,67 @@ if(newPlantForm){newPlantForm.addEventListener('submit',async e=>{
     status.textContent=(veg?'सब्ज़ी':'पौधा')+' सफलतापूर्वक जुड़ गया।';newPlantForm.reset();document.getElementById('newPlantPreview').style.display='none';updateNewProductUnitFields();await loadPlants();await loadOwnerStats();await renderAdminPlantEditor();
   }catch(err){status.textContent='सेव नहीं हुआ: '+(err.message||err);}finally{btn.disabled=false;}
 });}
+
+// Stock alerts: admin-panel alerts plus browser notifications while this page is open.
+const STOCK_LOW_THRESHOLD = 5; // plants or kg; adjust here if needed
+let stockAlertPollHandle = null;
+function stockAlertSeenKey(id, state) { return 'nurseryStockAlert:' + String(id) + ':' + state; }
+async function refreshStockAlerts(showMobileAlerts = true) {
+  const list = document.getElementById('stockAlertList');
+  if (!list) return;
+  const {data: sessionData, error: sessionError} = await db.auth.getSession();
+  const user = sessionData?.session?.user;
+  if (sessionError || !user || user.id !== OWNER_UID || user.email !== OWNER_EMAIL) {
+    list.textContent = 'स्टॉक अलर्ट देखने के लिए मालिक के खाते से लॉगिन करें।'; return;
+  }
+  list.textContent = 'स्टॉक जाँचा जा रहा है…';
+  const {data, error} = await db.from('plants').select('id,name,category,stock_quantity,is_active').order('name');
+  if (error) { list.textContent = '⚠️ स्टॉक लोड नहीं हुआ: ' + error.message + ' — Supabase कनेक्शन/अनुमति जाँचें।'; const badge=document.getElementById('stockAlertBadge'); if(badge){badge.textContent='!';badge.style.display='inline-block';} return; }
+  const rows = data || [];
+  const alerts = [];
+  rows.forEach(p => {
+    const qty = Math.max(0, Number(p.stock_quantity) || 0);
+    const state = qty <= 0 ? 'empty' : (qty <= STOCK_LOW_THRESHOLD ? 'low' : 'ok');
+    if (state === 'empty' || state === 'low' || p.is_active === false) {
+      alerts.push({p, qty, state});
+      if (showMobileAlerts && state !== 'ok' && 'Notification' in window && Notification.permission === 'granted') {
+        const key = stockAlertSeenKey(p.id, state);
+        if (localStorage.getItem(key) !== 'sent') {
+          const unit = isVegItem(p) ? 'किलो' : 'पौधे';
+          const title = state === 'empty' || qty <= 0 ? 'स्टॉक खत्म: ' + p.name : 'स्टॉक कम: ' + p.name;
+          try { new Notification(title, {body: 'बाकी स्टॉक: ' + qty + ' ' + unit + '. एडमिन पैनल में स्टॉक अपडेट करें।', tag: key}); localStorage.setItem(key, 'sent'); } catch(e) {}
+        }
+      }
+    }
+    if (state === 'ok') { localStorage.removeItem(stockAlertSeenKey(p.id,'empty')); localStorage.removeItem(stockAlertSeenKey(p.id,'low')); }
+  });
+  const badge = document.getElementById('stockAlertBadge');
+  if (badge) { badge.textContent = String(alerts.length); badge.style.display = alerts.length ? 'inline-block' : 'none'; badge.setAttribute('aria-label', alerts.length + ' स्टॉक अलर्ट'); }
+  if (!alerts.length) { list.innerHTML = '<p>✅ अभी कोई कम या खत्म स्टॉक वाला आइटम नहीं है।</p>'; return; }
+  list.innerHTML = '<p><strong>⚠️ कुल ' + alerts.length + ' उत्पादों पर ध्यान देना है।</strong> नीचे देखें कि क्या खत्म है या कम है।</p>' + alerts.map(({p,qty,state}) => {
+    const unit = isVegItem(p) ? 'किलो' : 'पौधे';
+    const empty = qty <= 0;
+    const color = empty ? '#b91c1c' : '#a16207';
+    const label = empty ? 'स्टॉक खत्म' : (p.is_active === false ? 'वेबसाइट पर बंद' : 'स्टॉक कम');
+    return '<div class="stock-row"><div><b>'+(isVegItem(p)?'🥬':'🌱')+' '+safe(p.name)+'</b><div class="sale-meta">बाकी: '+qty+' '+unit+'</div></div><span style="background:'+(empty?'#fee2e2':'#fef3c7')+';color:'+color+';padding:6px 10px;border-radius:999px;font-weight:700">'+label+'</span></div>';
+  }).join('');
+}
+document.getElementById('enableStockNotifications')?.addEventListener('click', async () => {
+  const status = document.getElementById('stockNotificationStatus');
+  if (!('Notification' in window)) { if(status) status.textContent='इस ब्राउज़र में नोटिफिकेशन सपोर्ट नहीं है। Chrome में वेबसाइट खोलकर कोशिश करें।'; return; }
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') { if(status) status.textContent='✅ मोबाइल/ब्राउज़र नोटिफिकेशन की अनुमति मिल गई। वेबसाइट खुली रहने पर स्टॉक अलर्ट मिलेंगे।'; await refreshStockAlerts(true); }
+    else if(status) status.textContent='नोटिफिकेशन अनुमति नहीं मिली। ब्राउज़र की Site settings में Notifications Allow करें।';
+  } catch(e) { if(status) status.textContent='नोटिफिकेशन चालू नहीं हुए: '+(e.message||e); }
+});
+document.getElementById('refreshStockAlerts')?.addEventListener('click', () => refreshStockAlerts(false));
+function startStockAlertPolling() {
+  if (stockAlertPollHandle) clearInterval(stockAlertPollHandle);
+  refreshStockAlerts(false);
+  stockAlertPollHandle = setInterval(() => { if (document.visibilityState === 'visible') refreshStockAlerts(true); }, 60000);
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshStockAlerts(false); });
 
 async function loadOwnerStats() {
   const { data: sessionData, error: sessionError } = await db.auth.getSession();
@@ -1680,15 +1757,15 @@ const SITE_CONTROL_DEFAULTS = {
  brandTitle:'🌱 श्री नीम करोली महाराज ग्रीन नर्सरी', brandSubtitle:'हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए', address:'📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान', phone:'9887666626', whatsapp:'919887666626', logoUrl:'', showLogo:false,
  welcomeTitle:'🌿 प्रकृति से जुड़ें, स्वस्थ पौधे घर लाएँ', welcomeText:'घर की क्यारी हो या खेत—सब्जियों के पौधों की जानकारी, कीमत और उपलब्ध स्टॉक यहाँ देखें।', welcomeNote:'ऑर्डर भेजने के बाद नर्सरी मालिक उपलब्धता और कीमत की पुष्टि करेंगे।',
  titleScale:100, navScale:100, bodyScale:100, buttonScale:100, cardScale:100,
- showWelcome:true, showPlants:true, showOrder:true, showContact:true, showFooter:true
+ showWelcome:true, showPlants:true, sellPlants:true, sellVegetables:true, showOrder:true, showContact:true, showFooter:true
 };
 function siteSettingsFromForm(){return {
  brandTitle:document.getElementById('siteBrandTitle').value.trim(),brandSubtitle:document.getElementById('siteBrandSubtitle').value.trim(),address:document.getElementById('siteAddress').value.trim(),phone:document.getElementById('sitePhone').value.trim(),whatsapp:document.getElementById('siteWhatsapp').value.trim(),logoUrl:document.getElementById('siteLogoUrl').value.trim(),showLogo:document.getElementById('siteShowLogo').checked,
  welcomeTitle:document.getElementById('siteWelcomeTitle').value.trim(),welcomeText:document.getElementById('siteWelcomeText').value.trim(),welcomeNote:document.getElementById('siteWelcomeNote').value.trim(),
  titleScale:Number(document.getElementById('siteTitleScale').value),navScale:Number(document.getElementById('siteNavScale').value),bodyScale:Number(document.getElementById('siteBodyScale').value),buttonScale:Number(document.getElementById('siteButtonScale').value),cardScale:Number(document.getElementById('siteCardScale').value),
- showWelcome:document.getElementById('siteShowWelcome').checked,showPlants:document.getElementById('siteShowPlants').checked,showOrder:document.getElementById('siteShowOrder').checked,showContact:document.getElementById('siteShowContact').checked,showFooter:document.getElementById('siteShowFooter').checked
+ showWelcome:document.getElementById('siteShowWelcome').checked,showPlants:document.getElementById('siteShowPlants').checked,sellPlants:document.getElementById('siteSellPlants').checked,sellVegetables:document.getElementById('siteSellVegetables').checked,showOrder:document.getElementById('siteShowOrder').checked,showContact:document.getElementById('siteShowContact').checked,showFooter:document.getElementById('siteShowFooter').checked
 };}
-function setSiteControlForm(v){const x=Object.assign({},SITE_CONTROL_DEFAULTS,v||{});const map={brandTitle:'siteBrandTitle',brandSubtitle:'siteBrandSubtitle',address:'siteAddress',phone:'sitePhone',whatsapp:'siteWhatsapp',logoUrl:'siteLogoUrl',welcomeTitle:'siteWelcomeTitle',welcomeText:'siteWelcomeText',welcomeNote:'siteWelcomeNote',titleScale:'siteTitleScale',navScale:'siteNavScale',bodyScale:'siteBodyScale',buttonScale:'siteButtonScale',cardScale:'siteCardScale',showLogo:'siteShowLogo',showWelcome:'siteShowWelcome',showPlants:'siteShowPlants',showOrder:'siteShowOrder',showContact:'siteShowContact',showFooter:'siteShowFooter'};Object.entries(map).forEach(([k,id])=>{const e=document.getElementById(id);if(!e)return;if(e.type==='checkbox')e.checked=!!x[k];else e.value=x[k]??'';});updateScaleLabels();const prev=document.getElementById('siteLogoPreview');if(prev){prev.src=x.logoUrl||'';prev.style.display=x.logoUrl?'block':'none';}}
+function setSiteControlForm(v){const x=Object.assign({},SITE_CONTROL_DEFAULTS,v||{});const map={brandTitle:'siteBrandTitle',brandSubtitle:'siteBrandSubtitle',address:'siteAddress',phone:'sitePhone',whatsapp:'siteWhatsapp',logoUrl:'siteLogoUrl',welcomeTitle:'siteWelcomeTitle',welcomeText:'siteWelcomeText',welcomeNote:'siteWelcomeNote',titleScale:'siteTitleScale',navScale:'siteNavScale',bodyScale:'siteBodyScale',buttonScale:'siteButtonScale',cardScale:'siteCardScale',showLogo:'siteShowLogo',showWelcome:'siteShowWelcome',showPlants:'siteShowPlants',sellPlants:'siteSellPlants',sellVegetables:'siteSellVegetables',showOrder:'siteShowOrder',showContact:'siteShowContact',showFooter:'siteShowFooter'};Object.entries(map).forEach(([k,id])=>{const e=document.getElementById(id);if(!e)return;if(e.type==='checkbox')e.checked=!!x[k];else e.value=x[k]??'';});updateScaleLabels();const prev=document.getElementById('siteLogoPreview');if(prev){prev.src=x.logoUrl||'';prev.style.display=x.logoUrl?'block':'none';}}
 function updateScaleLabels(){[['siteTitleScale','siteTitleScaleVal'],['siteNavScale','siteNavScaleVal'],['siteBodyScale','siteBodyScaleVal'],['siteButtonScale','siteButtonScaleVal'],['siteCardScale','siteCardScaleVal']].forEach(([a,b])=>{const x=document.getElementById(a),y=document.getElementById(b);if(x&&y)y.textContent=(x.value||100)+'%';});}
 function applySiteControlSettings(v){const x=Object.assign({},SITE_CONTROL_DEFAULTS,v||{});document.documentElement.style.setProperty('--site-title-scale',Number(x.titleScale||100)/100);document.documentElement.style.setProperty('--site-nav-scale',Number(x.navScale||100)/100);document.documentElement.style.setProperty('--site-body-scale',Number(x.bodyScale||100)/100);document.documentElement.style.setProperty('--site-button-scale',Number(x.buttonScale||100)/100);document.documentElement.style.setProperty('--site-card-scale',Number(x.cardScale||100)/100);
  const h=document.querySelector('body>header h1');if(h&&x.brandTitle)h.textContent=x.brandTitle;
@@ -1711,13 +1788,14 @@ document.getElementById('siteLogoUrl')?.addEventListener('input',()=>{const u=do
 document.getElementById('sitePreviewApply')?.addEventListener('click',applySitePreview);
 document.getElementById('siteReloadSettings')?.addEventListener('click',loadSiteControlForm);
 document.getElementById('siteSaveAll')?.addEventListener('click',async()=>{const status=document.getElementById('siteControlStatus'),btn=document.getElementById('siteSaveAll');try{btn.disabled=true;status.textContent='सेटिंग सेव हो रही हैं…';let x=siteSettingsFromForm();const {data:userData,error:userError}=await db.auth.getUser();if(userError||!userData.user||userData.user.id!==OWNER_UID||userData.user.email!==OWNER_EMAIL)throw new Error('सेटिंग सेव करने के लिए मालिक के खाते से लॉगिन करें।');const file=document.getElementById('siteLogoFile').files?.[0];if(file){if(!file.type.startsWith('image/'))throw new Error('कृपया इमेज फाइल चुनें।');if(file.size>5*1024*1024)throw new Error('लोगो 5 MB से छोटा रखें।');const ext=(file.name.split('.').pop()||'png').toLowerCase().replace(/[^a-z0-9]/g,'')||'png';const path=OWNER_UID+'/branding/logo-'+Date.now()+'.'+ext;const {error:upErr}=await db.storage.from('plant-images').upload(path,file,{upsert:true,contentType:file.type||'image/png'});if(upErr)throw upErr;const {data:urlData}=db.storage.from('plant-images').getPublicUrl(path);x.logoUrl=urlData.publicUrl;document.getElementById('siteLogoUrl').value=x.logoUrl;document.getElementById('siteLogoFile').value='';}
- const all=await (async()=>{try{const {data,error}=await db.from('nursery_site_settings').select('settings').eq('id',1).maybeSingle();if(!error&&data?.settings)return data.settings;}catch(e){}return {};})();all.siteControl=x;const {error:saveErr}=await db.from('nursery_site_settings').upsert({id:1,settings:all,updated_at:new Date().toISOString()});if(saveErr)throw saveErr;localStorage.setItem('nurserySiteControlFallback',JSON.stringify(x));applySiteControlSettings(x);status.textContent='✅ वेबसाइट सेटिंग Supabase में सेव हो गईं। ग्राहक वेबसाइट पर लागू होने के लिए पेज रिफ्रेश करके जाँचें।';}catch(e){status.textContent='सेव नहीं हुआ: '+(e.message||e)+'। यदि nursery_site_settings टेबल या Storage अनुमति में समस्या है, स्क्रीनशॉट भेजें।';}finally{btn.disabled=false;}});
+ const all=await (async()=>{try{const {data,error}=await db.from('nursery_site_settings').select('settings').eq('id',1).maybeSingle();if(!error&&data?.settings)return data.settings;}catch(e){}return {};})();all.siteControl=x;const {error:saveErr}=await db.from('nursery_site_settings').upsert({id:1,settings:all,updated_at:new Date().toISOString()});if(saveErr)throw saveErr;localStorage.setItem('nurserySiteControlFallback',JSON.stringify(x));applySiteControlSettings(x);await loadPlants();status.textContent='✅ वेबसाइट सेटिंग Supabase में सेव हो गईं। ग्राहक वेबसाइट पर लागू होने के लिए पेज रिफ्रेश करके जाँचें।';}catch(e){status.textContent='सेव नहीं हुआ: '+(e.message||e)+'। यदि nursery_site_settings टेबल या Storage अनुमति में समस्या है, स्क्रीनशॉट भेजें।';}finally{btn.disabled=false;}});
 // Public visitors also load the shared visual settings from Supabase.
 getSiteSettingsShared().then(v=>{if(v&&Object.keys(v).length){applySiteControlSettings(Object.assign({},SITE_CONTROL_DEFAULTS,v));localStorage.setItem('nurserySiteControlFallback',JSON.stringify(v));}else{try{const local=JSON.parse(localStorage.getItem('nurserySiteControlFallback')||'{}');if(Object.keys(local).length)applySiteControlSettings(Object.assign({},SITE_CONTROL_DEFAULTS,local));}catch(e){}}}).catch(()=>{});
 
 db.auth.onAuthStateChange((event, session) => {
   const user = session && session.user;
   const isOwner = !!(user && user.id === OWNER_UID && user.email === OWNER_EMAIL);
+  if (isOwner) startStockAlertPolling(); else if (stockAlertPollHandle) { clearInterval(stockAlertPollHandle); stockAlertPollHandle = null; }
   const statsBox = document.getElementById("ownerStats");
   const ordersBox = document.getElementById("ownerOrders");
   if (!isOwner) {
