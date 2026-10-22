@@ -242,6 +242,16 @@ body.about-page-active main>section:not(#about){display:none!important}
 body.about-page-active #about{display:block}
 @media(max-width:600px){#about{margin:10px auto;padding:12px;border-radius:14px}#about .about-subsection{padding:13px;border-radius:12px}}
 
+
+/* Admin panels as compact popup windows */
+body.admin-modal-open{overflow:hidden}
+body.admin-modal-open:after{content:"";position:fixed;inset:0;background:rgba(7,28,15,.68);backdrop-filter:blur(3px);z-index:9998}
+.admin-pane.admin-popup-active{display:block!important;position:fixed!important;z-index:9999!important;left:50%;top:50%;transform:translate(-50%,-50%);width:min(960px,calc(100vw - 28px));max-height:calc(100dvh - 28px);overflow:auto;background:#f7fbf5;border:1px solid #cfe2cf;border-radius:20px;padding:18px;box-shadow:0 25px 90px #0005;box-sizing:border-box}
+.admin-popup-close{position:sticky;top:0;z-index:5;display:flex;justify-content:flex-end;margin:-4px -4px 8px;pointer-events:none}
+.admin-popup-close button{pointer-events:auto;width:auto;background:#eaf5e8!important;color:#174b2b!important;border:1px solid #cfe2cf!important;box-shadow:0 3px 10px #0001!important}
+.admin-popup-title{font-size:20px;font-weight:700;color:#176b37;margin:0 0 8px}
+@media(max-width:650px){.admin-pane.admin-popup-active{width:calc(100vw - 14px);max-height:calc(100dvh - 14px);padding:11px;border-radius:15px}.admin-popup-title{font-size:17px}}
+
 </style>
 </head>
 <body>
@@ -1324,6 +1334,11 @@ loadPlants();
   });
 })();
 
+function closeAdminPopup(){
+  document.querySelectorAll('.admin-pane').forEach(p=>{p.classList.remove('active','admin-popup-active');});
+  document.body.classList.remove('admin-modal-open');
+  document.querySelectorAll('.admin-tab').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false');});
+}
 function showAdminTab(tabName) {
   const allowed = ['dashboard', 'orders', 'stock', 'manageplants', 'sales', 'dues', 'chatgpt', 'sitecontrol'];
   if (!allowed.includes(tabName)) tabName = 'dashboard';
@@ -1332,16 +1347,29 @@ function showAdminTab(tabName) {
     button.classList.toggle('active', active);
     button.setAttribute('aria-selected', active ? 'true' : 'false');
   });
-  document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active'));
+  document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active','admin-popup-active'));
   const paneId = {
     dashboard: 'adminDashboardPane', orders: 'adminOrdersPane',
     stock: 'adminStockPane', manageplants: 'adminManageplantsPane', sales: 'adminSalesPane', dues: 'adminDuesPane', chatgpt: 'adminChatgptPane', sitecontrol: 'adminSitecontrolPane'
   }[tabName];
-  document.getElementById(paneId).classList.add('active');
+  const pane=document.getElementById(paneId);
+  if(!pane)return;
+  pane.classList.add('active','admin-popup-active');
+  document.body.classList.add('admin-modal-open');
+  if(!pane.querySelector('.admin-popup-close')){
+    const closeWrap=document.createElement('div');closeWrap.className='admin-popup-close';
+    const closeBtn=document.createElement('button');closeBtn.type='button';closeBtn.textContent='✕ पैनल बंद करें';closeBtn.setAttribute('aria-label','एडमिन पैनल बंद करें');closeBtn.addEventListener('click',closeAdminPopup);
+    closeWrap.appendChild(closeBtn);pane.prepend(closeWrap);
+  }
+  const heading=pane.querySelector('h2');
+  let title=pane.querySelector('.admin-popup-title');
+  if(!title){title=document.createElement('div');title.className='admin-popup-title';pane.insertBefore(title,pane.children[1]||null);}
+  title.textContent=heading?heading.textContent.trim():({dashboard:'📊 डैशबोर्ड',orders:'🛒 ऑर्डर',stock:'📦 स्टॉक',manageplants:'🌱 पौधे और 🥬 सब्जियाँ',sales:'💰 बिक्री हिसाब',dues:'⏰ उधार / बाकी',chatgpt:'🤖 ChatGPT मदद',sitecontrol:'🎨 वेबसाइट कंट्रोल'}[tabName]);
 }
 document.querySelectorAll('.admin-tab').forEach(button => {
   button.addEventListener('click', () => { const tab = button.dataset.tab; showAdminTab(tab); if (tab === 'manageplants') showManageView('add'); if (tab === 'stock') loadOwnerStats(); if (tab === 'sitecontrol') loadSiteControlForm(); });
 });
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('admin-modal-open'))closeAdminPopup();});
 
 let activeManageCategory = 'पौधा';
 function setManageCategory(category) {
