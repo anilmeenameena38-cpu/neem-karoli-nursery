@@ -79,9 +79,23 @@ button:disabled{opacity:.55;cursor:wait}
 .admin-plant-edit-row{border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0;display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,1fr);gap:8px;align-items:center}
 .admin-plant-edit-row .wide{grid-column:1/-1}
 .admin-plant-edit-row img{width:80px;height:80px;object-fit:cover;border-radius:10px}
-.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:12px 0}
-.metric{background:linear-gradient(145deg,#f1f9ee,#fff);border:1px solid var(--line);border-radius:12px;padding:12px}
-.metric .metric-value{font-size:22px;font-weight:800;color:var(--green)}
+
+/* डैशबोर्ड कार्ड और टेबल स्टाइल */
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:14px 0}
+.metric{background:linear-gradient(145deg,#f1f9ee,#fff);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 3px 10px rgba(0,0,0,0.03)}
+.metric-label{font-size:13px;color:var(--muted);font-weight:600}
+.metric-value{font-size:24px;font-weight:800;color:var(--green);margin-top:4px}
+.metric.warning{background:linear-gradient(145deg,#fff6f5,#fff);border-color:#fca5a5}
+.metric.warning .metric-value{color:#b91c1c}
+.metric.pending{background:linear-gradient(145deg,#fffbeb,#fff);border-color:#fde68a}
+.metric.pending .metric-value{color:#d97706}
+
+.dashboard-table-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:16px}
+.dashboard-table-card h3{margin:0 0 12px;color:var(--green);font-size:17px;display:flex;justify-content:space-between;align-items:center}
+.order-item-card{border:1px solid #eef2eb;border-radius:12px;padding:12px;margin-bottom:10px;background:#fbfef9}
+.order-item-card.is-pending{border-left:5px solid #f59e0b}
+.order-item-card.is-confirmed{border-left:5px solid #16a34a}
+
 #order:not([hidden]){position:fixed;inset:0;z-index:9999;background:rgba(8,25,13,.68);padding:18px;display:flex;align-items:center;justify-content:center;overflow:auto}
 #order[hidden]{display:none !important;}
 #order .order-modal-card{width:min(100%,600px);max-height:calc(100dvh - 36px);overflow:auto;background:#fff;border-radius:20px;padding:20px;border-top:5px solid #25884b}
@@ -154,7 +168,6 @@ footer a{color:#fff}
           <div id="deliveryEstimate" class="status" style="display:none"></div>
         </div>
 
-        <!-- UPI बॉक्स और 10 सेकंड टाइमर -->
         <div id="bharatpePaymentBox" class="status" style="display:none;text-align:center">
           <h3>💳 UPI भुगतान</h3>
           <p>UPI ID: <strong>BHARATPE2H0E0T6Z3P47445@unitype</strong></p>
@@ -239,8 +252,9 @@ footer a{color:#fff}
       <button class="admin-tab" type="button" data-tab="chatgpt">🤖 ChatGPT</button>
     </div>
 
+    <!-- डैशबोर्ड: पूरा और विस्तृत हिसाब-किताब -->
     <div id="adminDashboardPane" class="admin-pane active">
-      <div id="ownerStats"></div>
+      <div id="ownerStats">लोड हो रहा है…</div>
     </div>
 
     <div id="adminOrdersPane" class="admin-pane">
@@ -382,7 +396,7 @@ function distanceKm(lat1, lon1, lat2, lon2) {
   return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-// 1. होमपेज उत्पाद लोड करना (पौधा / सब्ज़ी के अनुसार शीर्षक बदलना)
+// 1. होमपेज उत्पाद लोड करना
 async function loadPlants() {
   const pList = document.getElementById('plantOnlyList');
   const vList = document.getElementById('vegOnlyList');
@@ -493,7 +507,6 @@ document.getElementById('locationButton').addEventListener('click', () => {
   }, () => { stat.textContent = 'लोकेशन प्राप्त नहीं हो सकी।'; });
 });
 
-// 10 सेकंड का UPI टाइमर
 function startUpiTimer() {
   const countdownEl = document.getElementById('upiCountdown');
   const countStatus = document.getElementById('paymentCountdownStatus');
@@ -531,7 +544,7 @@ document.getElementById('paymentDoneButton').addEventListener('click', () => {
   document.getElementById('orderButton').style.display = 'block';
 });
 
-// ऑर्डर सबमिट: ऑटो WhatsApp, पॉपअप तत्काल बंद, होमपेज पर जाना व भरोसा दिलाने वाला संदेश
+// ऑर्डर सबमिट: WhatsApp अपने-आप खुलना और पॉपअप तुरंत बंद होना
 document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const button = document.getElementById('orderButton');
@@ -585,23 +598,21 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
     const waUrl = 'https://wa.me/919887666626?text=' + encodeURIComponent(message);
 
-    // 1. WhatsApp नए टैब में खोलें
+    // WhatsApp खोलें
     window.open(waUrl, '_blank');
 
-    // 2. पॉपअप को पूरी तरह तुरंत बंद करें
+    // पॉपअप को तुरंत बंद करें
     closeOrderPopup();
-
-    // 3. स्मूथली होमपेज पर सबसे ऊपर पहुँचाएँ
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // 4. होमपेज पर भरोसा दिलाने वाला साफ़ नोटिफिकेशन (Toast) दिखाएँ
+    // होमपेज पर सुंदर भरोसा दिलाने वाला मैसेज (Toast Alert)
     const toast = document.createElement('div');
     toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#176b37;color:#fff;padding:16px 22px;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.25);z-index:99999;max-width:90%;text-align:center;font-size:15px;line-height:1.6;font-weight:600';
     toast.innerHTML = '✅ आपका ऑर्डर व भुगतान स्क्रीनशॉट हमें मिल गया है!<br><small style="font-weight:400;opacity:0.95">हमारी टीम पेमेंट की जाँच कर बहुत जल्द आपसे संपर्क करेगी। धन्यवाद! 🌿</small>';
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 6000);
 
-    // 5. फ़ॉर्म को रीसेट करें
+    // फ़ॉर्म रीसेट
     document.getElementById('orderForm').reset();
     document.getElementById('postPaymentForm').style.display = 'none';
     document.getElementById('bharatpePaymentBox').style.display = 'none';
@@ -619,7 +630,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
   }
 });
 
-// 3. एडमिन पैनल
+// 3. एडमिन पैनल और डैशबोर्ड का संपूर्ण लॉजिक
 const ownerModal = document.getElementById('owner');
 document.getElementById('adminPanelNav').addEventListener('click', () => { ownerModal.classList.add('login-visible'); });
 document.getElementById('ownerCloseButton').addEventListener('click', () => { ownerModal.classList.remove('login-visible'); });
@@ -649,6 +660,7 @@ function showAdminTab(tab) {
   document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('active'));
   const el = document.getElementById('admin' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Pane');
   if (el) el.classList.add('active');
+  if (tab === 'dashboard' || tab === 'orders' || tab === 'stock') loadAdminAll();
   if (tab === 'manageplants') showManageView('add-plant');
 }
 document.querySelectorAll('.admin-tab').forEach(b => b.addEventListener('click', () => showAdminTab(b.dataset.tab)));
@@ -726,28 +738,152 @@ document.getElementById('newVegOnlyForm').addEventListener('submit', async (e) =
   } catch (err) { stat.textContent = 'त्रुटि: ' + err.message; }
 });
 
+// एडमिन डैशबोर्ड और ऑर्डर की पूरी विस्तृत रिपोर्ट
 async function loadAdminAll() {
-  const { data: allPlants } = await db.from('plants').select('*').order('name');
-  const items = allPlants || [];
-  const pList = items.filter(x => !isVeg(x));
-  const vList = items.filter(x => isVeg(x));
+  const statsBox = document.getElementById('ownerStats');
+  statsBox.innerHTML = '<div class="status">डैशबोर्ड अपडेट हो रहा है…</div>';
 
-  const makeRow = x => `<div class="stock-row"><div><strong>${safe(x.name)}</strong><br><small>₹${x.selling_price}</small></div><span class="stock-count">${x.stock_quantity}</span></div>`;
-  document.getElementById('ownerPlantStockList').innerHTML = pList.map(makeRow).join('');
-  document.getElementById('ownerVegStockList').innerHTML = vList.map(makeRow).join('');
+  try {
+    const now = new Date();
+    const todayStr = now.toISOString().slice(0, 10);
 
-  document.getElementById('ownerStats').innerHTML = `
-    <div class="metric-grid">
-      <div class="metric"><small>पौधे प्रकार</small><div class="metric-value">${pList.length}</div></div>
-      <div class="metric"><small>सब्जियां प्रकार</small><div class="metric-value">${vList.length}</div></div>
-    </div>`;
+    const [plantsRes, ordersRes] = await Promise.all([
+      db.from('plants').select('*').order('name'),
+      db.from('order_requests').select('*').order('created_at', { ascending: false })
+    ]);
 
-  const { data: orders } = await db.from('order_requests').select('*').order('created_at', {ascending:false});
-  document.getElementById('ownerOrders').innerHTML = (orders || []).map(o => `
-    <div class="status">
-      <strong>#${o.id} - ${safe(o.plant_name)} (${o.quantity})</strong>
-      <p>ग्राहक: ${safe(o.customer_name)} | ${safe(o.customer_phone)}<br>पता: ${safe(o.customer_address)}<br>स्थिति: ${safe(o.status)}</p>
-    </div>`).join('') || '<p>कोई ऑर्डर नहीं है।</p>';
+    const items = plantsRes.data || [];
+    const orders = ordersRes.data || [];
+
+    const pList = items.filter(x => !isVeg(x));
+    const vList = items.filter(x => isVeg(x));
+
+    // स्टॉक गणना
+    const totalPlantStock = pList.reduce((sum, x) => sum + (Number(x.stock_quantity) || 0), 0);
+    const totalVegStock = vList.reduce((sum, x) => sum + (Number(x.stock_quantity) || 0), 0);
+
+    // ऑर्डर्स गणना
+    const todayOrders = orders.filter(o => o.created_at && o.created_at.slice(0, 10) === todayStr);
+    const pendingOrders = orders.filter(o => o.status === 'pending');
+    const confirmedOrders = orders.filter(o => o.status === 'confirmed');
+
+    // आज की कुल बिक्री
+    const todaySalesAmount = todayOrders.reduce((sum, o) => sum + (Number(o.unit_price || 0) * Number(o.quantity || 0)), 0);
+
+    // कम स्टॉक वाले उत्पाद (चेतावनी)
+    const lowStockItems = items.filter(x => Number(x.stock_quantity) <= 10 && x.is_active);
+
+    // 1. डैशबोर्ड HTML निर्माण
+    statsBox.innerHTML = `
+      <!-- मुख्य आँकड़े -->
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="metric-label">🛒 आज के ऑर्डर</div>
+          <div class="metric-value">${todayOrders.length}</div>
+          <small style="color:var(--muted)">आज की कुल माँग</small>
+        </div>
+        <div class="metric pending">
+          <div class="metric-label">⏳ लंबित (Pending)</div>
+          <div class="metric-value">${pendingOrders.length}</div>
+          <small style="color:#d97706">जाँच बाकी है</small>
+        </div>
+        <div class="metric">
+          <div class="metric-label">✅ कन्फर्म ऑर्डर</div>
+          <div class="metric-value">${confirmedOrders.length}</div>
+          <small style="color:var(--green)">पक्के ऑर्डर</small>
+        </div>
+        <div class="metric">
+          <div class="metric-label">💰 आज का व्यापार</div>
+          <div class="metric-value">₹${todaySalesAmount.toFixed(2)}</div>
+          <small style="color:var(--muted)">अनुमानित कुल राशि</small>
+        </div>
+        <div class="metric">
+          <div class="metric-label">🌱 कुल पौधे बाकी</div>
+          <div class="metric-value">${totalPlantStock}</div>
+          <small style="color:var(--muted)">${pList.length} किस्मों में</small>
+        </div>
+        <div class="metric">
+          <div class="metric-label">🥬 कुल सब्ज़ी बाकी</div>
+          <div class="metric-value">${totalVegStock.toFixed(1)} <span style="font-size:14px">किलो</span></div>
+          <small style="color:var(--muted)">${vList.length} किस्मों में</small>
+        </div>
+      </div>
+
+      <!-- कम स्टॉक अलर्ट (यदि कोई हो) -->
+      ${lowStockItems.length ? `
+        <div class="status" style="background:#fef2f2;border:1px solid #fecaca;color:#991b1b;margin-top:12px">
+          <strong>⚠️ कम स्टॉक चेतावनी (Low Stock):</strong>
+          <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap">
+            ${lowStockItems.map(x => `<span style="background:#fee2e2;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700">${isVeg(x)?'🥬':'🌱'} ${safe(x.name)}: केवल ${x.stock_quantity} ${isVeg(x)?'किलो':'पौधे'} बाकी</span>`).join('')}
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- आज के नए ऑर्डर्स की विस्तृत सूची -->
+      <div class="dashboard-table-card">
+        <h3>
+          <span>📋 आज के ऑर्डर विवरण (${todayOrders.length})</span>
+          <button type="button" onclick="loadAdminAll()" style="padding:4px 8px;font-size:12px;background:#edf5e9;color:var(--green);border:1px solid var(--line)">🔄 रीफ्रेश करें</button>
+        </h3>
+        ${todayOrders.length ? todayOrders.map(o => renderOrderHtml(o)).join('') : '<p style="color:var(--muted)">आज अभी तक कोई नया ऑर्डर नहीं आया है।</p>'}
+      </div>
+    `;
+
+    // 2. ऑर्डर टैब में सभी ऑर्डर्स
+    document.getElementById('ownerOrders').innerHTML = orders.length 
+      ? orders.map(o => renderOrderHtml(o)).join('') 
+      : '<p style="color:var(--muted)">अभी कोई ऑर्डर उपलब्ध नहीं है।</p>';
+
+    // 3. स्टॉक टैब में सूची
+    const makeRow = x => `<div class="stock-row"><div><strong>${safe(x.name)}</strong><br><small style="color:var(--muted)">₹${x.selling_price} / ${isVeg(x)?'किलो':'पौधा'}</small></div><span class="stock-count">${x.stock_quantity} ${isVeg(x)?'किलो':'पौधे'}</span></div>`;
+    document.getElementById('ownerPlantStockList').innerHTML = pList.map(makeRow).join('');
+    document.getElementById('ownerVegStockList').innerHTML = vList.map(makeRow).join('');
+
+  } catch (err) {
+    statsBox.innerHTML = '<div class="status">डेटा लोड नहीं हुआ: ' + err.message + '</div>';
+  }
+}
+
+// ऑर्डर कार्ड बनाने का हेल्पर
+function renderOrderHtml(o) {
+  const isPending = o.status === 'pending';
+  const total = (Number(o.unit_price || 0) * Number(o.quantity || 0)).toFixed(2);
+  const mapsMatch = String(o.notes || '').match(/MAPS:(https:\/\/www\.google\.com\/maps\?q=[0-9.,-]+)/);
+  const proofMatch = String(o.notes || '').match(/PROOF:(https:[^|]+)/);
+
+  return `
+    <div class="order-item-card ${isPending ? 'is-pending' : 'is-confirmed'}">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+        <strong>ऑर्डर #${o.id} - ${safe(o.plant_name)} (${o.quantity} ${String(o.notes||'').includes('UNIT:किलो')?'किलो':'पौधे'})</strong>
+        <span style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:20px;background:${isPending ? '#fef3c7;color:#92400e' : '#dcfce7;color:#166534'}">
+          ${isPending ? '⏳ लंबित (Pending)' : '✅ कन्फर्म (Confirmed)'}
+        </span>
+      </div>
+      <p style="margin:6px 0;font-size:14px;color:#2c3e50">
+        👤 <b>ग्राहक:</b> ${safe(o.customer_name)} | 📞 <b>मोबाइल:</b> ${safe(o.customer_phone)}<br>
+        📍 <b>पता:</b> ${safe(o.customer_address)}<br>
+        💰 <b>कुल मूल्य:</b> ₹${total} | ⏰ <b>समय:</b> ${o.created_at ? new Date(o.created_at).toLocaleTimeString('hi-IN', {hour:'2-digit',minute:'2-digit'}) : '—'}
+      </p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
+        ${mapsMatch ? `<a class="btn" href="${safe(mapsMatch[1])}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📍 GPS लोकेशन</a>` : ''}
+        ${proofMatch ? `<a class="btn" href="${safe(proofMatch[1])}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📸 स्क्रीनशॉट देखें</a>` : ''}
+        ${isPending ? `<button type="button" onclick="confirmOrder(${o.id})" style="padding:5px 12px;font-size:12px;background:#16a34a">✅ ऑर्डर कन्फर्म करें</button>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// एडमिन द्वारा ऑर्डर कन्फर्म करना
+async function confirmOrder(orderId) {
+  if (!confirm('क्या आप यह ऑर्डर कन्फर्म करना चाहते हैं? इससे ग्राहक का ऑर्डर पक्का हो जाएगा।')) return;
+  try {
+    const { error } = await db.from('order_requests').update({ status: 'confirmed' }).eq('id', orderId);
+    if (error) throw error;
+    alert('✅ ऑर्डर कन्फर्म हो गया!');
+    loadAdminAll();
+  } catch (e) {
+    alert('त्रुटि: ' + e.message);
+  }
 }
 
 async function renderAdminEdit() {
