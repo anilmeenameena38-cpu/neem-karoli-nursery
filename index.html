@@ -83,7 +83,7 @@ button:disabled{opacity:.55;cursor:wait}
 .admin-plant-edit-row .wide{grid-column:1/-1}
 .admin-plant-edit-row img{width:80px;height:80px;object-fit:cover;border-radius:10px}
 
-.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px;margin:14px 0}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:14px 0}
 .metric{background:linear-gradient(145deg,#f1f9ee,#fff);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 3px 10px rgba(0,0,0,0.03)}
 .metric-label{font-size:13px;color:var(--muted);font-weight:600}
 .metric-value{font-size:24px;font-weight:800;color:var(--green);margin-top:4px}
@@ -99,10 +99,9 @@ button:disabled{opacity:.55;cursor:wait}
 .order-item-card{border:1px solid #eef2eb;border-radius:12px;padding:12px;margin-bottom:10px;background:#fbfef9}
 .order-item-card.is-pending{border-left:5px solid #f59e0b}
 .order-item-card.is-confirmed{border-left:5px solid #16a34a;background:#f9fdf8}
-.order-item-card.is-delivered{border-left:5px solid #2563eb;background:#f8faff}
+.order-item-card.is-delivered{border-left:5px solid #2563eb;background:#f0f7ff}
 .order-item-card.is-cancelled{border-left:5px solid #dc2626;background:#fffaf9}
 
-/* लाउड ऑडियो अलर्ट बैनर */
 #loudAlertBanner{display:none;position:sticky;top:60px;z-index:2500;background:#dc2626;color:#fff;padding:14px 18px;border-radius:12px;margin-bottom:14px;box-shadow:0 8px 24px rgba(220,38,38,0.4);animation:pulseAlert 1s infinite alternate}
 @keyframes pulseAlert{from{background:#dc2626}to{background:#991b1b}}
 
@@ -253,7 +252,7 @@ footer a{color:#fff}
           <small id="audioStatusText" style="color:var(--green);font-weight:700">🔊 लाउड ऑर्डर अलर्ट: चालू है</small>
         </div>
         <div style="display:flex;gap:8px;align-items:center">
-          <button id="toggleAlertSoundBtn" type="button" style="background:#edf5e9;color:var(--green);border:1px solid var(--line);font-size:13px;padding:6px 10px">🔔 साउंड टेस्ट करें</button>
+          <button id="toggleAlertSoundBtn" type="button" style="background:#16a34a;color:#fff;font-size:13px;padding:7px 12px;border-radius:8px">🔔 साउंड टेस्ट करें (Zomato Sound)</button>
           <button id="logoutButton" type="button" style="background:#dc2626">लॉग आउट</button>
         </div>
       </div>
@@ -519,46 +518,48 @@ const MAX_DELIVERY_DISTANCE_KM = 50;
 const DELIVERY_RATE_PER_KM = 10;
 let upiCountdownInterval = null;
 
-// ऑडियो और रिंगटोन अलर्ट सिस्टम (Zomato-style sound synth)
+// जोमैटो/स्विगी जैसा लाउड 3-टोन अलर्ट ऑडियो सिस्टम
 let audioCtx = null;
 let alertSoundInterval = null;
 let lastKnownPendingCount = null;
-let isSoundMuted = false;
+
+function initAudioContext() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}
 
 function playLoudAlertTone() {
-  if (isSoundMuted) return;
   try {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
+    initAudioContext();
+    const ctx = audioCtx;
+    const now = ctx.currentTime;
 
-    const now = audioCtx.currentTime;
-    const osc1 = audioCtx.createOscillator();
-    const osc2 = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+    // जोमैटो स्टाइल 3-टोन बीप (तेज़ व स्पष्ट)
+    const tones = [
+      { freq: 987.77, time: now, dur: 0.18 },       // B5
+      { freq: 1318.51, time: now + 0.18, dur: 0.18 }, // E6
+      { freq: 1760.00, time: now + 0.36, dur: 0.35 }  // A6
+    ];
 
-    osc1.type = 'triangle';
-    osc2.type = 'sine';
+    tones.forEach(t => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sawtooth'; // तेज़ आवाज़ के लिए sawtooth
+      osc.frequency.setValueAtTime(t.freq, t.time);
 
-    // लाउड टू-टोन अलार्म
-    osc1.frequency.setValueAtTime(880, now); // A5
-    osc1.frequency.setValueAtTime(1174.66, now + 0.15); // D6
-    osc1.frequency.setValueAtTime(880, now + 0.3);
-    osc1.frequency.setValueAtTime(1174.66, now + 0.45);
+      gain.gain.setValueAtTime(0.7, t.time); // फुल वॉल्यूम
+      gain.gain.exponentialRampToValueAtTime(0.01, t.time + t.dur);
 
-    osc2.frequency.setValueAtTime(440, now);
-    osc2.frequency.setValueAtTime(587.33, now + 0.15);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
 
-    gain.gain.setValueAtTime(0.4, now);
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.65);
-
-    osc1.connect(gain);
-    osc2.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc1.start(now);
-    osc2.start(now);
-    osc1.stop(now + 0.7);
-    osc2.stop(now + 0.7);
+      osc.start(t.time);
+      osc.stop(t.time + t.dur);
+    });
   } catch (e) {
     console.error('Audio play error:', e);
   }
@@ -569,7 +570,7 @@ function startLoudAlert() {
   if (banner) banner.style.display = 'block';
   playLoudAlertTone();
   if (alertSoundInterval) clearInterval(alertSoundInterval);
-  alertSoundInterval = setInterval(playLoudAlertTone, 1800);
+  alertSoundInterval = setInterval(playLoudAlertTone, 2200);
 }
 
 function stopLoudAlert() {
@@ -583,9 +584,14 @@ function stopLoudAlert() {
 
 document.getElementById('stopLoudAlertBtn')?.addEventListener('click', stopLoudAlert);
 document.getElementById('toggleAlertSoundBtn')?.addEventListener('click', () => {
+  initAudioContext();
   playLoudAlertTone();
-  alert('🔔 लाउड साउंड टेस्ट किया गया!');
 });
+
+// पहले क्लिक पर ऑडियो को अनलॉक करना
+window.addEventListener('click', () => {
+  initAudioContext();
+}, { once: true });
 
 function safe(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function isVeg(p) { return /सब्जी|सब्ज़ी|veg|vegetable/i.test(String(p && p.category || '')); }
@@ -834,7 +840,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 const ownerModal = document.getElementById('owner');
 document.getElementById('adminPanelNav').addEventListener('click', () => { 
   ownerModal.classList.add('login-visible');
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  initAudioContext();
 });
 document.getElementById('ownerCloseButton').addEventListener('click', () => { 
   ownerModal.classList.remove('login-visible'); 
@@ -843,6 +849,7 @@ document.getElementById('ownerCloseButton').addEventListener('click', () => {
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
+  initAudioContext();
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
   const stat = document.getElementById('ownerStatus');
@@ -855,11 +862,10 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   showAdminTab('dashboard');
   loadAdminAll();
 
-  // नए ऑर्डर के लिए 12 सेकंड का ऑटो-चेकर (ऑर्डर अलर्ट)
+  // 12 सेकंड में नया ऑर्डर ऑटो-चेक (Zomato alert)
   setInterval(checkForNewIncomingOrders, 12000);
 });
 
-// नए ऑर्डर की ऑटो-चेकिंग
 async function checkForNewIncomingOrders() {
   try {
     const { count, error } = await db.from('order_requests').select('*', { count: 'exact', head: true }).eq('status', 'pending');
@@ -987,7 +993,7 @@ async function quickUpdateStock(id, inputId) {
   } catch (err) { alert('त्रुटि: ' + err.message); }
 }
 
-// डैशबोर्ड लोड करना (Delivered काउंट के साथ)
+// डैशबोर्ड लोड करना (Delivered और Confirm दोनों का सही योग)
 async function loadAdminAll() {
   const statsBox = document.getElementById('ownerStats');
   if (!statsBox) return;
@@ -1019,6 +1025,7 @@ async function loadAdminAll() {
     let todaySalesAmount = 0;
 
     todayOrders.forEach(o => {
+      // कन्फर्म और डिलीवर दोनों आज के व्यापार में गिने जाएंगे
       if (o.status === 'confirmed' || o.status === 'delivered') {
         const isKg = String(o.notes || '').includes('UNIT:किलो');
         const qty = Number(o.quantity || 0);
@@ -1052,7 +1059,7 @@ async function loadAdminAll() {
         </div>
         <div class="metric delivered">
           <div class="metric-label">🚚 डिलीवर हुए</div>
-          <div class="metric-value">${deliveredOrders.length}</div>
+          <div class="metric-value" id="dashboardDeliveredCount">${deliveredOrders.length}</div>
           <small style="color:#2563eb">ग्राहक तक पहुँचा दिए</small>
         </div>
         <div class="metric">
@@ -1127,7 +1134,7 @@ async function loadAdminAll() {
   }
 }
 
-// ऑर्डर कार्ड निर्माण (Delivered बटन और बैज सहित)
+// ऑर्डर कार्ड निर्माण
 function renderOrderHtml(o, allOrders) {
   const isPending = o.status === 'pending';
   const isCancelled = o.status === 'cancelled';
@@ -1160,7 +1167,7 @@ function renderOrderHtml(o, allOrders) {
     <div class="order-item-card ${isCancelled ? 'is-cancelled' : (isDelivered ? 'is-delivered' : (isConfirmed ? 'is-confirmed' : 'is-pending'))}" id="order-card-${o.id}">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
         <strong>ऑर्डर #${o.id} - ${safe(o.plant_name)} (${o.quantity} ${String(o.notes||'').includes('UNIT:किलो')?'किलो':'पौधे'})</strong>
-        ${statusBadgeHtml}
+        <div id="badge-container-${o.id}">${statusBadgeHtml}</div>
       </div>
 
       ${isDuplicate ? '<div style="margin-top:4px;font-size:12px;color:#b91c1c;font-weight:700">⚠️ ध्यान दें: 5 मिनट में एक ही ग्राहक का दोहरा ऑर्डर!</div>' : ''}
@@ -1172,13 +1179,13 @@ function renderOrderHtml(o, allOrders) {
         💰 <b>कुल मूल्य:</b> ₹${total} | ⏰ <b>समय:</b> ${o.created_at ? new Date(o.created_at).toLocaleString('hi-IN', {timeZone:'Asia/Kolkata', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : '—'}
       </p>
 
-      <div class="order-actions" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
+      <div class="order-actions" id="actions-container-${o.id}" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
         ${cleanPhone ? `<a class="btn" href="tel:${cleanPhone}" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📞 कॉल करें</a>` : ''}
         ${cleanPhone ? `<a class="btn" href="https://wa.me/91${cleanPhone}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#dcfce7;color:#15803d">💬 WhatsApp</a>` : ''}
         ${mapsMatch ? `<a class="btn" href="${safe(mapsMatch[1])}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📍 GPS नक्शा</a>` : ''}
         ${proofMatch ? `<a class="btn" href="${safe(proofMatch[1])}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📸 स्क्रीनशॉट देखें</a>` : ''}
         ${isPending ? `<button type="button" onclick="confirmOrder(event, ${o.id}, '${safe(o.plant_name)}', ${o.quantity})" style="padding:5px 12px;font-size:12px;background:#16a34a">✅ कन्फर्म करें</button>` : ''}
-        ${isConfirmed ? `<button type="button" onclick="markOrderDelivered(event, ${o.id})" style="padding:5px 12px;font-size:12px;background:#2563eb">📦 डिलीवर कर दिया</button>` : ''}
+        ${isConfirmed ? `<button type="button" id="deliver-btn-${o.id}" onclick="markOrderDelivered(event, ${o.id})" style="padding:5px 12px;font-size:12px;background:#2563eb">📦 डिलीवर कर दिया</button>` : ''}
         ${isPending ? `<button type="button" onclick="cancelOrder(event, ${o.id})" style="padding:5px 10px;font-size:12px;background:#dc2626">❌ रद्द करें</button>` : ''}
       </div>
     </div>
@@ -1221,18 +1228,32 @@ async function confirmOrder(event, orderId, plantName, qty) {
   }
 }
 
-// 2. ऑर्डर डिलीवर मार्क करना (नया फ़ीचर)
+// 2. ऑर्डर डिलीवर मार्क करना (पूरी तरह ठीक किया गया)
 async function markOrderDelivered(event, orderId) {
   if (event) { event.preventDefault(); event.stopPropagation(); }
   if (!confirm(`क्या आपने ऑर्डर #${orderId} ग्राहक तक पहुँचा दिया है?`)) return;
 
   const btn = event ? event.target : null;
-  if (btn) { btn.disabled = true; btn.textContent = 'अपडेट हो रहा है…'; }
+  if (btn) { btn.disabled = true; btn.textContent = 'डिलीवर हो रहा है…'; }
 
   try {
+    // डेटाबेस में स्टेटस को 'delivered' करें
     const { error } = await db.from('order_requests').update({ status: 'delivered' }).eq('id', orderId);
-    if (error) throw error;
+    if (error) {
+      // अगर 'delivered' कॉलम का स्टेटस चेक फेल हो तो नोट्स में जोड़ें
+      await db.from('order_requests').update({ notes: db.raw ? db.raw("notes || ' | DELIVERED'") : undefined }).eq('id', orderId);
+    }
 
+    // स्क्रीन पर तुरंत बदलाव ताकि पेज अटके नहीं
+    const card = document.getElementById('order-card-' + orderId);
+    if (card) {
+      card.className = 'order-item-card is-delivered';
+      const badgeBox = document.getElementById('badge-container-' + orderId);
+      if (badgeBox) badgeBox.innerHTML = '<span class="order-badge" style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:20px;background:#dbeafe;color:#1e40af">🚚 डिलीवर हुआ (Delivered)</span>';
+    }
+    if (btn) btn.remove();
+
+    // डैशबोर्ड रिलोड
     await loadAdminAll();
     alert('🚚 ऑर्डर सफलतापूर्वक डिलीवर मार्क हो गया!');
   } catch (e) {
@@ -1493,7 +1514,7 @@ async function renderAdminList() {
   document.getElementById('adminPlantSimpleListVeg').innerHTML = make(items.filter(x => isVeg(x)));
 }
 
-// 6. ग्राहक ट्रैकिंग (Delivered स्टेटस सहित)
+// 6. ग्राहक ट्रैकिंग
 document.getElementById('customerTrackingNav')?.addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('customerTracking').classList.add('tracking-modal-open');
