@@ -91,15 +91,21 @@ button:disabled{opacity:.55;cursor:wait}
 .metric.warning .metric-value{color:#b91c1c}
 .metric.pending{background:linear-gradient(145deg,#fffbeb,#fff);border-color:#fde68a}
 .metric.pending .metric-value{color:#d97706}
+.metric.delivered{background:linear-gradient(145deg,#eff6ff,#fff);border-color:#bfdbfe}
+.metric.delivered .metric-value{color:#2563eb}
 
 .dashboard-table-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:16px}
 .dashboard-table-card h3{margin:0 0 12px;color:var(--green);font-size:17px;display:flex;justify-content:space-between;align-items:center}
 .order-item-card{border:1px solid #eef2eb;border-radius:12px;padding:12px;margin-bottom:10px;background:#fbfef9}
 .order-item-card.is-pending{border-left:5px solid #f59e0b}
 .order-item-card.is-confirmed{border-left:5px solid #16a34a;background:#f9fdf8}
+.order-item-card.is-delivered{border-left:5px solid #2563eb;background:#f8faff}
 .order-item-card.is-cancelled{border-left:5px solid #dc2626;background:#fffaf9}
 
-/* मंडी ग्रिड स्टाइल */
+/* लाउड ऑडियो अलर्ट बैनर */
+#loudAlertBanner{display:none;position:sticky;top:60px;z-index:2500;background:#dc2626;color:#fff;padding:14px 18px;border-radius:12px;margin-bottom:14px;box-shadow:0 8px 24px rgba(220,38,38,0.4);animation:pulseAlert 1s infinite alternate}
+@keyframes pulseAlert{from{background:#dc2626}to{background:#991b1b}}
+
 .mandi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:14px 0}
 .mandi-result{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
 .mandi-result>div{background:#f2f8f3;border:1px solid #d8e9dc;border-radius:10px;padding:12px;text-align:center}
@@ -241,9 +247,23 @@ footer a{color:#fff}
     </form>
 
     <div id="ownerPanelHeader" style="display:none">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <h3>🌿 नीम करोली नर्सरी एडमिन पैनल</h3>
-        <button id="logoutButton" type="button" style="background:#dc2626">लॉग आउट</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div>
+          <h3 style="margin:0">🌿 नीम करोली नर्सरी एडमिन पैनल</h3>
+          <small id="audioStatusText" style="color:var(--green);font-weight:700">🔊 लाउड ऑर्डर अलर्ट: चालू है</small>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="toggleAlertSoundBtn" type="button" style="background:#edf5e9;color:var(--green);border:1px solid var(--line);font-size:13px;padding:6px 10px">🔔 साउंड टेस्ट करें</button>
+          <button id="logoutButton" type="button" style="background:#dc2626">लॉग आउट</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- लाउड अलर्ट चमकता हुआ बैनर -->
+    <div id="loudAlertBanner">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <strong style="font-size:16px">🚨 नया ऑर्डर आया है! कृपया तुरंत जाँच करें।</strong>
+        <button id="stopLoudAlertBtn" type="button" style="background:#fff;color:#dc2626;padding:6px 14px;font-size:13px;font-weight:800;border-radius:8px">🔕 अलर्ट बंद करें</button>
       </div>
     </div>
 
@@ -347,7 +367,7 @@ footer a{color:#fff}
       </div>
     </div>
 
-    <!-- बिक्री हिसाब (दो अलग-अलग श्रेणी में विस्तृत हिसाब) -->
+    <!-- बिक्री हिसाब -->
     <div id="adminSalesPane" class="admin-pane">
       <div class="admin-section-card">
         <h2>💰 कुल बिक्री हिसाब-किताब</h2>
@@ -381,12 +401,12 @@ footer a{color:#fff}
           </section>
         </div>
 
-        <h3 style="margin:20px 0 10px;color:var(--green)">📋 सभी कन्फर्म बिक्री रसीदें</h3>
+        <h3 style="margin:20px 0 10px;color:var(--green)">📋 सभी कन्फर्म व डिलीवर बिक्री रसीदें</h3>
         <div id="ownerSalesList">लोड हो रहा है…</div>
       </div>
     </div>
 
-    <!-- मंडी भाव (झुंझुनू, सीकर, चूरू, जयपुर लाइव रेट व पोर्टल अपडेट) -->
+    <!-- मंडी भाव -->
     <div id="adminMandiPane" class="admin-pane">
       <div class="admin-section-card">
         <h2>📈 लाइव मंडी भाव (सरकारी AGMARKNET रिपोर्ट)</h2>
@@ -425,7 +445,6 @@ footer a{color:#fff}
           <div><small>अधिकतम भाव</small><strong id="mandiMaxPrice">₹0 / किलो</strong></div>
         </div>
 
-        <!-- तुरंत पोर्टल में भाव बदलने का बॉक्स -->
         <div class="mandi-profit-box">
           <h3 style="margin:0 0 8px;color:var(--green)">🧮 अपना नया बिक्री भाव तय करें व पोर्टल पर अपडेट करें</h3>
           <div class="mandi-grid">
@@ -500,6 +519,74 @@ const MAX_DELIVERY_DISTANCE_KM = 50;
 const DELIVERY_RATE_PER_KM = 10;
 let upiCountdownInterval = null;
 
+// ऑडियो और रिंगटोन अलर्ट सिस्टम (Zomato-style sound synth)
+let audioCtx = null;
+let alertSoundInterval = null;
+let lastKnownPendingCount = null;
+let isSoundMuted = false;
+
+function playLoudAlertTone() {
+  if (isSoundMuted) return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    const now = audioCtx.currentTime;
+    const osc1 = audioCtx.createOscillator();
+    const osc2 = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc1.type = 'triangle';
+    osc2.type = 'sine';
+
+    // लाउड टू-टोन अलार्म
+    osc1.frequency.setValueAtTime(880, now); // A5
+    osc1.frequency.setValueAtTime(1174.66, now + 0.15); // D6
+    osc1.frequency.setValueAtTime(880, now + 0.3);
+    osc1.frequency.setValueAtTime(1174.66, now + 0.45);
+
+    osc2.frequency.setValueAtTime(440, now);
+    osc2.frequency.setValueAtTime(587.33, now + 0.15);
+
+    gain.gain.setValueAtTime(0.4, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.65);
+
+    osc1.connect(gain);
+    osc2.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc1.start(now);
+    osc2.start(now);
+    osc1.stop(now + 0.7);
+    osc2.stop(now + 0.7);
+  } catch (e) {
+    console.error('Audio play error:', e);
+  }
+}
+
+function startLoudAlert() {
+  const banner = document.getElementById('loudAlertBanner');
+  if (banner) banner.style.display = 'block';
+  playLoudAlertTone();
+  if (alertSoundInterval) clearInterval(alertSoundInterval);
+  alertSoundInterval = setInterval(playLoudAlertTone, 1800);
+}
+
+function stopLoudAlert() {
+  const banner = document.getElementById('loudAlertBanner');
+  if (banner) banner.style.display = 'none';
+  if (alertSoundInterval) {
+    clearInterval(alertSoundInterval);
+    alertSoundInterval = null;
+  }
+}
+
+document.getElementById('stopLoudAlertBtn')?.addEventListener('click', stopLoudAlert);
+document.getElementById('toggleAlertSoundBtn')?.addEventListener('click', () => {
+  playLoudAlertTone();
+  alert('🔔 लाउड साउंड टेस्ट किया गया!');
+});
+
 function safe(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function isVeg(p) { return /सब्जी|सब्ज़ी|veg|vegetable/i.test(String(p && p.category || '')); }
 function distanceKm(lat1, lon1, lat2, lon2) {
@@ -509,7 +596,6 @@ function distanceKm(lat1, lon1, lat2, lon2) {
   return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-// भारतीय समय (IST) से सही तारीख निकालना
 function getISTDate(dateInput) {
   const d = dateInput ? new Date(dateInput) : new Date();
   const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
@@ -746,8 +832,14 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
 // 3. एडमिन पैनल व डैशबोर्ड
 const ownerModal = document.getElementById('owner');
-document.getElementById('adminPanelNav').addEventListener('click', () => { ownerModal.classList.add('login-visible'); });
-document.getElementById('ownerCloseButton').addEventListener('click', () => { ownerModal.classList.remove('login-visible'); });
+document.getElementById('adminPanelNav').addEventListener('click', () => { 
+  ownerModal.classList.add('login-visible');
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+});
+document.getElementById('ownerCloseButton').addEventListener('click', () => { 
+  ownerModal.classList.remove('login-visible'); 
+  stopLoudAlert();
+});
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -762,7 +854,24 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   document.getElementById('adminTabs').style.display = 'grid';
   showAdminTab('dashboard');
   loadAdminAll();
+
+  // नए ऑर्डर के लिए 12 सेकंड का ऑटो-चेकर (ऑर्डर अलर्ट)
+  setInterval(checkForNewIncomingOrders, 12000);
 });
+
+// नए ऑर्डर की ऑटो-चेकिंग
+async function checkForNewIncomingOrders() {
+  try {
+    const { count, error } = await db.from('order_requests').select('*', { count: 'exact', head: true }).eq('status', 'pending');
+    if (error) return;
+
+    if (lastKnownPendingCount !== null && count > lastKnownPendingCount) {
+      startLoudAlert();
+      await loadAdminAll();
+    }
+    lastKnownPendingCount = count;
+  } catch (_) {}
+}
 
 document.getElementById('logoutButton').addEventListener('click', async () => {
   await db.auth.signOut();
@@ -878,7 +987,7 @@ async function quickUpdateStock(id, inputId) {
   } catch (err) { alert('त्रुटि: ' + err.message); }
 }
 
-// डैशबोर्ड लोड करना
+// डैशबोर्ड लोड करना (Delivered काउंट के साथ)
 async function loadAdminAll() {
   const statsBox = document.getElementById('ownerStats');
   if (!statsBox) return;
@@ -903,13 +1012,14 @@ async function loadAdminAll() {
     const todayOrders = orders.filter(o => getISTDate(o.created_at) === todayStr);
     const pendingOrders = orders.filter(o => o.status === 'pending');
     const confirmedOrders = orders.filter(o => o.status === 'confirmed');
+    const deliveredOrders = orders.filter(o => o.status === 'delivered');
 
     let todaySoldPlants = 0;
     let todaySoldVegKg = 0;
     let todaySalesAmount = 0;
 
     todayOrders.forEach(o => {
-      if (o.status === 'confirmed') {
+      if (o.status === 'confirmed' || o.status === 'delivered') {
         const isKg = String(o.notes || '').includes('UNIT:किलो');
         const qty = Number(o.quantity || 0);
         const price = Number(o.unit_price || 0);
@@ -940,10 +1050,15 @@ async function loadAdminAll() {
           <div class="metric-value">${confirmedOrders.length}</div>
           <small style="color:var(--green)">पक्के ऑर्डर</small>
         </div>
+        <div class="metric delivered">
+          <div class="metric-label">🚚 डिलीवर हुए</div>
+          <div class="metric-value">${deliveredOrders.length}</div>
+          <small style="color:#2563eb">ग्राहक तक पहुँचा दिए</small>
+        </div>
         <div class="metric">
           <div class="metric-label">💰 आज का व्यापार</div>
           <div class="metric-value">₹${todaySalesAmount.toFixed(2)}</div>
-          <small style="color:var(--muted)">कन्फर्म बिक्री राशि</small>
+          <small style="color:var(--muted)">कन्फर्म व डिलीवर बिक्री</small>
         </div>
         <div class="metric">
           <div class="metric-label">🌱 आज बिके पौधे</div>
@@ -959,11 +1074,6 @@ async function loadAdminAll() {
           <div class="metric-label">🌱 कुल पौधे बाकी</div>
           <div class="metric-value">${totalPlantStock}</div>
           <small style="color:var(--muted)">${pList.length} किस्मों में</small>
-        </div>
-        <div class="metric">
-          <div class="metric-label">🥬 कुल सब्ज़ी बाकी</div>
-          <div class="metric-value">${totalVegStock.toFixed(1)} <span style="font-size:14px">किलो</span></div>
-          <small style="color:var(--muted)">${vList.length} किस्मों में</small>
         </div>
       </div>
 
@@ -1017,9 +1127,12 @@ async function loadAdminAll() {
   }
 }
 
+// ऑर्डर कार्ड निर्माण (Delivered बटन और बैज सहित)
 function renderOrderHtml(o, allOrders) {
   const isPending = o.status === 'pending';
   const isCancelled = o.status === 'cancelled';
+  const isConfirmed = o.status === 'confirmed';
+  const isDelivered = o.status === 'delivered';
   const total = (Number(o.unit_price || 0) * Number(o.quantity || 0)).toFixed(2);
   const mapsMatch = String(o.notes || '').match(/MAPS:(https:\/\/www\.google\.com\/maps\?q=[0-9.,-]+)/);
   const proofMatch = String(o.notes || '').match(/PROOF:(https:[^|]+)/);
@@ -1032,13 +1145,22 @@ function renderOrderHtml(o, allOrders) {
     Math.abs(new Date(other.created_at) - new Date(o.created_at)) < 5 * 60 * 1000
   );
 
+  let statusBadgeHtml = '';
+  if (isCancelled) {
+    statusBadgeHtml = '<span class="order-badge" style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:20px;background:#fee2e2;color:#991b1b">❌ रद्द (Cancelled)</span>';
+  } else if (isDelivered) {
+    statusBadgeHtml = '<span class="order-badge" style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:20px;background:#dbeafe;color:#1e40af">🚚 डिलीवर हुआ (Delivered)</span>';
+  } else if (isConfirmed) {
+    statusBadgeHtml = '<span class="order-badge" style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:20px;background:#dcfce7;color:#166534">✅ कन्फर्म (Confirmed)</span>';
+  } else {
+    statusBadgeHtml = '<span class="order-badge" style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:20px;background:#fef3c7;color:#92400e">⏳ लंबित (Pending)</span>';
+  }
+
   return `
-    <div class="order-item-card ${isCancelled ? 'is-cancelled' : (isPending ? 'is-pending' : 'is-confirmed')}" id="order-card-${o.id}">
+    <div class="order-item-card ${isCancelled ? 'is-cancelled' : (isDelivered ? 'is-delivered' : (isConfirmed ? 'is-confirmed' : 'is-pending'))}" id="order-card-${o.id}">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
         <strong>ऑर्डर #${o.id} - ${safe(o.plant_name)} (${o.quantity} ${String(o.notes||'').includes('UNIT:किलो')?'किलो':'पौधे'})</strong>
-        <span class="order-badge" style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:20px;background:${isCancelled ? '#fee2e2;color:#991b1b' : (isPending ? '#fef3c7;color:#92400e' : '#dcfce7;color:#166534')}">
-          ${isCancelled ? '❌ रद्द (Cancelled)' : (isPending ? '⏳ लंबित (Pending)' : '✅ कन्फर्म (Confirmed)')}
-        </span>
+        ${statusBadgeHtml}
       </div>
 
       ${isDuplicate ? '<div style="margin-top:4px;font-size:12px;color:#b91c1c;font-weight:700">⚠️ ध्यान दें: 5 मिनट में एक ही ग्राहक का दोहरा ऑर्डर!</div>' : ''}
@@ -1056,12 +1178,14 @@ function renderOrderHtml(o, allOrders) {
         ${mapsMatch ? `<a class="btn" href="${safe(mapsMatch[1])}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📍 GPS नक्शा</a>` : ''}
         ${proofMatch ? `<a class="btn" href="${safe(proofMatch[1])}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📸 स्क्रीनशॉट देखें</a>` : ''}
         ${isPending ? `<button type="button" onclick="confirmOrder(event, ${o.id}, '${safe(o.plant_name)}', ${o.quantity})" style="padding:5px 12px;font-size:12px;background:#16a34a">✅ कन्फर्म करें</button>` : ''}
+        ${isConfirmed ? `<button type="button" onclick="markOrderDelivered(event, ${o.id})" style="padding:5px 12px;font-size:12px;background:#2563eb">📦 डिलीवर कर दिया</button>` : ''}
         ${isPending ? `<button type="button" onclick="cancelOrder(event, ${o.id})" style="padding:5px 10px;font-size:12px;background:#dc2626">❌ रद्द करें</button>` : ''}
       </div>
     </div>
   `;
 }
 
+// 1. ऑर्डर कन्फर्मेशन
 async function confirmOrder(event, orderId, plantName, qty) {
   if (event) { event.preventDefault(); event.stopPropagation(); }
   if (!confirm(`क्या आप ऑर्डर #${orderId} कन्फर्म करना चाहते हैं? इससे स्टॉक में से ${qty} कम हो जाएगा और आज का व्यापार अपडेट होगा।`)) return;
@@ -1087,6 +1211,7 @@ async function confirmOrder(event, orderId, plantName, qty) {
       }
     }
 
+    stopLoudAlert();
     await loadAdminAll();
     await loadPlants();
     alert('✅ ऑर्डर सफलतापूर्वक कन्फर्म हो गया और स्टॉक घट गया!');
@@ -1096,18 +1221,39 @@ async function confirmOrder(event, orderId, plantName, qty) {
   }
 }
 
+// 2. ऑर्डर डिलीवर मार्क करना (नया फ़ीचर)
+async function markOrderDelivered(event, orderId) {
+  if (event) { event.preventDefault(); event.stopPropagation(); }
+  if (!confirm(`क्या आपने ऑर्डर #${orderId} ग्राहक तक पहुँचा दिया है?`)) return;
+
+  const btn = event ? event.target : null;
+  if (btn) { btn.disabled = true; btn.textContent = 'अपडेट हो रहा है…'; }
+
+  try {
+    const { error } = await db.from('order_requests').update({ status: 'delivered' }).eq('id', orderId);
+    if (error) throw error;
+
+    await loadAdminAll();
+    alert('🚚 ऑर्डर सफलतापूर्वक डिलीवर मार्क हो गया!');
+  } catch (e) {
+    alert('त्रुटि: ' + e.message);
+    if (btn) { btn.disabled = false; btn.textContent = '📦 डिलीवर कर दिया'; }
+  }
+}
+
 async function cancelOrder(event, orderId) {
   if (event) { event.preventDefault(); event.stopPropagation(); }
   if (!confirm('क्या आप इस ऑर्डर को रद्द (Cancel) करना चाहते हैं?')) return;
   try {
     const { error } = await db.from('order_requests').update({ status: 'cancelled' }).eq('id', orderId);
     if (error) throw error;
+    stopLoudAlert();
     await loadAdminAll();
     alert('❌ ऑर्डर रद्द कर दिया गया!');
   } catch (e) { alert('त्रुटि: ' + e.message); }
 }
 
-// 4. नया और विस्तृत बिक्री हिसाब (Sales Ledger)
+// बिक्री हिसाब लोड करना
 async function loadSalesLedger() {
   const pBox = document.getElementById('salesPlantRecords');
   const vBox = document.getElementById('salesVegRecords');
@@ -1120,7 +1266,7 @@ async function loadSalesLedger() {
   try {
     const { data: orders, error } = await db.from('order_requests')
       .select('*')
-      .eq('status', 'confirmed')
+      .in('status', ['confirmed', 'delivered'])
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -1153,7 +1299,6 @@ async function loadSalesLedger() {
     document.getElementById('salesTotalVeg').textContent = vegCountKg.toFixed(1) + ' किलो';
     document.getElementById('salesTotalOrders').textContent = String(orders ? orders.length : 0);
 
-    // पौधों की अलग बिक्री सूची
     const pKeys = Object.keys(plantItemsMap);
     pBox.innerHTML = pKeys.length ? pKeys.map(k => `
       <div class="stock-row">
@@ -1162,7 +1307,6 @@ async function loadSalesLedger() {
       </div>`).join('') + `<div style="margin-top:10px;font-weight:700;color:var(--green)">पौधों से कुल आमदनी: ₹${plantRevenue.toFixed(2)}</div>`
       : '<p style="color:var(--muted)">अभी कोई पौधे की बिक्री नहीं हुई।</p>';
 
-    // सब्ज़ियों की अलग बिक्री सूची
     const vKeys = Object.keys(vegItemsMap);
     vBox.innerHTML = vKeys.length ? vKeys.map(k => `
       <div class="stock-row">
@@ -1171,15 +1315,16 @@ async function loadSalesLedger() {
       </div>`).join('') + `<div style="margin-top:10px;font-weight:700;color:var(--green)">सब्ज़ियों से कुल आमदनी: ₹${vegRevenue.toFixed(2)}</div>`
       : '<p style="color:var(--muted)">अभी कोई सब्ज़ी की बिक्री नहीं हुई।</p>';
 
-    // सभी रसीदों की सूची
     allList.innerHTML = orders && orders.length ? orders.map(o => {
       const isKg = String(o.notes || '').includes('UNIT:किलो');
       const total = (Number(o.unit_price || 0) * Number(o.quantity || 0)).toFixed(2);
+      const isDel = o.status === 'delivered';
       const dateStr = o.created_at ? new Date(o.created_at).toLocaleString('hi-IN', {timeZone:'Asia/Kolkata', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'}) : '—';
       return `
         <div class="sale-row" style="padding:10px 4px;border-bottom:1px solid #eef2eb">
           <div>
             <strong>#${o.id} - ${safe(o.plant_name)} (${o.quantity} ${isKg ? 'किलो' : 'पौधे'})</strong>
+            <span style="font-size:11px;font-weight:700;padding:2px 6px;border-radius:10px;margin-left:6px;background:${isDel ? '#dbeafe;color:#1e40af' : '#dcfce7;color:#166534'}">${isDel ? '🚚 डिलीवर' : '✅ कन्फर्म'}</span>
             <div style="font-size:13px;color:var(--muted)">ग्राहक: ${safe(o.customer_name)} | 📞 ${safe(o.customer_phone)}</div>
             <div style="font-size:12px;color:var(--muted)">तारीख: ${dateStr}</div>
           </div>
@@ -1192,7 +1337,7 @@ async function loadSalesLedger() {
   }
 }
 
-// 5. लाइव मंडी भाव (झुंझुनू, सीकर, चूरू, जयपुर) व पोर्टल अपडेट
+// मंडी भाव प्रणाली
 const MANDI_BASE_RATES = {
   'Tomato': { min: 14, modal: 20, max: 26 },
   'Cucumber': { min: 15, modal: 22, max: 28 },
@@ -1220,7 +1365,6 @@ async function fetchLiveMandiBhav() {
   stat.textContent = `${dist} मंडी से लाइव भाव प्राप्त किया जा रहा है…`;
   resGrid.style.display = 'none';
 
-  // 1. यदि Supabase Edge Function तैयार है तो कॉल करें, नहीं तो रीयल-टाइम मंडी गणना
   let minRate, modalRate, maxRate;
   try {
     const res = await fetch(`${SUPABASE_URL}/functions/v1/mandi-bhav?district=${dist}&commodity=${veg}`);
@@ -1247,9 +1391,8 @@ async function fetchLiveMandiBhav() {
   document.getElementById('mandiMaxPrice').textContent = `₹${maxRate.toFixed(1)} / किलो`;
 
   resGrid.style.display = 'grid';
-  stat.textContent = `✅ ${dist} मंडी रिपोर्ट: आज का मॉडल (औसत) भाव ₹${modalRate.toFixed(1)} / किलो है।`;
+  stat.textContent = `✅ ${dist} मंडी रिपोर्ट: आज का मॉडल भाव ₹${modalRate.toFixed(1)} / किलो है।`;
 
-  // कैलकुलेटर में ऑटो-फिल
   document.getElementById('mandiCalcBuy').value = modalRate.toFixed(1);
   calculateSellPrice();
 }
@@ -1261,15 +1404,12 @@ function calculateSellPrice() {
   const trans = Number(document.getElementById('mandiCalcTransport').value) || 0;
   const margin = Number(document.getElementById('mandiCalcMargin').value) || 0;
   const sellEl = document.getElementById('mandiCalcSell');
-  if (buy > 0) {
-    sellEl.value = (buy + trans + margin).toFixed(1);
-  }
+  if (buy > 0) sellEl.value = (buy + trans + margin).toFixed(1);
 }
 ['mandiCalcBuy','mandiCalcTransport','mandiCalcMargin'].forEach(id => {
   document.getElementById(id)?.addEventListener('input', calculateSellPrice);
 });
 
-// मंडी पैनल के लिए सब्ज़ियों की ड्रॉपडाउन भरना
 async function loadMandiDropdownPlants() {
   const sel = document.getElementById('mandiSelectPlant');
   if (!sel) return;
@@ -1288,7 +1428,6 @@ async function loadMandiDropdownPlants() {
   }
 }
 
-// सीधे ग्राहक पोर्टल में भाव सेव करना
 document.getElementById('saveMandiToPortalBtn')?.addEventListener('click', async () => {
   const pId = document.getElementById('mandiSelectPlant').value;
   const newPrice = Number(document.getElementById('mandiCalcSell').value);
@@ -1354,7 +1493,7 @@ async function renderAdminList() {
   document.getElementById('adminPlantSimpleListVeg').innerHTML = make(items.filter(x => isVeg(x)));
 }
 
-// 6. ग्राहक ट्रैकिंग
+// 6. ग्राहक ट्रैकिंग (Delivered स्टेटस सहित)
 document.getElementById('customerTrackingNav')?.addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('customerTracking').classList.add('tracking-modal-open');
@@ -1397,6 +1536,17 @@ document.getElementById('customerTrackingForm')?.addEventListener('submit', asyn
       const formattedTime = dateObj ? dateObj.toLocaleTimeString('hi-IN', { timeZone:'Asia/Kolkata', hour: '2-digit', minute: '2-digit' }) : '—';
       const isKg = String(o.notes || '').includes('UNIT:किलो');
 
+      let custStatusText = '';
+      if (o.status === 'delivered') {
+        custStatusText = '<b style="color:#2563eb">🚚 आपका ऑर्डर डिलीवर कर दिया गया है! धन्यवाद!</b>';
+      } else if (o.status === 'confirmed') {
+        custStatusText = '<b style="color:#16a34a">✅ ऑर्डर कन्फर्म हो गया है (तैयारी जारी है)</b>';
+      } else if (o.status === 'cancelled') {
+        custStatusText = '<b style="color:#dc2626">❌ ऑर्डर रद्द कर दिया गया है</b>';
+      } else {
+        custStatusText = '<b style="color:#d97706">⏳ लंबित (पेमेंट व पते की जाँच जारी है)</b>';
+      }
+
       return `
         <div class="status" style="border:1px solid #dcebd7; margin-bottom:10px; background:#fff">
           <h4 style="margin:0 0 6px; color:var(--green)">ऑर्डर #${o.id} - ${safe(o.plant_name)}</h4>
@@ -1405,7 +1555,7 @@ document.getElementById('customerTrackingForm')?.addEventListener('submit', asyn
             💰 <b>कुल राशि:</b> ₹${total}<br>
             📅 <b>खरीदने की तारीख:</b> ${formattedDate}<br>
             ⏰ <b>खरीदने का समय:</b> ${formattedTime}<br>
-            📍 <b>स्थिति:</b> <b style="color:${o.status === 'confirmed' ? '#16a34a' : (o.status === 'cancelled' ? '#dc2626' : '#d97706')}">${o.status === 'confirmed' ? '✅ कन्फर्म (Confirmed)' : (o.status === 'cancelled' ? '❌ रद्द (Cancelled)' : '⏳ लंबित (जाँच जारी है)')}</b>
+            📍 <b>स्थिति:</b> ${custStatusText}
           </p>
           ${proofMatch ? `
             <div style="margin-top:8px">
