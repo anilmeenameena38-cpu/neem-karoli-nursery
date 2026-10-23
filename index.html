@@ -256,18 +256,15 @@ footer a{color:#fff}
       <button class="admin-tab" type="button" data-tab="chatgpt">🤖 ChatGPT</button>
     </div>
 
-    <!-- डैशबोर्ड -->
     <div id="adminDashboardPane" class="admin-pane active">
       <div id="ownerStats">डैशबोर्ड लोड हो रहा है…</div>
     </div>
 
-    <!-- ऑर्डर लिस्ट -->
     <div id="adminOrdersPane" class="admin-pane">
       <h2>🛒 ग्राहक ऑर्डर</h2>
       <div id="ownerOrders">ऑर्डर लोड हो रहे हैं…</div>
     </div>
 
-    <!-- स्टॉक प्रबंधन -->
     <div id="adminStockPane" class="admin-pane">
       <h2>📦 स्टॉक प्रबंधन (Sold Out व स्टॉक बदलाव)</h2>
       <div class="stock-category-columns">
@@ -282,7 +279,6 @@ footer a{color:#fff}
       </div>
     </div>
 
-    <!-- नया उत्पाद -->
     <div id="adminManageplantsPane" class="admin-pane">
       <h2>🌱 उत्पाद प्रबंधन</h2>
       <div class="plant-manage-buttons">
@@ -405,10 +401,16 @@ function distanceKm(lat1, lon1, lat2, lon2) {
 
 // भारतीय समय (IST) से सही तारीख निकालना
 function getISTDate(dateInput) {
-  const d = dateInput ? new Date(dateInput) : new Date();
+  if (!dateInput) {
+    const d = new Date();
+    const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+    const ist = new Date(utc + (3600000 * 5.5));
+    return ist.getFullYear() + '-' + String(ist.getMonth()+1).padStart(2,'0') + '-' + String(ist.getDate()).padStart(2,'0');
+  }
+  const d = new Date(dateInput);
   const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-  const istDate = new Date(utc + (3600000 * 5.5)); // IST +5:30
-  return istDate.getFullYear() + '-' + String(istDate.getMonth()+1).padStart(2,'0') + '-' + String(istDate.getDate()).padStart(2,'0');
+  const ist = new Date(utc + (3600000 * 5.5));
+  return ist.getFullYear() + '-' + String(ist.getMonth()+1).padStart(2,'0') + '-' + String(ist.getDate()).padStart(2,'0');
 }
 
 // 1. होमपेज उत्पाद लोड करना
@@ -770,13 +772,13 @@ async function quickUpdateStock(id, inputId) {
   } catch (err) { alert('त्रुटि: ' + err.message); }
 }
 
-// पॉइंट 5: पूरी तरह जाँचा और ठीक किया गया डैशबोर्ड
+// पॉइंट 5: बुलेटप्रूफ़ डैशबोर्ड (Zero Mistake Logic)
 async function loadAdminAll() {
   const statsBox = document.getElementById('ownerStats');
   if (!statsBox) return;
 
   try {
-    const todayStr = getISTDate(); // आज की सही भारतीय तारीख (YYYY-MM-DD)
+    const todayStr = getISTDate();
 
     const [plantsRes, ordersRes] = await Promise.all([
       db.from('plants').select('*').order('name'),
@@ -792,7 +794,7 @@ async function loadAdminAll() {
     const totalPlantStock = pList.reduce((sum, x) => sum + (Number(x.stock_quantity) || 0), 0);
     const totalVegStock = vList.reduce((sum, x) => sum + (Number(x.stock_quantity) || 0), 0);
 
-    // आज के सभी ऑर्डर
+    // आज के सभी ऑर्डर (तारीख मिलान)
     const todayOrders = orders.filter(o => getISTDate(o.created_at) === todayStr);
     const pendingOrders = orders.filter(o => o.status === 'pending');
     const confirmedOrders = orders.filter(o => o.status === 'confirmed');
@@ -911,7 +913,7 @@ async function loadAdminAll() {
   }
 }
 
-// ऑर्डर कार्ड रेंडरिंग (सटीक बटन्स व स्थिति)
+// ऑर्डर कार्ड निर्माण
 function renderOrderHtml(o, allOrders) {
   const isPending = o.status === 'pending';
   const isCancelled = o.status === 'cancelled';
@@ -957,39 +959,47 @@ function renderOrderHtml(o, allOrders) {
   `;
 }
 
-// ऑर्डर कन्फर्म करने का मजबूत फ़ंक्शन (बिना रिफ़्रेश अटके सीधा अपडेट)
+// सुरक्षित कन्फर्मेशन: RPC और Direct दोनों को चलाता है ताकि फेल न हो
 async function confirmOrder(event, orderId, plantName, qty) {
-  if (event) event.preventDefault();
+  if (event) { event.preventDefault(); event.stopPropagation(); }
   if (!confirm(`क्या आप ऑर्डर #${orderId} कन्फर्म करना चाहते हैं? इससे स्टॉक में से ${qty} कम हो जाएगा और आज का व्यापार अपडेट होगा।`)) return;
 
-  const card = document.getElementById('order-card-' + orderId);
   const btn = event ? event.target : null;
-  if (btn) btn.disabled = true;
+  if (btn) { btn.disabled = true; btn.textContent = 'प्रोसेसिंग…'; }
 
   try {
-    // 1. डेटाबेस में स्टेटस कन्फर्म करें
-    const { error: ordErr } = await db.from('order_requests').update({ status: 'confirmed' }).eq('id', orderId);
-    if (ordErr) throw ordErr;
+    // 1. पहले RPC चलाने की कोशिश करें (यदि उपलब्ध हो)
+    let rpcWorked = false;
+    try {
+      const { data: rpcData, error: rpcErr } = await db.rpc('confirm_nursery_order', { p_order_id: orderId });
+      if (!rpcErr) rpcWorked = true;
+    } catch (_) {}
 
-    // 2. पौधे/सब्ज़ी का स्टॉक घटाएँ
-    const { data: pData } = await db.from('plants').select('id, stock_quantity').eq('name', plantName).maybeSingle();
-    if (pData) {
-      const remainingStock = Math.max(0, Number(pData.stock_quantity || 0) - Number(qty));
-      await db.from('plants').update({ stock_quantity: remainingStock }).eq('id', pData.id);
+    // 2. यदि RPC नहीं चला तो सीधा टेबल अपडेट करें
+    if (!rpcWorked) {
+      const { error: ordErr } = await db.from('order_requests').update({ status: 'confirmed' }).eq('id', orderId);
+      if (ordErr) throw ordErr;
+
+      // पौधे/सब्ज़ी का स्टॉक घटाएँ
+      const { data: pData } = await db.from('plants').select('id, stock_quantity').eq('name', plantName).maybeSingle();
+      if (pData) {
+        const remainingStock = Math.max(0, Number(pData.stock_quantity || 0) - Number(qty));
+        await db.from('plants').update({ stock_quantity: remainingStock }).eq('id', pData.id);
+      }
     }
 
-    // 3. बिना पेज रीलोड किए तुरंत डैशबोर्ड और स्टॉक ताज़ा करें
+    // 3. बिना रीलोड अटके तुरंत स्क्रीन पर नया डेटा लाएँ
     await loadAdminAll();
     await loadPlants();
     alert('✅ ऑर्डर सफलतापूर्वक कन्फर्म हो गया और स्टॉक घट गया!');
   } catch (e) {
-    alert('त्रुटि: ' + e.message);
-    if (btn) btn.disabled = false;
+    alert('कन्फर्म नहीं हो सका: ' + e.message);
+    if (btn) { btn.disabled = false; btn.textContent = '✅ कन्फर्म करें'; }
   }
 }
 
 async function cancelOrder(event, orderId) {
-  if (event) event.preventDefault();
+  if (event) { event.preventDefault(); event.stopPropagation(); }
   if (!confirm('क्या आप इस ऑर्डर को रद्द (Cancel) करना चाहते हैं?')) return;
   try {
     const { error } = await db.from('order_requests').update({ status: 'cancelled' }).eq('id', orderId);
@@ -1042,7 +1052,7 @@ async function renderAdminList() {
   document.getElementById('adminPlantSimpleListVeg').innerHTML = make(items.filter(x => isVeg(x)));
 }
 
-// 4. ग्राहक ट्रैकिंग (सटीक और मज़बूत खोज)
+// 4. ग्राहक ट्रैकिंग
 document.getElementById('customerTrackingNav')?.addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('customerTracking').classList.add('tracking-modal-open');
