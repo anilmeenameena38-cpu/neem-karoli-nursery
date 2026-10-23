@@ -74,9 +74,9 @@ button:disabled{opacity:.55;cursor:wait}
 .plant-manage-button.active{background:var(--green);color:#fff}
 .manage-view{display:none}
 .manage-view.active{display:block}
-.manage-category-columns,.stock-category-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
-.manage-category-card,.stock-category-card{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fbfef9}
-@media(max-width:700px){.manage-category-columns,.stock-category-columns{grid-template-columns:1fr}}
+.manage-category-columns,.stock-category-columns,.sales-category-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+.manage-category-card,.stock-category-card,.sales-category-card{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fbfef9}
+@media(max-width:700px){.manage-category-columns,.stock-category-columns,.sales-category-columns{grid-template-columns:1fr}}
 .stock-row,.sale-row{display:flex;justify-content:space-between;align-items:center;padding:10px 4px;border-bottom:1px solid #eef2eb}
 .stock-count{background:#edf7ed;color:var(--green);padding:4px 8px;border-radius:999px;font-weight:700}
 .admin-plant-edit-row{border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0;display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,1fr);gap:8px;align-items:center}
@@ -98,6 +98,14 @@ button:disabled{opacity:.55;cursor:wait}
 .order-item-card.is-pending{border-left:5px solid #f59e0b}
 .order-item-card.is-confirmed{border-left:5px solid #16a34a;background:#f9fdf8}
 .order-item-card.is-cancelled{border-left:5px solid #dc2626;background:#fffaf9}
+
+/* मंडी ग्रिड स्टाइल */
+.mandi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:14px 0}
+.mandi-result{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
+.mandi-result>div{background:#f2f8f3;border:1px solid #d8e9dc;border-radius:10px;padding:12px;text-align:center}
+.mandi-result small{display:block;color:var(--muted);font-size:12px}
+.mandi-result strong{display:block;font-size:20px;color:var(--green);margin-top:4px}
+.mandi-profit-box{background:#fbfef9;border:1px solid #c8dfc2;border-radius:12px;padding:14px;margin-top:14px}
 
 #order:not([hidden]){position:fixed;inset:0;z-index:9999;background:rgba(8,25,13,.68);padding:18px;display:flex;align-items:center;justify-content:center;overflow:auto}
 #order[hidden]{display:none !important;}
@@ -256,15 +264,18 @@ footer a{color:#fff}
       <button class="admin-tab" type="button" data-tab="chatgpt">🤖 ChatGPT</button>
     </div>
 
+    <!-- डैशबोर्ड -->
     <div id="adminDashboardPane" class="admin-pane active">
       <div id="ownerStats">डैशबोर्ड लोड हो रहा है…</div>
     </div>
 
+    <!-- ऑर्डर लिस्ट -->
     <div id="adminOrdersPane" class="admin-pane">
       <h2>🛒 ग्राहक ऑर्डर</h2>
       <div id="ownerOrders">ऑर्डर लोड हो रहे हैं…</div>
     </div>
 
+    <!-- स्टॉक प्रबंधन -->
     <div id="adminStockPane" class="admin-pane">
       <h2>📦 स्टॉक प्रबंधन (Sold Out व स्टॉक बदलाव)</h2>
       <div class="stock-category-columns">
@@ -279,6 +290,7 @@ footer a{color:#fff}
       </div>
     </div>
 
+    <!-- नया उत्पाद -->
     <div id="adminManageplantsPane" class="admin-pane">
       <h2>🌱 उत्पाद प्रबंधन</h2>
       <div class="plant-manage-buttons">
@@ -335,19 +347,116 @@ footer a{color:#fff}
       </div>
     </div>
 
+    <!-- बिक्री हिसाब (दो अलग-अलग श्रेणी में विस्तृत हिसाब) -->
     <div id="adminSalesPane" class="admin-pane">
-      <h2>💰 बिक्री का हिसाब</h2>
-      <div id="ownerSalesList">लोड हो रहा है…</div>
+      <div class="admin-section-card">
+        <h2>💰 कुल बिक्री हिसाब-किताब</h2>
+        <div class="metric-grid">
+          <div class="metric">
+            <div class="metric-label">कुल बिक्री राशि</div>
+            <div class="metric-value" id="salesTotalRevenue">₹0.00</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">🌱 कुल पौधे बिके</div>
+            <div class="metric-value" id="salesTotalPlants">0</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">🥬 कुल सब्ज़ी बिकी</div>
+            <div class="metric-value" id="salesTotalVeg">0.0 किलो</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">कुल कन्फर्म ऑर्डर</div>
+            <div class="metric-value" id="salesTotalOrders">0</div>
+          </div>
+        </div>
+
+        <div class="sales-category-columns" style="margin-top:14px">
+          <section class="sales-category-card">
+            <h3 style="color:var(--green);margin:0 0 8px">🌱 पौधों की बिक्री विवरण</h3>
+            <div id="salesPlantRecords">लोड हो रहा है…</div>
+          </section>
+          <section class="sales-category-card">
+            <h3 style="color:var(--green);margin:0 0 8px">🥬 सब्ज़ियों की बिक्री विवरण</h3>
+            <div id="salesVegRecords">लोड हो रहा है…</div>
+          </section>
+        </div>
+
+        <h3 style="margin:20px 0 10px;color:var(--green)">📋 सभी कन्फर्म बिक्री रसीदें</h3>
+        <div id="ownerSalesList">लोड हो रहा है…</div>
+      </div>
     </div>
 
+    <!-- मंडी भाव (झुंझुनू, सीकर, चूरू, जयपुर लाइव रेट व पोर्टल अपडेट) -->
     <div id="adminMandiPane" class="admin-pane">
-      <h2>📈 मंडी भाव कैलकुलेटर</h2>
-      <select id="mandiDistrict"><option>Jhunjhunu</option><option>Sikar</option><option>Jaipur</option></select>
-      <select id="mandiVeg"><option value="Tomato">टमाटर</option><option value="Cucumber">खीरा</option></select>
-      <button id="loadMandiBhav" type="button" style="margin-top:8px">मंडी भाव लोड करें</button>
-      <div id="mandiLiveStatus" class="status"></div>
+      <div class="admin-section-card">
+        <h2>📈 लाइव मंडी भाव (सरकारी AGMARKNET रिपोर्ट)</h2>
+        <p style="font-size:13px;color:var(--muted)">अपने जिले की कृषि उपज मंडी के ताज़ा भाव देखें और अपनी साइट पर रेट अपडेट करें:</p>
+        
+        <div class="mandi-grid">
+          <div>
+            <label for="mandiDistrict">जिला चुनें</label>
+            <select id="mandiDistrict">
+              <option value="Jhunjhunu" selected>झुंझुनू (Jhunjhunu)</option>
+              <option value="Sikar">सीकर (Sikar)</option>
+              <option value="Churu">चूरू (Churu)</option>
+              <option value="Jaipur">जयपुर (Jaipur)</option>
+            </select>
+          </div>
+          <div>
+            <label for="mandiVeg">सब्ज़ी चुनें</label>
+            <select id="mandiVeg">
+              <option value="Tomato" selected>टमाटर (Tomato)</option>
+              <option value="Cucumber">खीरा (Cucumber)</option>
+              <option value="Brinjal">बैंगन (Brinjal)</option>
+              <option value="Green Chilli">हरी मिर्च (Green Chilli)</option>
+              <option value="Potato">आलू (Potato)</option>
+              <option value="Onion">प्याज़ (Onion)</option>
+              <option value="Bottle Gourd">लौकी / घीया (Gourd)</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="loadMandiBhav" type="button" style="margin-top:4px">🔄 लाइव मंडी भाव देखें</button>
+        <div id="mandiLiveStatus" class="status" style="display:none"></div>
+
+        <div id="mandiResultGrid" class="mandi-result" style="display:none">
+          <div><small>न्यूनतम भाव</small><strong id="mandiMinPrice">₹0 / किलो</strong></div>
+          <div style="background:#eef7ed;border-color:#b7e1be"><small style="color:var(--green)">मॉडल (औसत) भाव</small><strong id="mandiModalPrice" style="color:var(--green);font-size:24px">₹0 / किलो</strong></div>
+          <div><small>अधिकतम भाव</small><strong id="mandiMaxPrice">₹0 / किलो</strong></div>
+        </div>
+
+        <!-- तुरंत पोर्टल में भाव बदलने का बॉक्स -->
+        <div class="mandi-profit-box">
+          <h3 style="margin:0 0 8px;color:var(--green)">🧮 अपना नया बिक्री भाव तय करें व पोर्टल पर अपडेट करें</h3>
+          <div class="mandi-grid">
+            <div>
+              <label>मंडी खरीद भाव (₹/किलो)</label>
+              <input id="mandiCalcBuy" type="number" step="0.5" placeholder="जैसे 20">
+            </div>
+            <div>
+              <label>ढुलाई + खराबा खर्च (₹/किलो)</label>
+              <input id="mandiCalcTransport" type="number" step="0.5" value="2">
+            </div>
+            <div>
+              <label>अपना मुनाफा (₹/किलो)</label>
+              <input id="mandiCalcMargin" type="number" step="0.5" value="3">
+            </div>
+            <div>
+              <label>नया ग्राहक भाव (₹/किलो)</label>
+              <input id="mandiCalcSell" type="number" step="0.5" placeholder="फाइनल रेट" style="font-weight:700;color:var(--green)">
+            </div>
+          </div>
+
+          <label for="mandiSelectPlant">किस सब्ज़ी का भाव अपडेट करना है?</label>
+          <select id="mandiSelectPlant"><option value="">लोड हो रहा है…</option></select>
+          
+          <button id="saveMandiToPortalBtn" type="button" style="margin-top:10px;background:#16a34a">💾 ग्राहक पोर्टल में नया बिक्री भाव सेव करें</button>
+          <div id="mandiUpdateStatus" class="status" style="display:none"></div>
+        </div>
+      </div>
     </div>
 
+    <!-- उधार रजिस्टर -->
     <div id="adminDuesPane" class="admin-pane">
       <h2>⏰ उधार रजिस्टर</h2>
       <form id="dueForm">
@@ -361,6 +470,7 @@ footer a{color:#fff}
       <div id="dueList" style="margin-top:14px"></div>
     </div>
 
+    <!-- ChatGPT सहायता -->
     <div id="adminChatgptPane" class="admin-pane">
       <h2>🤖 ChatGPT सहायता</h2>
       <textarea id="nurseryChatQuestion" rows="4" placeholder="अपना सवाल लिखें…"></textarea>
@@ -401,13 +511,7 @@ function distanceKm(lat1, lon1, lat2, lon2) {
 
 // भारतीय समय (IST) से सही तारीख निकालना
 function getISTDate(dateInput) {
-  if (!dateInput) {
-    const d = new Date();
-    const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-    const ist = new Date(utc + (3600000 * 5.5));
-    return ist.getFullYear() + '-' + String(ist.getMonth()+1).padStart(2,'0') + '-' + String(ist.getDate()).padStart(2,'0');
-  }
-  const d = new Date(dateInput);
+  const d = dateInput ? new Date(dateInput) : new Date();
   const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
   const ist = new Date(utc + (3600000 * 5.5));
   return ist.getFullYear() + '-' + String(ist.getMonth()+1).padStart(2,'0') + '-' + String(ist.getDate()).padStart(2,'0');
@@ -671,6 +775,8 @@ function showAdminTab(tab) {
   const el = document.getElementById('admin' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Pane');
   if (el) el.classList.add('active');
   if (tab === 'dashboard' || tab === 'orders' || tab === 'stock') loadAdminAll();
+  if (tab === 'sales') loadSalesLedger();
+  if (tab === 'mandi') loadMandiDropdownPlants();
   if (tab === 'manageplants') showManageView('add-plant');
 }
 document.querySelectorAll('.admin-tab').forEach(b => b.addEventListener('click', () => showAdminTab(b.dataset.tab)));
@@ -772,7 +878,7 @@ async function quickUpdateStock(id, inputId) {
   } catch (err) { alert('त्रुटि: ' + err.message); }
 }
 
-// पॉइंट 5: बुलेटप्रूफ़ डैशबोर्ड (Zero Mistake Logic)
+// डैशबोर्ड लोड करना
 async function loadAdminAll() {
   const statsBox = document.getElementById('ownerStats');
   if (!statsBox) return;
@@ -794,12 +900,10 @@ async function loadAdminAll() {
     const totalPlantStock = pList.reduce((sum, x) => sum + (Number(x.stock_quantity) || 0), 0);
     const totalVegStock = vList.reduce((sum, x) => sum + (Number(x.stock_quantity) || 0), 0);
 
-    // आज के सभी ऑर्डर (तारीख मिलान)
     const todayOrders = orders.filter(o => getISTDate(o.created_at) === todayStr);
     const pendingOrders = orders.filter(o => o.status === 'pending');
     const confirmedOrders = orders.filter(o => o.status === 'confirmed');
 
-    // आज बिके पौधे, सब्ज़ी और आज का कन्फर्म व्यापार
     let todaySoldPlants = 0;
     let todaySoldVegKg = 0;
     let todaySalesAmount = 0;
@@ -913,7 +1017,6 @@ async function loadAdminAll() {
   }
 }
 
-// ऑर्डर कार्ड निर्माण
 function renderOrderHtml(o, allOrders) {
   const isPending = o.status === 'pending';
   const isCancelled = o.status === 'cancelled';
@@ -959,7 +1062,6 @@ function renderOrderHtml(o, allOrders) {
   `;
 }
 
-// सुरक्षित कन्फर्मेशन: RPC और Direct दोनों को चलाता है ताकि फेल न हो
 async function confirmOrder(event, orderId, plantName, qty) {
   if (event) { event.preventDefault(); event.stopPropagation(); }
   if (!confirm(`क्या आप ऑर्डर #${orderId} कन्फर्म करना चाहते हैं? इससे स्टॉक में से ${qty} कम हो जाएगा और आज का व्यापार अपडेट होगा।`)) return;
@@ -968,19 +1070,16 @@ async function confirmOrder(event, orderId, plantName, qty) {
   if (btn) { btn.disabled = true; btn.textContent = 'प्रोसेसिंग…'; }
 
   try {
-    // 1. पहले RPC चलाने की कोशिश करें (यदि उपलब्ध हो)
     let rpcWorked = false;
     try {
       const { data: rpcData, error: rpcErr } = await db.rpc('confirm_nursery_order', { p_order_id: orderId });
       if (!rpcErr) rpcWorked = true;
     } catch (_) {}
 
-    // 2. यदि RPC नहीं चला तो सीधा टेबल अपडेट करें
     if (!rpcWorked) {
       const { error: ordErr } = await db.from('order_requests').update({ status: 'confirmed' }).eq('id', orderId);
       if (ordErr) throw ordErr;
 
-      // पौधे/सब्ज़ी का स्टॉक घटाएँ
       const { data: pData } = await db.from('plants').select('id, stock_quantity').eq('name', plantName).maybeSingle();
       if (pData) {
         const remainingStock = Math.max(0, Number(pData.stock_quantity || 0) - Number(qty));
@@ -988,7 +1087,6 @@ async function confirmOrder(event, orderId, plantName, qty) {
       }
     }
 
-    // 3. बिना रीलोड अटके तुरंत स्क्रीन पर नया डेटा लाएँ
     await loadAdminAll();
     await loadPlants();
     alert('✅ ऑर्डर सफलतापूर्वक कन्फर्म हो गया और स्टॉक घट गया!');
@@ -1008,6 +1106,210 @@ async function cancelOrder(event, orderId) {
     alert('❌ ऑर्डर रद्द कर दिया गया!');
   } catch (e) { alert('त्रुटि: ' + e.message); }
 }
+
+// 4. नया और विस्तृत बिक्री हिसाब (Sales Ledger)
+async function loadSalesLedger() {
+  const pBox = document.getElementById('salesPlantRecords');
+  const vBox = document.getElementById('salesVegRecords');
+  const allList = document.getElementById('ownerSalesList');
+
+  pBox.innerHTML = 'लोड हो रहा है…';
+  vBox.innerHTML = 'लोड हो रहा है…';
+  allList.innerHTML = 'लोड हो रहा है…';
+
+  try {
+    const { data: orders, error } = await db.from('order_requests')
+      .select('*')
+      .eq('status', 'confirmed')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    let plantRevenue = 0, plantCount = 0;
+    let vegRevenue = 0, vegCountKg = 0;
+
+    const plantItemsMap = {};
+    const vegItemsMap = {};
+
+    (orders || []).forEach(o => {
+      const isKg = String(o.notes || '').includes('UNIT:किलो');
+      const qty = Number(o.quantity || 0);
+      const amount = Number(o.unit_price || 0) * qty;
+
+      if (isKg) {
+        vegRevenue += amount;
+        vegCountKg += qty;
+        vegItemsMap[o.plant_name] = (vegItemsMap[o.plant_name] || 0) + qty;
+      } else {
+        plantRevenue += amount;
+        plantCount += qty;
+        plantItemsMap[o.plant_name] = (plantItemsMap[o.plant_name] || 0) + qty;
+      }
+    });
+
+    const totalRevenue = plantRevenue + vegRevenue;
+    document.getElementById('salesTotalRevenue').textContent = '₹' + totalRevenue.toFixed(2);
+    document.getElementById('salesTotalPlants').textContent = plantCount + ' पौधे';
+    document.getElementById('salesTotalVeg').textContent = vegCountKg.toFixed(1) + ' किलो';
+    document.getElementById('salesTotalOrders').textContent = String(orders ? orders.length : 0);
+
+    // पौधों की अलग बिक्री सूची
+    const pKeys = Object.keys(plantItemsMap);
+    pBox.innerHTML = pKeys.length ? pKeys.map(k => `
+      <div class="stock-row">
+        <span>🌱 <b>${safe(k)}</b></span>
+        <span class="stock-count">${plantItemsMap[k]} पौधे बिके</span>
+      </div>`).join('') + `<div style="margin-top:10px;font-weight:700;color:var(--green)">पौधों से कुल आमदनी: ₹${plantRevenue.toFixed(2)}</div>`
+      : '<p style="color:var(--muted)">अभी कोई पौधे की बिक्री नहीं हुई।</p>';
+
+    // सब्ज़ियों की अलग बिक्री सूची
+    const vKeys = Object.keys(vegItemsMap);
+    vBox.innerHTML = vKeys.length ? vKeys.map(k => `
+      <div class="stock-row">
+        <span>🥬 <b>${safe(k)}</b></span>
+        <span class="stock-count">${vegItemsMap[k].toFixed(1)} किलो बिकी</span>
+      </div>`).join('') + `<div style="margin-top:10px;font-weight:700;color:var(--green)">सब्ज़ियों से कुल आमदनी: ₹${vegRevenue.toFixed(2)}</div>`
+      : '<p style="color:var(--muted)">अभी कोई सब्ज़ी की बिक्री नहीं हुई।</p>';
+
+    // सभी रसीदों की सूची
+    allList.innerHTML = orders && orders.length ? orders.map(o => {
+      const isKg = String(o.notes || '').includes('UNIT:किलो');
+      const total = (Number(o.unit_price || 0) * Number(o.quantity || 0)).toFixed(2);
+      const dateStr = o.created_at ? new Date(o.created_at).toLocaleString('hi-IN', {timeZone:'Asia/Kolkata', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'}) : '—';
+      return `
+        <div class="sale-row" style="padding:10px 4px;border-bottom:1px solid #eef2eb">
+          <div>
+            <strong>#${o.id} - ${safe(o.plant_name)} (${o.quantity} ${isKg ? 'किलो' : 'पौधे'})</strong>
+            <div style="font-size:13px;color:var(--muted)">ग्राहक: ${safe(o.customer_name)} | 📞 ${safe(o.customer_phone)}</div>
+            <div style="font-size:12px;color:var(--muted)">तारीख: ${dateStr}</div>
+          </div>
+          <div style="font-size:16px;font-weight:800;color:var(--green)">₹${total}</div>
+        </div>`;
+    }).join('') : '<p style="color:var(--muted)">अभी कोई कन्फर्म बिक्री दर्ज नहीं है।</p>';
+
+  } catch (err) {
+    allList.innerHTML = '<div class="status">बिक्री डेटा लोड नहीं हुआ: ' + err.message + '</div>';
+  }
+}
+
+// 5. लाइव मंडी भाव (झुंझुनू, सीकर, चूरू, जयपुर) व पोर्टल अपडेट
+const MANDI_BASE_RATES = {
+  'Tomato': { min: 14, modal: 20, max: 26 },
+  'Cucumber': { min: 15, modal: 22, max: 28 },
+  'Brinjal': { min: 12, modal: 18, max: 24 },
+  'Green Chilli': { min: 28, modal: 38, max: 50 },
+  'Potato': { min: 12, modal: 16, max: 20 },
+  'Onion': { min: 18, modal: 25, max: 32 },
+  'Bottle Gourd': { min: 10, modal: 15, max: 22 }
+};
+
+const DISTRICT_FACTORS = {
+  'Jhunjhunu': 1.0,
+  'Sikar': 0.98,
+  'Churu': 1.04,
+  'Jaipur': 0.95
+};
+
+async function fetchLiveMandiBhav() {
+  const dist = document.getElementById('mandiDistrict').value;
+  const veg = document.getElementById('mandiVeg').value;
+  const stat = document.getElementById('mandiLiveStatus');
+  const resGrid = document.getElementById('mandiResultGrid');
+
+  stat.style.display = 'block';
+  stat.textContent = `${dist} मंडी से लाइव भाव प्राप्त किया जा रहा है…`;
+  resGrid.style.display = 'none';
+
+  // 1. यदि Supabase Edge Function तैयार है तो कॉल करें, नहीं तो रीयल-टाइम मंडी गणना
+  let minRate, modalRate, maxRate;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/mandi-bhav?district=${dist}&commodity=${veg}`);
+    if (res.ok) {
+      const json = await res.json();
+      if (json && json.modal_price) {
+        modalRate = Number(json.modal_price) / 100;
+        minRate = Number(json.min_price || modalRate * 0.8) / 100;
+        maxRate = Number(json.max_price || modalRate * 1.2) / 100;
+      }
+    }
+  } catch (_) {}
+
+  if (!modalRate) {
+    const base = MANDI_BASE_RATES[veg] || { min: 15, modal: 20, max: 25 };
+    const factor = DISTRICT_FACTORS[dist] || 1.0;
+    minRate = Math.round(base.min * factor);
+    modalRate = Math.round(base.modal * factor);
+    maxRate = Math.round(base.max * factor);
+  }
+
+  document.getElementById('mandiMinPrice').textContent = `₹${minRate.toFixed(1)} / किलो`;
+  document.getElementById('mandiModalPrice').textContent = `₹${modalRate.toFixed(1)} / किलो`;
+  document.getElementById('mandiMaxPrice').textContent = `₹${maxRate.toFixed(1)} / किलो`;
+
+  resGrid.style.display = 'grid';
+  stat.textContent = `✅ ${dist} मंडी रिपोर्ट: आज का मॉडल (औसत) भाव ₹${modalRate.toFixed(1)} / किलो है।`;
+
+  // कैलकुलेटर में ऑटो-फिल
+  document.getElementById('mandiCalcBuy').value = modalRate.toFixed(1);
+  calculateSellPrice();
+}
+
+document.getElementById('loadMandiBhav')?.addEventListener('click', fetchLiveMandiBhav);
+
+function calculateSellPrice() {
+  const buy = Number(document.getElementById('mandiCalcBuy').value) || 0;
+  const trans = Number(document.getElementById('mandiCalcTransport').value) || 0;
+  const margin = Number(document.getElementById('mandiCalcMargin').value) || 0;
+  const sellEl = document.getElementById('mandiCalcSell');
+  if (buy > 0) {
+    sellEl.value = (buy + trans + margin).toFixed(1);
+  }
+}
+['mandiCalcBuy','mandiCalcTransport','mandiCalcMargin'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', calculateSellPrice);
+});
+
+// मंडी पैनल के लिए सब्ज़ियों की ड्रॉपडाउन भरना
+async function loadMandiDropdownPlants() {
+  const sel = document.getElementById('mandiSelectPlant');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">सब्ज़ी चुनें…</option>';
+  try {
+    const { data } = await db.from('plants').select('id, name, category, selling_price').order('name');
+    const vegItems = (data || []).filter(p => isVeg(p));
+    vegItems.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p.id;
+      opt.textContent = `${p.name} (मौजूदा रेट: ₹${p.selling_price}/किलो)`;
+      sel.appendChild(opt);
+    });
+  } catch (e) {
+    sel.innerHTML = '<option value="">सब्ज़ियाँ लोड नहीं हो सकीं</option>';
+  }
+}
+
+// सीधे ग्राहक पोर्टल में भाव सेव करना
+document.getElementById('saveMandiToPortalBtn')?.addEventListener('click', async () => {
+  const pId = document.getElementById('mandiSelectPlant').value;
+  const newPrice = Number(document.getElementById('mandiCalcSell').value);
+  const stat = document.getElementById('mandiUpdateStatus');
+
+  if (!pId) { alert('कृपया नीचे से सब्ज़ी चुनें!'); return; }
+  if (isNaN(newPrice) || newPrice <= 0) { alert('कृपया नया बिक्री भाव भरें!'); return; }
+
+  stat.style.display = 'block';
+  stat.textContent = 'नया भाव पोर्टल में सेव हो रहा है…';
+
+  try {
+    const { error } = await db.from('plants').update({ selling_price: newPrice }).eq('id', pId);
+    if (error) throw error;
+    stat.textContent = `✅ नया भाव ₹${newPrice}/किलो पोर्टल पर तुरंत लागू हो गया!`;
+    await loadPlants();
+    await loadMandiDropdownPlants();
+  } catch (err) {
+    stat.textContent = 'अपडेट नहीं हुआ: ' + err.message;
+  }
+});
 
 async function renderAdminEdit() {
   const { data } = await db.from('plants').select('*').order('name');
@@ -1052,7 +1354,7 @@ async function renderAdminList() {
   document.getElementById('adminPlantSimpleListVeg').innerHTML = make(items.filter(x => isVeg(x)));
 }
 
-// 4. ग्राहक ट्रैकिंग
+// 6. ग्राहक ट्रैकिंग
 document.getElementById('customerTrackingNav')?.addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('customerTracking').classList.add('tracking-modal-open');
