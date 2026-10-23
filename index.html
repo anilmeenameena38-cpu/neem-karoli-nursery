@@ -243,6 +243,7 @@ body.about-page-active #about{display:block}
 @media(max-width:600px){#about{margin:10px auto;padding:12px;border-radius:14px}#about .about-subsection{padding:13px;border-radius:12px}}
 
 
+.stock-category-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start;margin-top:14px}.stock-category-card{min-width:0;border:1px solid var(--line);border-radius:14px;padding:13px;background:#fbfef9}.stock-category-card h3{margin:0 0 5px;color:var(--green);font-size:17px}.stock-category-card .stock-row{align-items:flex-start}.stock-category-card .stock-row button{flex-shrink:0}@media(max-width:700px){.stock-category-columns{grid-template-columns:1fr}.stock-category-card{padding:11px}}
 .mandi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:14px 0}.mandi-grid>div{min-width:0}.mandi-grid input,.mandi-grid select,#mandiProductRecord{width:100%;box-sizing:border-box}.mandi-actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:12px 0}.mandi-actions a{color:#176b43;font-weight:700}.mandi-result{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}.mandi-result>div{background:#f2f8f3;border:1px solid #d8e9dc;border-radius:10px;padding:12px}.mandi-result small{display:block;color:#4d6254;font-size:12px}.mandi-result strong{display:block;font-size:20px;margin-top:5px}.mandi-profit-summary{background:#f7f5e9;border-radius:8px;padding:12px;font-weight:700;margin:12px 0}@media(max-width:520px){.mandi-result strong{font-size:16px}.mandi-result>div{padding:8px}}
 </style>
 </head>
@@ -425,7 +426,7 @@ body.about-page-active #about{display:block}
   <div id="ownerStats"></div>
 </div>
 <div id="adminOrdersPane" class="admin-pane"><div class="admin-section-card"><h2>🛒 ग्राहक के ऑर्डर</h2><p class="admin-muted">लंबित ऑर्डर जाँचें; पुष्टि करने पर बिक्री दर्ज होगी और स्टॉक घटेगा।</p><div id="ownerOrders"></div></div></div>
-<div id="adminStockPane" class="admin-pane"><div class="admin-section-card"><h2>🌱 पौधे और सब्जियों का स्टॉक</h2><p class="admin-muted">यहाँ पौधों और सब्जियों का कुल स्टॉक, बिक चुकी मात्रा और बाकी मात्रा अलग-अलग दिखेगी।</p><div id="stockTypeSummary" class="metric-grid"></div><div id="ownerStockList">स्टॉक लोड हो रहा है…</div></div></div>
+<div id="adminStockPane" class="admin-pane"><div class="admin-section-card"><h2>📦 स्टॉक प्रबंधन</h2><p class="admin-muted">पौधों और खाने वाली सब्जियों की सूची अलग-अलग कॉलम में दिखाई देगी।</p><div id="stockTypeSummary" class="metric-grid"></div><div class="stock-category-columns"><section class="stock-category-card"><h3>🌱 नर्सरी के पौधे</h3><p class="admin-muted">स्टॉक संख्या में (पौधे)</p><div id="ownerPlantStockList">पौधों का स्टॉक लोड हो रहा है…</div></section><section class="stock-category-card"><h3>🥬 खाने वाली सब्जियाँ</h3><p class="admin-muted">स्टॉक वजन में (किलो)</p><div id="ownerVegStockList">सब्जियों का स्टॉक लोड हो रहा है…</div></section></div></div></div>
 <div id="adminManageplantsPane" class="admin-pane">
   <div class="admin-section-card">
     <h2>🌱 पौधे और 🥬 खाने वाली सब्ज़ियाँ प्रबंधन</h2>
@@ -1161,7 +1162,8 @@ document.getElementById('logoutButton').addEventListener('click', async () => {
   document.getElementById('customerSearchForm').reset();
   document.getElementById('adminTabs').style.display = 'none';
   document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active'));
-  document.getElementById('ownerStockList').innerHTML = '';
+  document.getElementById('ownerPlantStockList').innerHTML = '';
+  document.getElementById('ownerVegStockList').innerHTML = '';
   document.getElementById('ownerSalesList').innerHTML = '';
   const statsBox = document.getElementById('ownerStats');
   if (statsBox) { statsBox.innerHTML = ''; statsBox.style.display = 'none'; }
@@ -1476,16 +1478,19 @@ async function loadOwnerStats() {
   const isOwner = !sessionError && currentUser &&
     currentUser.id === OWNER_UID && currentUser.email === OWNER_EMAIL;
   const statsBox = document.getElementById('ownerStats');
-  const stockBox = document.getElementById('ownerStockList');
+  const stockBox = document.getElementById('adminStockPane');
+  const plantStockBox = document.getElementById('ownerPlantStockList');
+  const vegStockBox = document.getElementById('ownerVegStockList');
   const salesBox = document.getElementById('ownerSalesList');
   if (!isOwner) {
     statsBox.innerHTML = ''; statsBox.style.display = 'none';
-    stockBox.innerHTML = ''; salesBox.innerHTML = '';
+    plantStockBox.innerHTML = ''; vegStockBox.innerHTML = ''; salesBox.innerHTML = '';
     return;
   }
   statsBox.style.display = 'block';
   statsBox.innerHTML = '<div class="admin-section-card">हिसाब लोड हो रहा है…</div>';
-  stockBox.textContent = 'स्टॉक लोड हो रहा है…';
+  plantStockBox.textContent = 'पौधों का स्टॉक लोड हो रहा है…';
+  vegStockBox.textContent = 'सब्जियों का स्टॉक लोड हो रहा है…';
   salesBox.textContent = 'बिक्री का हिसाब लोड हो रहा है…';
   try {
     const now = new Date();
@@ -1537,12 +1542,16 @@ async function loadOwnerStats() {
     if(stockSummary) stockSummary.innerHTML = `
       <div class="metric"><div class="metric-label">🌱 नर्सरी के पौधे — बाकी</div><div class="metric-value">${categoryTotals.plant.stock}</div><small>बिके: ${saleItemsResult && !saleItemsResult.error ? categoryTotals.plant.sold : 'डेटा उपलब्ध नहीं'} • किस्में: ${categoryTotals.plant.items}</small></div>
       <div class="metric"><div class="metric-label">🥒 सब्जियाँ — बाकी</div><div class="metric-value">${categoryTotals.veg.stock}</div><small>बिकी: ${saleItemsResult && !saleItemsResult.error ? categoryTotals.veg.sold : 'डेटा उपलब्ध नहीं'} • प्रकार: ${categoryTotals.veg.items}</small></div>`;
-    stockBox.innerHTML = allPlants.length ? allPlants.map(p => `
+    const stockRowHtml = p => `
       <div class="stock-row" style="gap:10px;align-items:center;flex-wrap:wrap">
-        <span class="stock-name">${isVegItem(p)?'🥒':'🌱'} ${safe(p.name || 'पौधा')} <small style="display:block;font-weight:400;color:#52715a">${safe(p.category || 'पौधा')} • ${safe(p.variety || 'किस्म नहीं बताई')}</small><small style="display:block;font-weight:400;color:${p.is_active ? '#16803d' : '#b45309'}">${p.is_active ? 'उपलब्ध' : 'अभी उपलब्ध नहीं / Sold Out'}</small></span>
+        <span class="stock-name">${isVegItem(p)?'🥬':'🌱'} ${safe(p.name || (isVegItem(p)?'सब्जी':'पौधा'))} <small style="display:block;font-weight:400;color:#52715a">${safe(p.variety || 'किस्म नहीं बताई')}</small><small style="display:block;font-weight:400;color:${p.is_active ? '#16803d' : '#b45309'}">${p.is_active ? 'उपलब्ध' : 'अभी उपलब्ध नहीं / Sold Out'}</small></span>
         <div><span class="stock-count">बाकी ${Math.max(0,Number(p.stock_quantity)||0)} ${isVegItem(p)?'किलो':'पौधे'}</span><div class="stock-subcounts"><span class="sold">${isVegItem(p)?'बिकी':'बिके'}: ${saleItemsResult && !saleItemsResult.error ? (soldCountByPlant.get(String(p.id))||0) : 'डेटा उपलब्ध नहीं'}</span></div></div>
         <button type="button" class="availability-toggle" data-plant-id="${safe(p.id)}" data-active="${p.is_active ? 'true' : 'false'}" style="font-size:12px;padding:7px 10px;border-radius:8px;border:1px solid ${p.is_active ? '#dc2626' : '#15803d'};background:${p.is_active ? '#fff7f7' : '#f0fdf4'};color:${p.is_active ? '#b91c1c' : '#166534'}">${p.is_active ? 'Sold Out करें' : 'फिर उपलब्ध करें'}</button>
-      </div>`).join('') : '<p>अभी कोई पौधा या सब्जी दर्ज नहीं है।</p>';
+      </div>`;
+    const plantItems = allPlants.filter(p => !isVegItem(p));
+    const vegItems = allPlants.filter(p => isVegItem(p));
+    plantStockBox.innerHTML = plantItems.length ? plantItems.map(stockRowHtml).join('') : '<p>अभी कोई नर्सरी पौधा दर्ज नहीं है।</p>';
+    vegStockBox.innerHTML = vegItems.length ? vegItems.map(stockRowHtml).join('') : '<p>अभी कोई खाने वाली सब्जी दर्ज नहीं है।</p>';
     stockBox.querySelectorAll('.availability-toggle').forEach(button => {
       button.addEventListener('click', async () => {
         const plantId = button.dataset.plantId;
@@ -1566,7 +1575,8 @@ async function loadOwnerStats() {
   } catch (error) {
     const message = safe(error.message || error);
     statsBox.innerHTML = '<div class="admin-section-card">हिसाब लोड नहीं हुआ: ' + message + '</div>';
-    stockBox.innerHTML = '<p>स्टॉक लोड नहीं हुआ: ' + message + '</p>';
+    plantStockBox.innerHTML = '<p>पौधों का स्टॉक लोड नहीं हुआ: ' + message + '</p>';
+    vegStockBox.innerHTML = '<p>सब्जियों का स्टॉक लोड नहीं हुआ: ' + message + '</p>';
     salesBox.innerHTML = '<p>बिक्री का हिसाब लोड नहीं हुआ: ' + message + '</p>';
   }
 }
