@@ -88,6 +88,9 @@ button:disabled{opacity:.55;cursor:wait}
 #customerTracking.tracking-modal-open{display:block}
 #about{display:none;padding:20px;background:#fff;border-radius:18px;margin-bottom:16px}
 #about.about-page-open{display:block}
+.order-confirmation-box{background:#f0fff4;border:1px solid #86c99a;border-radius:14px;padding:16px;margin:12px 0;color:#174b2a;line-height:1.65}
+.order-confirmation-box h3{margin:0 0 10px;color:#166534}
+.order-confirmation-box p{margin:6px 0}
 footer{background:linear-gradient(125deg,#123f25,#176b37);color:#fff;text-align:center;padding:20px 14px;margin-top:20px;border-radius:18px 18px 0 0}
 footer p{margin:4px 0}
 footer a{color:#fff}
@@ -130,7 +133,10 @@ footer a{color:#fff}
   <section id="order" hidden>
     <div class="order-modal-card">
       <button id="closeOrderModal" type="button" style="float:right;background:#edf5e9;color:#174b2b">✕ बंद करें</button>
-      <h2>🛒 पौधा या सब्ज़ी ऑर्डर करें</h2>
+      
+      <!-- यह शीर्षक पौधे/सब्ज़ी के हिसाब से अपने आप बदलेगा -->
+      <h2 id="orderModalTitle">🛒 ऑर्डर करें</h2>
+      
       <form id="orderForm">
         <select id="plant" style="display:none"></select>
         <div class="status">
@@ -153,10 +159,15 @@ footer a{color:#fff}
           <div id="deliveryEstimate" class="status" style="display:none"></div>
         </div>
 
+        <!-- UPI बॉक्स और 10 सेकंड का टाइमर -->
         <div id="bharatpePaymentBox" class="status" style="display:none;text-align:center">
           <h3>💳 UPI भुगतान</h3>
           <p>UPI ID: <strong>BHARATPE2H0E0T6Z3P47445@unitype</strong></p>
           <a id="upiPayButton" class="btn" href="#" style="display:block;margin:10px auto">💳 UPI से भुगतान करें</a>
+          
+          <div id="upiCountdown" class="status" style="display:none;text-align:center;font-size:22px;font-weight:800;color:#176b35">00:10</div>
+          <div id="paymentCountdownStatus" class="status" style="display:none;text-align:center;font-weight:700">UPI ऐप में भुगतान करने के बाद यहाँ वापस आएँ।</div>
+
           <button id="paymentDoneButton" type="button" class="btn" style="display:none;margin:8px auto;background:#176b35">✅ मैंने भुगतान कर दिया</button>
           <p id="bharatpeTotalAmount" style="font-weight:700"></p>
         </div>
@@ -233,18 +244,15 @@ footer a{color:#fff}
       <button class="admin-tab" type="button" data-tab="chatgpt">🤖 ChatGPT</button>
     </div>
 
-    <!-- डैशबोर्ड -->
     <div id="adminDashboardPane" class="admin-pane active">
       <div id="ownerStats"></div>
     </div>
 
-    <!-- ऑर्डर -->
     <div id="adminOrdersPane" class="admin-pane">
       <h2>🛒 ग्राहक ऑर्डर</h2>
       <div id="ownerOrders">ऑर्डर लोड हो रहे हैं…</div>
     </div>
 
-    <!-- स्टॉक लिस्ट (दो कॉलम) -->
     <div id="adminStockPane" class="admin-pane">
       <h2>📦 स्टॉक प्रबंधन</h2>
       <div class="stock-category-columns">
@@ -259,7 +267,6 @@ footer a{color:#fff}
       </div>
     </div>
 
-    <!-- नया उत्पाद (पौधा और सब्ज़ी के अलग-अलग मेनू) -->
     <div id="adminManageplantsPane" class="admin-pane">
       <h2>🌱 उत्पाद प्रबंधन</h2>
       <div class="plant-manage-buttons">
@@ -269,7 +276,6 @@ footer a{color:#fff}
         <button type="button" class="plant-manage-button" data-manage-view="list">📋 सभी सूची</button>
       </div>
 
-      <!-- फॉर्म 1: केवल पौधा -->
       <div id="manageViewAddPlant" class="manage-view active">
         <h3>🌱 नया पौधा जोड़ें</h3>
         <form id="newPlantOnlyForm">
@@ -286,7 +292,6 @@ footer a{color:#fff}
         <div id="newPlantOnlyStatus" class="status" style="display:none"></div>
       </div>
 
-      <!-- फॉर्म 2: केवल सब्ज़ी -->
       <div id="manageViewAddVeg" class="manage-view">
         <h3>🥬 नई सब्ज़ी जोड़ें</h3>
         <form id="newVegOnlyForm">
@@ -303,7 +308,6 @@ footer a{color:#fff}
         <div id="newVegOnlyStatus" class="status" style="display:none"></div>
       </div>
 
-      <!-- एडिट पैनल -->
       <div id="manageViewEdit" class="manage-view">
         <div class="manage-category-columns">
           <div class="manage-category-card"><h3>🌱 पौधे</h3><div id="adminPlantEditorPlant">लोड हो रहा है…</div></div>
@@ -311,7 +315,6 @@ footer a{color:#fff}
         </div>
       </div>
 
-      <!-- लिस्ट व्यू -->
       <div id="manageViewList" class="manage-view">
         <div class="manage-category-columns">
           <div class="manage-category-card"><h3>🌱 पौधे</h3><div id="adminPlantSimpleListPlant">लोड हो रहा है…</div></div>
@@ -320,13 +323,11 @@ footer a{color:#fff}
       </div>
     </div>
 
-    <!-- बिक्री -->
     <div id="adminSalesPane" class="admin-pane">
       <h2>💰 बिक्री का हिसाब</h2>
       <div id="ownerSalesList">लोड हो रहा है…</div>
     </div>
 
-    <!-- मंडी भाव -->
     <div id="adminMandiPane" class="admin-pane">
       <h2>📈 मंडी भाव कैलकुलेटर</h2>
       <select id="mandiDistrict"><option>Jhunjhunu</option><option>Sikar</option><option>Jaipur</option></select>
@@ -335,7 +336,6 @@ footer a{color:#fff}
       <div id="mandiLiveStatus" class="status"></div>
     </div>
 
-    <!-- उधार रजिस्टर -->
     <div id="adminDuesPane" class="admin-pane">
       <h2>⏰ उधार रजिस्टर</h2>
       <form id="dueForm">
@@ -349,7 +349,6 @@ footer a{color:#fff}
       <div id="dueList" style="margin-top:14px"></div>
     </div>
 
-    <!-- ChatGPT सहायता -->
     <div id="adminChatgptPane" class="admin-pane">
       <h2>🤖 ChatGPT सहायता</h2>
       <textarea id="nurseryChatQuestion" rows="4" placeholder="अपना सवाल लिखें…"></textarea>
@@ -377,6 +376,7 @@ let deliveryDistanceKm = null;
 const NURSERY_LOCATION = { lat: 28.010476, lon: 75.653594 };
 const MAX_DELIVERY_DISTANCE_KM = 50;
 const DELIVERY_RATE_PER_KM = 10;
+let upiCountdownInterval = null;
 
 function safe(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function isVeg(p) { return /सब्जी|सब्ज़ी|veg|vegetable/i.test(String(p && p.category || '')); }
@@ -387,7 +387,7 @@ function distanceKm(lat1, lon1, lat2, lon2) {
   return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-// 1. होमपेज उत्पाद लोड करना (फ़ोटो सहित)
+// 1. होमपेज उत्पाद लोड करना (पौधा / सब्ज़ी के अनुसार शीर्षक बदलना)
 async function loadPlants() {
   const pList = document.getElementById('plantOnlyList');
   const vList = document.getElementById('vegOnlyList');
@@ -421,6 +421,18 @@ async function loadPlants() {
         const q = Number(card.querySelector('.card-qty').value);
         select.value = String(p.id);
         document.getElementById('qty').value = String(q);
+        
+        // 👉 यहाँ हेडिंग अपने-आप पौधे या सब्ज़ी के हिसाब से बदलती है:
+        const modalTitle = document.getElementById('orderModalTitle');
+        if (modalTitle) {
+          modalTitle.textContent = veg ? '🛒 ताज़ी सब्ज़ी ऑर्डर करें' : '🛒 पौधा ऑर्डर करें';
+        }
+        
+        const qtyLabel = document.getElementById('qtyLabel');
+        if (qtyLabel) {
+          qtyLabel.textContent = veg ? 'सब्ज़ी की मात्रा (किलो)' : 'पौधों की संख्या';
+        }
+
         updateOrderTotal();
         document.getElementById('order').hidden = false;
       });
@@ -452,7 +464,10 @@ function updateOrderTotal() {
 }
 
 document.getElementById('qty').addEventListener('input', updateOrderTotal);
-document.getElementById('closeOrderModal').addEventListener('click', () => { document.getElementById('order').hidden = true; });
+document.getElementById('closeOrderModal').addEventListener('click', () => { 
+  document.getElementById('order').hidden = true; 
+  if (upiCountdownInterval) clearInterval(upiCountdownInterval);
+});
 
 document.getElementById('locationButton').addEventListener('click', () => {
   const stat = document.getElementById('locationStatus');
@@ -466,6 +481,7 @@ document.getElementById('locationButton').addEventListener('click', () => {
     }
     deliveryDistanceKm = km;
     deliveryFee = Math.ceil(km * 2 * DELIVERY_RATE_PER_KM);
+    customerLocation = { lat, lon, mapsUrl: `https://www.google.com/maps?q=${lat},${lon}` };
     stat.textContent = `✅ लोकेशन मान्य (${km.toFixed(1)} किमी)।`;
     document.getElementById('deliveryEstimate').style.display = 'block';
     document.getElementById('deliveryEstimate').textContent = `दूरी: ${km.toFixed(1)} किमी | डिलीवरी शुल्क: ₹${deliveryFee}`;
@@ -474,45 +490,118 @@ document.getElementById('locationButton').addEventListener('click', () => {
   }, () => { stat.textContent = 'लोकेशन प्राप्त नहीं हो सकी।'; });
 });
 
-document.getElementById('upiPayButton').addEventListener('click', () => {
-  document.getElementById('postPaymentForm').style.display = 'block';
-  document.getElementById('paymentDoneButton').style.display = 'block';
+// 10 सेकंड का UPI टाइमर
+function startUpiTimer() {
+  const countdownEl = document.getElementById('upiCountdown');
+  const countStatus = document.getElementById('paymentCountdownStatus');
+  const doneBtn = document.getElementById('paymentDoneButton');
+  
+  countdownEl.style.display = 'block';
+  countStatus.style.display = 'block';
+  doneBtn.style.display = 'none';
+
+  let seconds = 10;
+  countdownEl.textContent = '00:10';
+  countStatus.textContent = 'भुगतान प्रक्रिया जाँची जा रही है... 10 सेकंड प्रतीक्षा करें।';
+
+  if (upiCountdownInterval) clearInterval(upiCountdownInterval);
+
+  upiCountdownInterval = setInterval(() => {
+    seconds--;
+    countdownEl.textContent = '00:0' + seconds;
+    if (seconds <= 0) {
+      clearInterval(upiCountdownInterval);
+      countdownEl.style.display = 'none';
+      countStatus.textContent = 'समय पूरा हुआ। भुगतान सफल होने पर नीचे दिए गए बटन को दबाएँ:';
+      doneBtn.style.display = 'block';
+    }
+  }, 1000);
+}
+
+document.getElementById('upiPayButton').addEventListener('click', function(e) {
+  startUpiTimer();
 });
+
 document.getElementById('paymentDoneButton').addEventListener('click', () => {
+  document.getElementById('postPaymentForm').style.display = 'block';
   document.getElementById('paymentProofSection').style.display = 'block';
   document.getElementById('orderButton').style.display = 'block';
 });
 
-// ऑर्डर सेव
+// ऑर्डर सबमिट और WhatsApp पर भेजना
 document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
+  const button = document.getElementById('orderButton');
   const status = document.getElementById('orderStatus');
-  status.style.display = 'block'; status.textContent = 'ऑर्डर भेजा जा रहा है…';
+  button.disabled = true;
+  status.style.display = 'block';
+  status.textContent = 'ऑर्डर दर्ज हो रहा है…';
+
   const p = plants.find(x => Number(x.id) === Number(document.getElementById('plant').value));
+  const quantity = Number(document.getElementById('qty').value);
+  const customerName = document.getElementById('customer').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const village = document.getElementById('village').value.trim();
+  const address = document.getElementById('address').value.trim();
+  const fullAddress = village + ', ' + address;
   const file = document.getElementById('paymentProofFile')?.files[0];
+
   try {
     let proofUrl = '';
     if (file) {
-      const path = 'proofs/' + Date.now() + '-' + file.name;
-      await db.storage.from('payment-proofs').upload(path, file);
-      const res = db.storage.from('payment-proofs').getPublicUrl(path);
-      proofUrl = res.data?.publicUrl || '';
+      const ext = file.type === 'image/png' ? 'png' : (file.type === 'image/webp' ? 'webp' : 'jpg');
+      const path = 'customer-submissions/' + Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.' + ext;
+      await db.storage.from('payment-proofs').upload(path, file, { contentType: file.type });
+      const { data: signed } = await db.storage.from('payment-proofs').createSignedUrl(path, 60 * 60 * 24 * 7);
+      proofUrl = signed?.signedUrl || '';
     }
+
+    const plantTotalAmount = Number(p.selling_price) * quantity;
+    const totalAmount = (plantTotalAmount + Number(deliveryFee || 0)).toFixed(2);
+
     await db.from('order_requests').insert({
       plant_name: p.name,
-      quantity: Number(document.getElementById('qty').value),
+      quantity: quantity,
       unit_price: Number(p.selling_price),
-      customer_name: document.getElementById('customer').value.trim(),
-      customer_phone: document.getElementById('phone').value.trim(),
-      customer_address: document.getElementById('village').value + ', ' + document.getElementById('address').value,
-      notes: `DELIVERY_FEE:${deliveryFee} | PROOF:${proofUrl}`,
+      customer_name: customerName,
+      customer_phone: phone,
+      customer_address: fullAddress,
+      notes: `UNIT:${isVeg(p)?'किलो':'पौधा'} | DELIVERY_FEE:${deliveryFee} | MAPS:${customerLocation?.mapsUrl || ''} | PROOF:${proofUrl}`,
       status: 'pending'
     });
-    status.innerHTML = '<h3>✅ ऑर्डर दर्ज हो गया!</h3>';
-  } catch (err) { status.textContent = 'त्रुटि: ' + err.message; }
+
+    const message = 'नया नर्सरी ऑर्डर अनुरोध' +
+      '\nनाम: ' + customerName +
+      '\nमोबाइल: ' + phone +
+      '\nउत्पाद: ' + p.name +
+      '\nश्रेणी: ' + (isVeg(p) ? 'खाने वाली सब्ज़ी' : 'नर्सरी का पौधा') +
+      '\nमात्रा: ' + quantity + ' ' + (isVeg(p) ? 'किलो' : 'पौधे') +
+      '\nउत्पाद मूल्य: ₹' + plantTotalAmount.toFixed(2) +
+      '\nडिलीवरी शुल्क: ₹' + Number(deliveryFee || 0).toFixed(2) +
+      '\nकुल राशि: ₹' + totalAmount +
+      '\nपता: ' + fullAddress +
+      (customerLocation ? '\nGPS लोकेशन: ' + customerLocation.mapsUrl : '') +
+      (proofUrl ? '\nस्क्रीनशॉट: ' + proofUrl : '');
+
+    const waUrl = 'https://wa.me/919887666626?text=' + encodeURIComponent(message);
+
+    status.innerHTML = `
+      <div class="order-confirmation-box">
+        <h3>✅ आपका ऑर्डर वेबसाइट पर सेव हो गया है!</h3>
+        <p>ऑर्डर की पुष्टि के लिए नीचे बटन दबाकर WhatsApp पर विवरण भेजें।</p>
+        <a class="btn" href="${waUrl}" target="_blank" rel="noopener" style="display:block;margin-top:10px;background:#25D366;font-size:16px">
+          📲 WhatsApp पर ऑर्डर भेजें
+        </a>
+      </div>`;
+
+    window.open(waUrl, '_blank');
+  } catch (err) {
+    status.textContent = '❌ त्रुटि: ' + err.message;
+    button.disabled = false;
+  }
 });
 
-// 3. एडमिन पैनल लॉगिन व नेविगेशन
+// 3. एडमिन पैनल
 const ownerModal = document.getElementById('owner');
 document.getElementById('adminPanelNav').addEventListener('click', () => { ownerModal.classList.add('login-visible'); });
 document.getElementById('ownerCloseButton').addEventListener('click', () => { ownerModal.classList.remove('login-visible'); });
@@ -556,7 +645,6 @@ function showManageView(view) {
 }
 document.querySelectorAll('.plant-manage-button').forEach(b => b.addEventListener('click', () => showManageView(b.dataset.manageView)));
 
-// फ़ोटो अपलोड हेल्पर
 async function uploadPhoto(file, id) {
   if (!file) return null;
   const ext = file.name.split('.').pop() || 'jpg';
@@ -566,7 +654,6 @@ async function uploadPhoto(file, id) {
   return db.storage.from('plant-images').getPublicUrl(path).data.publicUrl;
 }
 
-// फॉर्म: नया पौधा
 document.getElementById('newPlantOnlyForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const stat = document.getElementById('newPlantOnlyStatus');
@@ -594,7 +681,6 @@ document.getElementById('newPlantOnlyForm').addEventListener('submit', async (e)
   } catch (err) { stat.textContent = 'त्रुटि: ' + err.message; }
 });
 
-// फॉर्म: नई सब्ज़ी
 document.getElementById('newVegOnlyForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const stat = document.getElementById('newVegOnlyStatus');
@@ -622,7 +708,6 @@ document.getElementById('newVegOnlyForm').addEventListener('submit', async (e) =
   } catch (err) { stat.textContent = 'त्रुटि: ' + err.message; }
 });
 
-// एडमिन डेटा रेंडर (स्टॉक, एडिट, लिस्ट)
 async function loadAdminAll() {
   const { data: allPlants } = await db.from('plants').select('*').order('name');
   const items = allPlants || [];
@@ -633,14 +718,12 @@ async function loadAdminAll() {
   document.getElementById('ownerPlantStockList').innerHTML = pList.map(makeRow).join('');
   document.getElementById('ownerVegStockList').innerHTML = vList.map(makeRow).join('');
 
-  // डैशबोर्ड सारांश
   document.getElementById('ownerStats').innerHTML = `
     <div class="metric-grid">
       <div class="metric"><small>पौधे प्रकार</small><div class="metric-value">${pList.length}</div></div>
       <div class="metric"><small>सब्जियां प्रकार</small><div class="metric-value">${vList.length}</div></div>
     </div>`;
 
-  // ऑर्डर्स लोड
   const { data: orders } = await db.from('order_requests').select('*').order('created_at', {ascending:false});
   document.getElementById('ownerOrders').innerHTML = (orders || []).map(o => `
     <div class="status">
