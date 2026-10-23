@@ -83,6 +83,7 @@ button:disabled{opacity:.55;cursor:wait}
 .metric{background:linear-gradient(145deg,#f1f9ee,#fff);border:1px solid var(--line);border-radius:12px;padding:12px}
 .metric .metric-value{font-size:22px;font-weight:800;color:var(--green)}
 #order:not([hidden]){position:fixed;inset:0;z-index:9999;background:rgba(8,25,13,.68);padding:18px;display:flex;align-items:center;justify-content:center;overflow:auto}
+#order[hidden]{display:none !important;}
 #order .order-modal-card{width:min(100%,600px);max-height:calc(100dvh - 36px);overflow:auto;background:#fff;border-radius:20px;padding:20px;border-top:5px solid #25884b}
 #customerTracking{display:none;position:fixed;inset:0;z-index:10000;width:min(100% - 24px,500px);max-height:calc(100dvh - 28px);overflow:auto;margin:auto!important;background:#fff;padding:20px;border-radius:18px;box-shadow:0 22px 70px #0006}
 #customerTracking.tracking-modal-open{display:block}
@@ -427,7 +428,10 @@ async function loadPlants() {
         }
 
         updateOrderTotal();
-        document.getElementById('order').hidden = false;
+        const orderModal = document.getElementById('order');
+        orderModal.hidden = false;
+        orderModal.style.display = 'flex';
+        document.body.classList.add('order-modal-open');
       });
 
       target.appendChild(card);
@@ -457,10 +461,16 @@ function updateOrderTotal() {
 }
 
 document.getElementById('qty').addEventListener('input', updateOrderTotal);
-document.getElementById('closeOrderModal').addEventListener('click', () => { 
-  document.getElementById('order').hidden = true; 
+
+function closeOrderPopup() {
+  const orderModal = document.getElementById('order');
+  orderModal.hidden = true;
+  orderModal.style.display = 'none';
+  document.body.classList.remove('order-modal-open');
   if (upiCountdownInterval) clearInterval(upiCountdownInterval);
-});
+}
+
+document.getElementById('closeOrderModal').addEventListener('click', closeOrderPopup);
 
 document.getElementById('locationButton').addEventListener('click', () => {
   const stat = document.getElementById('locationStatus');
@@ -521,7 +531,7 @@ document.getElementById('paymentDoneButton').addEventListener('click', () => {
   document.getElementById('orderButton').style.display = 'block';
 });
 
-// ऑर्डर सबमिट: WhatsApp अपने-आप खुलना, पॉपअप तुरंत बंद होना और होमपेज पर जाना
+// ऑर्डर सबमिट: ऑटो WhatsApp, पॉपअप तत्काल बंद, होमपेज पर जाना व भरोसा दिलाने वाला संदेश
 document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const button = document.getElementById('orderButton');
@@ -575,14 +585,13 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
     const waUrl = 'https://wa.me/919887666626?text=' + encodeURIComponent(message);
 
-    // 1. WhatsApp अपने-आप नए टैब/ऐप में खोलें
+    // 1. WhatsApp नए टैब में खोलें
     window.open(waUrl, '_blank');
 
-    // 2. पॉप-अप विंडो को तुरंत बंद करें
-    document.getElementById('order').hidden = true;
-    document.body.classList.remove('order-modal-open');
+    // 2. पॉपअप को पूरी तरह तुरंत बंद करें
+    closeOrderPopup();
 
-    // 3. पेज को वापस होमपेज (ऊपर) पर ले जाएँ
+    // 3. स्मूथली होमपेज पर सबसे ऊपर पहुँचाएँ
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // 4. होमपेज पर भरोसा दिलाने वाला साफ़ नोटिफिकेशन (Toast) दिखाएँ
