@@ -1498,7 +1498,7 @@ async function loadOwnerStats() {
     const [salesResult, ordersResult, plantsResult, saleItemsResult] = await Promise.all([
       db.from('sales').select('id,sale_date,total_amount,payment_method,notes').order('sale_date',{ascending:false}).limit(100),
       db.from('order_requests').select('id,status,created_at'),
-      db.from('plants').select('id,name,stock_quantity,is_active').order('name'),
+      db.from('plants').select('id,name,variety,category,stock_quantity,is_active').order('name'),
       db.from('sale_items').select('plant_id,quantity')
     ]);
     if (salesResult.error) throw salesResult.error;
@@ -1535,7 +1535,7 @@ async function loadOwnerStats() {
     document.getElementById('refreshOwnerStats').addEventListener('click', async () => { await loadOwnerStats(); });
     document.getElementById('goPendingOrders').addEventListener('click', () => { showAdminTab('orders'); });
 
-    const isVegItem = p => /सब्जी|vegetable|veg/i.test(String(p.category||''));
+    const isVegItem = p => /सब्जी|सब्ज़ी|vegetable|vegetables|veg/i.test(String(p && p.category || ''));
     const stockSummary = document.getElementById('stockTypeSummary');
     const categoryTotals = {plant:{stock:0,sold:0,items:0},veg:{stock:0,sold:0,items:0}};
     allPlants.forEach(p=>{const k=isVegItem(p)?'veg':'plant';categoryTotals[k].stock+=Math.max(0,Number(p.stock_quantity)||0);categoryTotals[k].sold+=saleItemsResult && !saleItemsResult.error ? (soldCountByPlant.get(String(p.id))||0) : 0;categoryTotals[k].items++;});
