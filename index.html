@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>श्री नीम करोली महाराज ग्रीन नर्सरी</title>
+<title id="pageTitle">श्री नीम करोली महाराज ग्रीन नर्सरी</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -37,6 +37,11 @@ header{position:relative;overflow:hidden;text-align:center;color:#fff;padding:cl
 header:after{content:"🌿  🍀  🌱  🍃";display:block;margin-top:10px;font-size:20px;letter-spacing:5px;opacity:.95}
 header h1{font-size:clamp(23px,4vw,36px);line-height:1.35;margin:0 auto 8px;max-width:900px;text-shadow:0 2px 12px #092b1670}
 header p{margin:4px auto;max-width:800px;font-size:clamp(13px,1.8vw,16px)}
+
+/* चमकता हुआ डिस्काउंट बैनर और दुकान बंद नोटिस */
+#siteOfferBanner{display:none;background:linear-gradient(90deg,#b45309,#f59e0b,#b45309);color:#fff;text-align:center;padding:10px 14px;font-weight:800;font-size:15px;letter-spacing:0.5px;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+#siteClosedBanner{display:none;background:#dc2626;color:#fff;text-align:center;padding:12px 14px;font-weight:800;font-size:16px}
+
 nav{position:sticky;top:0;z-index:1000;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:7px;padding:9px 12px;background:#ffffffed;backdrop-filter:blur(12px);box-shadow:0 4px 18px #0000000c;border-bottom:1px solid #e8f0e5}
 nav a{display:inline-block;min-width:0;text-align:center;padding:8px 12px;border:1px solid #e0edda;border-radius:12px;background:#f5faf2;color:var(--green);font-weight:800;font-size:14px;text-decoration:none;transition:background .2s,transform .2s}
 nav a:hover{background:#dff0dc;transform:translateY(-1px)}
@@ -126,10 +131,14 @@ footer a{color:#fff}
 </head>
 <body>
 
+<!-- 1. चमकता हुआ ऑफर बैनर व दुकान बंद सूचना -->
+<div id="siteOfferBanner">🎉 विशेष ऑफर: आज सभी आर्डर्स पर <span id="bannerDiscountText">10%</span> की सीधी छूट!</div>
+<div id="siteClosedBanner">⚠️ सूचना: आज नर्सरी बंद है। नए ऑर्डर कल से स्वीकार किए जाएँगे।</div>
+
 <header>
-  <h1>🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</h1>
-  <p>हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए</p>
-  <p>📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान</p>
+  <h1 id="headerNurseryName">🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</h1>
+  <p id="headerNurseryTagline">हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए</p>
+  <p id="headerNurseryAddress">📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान</p>
 </header>
 
 <nav>
@@ -142,7 +151,7 @@ footer a{color:#fff}
 
 <main>
   <section class="card" id="about">
-    <h2>🌿 श्री नीम करोली महाराज ग्रीन नर्सरी</h2>
+    <h2 id="aboutNurseryTitle">🌿 श्री नीम करोली महाराज ग्रीन नर्सरी</h2>
     <p>हमारा उद्देश्य घरों, खेतों और बगीचों तक स्वस्थ पौधों, हरियाली और उपयोगी बागवानी जानकारी को पहुँचाना है।</p>
   </section>
 
@@ -169,6 +178,7 @@ footer a{color:#fff}
           <label for="qty" id="qtyLabel">संख्या / मात्रा</label>
           <input id="qty" type="number" min="1" step="1" value="1" required>
           <div>उत्पाद का मूल्य: <strong id="plantAmountDisplay">₹0.00</strong></div>
+          <div id="discountRowDisplay" style="display:none;color:#b45309">विशेष छूट: <strong id="discountAmountDisplay">-₹0.00</strong></div>
           <div>डिलीवरी चार्ज: <strong id="deliveryAmountDisplay">जाँच बाकी</strong></div>
           <div style="font-size:16px;margin-top:6px">कुल भुगतान: <strong id="grandTotalDisplay">जाँच बाकी</strong></div>
         </div>
@@ -226,9 +236,9 @@ footer a{color:#fff}
   <!-- संपर्क -->
   <section class="card" id="contact">
     <h2>📞 संपर्क करें</h2>
-    <p>संपर्क नंबर: <a href="tel:9887666626">9887666626</a></p>
-    <a class="btn" href="tel:9887666626">📞 कॉल करें</a>
-    <a class="btn" href="https://wa.me/919887666626" target="_blank" rel="noopener">💬 WhatsApp</a>
+    <p>संपर्क नंबर: <a id="contactPhoneLink" href="tel:9887666626"><span id="contactPhoneText">9887666626</span></a></p>
+    <a class="btn" id="contactCallBtn" href="tel:9887666626">📞 कॉल करें</a>
+    <a class="btn" id="contactWaBtn" href="https://wa.me/919887666626" target="_blank" rel="noopener">💬 WhatsApp</a>
   </section>
 
   <!-- एडमिन पैनल -->
@@ -252,17 +262,16 @@ footer a{color:#fff}
           <small id="audioStatusText" style="color:var(--green);font-weight:700">🔔 नए ऑर्डर पर लाउड अलर्ट: तैयार है</small>
         </div>
         
-        <!-- 🔔 4 रिंगटोन सेट करने का नया मेनू -->
         <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:#f5faf2;padding:6px 10px;border-radius:10px;border:1px solid #d8e9dc">
-          <label style="margin:0;font-size:12px;font-weight:700;color:var(--green)">🎵 टोन चुनें:</label>
+          <label style="margin:0;font-size:12px;font-weight:700;color:var(--green)">🎵 टोन:</label>
           <select id="ringtoneSelector" style="width:auto;margin:0;padding:4px 8px;font-size:13px;border-radius:6px">
-            <option value="zomato">🛵 1. ज़ोमैटो स्टाइल (Triple Chime)</option>
-            <option value="swiggy">🍔 2. स्विगी स्टाइल (Double Bell)</option>
-            <option value="siren">🚨 3. तेज़ सायरन अलर्ट (Urgent Siren)</option>
-            <option value="melody">🌿 4. शांत नर्सरी टोन (Soft Melody)</option>
+            <option value="zomato">🛵 1. ज़ोमैटो (Triple Chime)</option>
+            <option value="swiggy">🍔 2. स्विगी (Double Bell)</option>
+            <option value="siren">🚨 3. सायरन (Urgent Siren)</option>
+            <option value="melody">🌿 4. नर्सरी (Soft Melody)</option>
           </select>
-          <button id="toggleAlertSoundBtn" type="button" style="background:#16a34a;color:#fff;font-size:12px;padding:5px 10px;border-radius:6px">▶️ टेस्ट सुनें</button>
-          <button id="muteToggleBtn" type="button" style="background:#edf5e9;color:var(--green);border:1px solid var(--line);font-size:12px;padding:5px 10px;border-radius:6px">🔊 ऑन है</button>
+          <button id="toggleAlertSoundBtn" type="button" style="background:#16a34a;color:#fff;font-size:12px;padding:5px 10px;border-radius:6px">▶️ टेस्ट</button>
+          <button id="muteToggleBtn" type="button" style="background:#edf5e9;color:var(--green);border:1px solid var(--line);font-size:12px;padding:5px 10px;border-radius:6px">🔊 ऑन</button>
           <button id="logoutButton" type="button" style="background:#dc2626;padding:5px 10px;font-size:12px;border-radius:6px">लॉग आउट</button>
         </div>
       </div>
@@ -289,6 +298,7 @@ footer a{color:#fff}
       <button class="admin-tab" type="button" data-tab="manageplants">➕ नया उत्पाद</button>
       <button class="admin-tab" type="button" data-tab="sales">💰 बिक्री हिसाब</button>
       <button class="admin-tab" type="button" data-tab="mandi">📈 मंडी भाव</button>
+      <button class="admin-tab" type="button" data-tab="settings">⚙️ वेबसाइट कंट्रोल</button>
       <button class="admin-tab" type="button" data-tab="dues">⏰ उधार रजिस्टर</button>
       <button class="admin-tab" type="button" data-tab="chatgpt">🤖 ChatGPT</button>
     </div>
@@ -484,6 +494,66 @@ footer a{color:#fff}
       </div>
     </div>
 
+    <!-- ⚙️ नया टैब: वेबसाइट कंट्रोल पैनल (CMS) -->
+    <div id="adminSettingsPane" class="admin-pane">
+      <h2>⚙️ वेबसाइट कंट्रोल पैनल (Site Settings)</h2>
+      <p style="font-size:13px;color:var(--muted)">यहाँ से आप बिना कोड छुए अपनी वेबसाइट का नाम, डिस्काउंट, दुकान का स्टेटस और डिलीवरी नियम बदल सकते हैं:</p>
+
+      <form id="siteSettingsForm">
+        <div class="status" style="background:#fff;border:1px solid var(--line);margin-bottom:14px">
+          <h3 style="color:var(--green);margin:0 0 10px">🏪 दुकान की स्थिति और डिस्काउंट सेल</h3>
+          
+          <label>दुकान की स्थिति (Nursery Status)</label>
+          <select id="settingShopStatus">
+            <option value="open">🟢 खुली है (ग्राहकों के आर्डर चालू हैं)</option>
+            <option value="closed">🔴 आज बंद है (सूचना दिखेगी, आर्डर बंद रहेंगे)</option>
+          </select>
+
+          <label>विशेष डिस्काउंट ऑफर (10% या 20% छूट)</label>
+          <select id="settingDiscountPercent">
+            <option value="0">कोई छूट नहीं (0% Normal)</option>
+            <option value="10">🎉 10% की सीधी छूट</option>
+            <option value="15">🎉 15% की सीधी छूट</option>
+            <option value="20">🎉 20% की धमाकेदार छूट</option>
+          </select>
+        </div>
+
+        <div class="status" style="background:#fff;border:1px solid var(--line);margin-bottom:14px">
+          <h3 style="color:var(--green);margin:0 0 10px">🎨 ब्रांडिंग व संपर्क जानकारी</h3>
+          
+          <label>नर्सरी का नाम</label>
+          <input id="settingNurseryName" required value="श्री नीम करोली महाराज ग्रीन नर्सरी">
+
+          <label>टैगलाइन / स्लोगन</label>
+          <input id="settingNurseryTagline" required value="हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए">
+
+          <label>नर्सरी का पता</label>
+          <input id="settingNurseryAddress" required value="मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान">
+
+          <label>मुख्य फ़ोन व WhatsApp नंबर (10 अंक)</label>
+          <input id="settingPhone" type="tel" required value="9887666626">
+        </div>
+
+        <div class="status" style="background:#fff;border:1px solid var(--line);margin-bottom:14px">
+          <h3 style="color:var(--green);margin:0 0 10px">🚚 डिलीवरी सेटिंग्स</h3>
+          
+          <div class="mandi-grid" style="margin:0">
+            <div>
+              <label>डिलीवरी चार्ज (₹ प्रति किमी)</label>
+              <input id="settingDeliveryRate" type="number" min="0" step="1" value="10">
+            </div>
+            <div>
+              <label>अधिकतम डिलीवरी दूरी (किमी)</label>
+              <input id="settingMaxDistance" type="number" min="1" step="1" value="50">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" style="width:100%;font-size:16px;padding:12px;background:#16a34a">💾 वेबसाइट सेटिंग्स सेव करें</button>
+      </form>
+      <div id="siteSettingsStatus" class="status" style="display:none"></div>
+    </div>
+
     <!-- उधार रजिस्टर -->
     <div id="adminDuesPane" class="admin-pane">
       <h2>⏰ उधार रजिस्टर</h2>
@@ -508,8 +578,8 @@ footer a{color:#fff}
 </main>
 
 <footer>
-  <p>श्री नीम करोली महाराज ग्रीन नर्सरी | चारावास, झुंझुनू</p>
-  <p>संपर्क: 9887666626</p>
+  <p id="footerNurseryName">श्री नीम करोली महाराज ग्रीन नर्सरी | चारावास, झुंझुनू</p>
+  <p>संपर्क: <span id="footerPhoneText">9887666626</span></p>
 </footer>
 
 <script>
@@ -524,19 +594,114 @@ let customerLocation = null;
 let deliveryFee = null;
 let deliveryDistanceKm = null;
 const NURSERY_LOCATION = { lat: 28.010476, lon: 75.653594 };
-const MAX_DELIVERY_DISTANCE_KM = 50;
-const DELIVERY_RATE_PER_KM = 10;
 let upiCountdownInterval = null;
 
 // ==========================================
-// 🎵 4 प्रकार की रिंगटोन इंजन (Zomato, Swiggy, Siren, Melody)
+// ⚙️ वेबसाइट सेटिंग्स लोड व सिंक सिस्टम (CMS)
+// ==========================================
+const DEFAULT_SITE_CONFIG = {
+  nurseryName: 'श्री नीम करोली महाराज ग्रीन नर्सरी',
+  tagline: 'हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए',
+  address: 'मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान',
+  phone: '9887666626',
+  shopStatus: 'open',
+  discountPercent: 0,
+  deliveryRate: 10,
+  maxDistance: 50
+};
+
+function getSiteConfig() {
+  try {
+    const saved = localStorage.getItem('nursery_site_config');
+    return saved ? Object.assign({}, DEFAULT_SITE_CONFIG, JSON.parse(saved)) : DEFAULT_SITE_CONFIG;
+  } catch (_) {
+    return DEFAULT_SITE_CONFIG;
+  }
+}
+
+function applySiteConfigToUI() {
+  const cfg = getSiteConfig();
+
+  // 1. नाम व पहचान
+  document.getElementById('pageTitle').textContent = cfg.nurseryName;
+  document.getElementById('headerNurseryName').textContent = '🌱 ' + cfg.nurseryName;
+  document.getElementById('headerNurseryTagline').textContent = cfg.tagline;
+  document.getElementById('headerNurseryAddress').textContent = '📍 ' + cfg.address;
+  document.getElementById('aboutNurseryTitle').textContent = '🌿 ' + cfg.nurseryName;
+  document.getElementById('footerNurseryName').textContent = cfg.nurseryName + ' | ' + cfg.address.split(',')[0];
+  
+  // 2. संपर्क
+  document.getElementById('contactPhoneText').textContent = cfg.phone;
+  document.getElementById('footerPhoneText').textContent = cfg.phone;
+  document.getElementById('contactPhoneLink').href = 'tel:' + cfg.phone;
+  document.getElementById('contactCallBtn').href = 'tel:' + cfg.phone;
+  document.getElementById('contactWaBtn').href = 'https://wa.me/91' + cfg.phone;
+
+  // 3. डिस्काउंट सेल बैनर
+  const offerBanner = document.getElementById('siteOfferBanner');
+  if (cfg.discountPercent > 0) {
+    offerBanner.style.display = 'block';
+    document.getElementById('bannerDiscountText').textContent = cfg.discountPercent + '%';
+  } else {
+    offerBanner.style.display = 'none';
+  }
+
+  // 4. दुकान खुली / बंद स्थिति
+  const closedBanner = document.getElementById('siteClosedBanner');
+  const allBuyButtons = document.querySelectorAll('.plant-buy-button');
+  if (cfg.shopStatus === 'closed') {
+    closedBanner.style.display = 'block';
+    allBuyButtons.forEach(btn => {
+      btn.disabled = true;
+      btn.textContent = '🔒 नर्सरी आज बंद है';
+    });
+  } else {
+    closedBanner.style.display = 'none';
+  }
+}
+
+// एडमिन सेटिंग्स फ़ॉर्म में मान भरना
+function fillSettingsForm() {
+  const cfg = getSiteConfig();
+  document.getElementById('settingShopStatus').value = cfg.shopStatus;
+  document.getElementById('settingDiscountPercent').value = String(cfg.discountPercent);
+  document.getElementById('settingNurseryName').value = cfg.nurseryName;
+  document.getElementById('settingNurseryTagline').value = cfg.tagline;
+  document.getElementById('settingNurseryAddress').value = cfg.address;
+  document.getElementById('settingPhone').value = cfg.phone;
+  document.getElementById('settingDeliveryRate').value = cfg.deliveryRate;
+  document.getElementById('settingMaxDistance').value = cfg.maxDistance;
+}
+
+document.getElementById('siteSettingsForm')?.addEventListener('submit', function(e) {
+  e.preventDefault();
+  const newConfig = {
+    shopStatus: document.getElementById('settingShopStatus').value,
+    discountPercent: Number(document.getElementById('settingDiscountPercent').value),
+    nurseryName: document.getElementById('settingNurseryName').value.trim(),
+    tagline: document.getElementById('settingNurseryTagline').value.trim(),
+    address: document.getElementById('settingNurseryAddress').value.trim(),
+    phone: document.getElementById('settingPhone').value.trim().replace(/\D/g, '').slice(-10),
+    deliveryRate: Number(document.getElementById('settingDeliveryRate').value) || 10,
+    maxDistance: Number(document.getElementById('settingMaxDistance').value) || 50
+  };
+
+  localStorage.setItem('nursery_site_config', JSON.stringify(newConfig));
+  applySiteConfigToUI();
+
+  const stat = document.getElementById('siteSettingsStatus');
+  stat.style.display = 'block';
+  stat.textContent = '✅ वेबसाइट सेटिंग्स तुरंत सुरक्षित हो गईं और लागू कर दी गईं!';
+  setTimeout(() => { stat.style.display = 'none'; }, 4000);
+});
+
+// ==========================================
+// 🎵 4 प्रकार की रिंगटोन इंजन
 // ==========================================
 let alertAudioCtx = null;
 let alertSoundInterval = null;
 let lastKnownPendingCount = null;
 let isAlertMuted = false;
-
-// यूजर द्वारा चुनी गई टोन को लोकल स्टोरेज से लोड करना
 let selectedRingtone = localStorage.getItem('nursery_ringtone_choice') || 'zomato';
 
 function initAudioContext() {
@@ -549,7 +714,6 @@ function initAudioContext() {
   }
 }
 
-// 4 अलग-अलग रिंगटोन बजाने का फ़ंक्शन
 function playSelectedTone() {
   if (isAlertMuted) return;
   initAudioContext();
@@ -558,25 +722,20 @@ function playSelectedTone() {
   const ctx = alertAudioCtx;
   const now = ctx.currentTime;
 
-  // 1. ज़ोमैटो स्टाइल (Triple Chime)
   if (selectedRingtone === 'zomato') {
     const notes = [
-      { f: 987.77, t: now, d: 0.16 },       // B5
-      { f: 1318.51, t: now + 0.18, d: 0.16 }, // E6
-      { f: 1760.00, t: now + 0.36, d: 0.32 }  // A6
+      { f: 987.77, t: now, d: 0.16 },
+      { f: 1318.51, t: now + 0.18, d: 0.16 },
+      { f: 1760.00, t: now + 0.36, d: 0.32 }
     ];
     notes.forEach(n => playSingleTone(ctx, n.f, n.t, n.d, 'sawtooth', 0.8));
-  }
-  // 2. स्विगी स्टाइल (Double Bell)
-  else if (selectedRingtone === 'swiggy') {
+  } else if (selectedRingtone === 'swiggy') {
     const notes = [
-      { f: 1046.50, t: now, d: 0.22 },       // C6
-      { f: 1567.98, t: now + 0.22, d: 0.38 }  // G6
+      { f: 1046.50, t: now, d: 0.22 },
+      { f: 1567.98, t: now + 0.22, d: 0.38 }
     ];
     notes.forEach(n => playSingleTone(ctx, n.f, n.t, n.d, 'sine', 0.85));
-  }
-  // 3. तेज़ सायरन अलर्ट (Urgent Siren Beep)
-  else if (selectedRingtone === 'siren') {
+  } else if (selectedRingtone === 'siren') {
     const notes = [
       { f: 880, t: now, d: 0.14 },
       { f: 1200, t: now + 0.15, d: 0.14 },
@@ -584,14 +743,12 @@ function playSelectedTone() {
       { f: 1200, t: now + 0.45, d: 0.28 }
     ];
     notes.forEach(n => playSingleTone(ctx, n.f, n.t, n.d, 'square', 0.75));
-  }
-  // 4. शांत नर्सरी टोन (Soft Melody)
-  else {
+  } else {
     const notes = [
-      { f: 523.25, t: now, d: 0.2 },         // C5
-      { f: 659.25, t: now + 0.18, d: 0.2 },  // E5
-      { f: 783.99, t: now + 0.36, d: 0.2 },  // G5
-      { f: 1046.50, t: now + 0.54, d: 0.4 }  // C6
+      { f: 523.25, t: now, d: 0.2 },
+      { f: 659.25, t: now + 0.18, d: 0.2 },
+      { f: 783.99, t: now + 0.36, d: 0.2 },
+      { f: 1046.50, t: now + 0.54, d: 0.4 }
     ];
     notes.forEach(n => playSingleTone(ctx, n.f, n.t, n.d, 'triangle', 0.8));
   }
@@ -603,13 +760,10 @@ function playSingleTone(ctx, freq, startTime, duration, waveType, volume) {
     const gain = ctx.createGain();
     osc.type = waveType;
     osc.frequency.setValueAtTime(freq, startTime);
-
     gain.gain.setValueAtTime(volume, startTime);
     gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-
     osc.connect(gain);
     gain.connect(ctx.destination);
-
     osc.start(startTime);
     osc.stop(startTime + duration);
   } catch (_) {}
@@ -634,14 +788,11 @@ function stopLoudAlert() {
 }
 
 document.getElementById('stopLoudAlertBtn')?.addEventListener('click', stopLoudAlert);
-
-// टेस्ट बटन
 document.getElementById('toggleAlertSoundBtn')?.addEventListener('click', () => {
   initAudioContext();
   playSelectedTone();
 });
 
-// रिंगटोन सेलेक्टर ड्रॉपडाउन
 document.getElementById('ringtoneSelector')?.addEventListener('change', function() {
   selectedRingtone = this.value;
   localStorage.setItem('nursery_ringtone_choice', selectedRingtone);
@@ -649,7 +800,6 @@ document.getElementById('ringtoneSelector')?.addEventListener('change', function
   playSelectedTone();
 });
 
-// म्यूट/पॉज़ टॉगल बटन
 document.getElementById('muteToggleBtn')?.addEventListener('click', function() {
   isAlertMuted = !isAlertMuted;
   if (isAlertMuted) {
@@ -670,7 +820,7 @@ document.getElementById('muteToggleBtn')?.addEventListener('click', function() {
 });
 
 // ==========================================
-// 📦 फुलप्रूफ डिलीवरी सिंक सिस्टम (Local + Supabase)
+// 📦 डिलीवरी व रसीद प्रिंटिंग सिस्टम
 // ==========================================
 function getDeliveredCache() {
   try {
@@ -697,6 +847,89 @@ function isOrderDelivered(o) {
          cache.includes(Number(o.id));
 }
 
+// 🖨️ 1-क्लिक पक्का बिल प्रिंट करने का फ़ंक्शन
+function printOrderInvoice(orderId, plantName, qty, unitPrice, custName, custPhone, custAddr, notes, createdAt) {
+  const cfg = getSiteConfig();
+  const isKg = String(notes || '').includes('UNIT:किलो');
+  const subtotal = Number(unitPrice || 0) * Number(qty || 0);
+  
+  const delFeeMatch = String(notes || '').match(/DELIVERY_FEE:([0-9.]+)/);
+  const deliveryAmt = delFeeMatch ? Number(delFeeMatch[1]) : 0;
+  const grandTotal = subtotal + deliveryAmt;
+  const dateStr = createdAt ? new Date(createdAt).toLocaleString('hi-IN', {timeZone:'Asia/Kolkata'}) : new Date().toLocaleString('hi-IN');
+
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>बिल - #${orderId} - ${cfg.nurseryName}</title>
+      <style>
+        body{font-family:Arial,sans-serif;padding:24px;color:#222;max-width:550px;margin:0 auto}
+        .header{text-align:center;border-bottom:2px dashed #333;padding-bottom:12px}
+        .header h2{margin:0;color:#176b37}
+        .header p{margin:3px 0;font-size:13px}
+        .details{margin:16px 0;font-size:14px;line-height:1.6}
+        table{width:100%;border-collapse:collapse;margin:14px 0}
+        th,td{border:1px solid #ccc;padding:8px;text-align:left;font-size:14px}
+        th{background:#f4fbf2}
+        .total-box{text-align:right;font-size:15px;margin-top:10px}
+        .footer{text-align:center;margin-top:24px;font-size:12px;border-top:1px solid #ddd;padding-top:10px}
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h2>🌱 ${cfg.nurseryName}</h2>
+        <p>${cfg.tagline}</p>
+        <p>📍 ${cfg.address} | 📞 ${cfg.phone}</p>
+        <p><b>डिलीवरी रसीद / पक्का बिल</b></p>
+      </div>
+
+      <div class="details">
+        <b>ऑर्डर आईडी:</b> #${orderId}<br>
+        <b>तारीख व समय:</b> ${dateStr}<br>
+        <b>ग्राहक:</b> ${custName} (📞 ${custPhone})<br>
+        <b>डिलीवरी पता:</b> ${custAddr}
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>उत्पाद</th>
+            <th>मात्रा</th>
+            <th>भाव (₹)</th>
+            <th>कुल (₹)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${plantName}</td>
+            <td>${qty} ${isKg ? 'किलो' : 'पौधे'}</td>
+            <td>₹${Number(unitPrice).toFixed(2)}</td>
+            <td>₹${subtotal.toFixed(2)}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="total-box">
+        उत्पाद राशि: ₹${subtotal.toFixed(2)}<br>
+        डिलीवरी शुल्क: ₹${deliveryAmt.toFixed(2)}<br>
+        <hr style="margin:6px 0;border:0;border-top:1px dashed #333">
+        <strong style="font-size:18px;color:#176b37">कुल भुगतान: ₹${grandTotal.toFixed(2)}</strong>
+      </div>
+
+      <div class="footer">
+        <p>हमारे यहाँ से खरीदारी करने के लिए धन्यवाद! स्वस्थ पौधे, खुशहाल बगीचा। 🌿</p>
+      </div>
+      <script>
+        window.onload = function() { window.print(); }
+      <\/script>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+}
+
 function safe(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function isVeg(p) { return /सब्जी|सब्ज़ी|veg|vegetable/i.test(String(p && p.category || '')); }
 function distanceKm(lat1, lon1, lat2, lon2) {
@@ -718,6 +951,8 @@ async function loadPlants() {
   const pList = document.getElementById('plantOnlyList');
   const vList = document.getElementById('vegOnlyList');
   const select = document.getElementById('plant');
+  const cfg = getSiteConfig();
+
   try {
     const { data, error } = await db.from('plants').select('*').order('name');
     if (error) throw error;
@@ -727,7 +962,7 @@ async function loadPlants() {
       const veg = isVeg(p);
       const unit = veg ? 'किलो' : 'पौधा';
       const target = veg ? vList : pList;
-      const isSoldOut = (!p.is_active || Number(p.stock_quantity) <= 0);
+      const isSoldOut = (!p.is_active || Number(p.stock_quantity) <= 0 || cfg.shopStatus === 'closed');
       const card = document.createElement('div'); 
       card.className = 'plant' + (isSoldOut ? ' sold-out' : '');
       
@@ -736,7 +971,7 @@ async function loadPlants() {
         : `<div style="height:155px;display:flex;align-items:center;justify-content:center;background:#eef5eb;font-size:40px;border-radius:10px">${veg?'🥬':'🌱'}</div>`;
 
       card.innerHTML = `
-        ${isSoldOut ? '<span class="plant-badge-soldout">❌ स्टॉक समाप्त (Sold Out)</span>' : ''}
+        ${isSoldOut ? '<span class="plant-badge-soldout">' + (cfg.shopStatus === 'closed' ? '🔒 नर्सरी बंद है' : '❌ स्टॉक समाप्त') + '</span>' : ''}
         ${imgHtml}
         <h3>${safe(p.name)}</h3>
         <p class="price">₹${Number(p.selling_price).toFixed(2)} / ${unit}</p>
@@ -745,7 +980,7 @@ async function loadPlants() {
           <label>मात्रा (${unit})</label>
           <input class="card-qty" type="number" min="${veg?'0.5':'1'}" max="${p.stock_quantity}" step="${veg?'0.5':'1'}" value="${veg?'0.5':'1'}" ${isSoldOut ? 'disabled' : ''}>
           <button class="plant-buy-button" type="button" ${isSoldOut ? 'disabled' : ''}>
-            ${isSoldOut ? '🚫 उपलब्ध नहीं' : '🛒 अभी खरीदें'}
+            ${isSoldOut ? (cfg.shopStatus === 'closed' ? '🔒 बंद है' : '🚫 उपलब्ध नहीं') : '🛒 अभी खरीदें'}
           </button>
         </div>`;
 
@@ -780,20 +1015,33 @@ async function loadPlants() {
   }
 }
 
-// 2. ऑर्डर व डिलीवरी
+// 2. ऑर्डर व डिलीवरी (डिस्काउंट सहित)
 function updateOrderTotal() {
+  const cfg = getSiteConfig();
   const pId = Number(document.getElementById('plant').value);
   const p = plants.find(x => Number(x.id) === pId);
   const q = Number(document.getElementById('qty').value);
   if (!p) return;
-  const itemTotal = Number(p.selling_price) * q;
+
+  const rawItemTotal = Number(p.selling_price) * q;
+  let discountAmt = 0;
+  if (cfg.discountPercent > 0) {
+    discountAmt = (rawItemTotal * cfg.discountPercent) / 100;
+    document.getElementById('discountRowDisplay').style.display = 'block';
+    document.getElementById('discountAmountDisplay').textContent = `-₹${discountAmt.toFixed(2)} (${cfg.discountPercent}% Off)`;
+  } else {
+    document.getElementById('discountRowDisplay').style.display = 'none';
+  }
+
+  const finalItemTotal = rawItemTotal - discountAmt;
   document.getElementById('orderSelectedPlant').textContent = `${p.name} - ₹${p.selling_price} / ${isVeg(p)?'किलो':'पौधा'}`;
-  document.getElementById('plantAmountDisplay').textContent = '₹' + itemTotal.toFixed(2);
+  document.getElementById('plantAmountDisplay').textContent = '₹' + rawItemTotal.toFixed(2);
+
   if (deliveryFee !== null) {
     document.getElementById('deliveryAmountDisplay').textContent = '₹' + deliveryFee.toFixed(2);
-    document.getElementById('grandTotalDisplay').textContent = '₹' + (itemTotal + deliveryFee).toFixed(2);
-    document.getElementById('bharatpeTotalAmount').textContent = 'कुल: ₹' + (itemTotal + deliveryFee).toFixed(2);
-    const payUri = 'upi://pay?' + new URLSearchParams({pa:'BHARATPE2H0E0T6Z3P47445@unitype',pn:'ANIL KUMAR MEENA',am:(itemTotal+deliveryFee).toFixed(2),cu:'INR'});
+    document.getElementById('grandTotalDisplay').textContent = '₹' + (finalItemTotal + deliveryFee).toFixed(2);
+    document.getElementById('bharatpeTotalAmount').textContent = 'कुल: ₹' + (finalItemTotal + deliveryFee).toFixed(2);
+    const payUri = 'upi://pay?' + new URLSearchParams({pa:'BHARATPE2H0E0T6Z3P47445@unitype',pn:'ANIL KUMAR MEENA',am:(finalItemTotal+deliveryFee).toFixed(2),cu:'INR'});
     document.getElementById('upiPayButton').href = payUri;
   }
 }
@@ -810,17 +1058,18 @@ function closeOrderPopup() {
 document.getElementById('closeOrderModal').addEventListener('click', closeOrderPopup);
 
 document.getElementById('locationButton').addEventListener('click', () => {
+  const cfg = getSiteConfig();
   const stat = document.getElementById('locationStatus');
   stat.textContent = 'लोकेशन जाँची जा रही है…';
   navigator.geolocation.getCurrentPosition(pos => {
     const lat = pos.coords.latitude, lon = pos.coords.longitude;
     const km = distanceKm(NURSERY_LOCATION.lat, NURSERY_LOCATION.lon, lat, lon);
-    if (km > MAX_DELIVERY_DISTANCE_KM) {
-      stat.textContent = `❌ आपकी दूरी ${km.toFixed(1)} किमी है (50 किमी सीमा से बाहर)।`;
+    if (km > cfg.maxDistance) {
+      stat.textContent = `❌ आपकी दूरी ${km.toFixed(1)} किमी है (अधिकतम सीमा ${cfg.maxDistance} किमी से बाहर)।`;
       return;
     }
     deliveryDistanceKm = km;
-    deliveryFee = Math.ceil(km * 2 * DELIVERY_RATE_PER_KM);
+    deliveryFee = Math.ceil(km * 2 * cfg.deliveryRate);
     customerLocation = { lat, lon, mapsUrl: `https://www.google.com/maps?q=${lat},${lon}` };
     stat.textContent = `✅ लोकेशन मान्य (${km.toFixed(1)} किमी)।`;
     document.getElementById('deliveryEstimate').style.display = 'block';
@@ -870,6 +1119,12 @@ document.getElementById('paymentDoneButton').addEventListener('click', () => {
 // ऑर्डर सबमिट प्रक्रिया
 document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
+  const cfg = getSiteConfig();
+  if (cfg.shopStatus === 'closed') {
+    alert('⚠️ आज नर्सरी बंद है। कृपया कल ऑर्डर करें।');
+    return;
+  }
+
   const button = document.getElementById('orderButton');
   const status = document.getElementById('orderStatus');
   button.disabled = true;
@@ -896,7 +1151,9 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
       proofUrl = signed?.signedUrl || '';
     }
 
-    const plantTotalAmount = Number(p.selling_price) * quantity;
+    const rawTotal = Number(p.selling_price) * quantity;
+    const discountAmt = cfg.discountPercent > 0 ? (rawTotal * cfg.discountPercent) / 100 : 0;
+    const plantTotalAmount = rawTotal - discountAmt;
     const totalAmount = (plantTotalAmount + Number(deliveryFee || 0)).toFixed(2);
 
     await db.from('order_requests').insert({
@@ -906,7 +1163,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
       customer_name: customerName,
       customer_phone: cleanPhone,
       customer_address: fullAddress,
-      notes: `UNIT:${isVeg(p)?'किलो':'पौधा'} | DELIVERY_FEE:${deliveryFee} | MAPS:${customerLocation?.mapsUrl || ''} | PROOF:${proofUrl}`,
+      notes: `UNIT:${isVeg(p)?'किलो':'पौधा'} | DELIVERY_FEE:${deliveryFee} | DISCOUNT:${discountAmt} | MAPS:${customerLocation?.mapsUrl || ''} | PROOF:${proofUrl}`,
       status: 'pending'
     });
 
@@ -917,13 +1174,14 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
       '\nश्रेणी: ' + (isVeg(p) ? 'खाने वाली सब्ज़ी' : 'नर्सरी का पौधा') +
       '\nमात्रा: ' + quantity + ' ' + (isVeg(p) ? 'किलो' : 'पौधे') +
       '\nउत्पाद मूल्य: ₹' + plantTotalAmount.toFixed(2) +
+      (discountAmt > 0 ? '\nछूट: -₹' + discountAmt.toFixed(2) : '') +
       '\nडिलीवरी शुल्क: ₹' + Number(deliveryFee || 0).toFixed(2) +
       '\nकुल राशि: ₹' + totalAmount +
       '\nपता: ' + fullAddress +
       (customerLocation ? '\nGPS लोकेशन: ' + customerLocation.mapsUrl : '') +
       (proofUrl ? '\nस्क्रीनशॉट: ' + proofUrl : '');
 
-    const waUrl = 'https://wa.me/919887666626?text=' + encodeURIComponent(message);
+    const waUrl = 'https://wa.me/91' + cfg.phone + '?text=' + encodeURIComponent(message);
 
     status.innerHTML = `
       <div class="order-confirmation-box" style="text-align:center; padding:16px; border:2px solid #25884b; background:#f4fbf2; border-radius:14px; margin-top:12px;">
@@ -967,16 +1225,16 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   document.getElementById('adminTabs').style.display = 'grid';
   showAdminTab('dashboard');
   
-  // ड्रॉपडाउन में सेव की गई रिंगटोन सेट करना
   const sel = document.getElementById('ringtoneSelector');
   if (sel) sel.value = selectedRingtone;
 
   const { count } = await db.from('order_requests').select('*', { count: 'exact', head: true }).eq('status', 'pending');
   lastKnownPendingCount = count || 0;
 
+  fillSettingsForm();
   loadAdminAll();
 
-  // 12 सेकंड में नया ऑर्डर ऑटो-चेक (Zomato alert)
+  // 12 सेकंड में नया ऑर्डर ऑटो-चेक
   setInterval(checkForNewIncomingOrders, 12000);
 });
 
@@ -1006,6 +1264,7 @@ function showAdminTab(tab) {
   if (tab === 'dashboard' || tab === 'orders' || tab === 'stock') loadAdminAll();
   if (tab === 'sales') loadSalesLedger();
   if (tab === 'mandi') loadMandiDropdownPlants();
+  if (tab === 'settings') fillSettingsForm();
   if (tab === 'manageplants') showManageView('add-plant');
 }
 document.querySelectorAll('.admin-tab').forEach(b => b.addEventListener('click', () => showAdminTab(b.dataset.tab)));
@@ -1132,7 +1391,6 @@ async function loadAdminAll() {
     const todayOrders = orders.filter(o => getISTDate(o.created_at) === todayStr);
     const pendingOrders = orders.filter(o => o.status === 'pending');
     
-    // डिलीवर और कन्फर्म की सटीक गिनती
     const deliveredOrders = orders.filter(o => isOrderDelivered(o));
     const confirmedOrders = orders.filter(o => o.status === 'confirmed' && !isOrderDelivered(o));
 
@@ -1249,7 +1507,7 @@ async function loadAdminAll() {
   }
 }
 
-// ऑर्डर कार्ड निर्माण
+// ऑर्डर कार्ड निर्माण (🖨️ प्रिंट बिल बटन सहित)
 function renderOrderHtml(o, allOrders) {
   const isDelivered = isOrderDelivered(o);
   const isPending = o.status === 'pending';
@@ -1300,6 +1558,10 @@ function renderOrderHtml(o, allOrders) {
         ${cleanPhone ? `<a class="btn" href="https://wa.me/91${cleanPhone}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#dcfce7;color:#15803d">💬 WhatsApp</a>` : ''}
         ${mapsMatch ? `<a class="btn" href="${safe(mapsMatch[1])}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📍 GPS नक्शा</a>` : ''}
         ${proofMatch ? `<a class="btn" href="${safe(proofMatch[1])}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📸 स्क्रीनशॉट देखें</a>` : ''}
+        
+        <!-- 🖨️ रसीद प्रिंट बटन -->
+        <button type="button" onclick="printOrderInvoice(${o.id}, '${safe(o.plant_name)}', ${o.quantity}, ${o.unit_price}, '${safe(o.customer_name)}', '${phone}', '${safe(o.customer_address)}', '${safe(o.notes)}', '${o.created_at}')" style="padding:5px 10px;font-size:12px;background:#f3f4f6;color:#1f2937;border:1px solid #d1d5db">🖨️ बिल प्रिंट करें</button>
+
         ${isPending ? `<button type="button" onclick="confirmOrder(event, ${o.id}, '${safe(o.plant_name)}', ${o.quantity})" style="padding:5px 12px;font-size:12px;background:#16a34a">✅ कन्फर्म करें</button>` : ''}
         ${isConfirmed ? `<button type="button" id="deliver-btn-${o.id}" onclick="markOrderDelivered(event, ${o.id}, '${safe(o.notes || '')}')" style="padding:5px 12px;font-size:12px;background:#2563eb">📦 डिलीवर कर दिया</button>` : ''}
         ${isPending ? `<button type="button" onclick="cancelOrder(event, ${o.id})" style="padding:5px 10px;font-size:12px;background:#dc2626">❌ रद्द करें</button>` : ''}
@@ -1344,7 +1606,7 @@ async function confirmOrder(event, orderId, plantName, qty) {
   }
 }
 
-// 2. ऑर्डर डिलीवर मार्क करना (Instant Screen Update + Double Storage)
+// 2. ऑर्डर डिलीवर मार्क करना
 async function markOrderDelivered(event, orderId, existingNotes) {
   if (event) { event.preventDefault(); event.stopPropagation(); }
   if (!confirm(`क्या आपने ऑर्डर #${orderId} ग्राहक तक पहुँचा दिया है?`)) return;
@@ -1352,10 +1614,8 @@ async function markOrderDelivered(event, orderId, existingNotes) {
   const btn = event ? event.target : null;
   if (btn) { btn.disabled = true; btn.textContent = 'डिलीवर हो रहा है…'; }
 
-  // 1. लोकल कैश में सुरक्षित करें
   saveDeliveredCache(orderId);
 
-  // 2. स्क्रीन पर तुरंत डिलीवर दिखाएँ
   const card = document.getElementById('order-card-' + orderId);
   if (card) {
     card.className = 'order-item-card is-delivered';
@@ -1364,7 +1624,6 @@ async function markOrderDelivered(event, orderId, existingNotes) {
   }
   if (btn) btn.remove();
 
-  // 3. डेटाबेस में बैकग्राउंड अपडेट
   try {
     const updatedNotes = (existingNotes || '') + ' | DELIVERY_STATUS:delivered';
     try {
@@ -1374,7 +1633,6 @@ async function markOrderDelivered(event, orderId, existingNotes) {
     }
   } catch (_) {}
 
-  // 4. तुरंत डैशबोर्ड रिफ्रेश
   await loadAdminAll();
   alert('🚚 ऑर्डर सफलतापूर्वक डिलीवर मार्क हो गया!');
 }
@@ -1717,6 +1975,8 @@ document.getElementById('nurseryAskChatGPT')?.addEventListener('click', () => {
   if (q) window.open('https://chatgpt.com/?q=' + encodeURIComponent(q), '_blank');
 });
 
+// पेज लोड पर सेटिंग्स व उत्पाद लागू करना
+applySiteConfigToUI();
 loadPlants();
 </script>
 </body>
