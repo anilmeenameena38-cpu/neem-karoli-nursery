@@ -46,12 +46,15 @@ main{max-width:1120px;margin:0 auto;padding:18px 14px}
 .card{background:#fff;border:1px solid #e2eddf;border-radius:17px;padding:clamp(14px,2.2vw,22px);margin-bottom:16px;box-shadow:0 7px 22px rgba(20,70,35,.065)}
 .card h2{color:var(--green);font-size:clamp(19px,2.5vw,25px);margin:0 0 9px}
 .plants{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:13px;margin-top:13px}
-.plant{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center;box-shadow:0 5px 18px #174b2b0b;transition:transform .2s,box-shadow .2s}
+.plant{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center;box-shadow:0 5px 18px #174b2b0b;transition:transform .2s,box-shadow .2s}
 .plant:hover{transform:translateY(-4px);box-shadow:0 14px 28px #174b2b18}
+.plant.sold-out{border-color:#fca5a5;background:#fffaf9}
+.plant-badge-soldout{position:absolute;top:10px;right:10px;background:#dc2626;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:800;box-shadow:0 2px 6px rgba(0,0,0,0.2)}
 .plant img{display:block;width:100%;height:155px;object-fit:cover;border-radius:10px;margin-bottom:8px;background:#eef5eb}
 .price{font-weight:800;color:#138044;font-size:20px;margin:5px 0}
 .plant-buy-box{background:#f5faf2;border:1px solid var(--line);border-radius:10px;padding:8px;margin-top:8px;text-align:left}
 .plant-buy-button{width:auto!important;min-width:115px;padding:7px 11px!important;font-size:13px!important;border-radius:9px;margin:4px auto 0}
+.plant-buy-button:disabled{background:#cbd5e1!important;color:#64748b!important;cursor:not-allowed;box-shadow:none}
 label{display:block;font-weight:700;margin:10px 0 3px;color:#294d32}
 input,select,textarea{display:block;width:100%;padding:10px 12px;margin:6px 0 10px;border:1px solid #c9ddc4;border-radius:10px;background:#fff;font:inherit;font-size:15px}
 input:focus,select:focus,textarea:focus{outline:3px solid #25884b25;border-color:#25884b}
@@ -81,7 +84,7 @@ button:disabled{opacity:.55;cursor:wait}
 .admin-plant-edit-row img{width:80px;height:80px;object-fit:cover;border-radius:10px}
 
 /* डैशबोर्ड कार्ड और टेबल स्टाइल */
-.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:14px 0}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px;margin:14px 0}
 .metric{background:linear-gradient(145deg,#f1f9ee,#fff);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 3px 10px rgba(0,0,0,0.03)}
 .metric-label{font-size:13px;color:var(--muted);font-weight:600}
 .metric-value{font-size:24px;font-weight:800;color:var(--green);margin-top:4px}
@@ -95,11 +98,12 @@ button:disabled{opacity:.55;cursor:wait}
 .order-item-card{border:1px solid #eef2eb;border-radius:12px;padding:12px;margin-bottom:10px;background:#fbfef9}
 .order-item-card.is-pending{border-left:5px solid #f59e0b}
 .order-item-card.is-confirmed{border-left:5px solid #16a34a}
+.order-item-card.is-cancelled{border-left:5px solid #dc2626;background:#fffaf9}
 
 #order:not([hidden]){position:fixed;inset:0;z-index:9999;background:rgba(8,25,13,.68);padding:18px;display:flex;align-items:center;justify-content:center;overflow:auto}
 #order[hidden]{display:none !important;}
 #order .order-modal-card{width:min(100%,600px);max-height:calc(100dvh - 36px);overflow:auto;background:#fff;border-radius:20px;padding:20px;border-top:5px solid #25884b}
-#customerTracking{display:none;position:fixed;inset:0;z-index:10000;width:min(100% - 24px,500px);max-height:calc(100dvh - 28px);overflow:auto;margin:auto!important;background:#fff;padding:20px;border-radius:18px;box-shadow:0 22px 70px #0006}
+#customerTracking{display:none;position:fixed;inset:0;z-index:10000;width:min(100% - 24px,520px);max-height:calc(100dvh - 28px);overflow:auto;margin:auto!important;background:#fff;padding:20px;border-radius:18px;box-shadow:0 22px 70px #0006}
 #customerTracking.tracking-modal-open{display:block}
 #about{display:none;padding:20px;background:#fff;border-radius:18px;margin-bottom:16px}
 #about.about-page-open{display:block}
@@ -141,7 +145,7 @@ footer a{color:#fff}
     <div id="plantStatus" class="status" style="display:none"></div>
   </section>
 
-  <!-- ऑर्डर मॉडल -->
+  <!-- ऑर्डर मॉडल (पॉइंट 2 लागू: डायनामिक शीर्षक) -->
   <section id="order" hidden>
     <div class="order-modal-card">
       <button id="closeOrderModal" type="button" style="float:right;background:#edf5e9;color:#174b2b">✕ बंद करें</button>
@@ -193,17 +197,18 @@ footer a{color:#fff}
     </div>
   </section>
 
-  <!-- ट्रैकिंग मॉडल -->
+  <!-- ट्रैकिंग मॉडल (पॉइंट 4 लागू: तारीख, समय, स्क्रीनशॉट लिंक सहित) -->
   <section class="card" id="customerTracking">
     <button id="closeTrackingModal" type="button" style="float:right;background:#edf5e9;color:#174b2b">✕</button>
     <h2>📦 अपना ऑर्डर ट्रैक करें</h2>
+    <p style="font-size:13px;color:var(--muted)">ऑर्डर में दर्ज 10 अंकों का मोबाइल नंबर डालें:</p>
     <form id="customerTrackingForm">
       <label>मोबाइल नंबर</label>
-      <input id="trackingPhone" type="tel" required placeholder="ऑर्डर वाला मोबाइल नंबर">
-      <button type="submit" class="btn">ऑर्डर देखें</button>
+      <input id="trackingPhone" type="tel" required placeholder="मोबाइल नंबर डालें">
+      <button type="submit" class="btn">मेरे ऑर्डर देखें</button>
     </form>
     <div id="customerTrackingStatus" class="status" style="display:none"></div>
-    <div id="customerTrackingResults"></div>
+    <div id="customerTrackingResults" style="margin-top:12px"></div>
   </section>
 
   <!-- संपर्क -->
@@ -252,18 +257,20 @@ footer a{color:#fff}
       <button class="admin-tab" type="button" data-tab="chatgpt">🤖 ChatGPT</button>
     </div>
 
-    <!-- डैशबोर्ड: पूरा और विस्तृत हिसाब-किताब -->
+    <!-- डैशबोर्ड (पॉइंट 5 लागू: पूर्ण दैनिक ब्योरा) -->
     <div id="adminDashboardPane" class="admin-pane active">
-      <div id="ownerStats">लोड हो रहा है…</div>
+      <div id="ownerStats">डैशबोर्ड लोड हो रहा है…</div>
     </div>
 
+    <!-- ऑर्डर लिस्ट -->
     <div id="adminOrdersPane" class="admin-pane">
       <h2>🛒 ग्राहक ऑर्डर</h2>
       <div id="ownerOrders">ऑर्डर लोड हो रहे हैं…</div>
     </div>
 
+    <!-- स्टॉक प्रबंधन (पॉइंट 3 लागू: Sold Out टॉगल व त्वरित संख्या संपादन) -->
     <div id="adminStockPane" class="admin-pane">
-      <h2>📦 स्टॉक प्रबंधन</h2>
+      <h2>📦 स्टॉक प्रबंधन (Sold Out व स्टॉक बदलाव)</h2>
       <div class="stock-category-columns">
         <section class="stock-category-card">
           <h3>🌱 नर्सरी के पौधे</h3>
@@ -276,6 +283,7 @@ footer a{color:#fff}
       </div>
     </div>
 
+    <!-- नया उत्पाद (पॉइंट 1 लागू: अलग-अलग मेनू) -->
     <div id="adminManageplantsPane" class="admin-pane">
       <h2>🌱 उत्पाद प्रबंधन</h2>
       <div class="plant-manage-buttons">
@@ -396,67 +404,75 @@ function distanceKm(lat1, lon1, lat2, lon2) {
   return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-// 1. होमपेज उत्पाद लोड करना
+// 1. होमपेज उत्पाद लोड करना (तरीका B: Sold Out उत्पाद दिखेगा, पर लाल बैज व बटन डिसेबल रहेगा)
 async function loadPlants() {
   const pList = document.getElementById('plantOnlyList');
   const vList = document.getElementById('vegOnlyList');
   const select = document.getElementById('plant');
   try {
-    const { data, error } = await db.from('plants').select('*').eq('is_active', true).order('name');
+    const { data, error } = await db.from('plants').select('*').order('name');
     if (error) throw error;
-    plants = (data || []).filter(p => Number(p.stock_quantity) > 0);
+    plants = data || [];
     pList.innerHTML = ''; vList.innerHTML = ''; select.innerHTML = '<option value="">चुनें</option>';
     plants.forEach(p => {
       const veg = isVeg(p);
       const unit = veg ? 'किलो' : 'पौधा';
       const target = veg ? vList : pList;
-      const card = document.createElement('div'); card.className = 'plant';
+      const isSoldOut = (!p.is_active || Number(p.stock_quantity) <= 0);
+      const card = document.createElement('div'); 
+      card.className = 'plant' + (isSoldOut ? ' sold-out' : '');
       
       const imgHtml = p.image_url 
         ? `<img src="${safe(p.image_url)}" alt="${safe(p.name)}" loading="lazy">`
         : `<div style="height:155px;display:flex;align-items:center;justify-content:center;background:#eef5eb;font-size:40px;border-radius:10px">${veg?'🥬':'🌱'}</div>`;
 
-      card.innerHTML = `${imgHtml}
+      card.innerHTML = `
+        ${isSoldOut ? '<span class="plant-badge-soldout">❌ स्टॉक समाप्त (Sold Out)</span>' : ''}
+        ${imgHtml}
         <h3>${safe(p.name)}</h3>
         <p class="price">₹${Number(p.selling_price).toFixed(2)} / ${unit}</p>
-        <p style="font-size:13px;color:#607464">स्टॉक: ${p.stock_quantity} ${unit}</p>
+        <p style="font-size:13px;color:#607464">स्टॉक: ${isSoldOut ? '<b style="color:#dc2626">0 उपलब्ध</b>' : p.stock_quantity + ' ' + unit}</p>
         <div class="plant-buy-box">
           <label>मात्रा (${unit})</label>
-          <input class="card-qty" type="number" min="${veg?'0.5':'1'}" max="${p.stock_quantity}" step="${veg?'0.5':'1'}" value="${veg?'0.5':'1'}">
-          <button class="plant-buy-button" type="button">🛒 अभी खरीदें</button>
+          <input class="card-qty" type="number" min="${veg?'0.5':'1'}" max="${p.stock_quantity}" step="${veg?'0.5':'1'}" value="${veg?'0.5':'1'}" ${isSoldOut ? 'disabled' : ''}>
+          <button class="plant-buy-button" type="button" ${isSoldOut ? 'disabled' : ''}>
+            ${isSoldOut ? '🚫 उपलब्ध नहीं' : '🛒 अभी खरीदें'}
+          </button>
         </div>`;
 
-      card.querySelector('.plant-buy-button').addEventListener('click', () => {
-        const q = Number(card.querySelector('.card-qty').value);
-        select.value = String(p.id);
-        document.getElementById('qty').value = String(q);
-        
-        const modalTitle = document.getElementById('orderModalTitle');
-        if (modalTitle) {
-          modalTitle.textContent = veg ? '🛒 ताज़ी सब्ज़ी ऑर्डर करें' : '🛒 पौधा ऑर्डर करें';
-        }
-        
-        const qtyLabel = document.getElementById('qtyLabel');
-        if (qtyLabel) {
-          qtyLabel.textContent = veg ? 'सब्ज़ी की मात्रा (किलो)' : 'पौधों की संख्या';
-        }
+      if (!isSoldOut) {
+        card.querySelector('.plant-buy-button').addEventListener('click', () => {
+          const q = Number(card.querySelector('.card-qty').value);
+          select.value = String(p.id);
+          document.getElementById('qty').value = String(q);
+          
+          // पॉइंट 2 लागू: हेडिंग अपने-आप बदलना
+          const modalTitle = document.getElementById('orderModalTitle');
+          if (modalTitle) {
+            modalTitle.textContent = veg ? '🛒 ताज़ी सब्ज़ी ऑर्डर करें' : '🛒 पौधा ऑर्डर करें';
+          }
+          const qtyLabel = document.getElementById('qtyLabel');
+          if (qtyLabel) {
+            qtyLabel.textContent = veg ? 'सब्ज़ी की मात्रा (किलो)' : 'पौधों की संख्या';
+          }
 
-        updateOrderTotal();
-        const orderModal = document.getElementById('order');
-        orderModal.hidden = false;
-        orderModal.style.display = 'flex';
-        document.body.classList.add('order-modal-open');
-      });
+          updateOrderTotal();
+          const orderModal = document.getElementById('order');
+          orderModal.hidden = false;
+          orderModal.style.display = 'flex';
+        });
+
+        const opt = document.createElement('option'); opt.value = String(p.id); opt.textContent = p.name; select.appendChild(opt);
+      }
 
       target.appendChild(card);
-      const opt = document.createElement('option'); opt.value = String(p.id); opt.textContent = p.name; select.appendChild(opt);
     });
   } catch (err) {
     pList.textContent = 'लोड करने में समस्या हुई।';
   }
 }
 
-// 2. ऑर्डर और डिलीवरी लॉजिक
+// 2. ऑर्डर व डिलीवरी कैलकुलेशन
 function updateOrderTotal() {
   const pId = Number(document.getElementById('plant').value);
   const p = plants.find(x => Number(x.id) === pId);
@@ -480,7 +496,6 @@ function closeOrderPopup() {
   const orderModal = document.getElementById('order');
   orderModal.hidden = true;
   orderModal.style.display = 'none';
-  document.body.classList.remove('order-modal-open');
   if (upiCountdownInterval) clearInterval(upiCountdownInterval);
 }
 
@@ -534,7 +549,7 @@ function startUpiTimer() {
   }, 1000);
 }
 
-document.getElementById('upiPayButton').addEventListener('click', function(e) {
+document.getElementById('upiPayButton').addEventListener('click', function() {
   startUpiTimer();
 });
 
@@ -544,11 +559,14 @@ document.getElementById('paymentDoneButton').addEventListener('click', () => {
   document.getElementById('orderButton').style.display = 'block';
 });
 
-// ऑर्डर सबमिट: WhatsApp अपने-आप खुलना और पॉपअप तुरंत बंद होना
+// ऑर्डर सबमिट प्रक्रिया (डेटाबेस में सेव व WhatsApp बटन प्रदर्शित)
 document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const button = document.getElementById('orderButton');
+  const status = document.getElementById('orderStatus');
   button.disabled = true;
+  status.style.display = 'block';
+  status.textContent = 'ऑर्डर दर्ज हो रहा है…';
 
   const p = plants.find(x => Number(x.id) === Number(document.getElementById('plant').value));
   const quantity = Number(document.getElementById('qty').value);
@@ -598,39 +616,22 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
     const waUrl = 'https://wa.me/919887666626?text=' + encodeURIComponent(message);
 
-    // WhatsApp खोलें
-    window.open(waUrl, '_blank');
-
-    // पॉपअप को तुरंत बंद करें
-    closeOrderPopup();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // होमपेज पर सुंदर भरोसा दिलाने वाला मैसेज (Toast Alert)
-    const toast = document.createElement('div');
-    toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#176b37;color:#fff;padding:16px 22px;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.25);z-index:99999;max-width:90%;text-align:center;font-size:15px;line-height:1.6;font-weight:600';
-    toast.innerHTML = '✅ आपका ऑर्डर व भुगतान स्क्रीनशॉट हमें मिल गया है!<br><small style="font-weight:400;opacity:0.95">हमारी टीम पेमेंट की जाँच कर बहुत जल्द आपसे संपर्क करेगी। धन्यवाद! 🌿</small>';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 6000);
-
-    // फ़ॉर्म रीसेट
-    document.getElementById('orderForm').reset();
-    document.getElementById('postPaymentForm').style.display = 'none';
-    document.getElementById('bharatpePaymentBox').style.display = 'none';
-    document.getElementById('paymentProofSection').style.display = 'none';
-    document.getElementById('paymentProofPreview').innerHTML = '';
-    document.getElementById('paymentDoneButton').style.display = 'none';
-    button.style.display = 'none';
-    button.disabled = false;
-    deliveryFee = null;
-    customerLocation = null;
+    status.innerHTML = `
+      <div class="order-confirmation-box" style="text-align:center; padding:16px; border:2px solid #25884b; background:#f4fbf2; border-radius:14px; margin-top:12px;">
+        <h3 style="color:#176b37; margin-bottom:8px">✅ आपका ऑर्डर वेबसाइट पर सेव हो गया है!</h3>
+        <p style="font-size:14px; margin:6px 0">ऑर्डर की तुरंत पुष्टि के लिए नीचे बटन दबाकर हमें WhatsApp पर विवरण भेजें:</p>
+        <a class="btn" href="${waUrl}" target="_blank" rel="noopener" style="display:block;margin-top:10px;background:#25D366;font-size:16px">
+          📲 WhatsApp पर ऑर्डर भेजें
+        </a>
+      </div>`;
 
   } catch (err) {
-    alert('❌ ऑर्डर दर्ज करने में समस्या हुई: ' + err.message);
+    status.textContent = '❌ त्रुटि: ' + err.message;
     button.disabled = false;
   }
 });
 
-// 3. एडमिन पैनल और डैशबोर्ड का संपूर्ण लॉजिक
+// 3. एडमिन पैनल व डैशबोर्ड प्रबंधन
 const ownerModal = document.getElementById('owner');
 document.getElementById('adminPanelNav').addEventListener('click', () => { ownerModal.classList.add('login-visible'); });
 document.getElementById('ownerCloseButton').addEventListener('click', () => { ownerModal.classList.remove('login-visible'); });
@@ -684,6 +685,7 @@ async function uploadPhoto(file, id) {
   return db.storage.from('plant-images').getPublicUrl(path).data.publicUrl;
 }
 
+// पॉइंट 1 लागू: अलग पौधा जोड़ें
 document.getElementById('newPlantOnlyForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const stat = document.getElementById('newPlantOnlyStatus');
@@ -711,6 +713,7 @@ document.getElementById('newPlantOnlyForm').addEventListener('submit', async (e)
   } catch (err) { stat.textContent = 'त्रुटि: ' + err.message; }
 });
 
+// पॉइंट 1 लागू: अलग सब्ज़ी जोड़ें
 document.getElementById('newVegOnlyForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const stat = document.getElementById('newVegOnlyStatus');
@@ -738,7 +741,32 @@ document.getElementById('newVegOnlyForm').addEventListener('submit', async (e) =
   } catch (err) { stat.textContent = 'त्रुटि: ' + err.message; }
 });
 
-// एडमिन डैशबोर्ड और ऑर्डर की पूरी विस्तृत रिपोर्ट
+// पॉइंट 3 लागू: Sold Out / उपलब्ध टॉगल व तुरंत स्टॉक संख्या संपादन
+async function toggleProductStatus(id, currentStatus) {
+  const nextStatus = !currentStatus;
+  if (!confirm(`क्या आप इस उत्पाद को "${nextStatus ? 'उपलब्ध' : 'Sold Out'}" करना चाहते हैं?`)) return;
+  try {
+    const { error } = await db.from('plants').update({ is_active: nextStatus }).eq('id', id);
+    if (error) throw error;
+    await loadAdminAll();
+    await loadPlants();
+  } catch (err) { alert('त्रुटि: ' + err.message); }
+}
+
+async function quickUpdateStock(id, inputId) {
+  const input = document.getElementById(inputId);
+  const newStock = Number(input.value);
+  if (isNaN(newStock) || newStock < 0) { alert('सही संख्या भरें!'); return; }
+  try {
+    const { error } = await db.from('plants').update({ stock_quantity: newStock }).eq('id', id);
+    if (error) throw error;
+    alert('✅ स्टॉक अपडेट हो गया!');
+    await loadAdminAll();
+    await loadPlants();
+  } catch (err) { alert('त्रुटि: ' + err.message); }
+}
+
+// पॉइंट 5 लागू: डैशबोर्ड पर सम्पूर्ण विस्तृत हिसाब-किताब
 async function loadAdminAll() {
   const statsBox = document.getElementById('ownerStats');
   statsBox.innerHTML = '<div class="status">डैशबोर्ड अपडेट हो रहा है…</div>';
@@ -758,29 +786,33 @@ async function loadAdminAll() {
     const pList = items.filter(x => !isVeg(x));
     const vList = items.filter(x => isVeg(x));
 
-    // स्टॉक गणना
     const totalPlantStock = pList.reduce((sum, x) => sum + (Number(x.stock_quantity) || 0), 0);
     const totalVegStock = vList.reduce((sum, x) => sum + (Number(x.stock_quantity) || 0), 0);
 
-    // ऑर्डर्स गणना
     const todayOrders = orders.filter(o => o.created_at && o.created_at.slice(0, 10) === todayStr);
     const pendingOrders = orders.filter(o => o.status === 'pending');
     const confirmedOrders = orders.filter(o => o.status === 'confirmed');
 
-    // आज की कुल बिक्री
-    const todaySalesAmount = todayOrders.reduce((sum, o) => sum + (Number(o.unit_price || 0) * Number(o.quantity || 0)), 0);
+    // आज बिके पौधे व बिकी सब्ज़ियाँ (कन्फर्म ऑर्डर्स से)
+    let todaySoldPlants = 0;
+    let todaySoldVegKg = 0;
+    todayOrders.forEach(o => {
+      if (o.status === 'confirmed') {
+        const isKg = String(o.notes || '').includes('UNIT:किलो');
+        if (isKg) todaySoldVegKg += Number(o.quantity || 0);
+        else todaySoldPlants += Number(o.quantity || 0);
+      }
+    });
 
-    // कम स्टॉक वाले उत्पाद (चेतावनी)
+    const todaySalesAmount = todayOrders.filter(o => o.status === 'confirmed').reduce((sum, o) => sum + (Number(o.unit_price || 0) * Number(o.quantity || 0)), 0);
     const lowStockItems = items.filter(x => Number(x.stock_quantity) <= 10 && x.is_active);
 
-    // 1. डैशबोर्ड HTML निर्माण
     statsBox.innerHTML = `
-      <!-- मुख्य आँकड़े -->
       <div class="metric-grid">
         <div class="metric">
           <div class="metric-label">🛒 आज के ऑर्डर</div>
           <div class="metric-value">${todayOrders.length}</div>
-          <small style="color:var(--muted)">आज की कुल माँग</small>
+          <small style="color:var(--muted)">आज प्राप्त कुल माँग</small>
         </div>
         <div class="metric pending">
           <div class="metric-label">⏳ लंबित (Pending)</div>
@@ -795,7 +827,17 @@ async function loadAdminAll() {
         <div class="metric">
           <div class="metric-label">💰 आज का व्यापार</div>
           <div class="metric-value">₹${todaySalesAmount.toFixed(2)}</div>
-          <small style="color:var(--muted)">अनुमानित कुल राशि</small>
+          <small style="color:var(--muted)">कन्फर्म बिक्री राशि</small>
+        </div>
+        <div class="metric">
+          <div class="metric-label">🌱 आज बिके पौधे</div>
+          <div class="metric-value">${todaySoldPlants}</div>
+          <small style="color:var(--muted)">संख्या में</small>
+        </div>
+        <div class="metric">
+          <div class="metric-label">🥬 आज बिकी सब्ज़ी</div>
+          <div class="metric-value">${todaySoldVegKg.toFixed(1)} <span style="font-size:14px">किलो</span></div>
+          <small style="color:var(--muted)">वज़न में</small>
         </div>
         <div class="metric">
           <div class="metric-label">🌱 कुल पौधे बाकी</div>
@@ -809,81 +851,122 @@ async function loadAdminAll() {
         </div>
       </div>
 
-      <!-- कम स्टॉक अलर्ट (यदि कोई हो) -->
       ${lowStockItems.length ? `
         <div class="status" style="background:#fef2f2;border:1px solid #fecaca;color:#991b1b;margin-top:12px">
-          <strong>⚠️ कम स्टॉक चेतावनी (Low Stock):</strong>
+          <strong>⚠️ कम स्टॉक चेतावनी (Low Stock Alert):</strong>
           <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap">
             ${lowStockItems.map(x => `<span style="background:#fee2e2;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700">${isVeg(x)?'🥬':'🌱'} ${safe(x.name)}: केवल ${x.stock_quantity} ${isVeg(x)?'किलो':'पौधे'} बाकी</span>`).join('')}
           </div>
         </div>
       ` : ''}
 
-      <!-- आज के नए ऑर्डर्स की विस्तृत सूची -->
       <div class="dashboard-table-card">
         <h3>
           <span>📋 आज के ऑर्डर विवरण (${todayOrders.length})</span>
           <button type="button" onclick="loadAdminAll()" style="padding:4px 8px;font-size:12px;background:#edf5e9;color:var(--green);border:1px solid var(--line)">🔄 रीफ्रेश करें</button>
         </h3>
-        ${todayOrders.length ? todayOrders.map(o => renderOrderHtml(o)).join('') : '<p style="color:var(--muted)">आज अभी तक कोई नया ऑर्डर नहीं आया है।</p>'}
+        ${todayOrders.length ? todayOrders.map(o => renderOrderHtml(o, orders)).join('') : '<p style="color:var(--muted)">आज अभी तक कोई नया ऑर्डर नहीं आया है।</p>'}
       </div>
     `;
 
-    // 2. ऑर्डर टैब में सभी ऑर्डर्स
     document.getElementById('ownerOrders').innerHTML = orders.length 
-      ? orders.map(o => renderOrderHtml(o)).join('') 
+      ? orders.map(o => renderOrderHtml(o, orders)).join('') 
       : '<p style="color:var(--muted)">अभी कोई ऑर्डर उपलब्ध नहीं है।</p>';
 
-    // 3. स्टॉक टैब में सूची
-    const makeRow = x => `<div class="stock-row"><div><strong>${safe(x.name)}</strong><br><small style="color:var(--muted)">₹${x.selling_price} / ${isVeg(x)?'किलो':'पौधा'}</small></div><span class="stock-count">${x.stock_quantity} ${isVeg(x)?'किलो':'पौधे'}</span></div>`;
-    document.getElementById('ownerPlantStockList').innerHTML = pList.map(makeRow).join('');
-    document.getElementById('ownerVegStockList').innerHTML = vList.map(makeRow).join('');
+    // पॉइंट 3: स्टॉक लिस्ट में Sold Out बटन व तुरंत संख्या बदलने का इनपुट बॉक्स
+    const makeStockRow = x => {
+      const isAvailable = x.is_active === true;
+      const unit = isVeg(x) ? 'किलो' : 'पौधा';
+      const inputId = 'stock-input-' + x.id;
+      return `
+        <div class="stock-row" style="flex-wrap:wrap;gap:8px;padding:12px 4px;">
+          <div>
+            <strong>${isVeg(x)?'🥬':'🌱'} ${safe(x.name)}</strong>
+            <small style="display:block;color:var(--muted)">₹${Number(x.selling_price).toFixed(2)} / ${unit}</small>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input id="${inputId}" type="number" min="0" step="${isVeg(x)?'0.5':'1'}" value="${x.stock_quantity}" style="width:70px;padding:4px 6px;margin:0;font-size:13px;text-align:center">
+            <button type="button" onclick="quickUpdateStock(${x.id}, '${inputId}')" style="padding:5px 8px;font-size:12px;background:#edf5e9;color:var(--green);border:1px solid var(--line)" title="स्टॉक संख्या सेव करें">💾</button>
+            <button type="button" onclick="toggleProductStatus(${x.id}, ${isAvailable})" style="font-size:12px;padding:5px 9px;border-radius:8px;border:1px solid ${isAvailable ? '#f87171' : '#4ade80'};background:${isAvailable ? '#fff1f2' : '#f0fdf4'};color:${isAvailable ? '#b91c1c' : '#15803d'};font-weight:700">
+              ${isAvailable ? '🚫 Sold Out करें' : '✅ उपलब्ध करें'}
+            </button>
+          </div>
+        </div>`;
+    };
+
+    document.getElementById('ownerPlantStockList').innerHTML = pList.map(makeStockRow).join('');
+    document.getElementById('ownerVegStockList').innerHTML = vList.map(makeStockRow).join('');
 
   } catch (err) {
     statsBox.innerHTML = '<div class="status">डेटा लोड नहीं हुआ: ' + err.message + '</div>';
   }
 }
 
-// ऑर्डर कार्ड बनाने का हेल्पर
-function renderOrderHtml(o) {
+// पॉइंट 5: विस्तृत ऑर्डर कार्ड व गलतियों से बचाव (Duplicate Alert, GPS Alert)
+function renderOrderHtml(o, allOrders) {
   const isPending = o.status === 'pending';
+  const isCancelled = o.status === 'cancelled';
   const total = (Number(o.unit_price || 0) * Number(o.quantity || 0)).toFixed(2);
   const mapsMatch = String(o.notes || '').match(/MAPS:(https:\/\/www\.google\.com\/maps\?q=[0-9.,-]+)/);
   const proofMatch = String(o.notes || '').match(/PROOF:(https:[^|]+)/);
+  const phone = safe(o.customer_phone || '');
+  const cleanPhone = phone.replace(/\D/g, '').slice(-10);
+
+  // डुप्लिकेट ऑर्डर अलर्ट (5 मिनट में एक ही फ़ोन नंबर से दोबारा ऑर्डर)
+  const isDuplicate = allOrders && allOrders.some(other => 
+    other.id !== o.id && 
+    other.customer_phone === o.customer_phone && 
+    Math.abs(new Date(other.created_at) - new Date(o.created_at)) < 5 * 60 * 1000
+  );
 
   return `
-    <div class="order-item-card ${isPending ? 'is-pending' : 'is-confirmed'}">
+    <div class="order-item-card ${isCancelled ? 'is-cancelled' : (isPending ? 'is-pending' : 'is-confirmed')}">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
         <strong>ऑर्डर #${o.id} - ${safe(o.plant_name)} (${o.quantity} ${String(o.notes||'').includes('UNIT:किलो')?'किलो':'पौधे'})</strong>
-        <span style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:20px;background:${isPending ? '#fef3c7;color:#92400e' : '#dcfce7;color:#166534'}">
-          ${isPending ? '⏳ लंबित (Pending)' : '✅ कन्फर्म (Confirmed)'}
+        <span style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:20px;background:${isCancelled ? '#fee2e2;color:#991b1b' : (isPending ? '#fef3c7;color:#92400e' : '#dcfce7;color:#166534')}">
+          ${isCancelled ? '❌ रद्द (Cancelled)' : (isPending ? '⏳ लंबित (Pending)' : '✅ कन्फर्म (Confirmed)')}
         </span>
       </div>
+
+      ${isDuplicate ? '<div style="margin-top:4px;font-size:12px;color:#b91c1c;font-weight:700">⚠️ ध्यान दें: इस ग्राहक का 5 मिनट में एक और ऑर्डर आया है!</div>' : ''}
+      ${!mapsMatch ? '<div style="margin-top:2px;font-size:12px;color:#d97706;font-weight:700">📍 चेतावनी: GPS लोकेशन शेयर नहीं की गई है।</div>' : ''}
+
       <p style="margin:6px 0;font-size:14px;color:#2c3e50">
-        👤 <b>ग्राहक:</b> ${safe(o.customer_name)} | 📞 <b>मोबाइल:</b> ${safe(o.customer_phone)}<br>
+        👤 <b>ग्राहक:</b> ${safe(o.customer_name)} | 📞 <b>मोबाइल:</b> ${phone}<br>
         📍 <b>पता:</b> ${safe(o.customer_address)}<br>
-        💰 <b>कुल मूल्य:</b> ₹${total} | ⏰ <b>समय:</b> ${o.created_at ? new Date(o.created_at).toLocaleTimeString('hi-IN', {hour:'2-digit',minute:'2-digit'}) : '—'}
+        💰 <b>कुल मूल्य:</b> ₹${total} | ⏰ <b>समय:</b> ${o.created_at ? new Date(o.created_at).toLocaleString('hi-IN', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—'}
       </p>
+
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
-        ${mapsMatch ? `<a class="btn" href="${safe(mapsMatch[1])}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📍 GPS लोकेशन</a>` : ''}
+        ${cleanPhone ? `<a class="btn" href="tel:${cleanPhone}" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📞 कॉल करें</a>` : ''}
+        ${cleanPhone ? `<a class="btn" href="https://wa.me/91${cleanPhone}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#dcfce7;color:#15803d">💬 WhatsApp</a>` : ''}
+        ${mapsMatch ? `<a class="btn" href="${safe(mapsMatch[1])}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📍 GPS नक्शा</a>` : ''}
         ${proofMatch ? `<a class="btn" href="${safe(proofMatch[1])}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📸 स्क्रीनशॉट देखें</a>` : ''}
-        ${isPending ? `<button type="button" onclick="confirmOrder(${o.id})" style="padding:5px 12px;font-size:12px;background:#16a34a">✅ ऑर्डर कन्फर्म करें</button>` : ''}
+        ${isPending ? `<button type="button" onclick="confirmOrder(${o.id})" style="padding:5px 12px;font-size:12px;background:#16a34a">✅ कन्फर्म करें</button>` : ''}
+        ${isPending ? `<button type="button" onclick="cancelOrder(${o.id})" style="padding:5px 10px;font-size:12px;background:#dc2626">❌ रद्द करें</button>` : ''}
       </div>
     </div>
   `;
 }
 
-// एडमिन द्वारा ऑर्डर कन्फर्म करना
 async function confirmOrder(orderId) {
-  if (!confirm('क्या आप यह ऑर्डर कन्फर्म करना चाहते हैं? इससे ग्राहक का ऑर्डर पक्का हो जाएगा।')) return;
+  if (!confirm('क्या आपने BharatPe/बैंक में भुगतान की पुष्टि कर ली है? क्या यह ऑर्डर पक्का है?')) return;
   try {
     const { error } = await db.from('order_requests').update({ status: 'confirmed' }).eq('id', orderId);
     if (error) throw error;
     alert('✅ ऑर्डर कन्फर्म हो गया!');
     loadAdminAll();
-  } catch (e) {
-    alert('त्रुटि: ' + e.message);
-  }
+  } catch (e) { alert('त्रुटि: ' + e.message); }
+}
+
+async function cancelOrder(orderId) {
+  if (!confirm('क्या आप इस ऑर्डर को रद्द (Cancel) करना चाहते हैं?')) return;
+  try {
+    const { error } = await db.from('order_requests').update({ status: 'cancelled' }).eq('id', orderId);
+    if (error) throw error;
+    alert('❌ ऑर्डर रद्द कर दिया गया!');
+    loadAdminAll();
+  } catch (e) { alert('त्रुटि: ' + e.message); }
 }
 
 async function renderAdminEdit() {
@@ -929,7 +1012,7 @@ async function renderAdminList() {
   document.getElementById('adminPlantSimpleListVeg').innerHTML = make(items.filter(x => isVeg(x)));
 }
 
-// ट्रैकिंग
+// पॉइंट 4 लागू: ग्राहक ट्रैकिंग (तारीख, समय, स्क्रीनशॉट लिंक सहित)
 document.getElementById('customerTrackingNav')?.addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('customerTracking').classList.add('tracking-modal-open');
@@ -941,13 +1024,50 @@ document.getElementById('customerTrackingForm')?.addEventListener('submit', asyn
   e.preventDefault();
   const phone = document.getElementById('trackingPhone').value.trim();
   const res = document.getElementById('customerTrackingResults');
-  res.innerHTML = 'लोड हो रहा है…';
-  const { data } = await db.from('order_requests').select('*').eq('customer_phone', phone);
-  res.innerHTML = (data || []).map(o => `
-    <div class="status">
-      <strong>#${o.id} - ${safe(o.plant_name)}</strong>
-      <p>मात्रा: ${o.quantity} | स्थिति: <b>${safe(o.status)}</b></p>
-    </div>`).join('') || '<p>कोई ऑर्डर नहीं मिला।</p>';
+  const stat = document.getElementById('customerTrackingStatus');
+  stat.style.display = 'block';
+  stat.textContent = 'ऑर्डर खोजे जा रहे हैं…';
+  res.innerHTML = '';
+  
+  try {
+    const { data, error } = await db.from('order_requests').select('*').eq('customer_phone', phone).order('created_at', { ascending: false });
+    if (error) throw error;
+    if (!data || !data.length) {
+      stat.textContent = 'इस नंबर से कोई ऑर्डर नहीं मिला।';
+      return;
+    }
+    stat.textContent = `${data.length} ऑर्डर मिले:`;
+    res.innerHTML = data.map(o => {
+      const total = (Number(o.unit_price || 0) * Number(o.quantity || 0)).toFixed(2);
+      const proofMatch = String(o.notes || '').match(/PROOF:(https:[^|]+)/);
+      const dateObj = o.created_at ? new Date(o.created_at) : null;
+      const formattedDate = dateObj ? dateObj.toLocaleDateString('hi-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : '—';
+      const formattedTime = dateObj ? dateObj.toLocaleTimeString('hi-IN', { hour: '2-digit', minute: '2-digit' }) : '—';
+      const isKg = String(o.notes || '').includes('UNIT:किलो');
+
+      return `
+        <div class="status" style="border:1px solid #dcebd7; margin-bottom:10px; background:#fff">
+          <h4 style="margin:0 0 6px; color:var(--green)">ऑर्डर #${o.id} - ${safe(o.plant_name)}</h4>
+          <p style="margin:4px 0; font-size:14px">
+            📦 <b>मात्रा:</b> ${o.quantity} ${isKg ? 'किलो' : 'पौधे'}<br>
+            💰 <b>कुल राशि:</b> ₹${total}<br>
+            📅 <b>खरीदने की तारीख:</b> ${formattedDate}<br>
+            ⏰ <b>खरीदने का समय:</b> ${formattedTime}<br>
+            📍 <b>स्थिति:</b> <b style="color:${o.status === 'confirmed' ? '#16a34a' : (o.status === 'cancelled' ? '#dc2626' : '#d97706')}">${o.status === 'confirmed' ? '✅ कन्फर्म (Confirmed)' : (o.status === 'cancelled' ? '❌ रद्द (Cancelled)' : '⏳ लंबित (जाँच जारी है)')}</b>
+          </p>
+          ${proofMatch ? `
+            <div style="margin-top:8px">
+              <a href="${safe(proofMatch[1])}" target="_blank" rel="noopener" style="display:inline-block; padding:6px 10px; background:#edf5e9; color:var(--green); border-radius:8px; text-decoration:none; font-size:13px; font-weight:700">
+                📸 अपना भुगतान स्क्रीनशॉट देखें
+              </a>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    stat.textContent = 'त्रुटि: ' + err.message;
+  }
 });
 
 // ChatGPT
