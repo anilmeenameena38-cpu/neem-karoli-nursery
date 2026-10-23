@@ -88,9 +88,6 @@ button:disabled{opacity:.55;cursor:wait}
 #customerTracking.tracking-modal-open{display:block}
 #about{display:none;padding:20px;background:#fff;border-radius:18px;margin-bottom:16px}
 #about.about-page-open{display:block}
-.order-confirmation-box{background:#f0fff4;border:1px solid #86c99a;border-radius:14px;padding:16px;margin:12px 0;color:#174b2a;line-height:1.65}
-.order-confirmation-box h3{margin:0 0 10px;color:#166534}
-.order-confirmation-box p{margin:6px 0}
 footer{background:linear-gradient(125deg,#123f25,#176b37);color:#fff;text-align:center;padding:20px 14px;margin-top:20px;border-radius:18px 18px 0 0}
 footer p{margin:4px 0}
 footer a{color:#fff}
@@ -133,10 +130,7 @@ footer a{color:#fff}
   <section id="order" hidden>
     <div class="order-modal-card">
       <button id="closeOrderModal" type="button" style="float:right;background:#edf5e9;color:#174b2b">✕ बंद करें</button>
-      
-      <!-- यह शीर्षक पौधे/सब्ज़ी के हिसाब से अपने आप बदलेगा -->
       <h2 id="orderModalTitle">🛒 ऑर्डर करें</h2>
-      
       <form id="orderForm">
         <select id="plant" style="display:none"></select>
         <div class="status">
@@ -159,7 +153,7 @@ footer a{color:#fff}
           <div id="deliveryEstimate" class="status" style="display:none"></div>
         </div>
 
-        <!-- UPI बॉक्स और 10 सेकंड का टाइमर -->
+        <!-- UPI बॉक्स और 10 सेकंड टाइमर -->
         <div id="bharatpePaymentBox" class="status" style="display:none;text-align:center">
           <h3>💳 UPI भुगतान</h3>
           <p>UPI ID: <strong>BHARATPE2H0E0T6Z3P47445@unitype</strong></p>
@@ -422,7 +416,6 @@ async function loadPlants() {
         select.value = String(p.id);
         document.getElementById('qty').value = String(q);
         
-        // 👉 यहाँ हेडिंग अपने-आप पौधे या सब्ज़ी के हिसाब से बदलती है:
         const modalTitle = document.getElementById('orderModalTitle');
         if (modalTitle) {
           modalTitle.textContent = veg ? '🛒 ताज़ी सब्ज़ी ऑर्डर करें' : '🛒 पौधा ऑर्डर करें';
@@ -528,14 +521,11 @@ document.getElementById('paymentDoneButton').addEventListener('click', () => {
   document.getElementById('orderButton').style.display = 'block';
 });
 
-// ऑर्डर सबमिट और WhatsApp पर भेजना
+// ऑर्डर सबमिट: WhatsApp अपने-आप खुलना, पॉपअप तुरंत बंद होना और होमपेज पर जाना
 document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const button = document.getElementById('orderButton');
-  const status = document.getElementById('orderStatus');
   button.disabled = true;
-  status.style.display = 'block';
-  status.textContent = 'ऑर्डर दर्ज हो रहा है…';
 
   const p = plants.find(x => Number(x.id) === Number(document.getElementById('plant').value));
   const quantity = Number(document.getElementById('qty').value);
@@ -585,18 +575,37 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
     const waUrl = 'https://wa.me/919887666626?text=' + encodeURIComponent(message);
 
-    status.innerHTML = `
-      <div class="order-confirmation-box">
-        <h3>✅ आपका ऑर्डर वेबसाइट पर सेव हो गया है!</h3>
-        <p>ऑर्डर की पुष्टि के लिए नीचे बटन दबाकर WhatsApp पर विवरण भेजें।</p>
-        <a class="btn" href="${waUrl}" target="_blank" rel="noopener" style="display:block;margin-top:10px;background:#25D366;font-size:16px">
-          📲 WhatsApp पर ऑर्डर भेजें
-        </a>
-      </div>`;
-
+    // 1. WhatsApp अपने-आप नए टैब/ऐप में खोलें
     window.open(waUrl, '_blank');
+
+    // 2. पॉप-अप विंडो को तुरंत बंद करें
+    document.getElementById('order').hidden = true;
+    document.body.classList.remove('order-modal-open');
+
+    // 3. पेज को वापस होमपेज (ऊपर) पर ले जाएँ
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 4. होमपेज पर भरोसा दिलाने वाला साफ़ नोटिफिकेशन (Toast) दिखाएँ
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#176b37;color:#fff;padding:16px 22px;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.25);z-index:99999;max-width:90%;text-align:center;font-size:15px;line-height:1.6;font-weight:600';
+    toast.innerHTML = '✅ आपका ऑर्डर व भुगतान स्क्रीनशॉट हमें मिल गया है!<br><small style="font-weight:400;opacity:0.95">हमारी टीम पेमेंट की जाँच कर बहुत जल्द आपसे संपर्क करेगी। धन्यवाद! 🌿</small>';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 6000);
+
+    // 5. फ़ॉर्म को रीसेट करें
+    document.getElementById('orderForm').reset();
+    document.getElementById('postPaymentForm').style.display = 'none';
+    document.getElementById('bharatpePaymentBox').style.display = 'none';
+    document.getElementById('paymentProofSection').style.display = 'none';
+    document.getElementById('paymentProofPreview').innerHTML = '';
+    document.getElementById('paymentDoneButton').style.display = 'none';
+    button.style.display = 'none';
+    button.disabled = false;
+    deliveryFee = null;
+    customerLocation = null;
+
   } catch (err) {
-    status.textContent = '❌ त्रुटि: ' + err.message;
+    alert('❌ ऑर्डर दर्ज करने में समस्या हुई: ' + err.message);
     button.disabled = false;
   }
 });
