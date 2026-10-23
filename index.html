@@ -246,15 +246,24 @@ footer a{color:#fff}
     </form>
 
     <div id="ownerPanelHeader" style="display:none">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
         <div>
           <h3 style="margin:0">🌿 नीम करोली नर्सरी एडमिन पैनल</h3>
           <small id="audioStatusText" style="color:var(--green);font-weight:700">🔔 नए ऑर्डर पर लाउड अलर्ट: तैयार है</small>
         </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button id="muteToggleBtn" type="button" style="background:#edf5e9;color:var(--green);border:1px solid var(--line);font-size:13px;padding:7px 12px;border-radius:8px">🔊 अलर्ट ऑन है</button>
-          <button id="toggleAlertSoundBtn" type="button" style="background:#16a34a;color:#fff;font-size:13px;padding:7px 12px;border-radius:8px">🔔 टेस्ट रिंगटोन</button>
-          <button id="logoutButton" type="button" style="background:#dc2626">लॉग आउट</button>
+        
+        <!-- 🔔 4 रिंगटोन सेट करने का नया मेनू -->
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:#f5faf2;padding:6px 10px;border-radius:10px;border:1px solid #d8e9dc">
+          <label style="margin:0;font-size:12px;font-weight:700;color:var(--green)">🎵 टोन चुनें:</label>
+          <select id="ringtoneSelector" style="width:auto;margin:0;padding:4px 8px;font-size:13px;border-radius:6px">
+            <option value="zomato">🛵 1. ज़ोमैटो स्टाइल (Triple Chime)</option>
+            <option value="swiggy">🍔 2. स्विगी स्टाइल (Double Bell)</option>
+            <option value="siren">🚨 3. तेज़ सायरन अलर्ट (Urgent Siren)</option>
+            <option value="melody">🌿 4. शांत नर्सरी टोन (Soft Melody)</option>
+          </select>
+          <button id="toggleAlertSoundBtn" type="button" style="background:#16a34a;color:#fff;font-size:12px;padding:5px 10px;border-radius:6px">▶️ टेस्ट सुनें</button>
+          <button id="muteToggleBtn" type="button" style="background:#edf5e9;color:var(--green);border:1px solid var(--line);font-size:12px;padding:5px 10px;border-radius:6px">🔊 ऑन है</button>
+          <button id="logoutButton" type="button" style="background:#dc2626;padding:5px 10px;font-size:12px;border-radius:6px">लॉग आउट</button>
         </div>
       </div>
     </div>
@@ -520,72 +529,99 @@ const DELIVERY_RATE_PER_KM = 10;
 let upiCountdownInterval = null;
 
 // ==========================================
-// 🔔 स्मार्ट लाउड अलर्ट (सिर्फ नया ऑर्डर आने पर बजेगा + पॉज़ विकल्प)
+// 🎵 4 प्रकार की रिंगटोन इंजन (Zomato, Swiggy, Siren, Melody)
 // ==========================================
-let alertAudioElement = null;
+let alertAudioCtx = null;
 let alertSoundInterval = null;
 let lastKnownPendingCount = null;
 let isAlertMuted = false;
 
-// लाउड अलार्म बीप MP3
-const ALERT_SOUND_URL = 'https://actions.google.com/sounds/v1/alarms/beep_short.ogg';
+// यूजर द्वारा चुनी गई टोन को लोकल स्टोरेज से लोड करना
+let selectedRingtone = localStorage.getItem('nursery_ringtone_choice') || 'zomato';
 
-function initAudio() {
-  if (!alertAudioElement) {
-    alertAudioElement = new Audio(ALERT_SOUND_URL);
-    alertAudioElement.volume = 1.0;
-  }
-}
-
-function playLoudAlertTone() {
-  if (isAlertMuted) return;
-  try {
-    initAudio();
-    alertAudioElement.currentTime = 0;
-    const p = alertAudioElement.play();
-    if (p !== undefined) {
-      p.catch(() => playSynthesizerFallback());
-    }
-  } catch (_) {
-    playSynthesizerFallback();
-  }
-}
-
-function playSynthesizerFallback() {
-  if (isAlertMuted) return;
-  try {
+function initAudioContext() {
+  if (!alertAudioCtx) {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
-    if (ctx.state === 'suspended') ctx.resume();
+    if (AudioCtx) alertAudioCtx = new AudioCtx();
+  }
+  if (alertAudioCtx && alertAudioCtx.state === 'suspended') {
+    alertAudioCtx.resume();
+  }
+}
 
-    const now = ctx.currentTime;
-    [
-      { f: 950, t: now, d: 0.16 },
-      { f: 1250, t: now + 0.18, d: 0.16 },
-      { f: 1650, t: now + 0.36, d: 0.3 }
-    ].forEach(item => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(item.f, item.t);
-      gain.gain.setValueAtTime(0.85, item.t);
-      gain.gain.exponentialRampToValueAtTime(0.01, item.t + item.d);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(item.t);
-      osc.stop(item.t + item.d);
-    });
-  } catch (err) {}
+// 4 अलग-अलग रिंगटोन बजाने का फ़ंक्शन
+function playSelectedTone() {
+  if (isAlertMuted) return;
+  initAudioContext();
+  if (!alertAudioCtx) return;
+
+  const ctx = alertAudioCtx;
+  const now = ctx.currentTime;
+
+  // 1. ज़ोमैटो स्टाइल (Triple Chime)
+  if (selectedRingtone === 'zomato') {
+    const notes = [
+      { f: 987.77, t: now, d: 0.16 },       // B5
+      { f: 1318.51, t: now + 0.18, d: 0.16 }, // E6
+      { f: 1760.00, t: now + 0.36, d: 0.32 }  // A6
+    ];
+    notes.forEach(n => playSingleTone(ctx, n.f, n.t, n.d, 'sawtooth', 0.8));
+  }
+  // 2. स्विगी स्टाइल (Double Bell)
+  else if (selectedRingtone === 'swiggy') {
+    const notes = [
+      { f: 1046.50, t: now, d: 0.22 },       // C6
+      { f: 1567.98, t: now + 0.22, d: 0.38 }  // G6
+    ];
+    notes.forEach(n => playSingleTone(ctx, n.f, n.t, n.d, 'sine', 0.85));
+  }
+  // 3. तेज़ सायरन अलर्ट (Urgent Siren Beep)
+  else if (selectedRingtone === 'siren') {
+    const notes = [
+      { f: 880, t: now, d: 0.14 },
+      { f: 1200, t: now + 0.15, d: 0.14 },
+      { f: 880, t: now + 0.30, d: 0.14 },
+      { f: 1200, t: now + 0.45, d: 0.28 }
+    ];
+    notes.forEach(n => playSingleTone(ctx, n.f, n.t, n.d, 'square', 0.75));
+  }
+  // 4. शांत नर्सरी टोन (Soft Melody)
+  else {
+    const notes = [
+      { f: 523.25, t: now, d: 0.2 },         // C5
+      { f: 659.25, t: now + 0.18, d: 0.2 },  // E5
+      { f: 783.99, t: now + 0.36, d: 0.2 },  // G5
+      { f: 1046.50, t: now + 0.54, d: 0.4 }  // C6
+    ];
+    notes.forEach(n => playSingleTone(ctx, n.f, n.t, n.d, 'triangle', 0.8));
+  }
+}
+
+function playSingleTone(ctx, freq, startTime, duration, waveType, volume) {
+  try {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = waveType;
+    osc.frequency.setValueAtTime(freq, startTime);
+
+    gain.gain.setValueAtTime(volume, startTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(startTime);
+    osc.stop(startTime + duration);
+  } catch (_) {}
 }
 
 function startLoudAlert() {
   if (isAlertMuted) return;
   const banner = document.getElementById('loudAlertBanner');
   if (banner) banner.style.display = 'block';
-  playLoudAlertTone();
+  playSelectedTone();
   if (alertSoundInterval) clearInterval(alertSoundInterval);
-  alertSoundInterval = setInterval(playLoudAlertTone, 2200);
+  alertSoundInterval = setInterval(playSelectedTone, 2400);
 }
 
 function stopLoudAlert() {
@@ -595,17 +631,22 @@ function stopLoudAlert() {
     clearInterval(alertSoundInterval);
     alertSoundInterval = null;
   }
-  if (alertAudioElement) {
-    alertAudioElement.pause();
-    alertAudioElement.currentTime = 0;
-  }
 }
 
 document.getElementById('stopLoudAlertBtn')?.addEventListener('click', stopLoudAlert);
 
+// टेस्ट बटन
 document.getElementById('toggleAlertSoundBtn')?.addEventListener('click', () => {
-  initAudio();
-  playLoudAlertTone();
+  initAudioContext();
+  playSelectedTone();
+});
+
+// रिंगटोन सेलेक्टर ड्रॉपडाउन
+document.getElementById('ringtoneSelector')?.addEventListener('change', function() {
+  selectedRingtone = this.value;
+  localStorage.setItem('nursery_ringtone_choice', selectedRingtone);
+  initAudioContext();
+  playSelectedTone();
 });
 
 // म्यूट/पॉज़ टॉगल बटन
@@ -613,23 +654,23 @@ document.getElementById('muteToggleBtn')?.addEventListener('click', function() {
   isAlertMuted = !isAlertMuted;
   if (isAlertMuted) {
     stopLoudAlert();
-    this.textContent = '🔇 अलर्ट म्यूट (बंद)';
+    this.textContent = '🔇 म्यूट है';
     this.style.background = '#fee2e2';
     this.style.color = '#b91c1c';
     document.getElementById('audioStatusText').textContent = '🔇 अलर्ट पॉज़ / बंद है';
     document.getElementById('audioStatusText').style.color = '#b91c1c';
   } else {
-    this.textContent = '🔊 अलर्ट ऑन है';
+    this.textContent = '🔊 ऑन है';
     this.style.background = '#edf5e9';
     this.style.color = 'var(--green)';
     document.getElementById('audioStatusText').textContent = '🔔 नए ऑर्डर पर लाउड अलर्ट: तैयार है';
     document.getElementById('audioStatusText').style.color = 'var(--green)';
-    initAudio();
+    initAudioContext();
   }
 });
 
 // ==========================================
-// 📦 100% फुलप्रूफ डिलीवरी सिंक सिस्टम (Local + Supabase)
+// 📦 फुलप्रूफ डिलीवरी सिंक सिस्टम (Local + Supabase)
 // ==========================================
 function getDeliveredCache() {
   try {
@@ -903,7 +944,9 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 const ownerModal = document.getElementById('owner');
 document.getElementById('adminPanelNav').addEventListener('click', () => { 
   ownerModal.classList.add('login-visible');
-  initAudio();
+  initAudioContext();
+  const sel = document.getElementById('ringtoneSelector');
+  if (sel) sel.value = selectedRingtone;
 });
 document.getElementById('ownerCloseButton').addEventListener('click', () => { 
   ownerModal.classList.remove('login-visible'); 
@@ -912,7 +955,7 @@ document.getElementById('ownerCloseButton').addEventListener('click', () => {
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  initAudio();
+  initAudioContext();
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
   const stat = document.getElementById('ownerStatus');
@@ -924,17 +967,19 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   document.getElementById('adminTabs').style.display = 'grid';
   showAdminTab('dashboard');
   
-  // प्रारंभिक गिनती नोट करें ताकि लॉगिन होते ही साउंड न बजे
+  // ड्रॉपडाउन में सेव की गई रिंगटोन सेट करना
+  const sel = document.getElementById('ringtoneSelector');
+  if (sel) sel.value = selectedRingtone;
+
   const { count } = await db.from('order_requests').select('*', { count: 'exact', head: true }).eq('status', 'pending');
   lastKnownPendingCount = count || 0;
 
   loadAdminAll();
 
-  // 12 सेकंड में नया ऑर्डर ऑटो-चेक
+  // 12 सेकंड में नया ऑर्डर ऑटो-चेक (Zomato alert)
   setInterval(checkForNewIncomingOrders, 12000);
 });
 
-// केवल नया ऑर्डर आने पर ही बजेगा
 async function checkForNewIncomingOrders() {
   try {
     const { count, error } = await db.from('order_requests').select('*', { count: 'exact', head: true }).eq('status', 'pending');
@@ -1307,10 +1352,10 @@ async function markOrderDelivered(event, orderId, existingNotes) {
   const btn = event ? event.target : null;
   if (btn) { btn.disabled = true; btn.textContent = 'डिलीवर हो रहा है…'; }
 
-  // 1. लोकल कैश में सुरक्षित करें ताकि रिफ़्रेश पर भी डिलीवर ही रहे
+  // 1. लोकल कैश में सुरक्षित करें
   saveDeliveredCache(orderId);
 
-  // 2. स्क्रीन पर तुरंत डिलीवर दिखाएँ (ताकि 0 न दिखे)
+  // 2. स्क्रीन पर तुरंत डिलीवर दिखाएँ
   const card = document.getElementById('order-card-' + orderId);
   if (card) {
     card.className = 'order-item-card is-delivered';
