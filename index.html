@@ -350,7 +350,7 @@ footer a:hover{text-decoration:underline}
     <div id="plantOnlyList" class="plants">पौधों की सूची लोड हो रही है…</div>
   </section>
 
-  <!-- सब्जियाँ श्रेणी व्यू (न्यूनतम मात्रा 1 किलो फिक्स) -->
+  <!-- सब्जियाँ श्रेणी व्यू -->
   <section class="card" id="viewVegCategory">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin:12px 0 8px">
       <h2 style="margin:0">🥬 खाने के लिए ताज़ी सब्ज़ियाँ</h2>
@@ -690,7 +690,7 @@ footer a:hover{text-decoration:underline}
       </div>
     </div>
 
-    <!-- ⚙️ वेबसाइट मास्टर स्टूडियो (पौधों और सब्जियों के लिए अलग-अलग डिलीवरी कंट्रोल सहित) -->
+    <!-- ⚙️ वेबसाइट मास्टर स्टूडियो (फ्री डिलीवरी राउंड-ट्रिप दूरी कॉलम के साथ) -->
     <div id="adminSettingsPane" class="admin-pane">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px">
         <div>
@@ -752,15 +752,19 @@ footer a:hover{text-decoration:underline}
           <input id="settingUpiName" required value="ANIL KUMAR MEENA">
         </div>
 
-        <!-- टैब 4: डिलीवरी & मुफ़्त ऑफर (पौधे और सब्ज़ियाँ अलग-अलग) -->
+        <!-- टैब 4: डिलीवरी & मुफ़्त ऑफर (फ्री दूरी राउंड-ट्रिप कॉलम सहित) -->
         <div id="subpane-delivery" class="settings-subpane">
-          <h3 style="color:var(--green);margin-top:0">🚚 डिलीवरी नियम (पौधे और सब्ज़ियाँ अलग-अलग)</h3>
+          <h3 style="color:var(--green);margin-top:0">🚚 डिलीवरी नियम (दूरी और फ्री रेंज कंट्रोल)</h3>
           
           <div style="background:#f4fbf7;border:1px solid #d1fae5;border-radius:14px;padding:14px;margin-bottom:14px">
             <h4 style="margin:0 0 10px;color:var(--deep)">🌱 नर्सरी पौधे के डिलीवरी नियम</h4>
             <div class="mandi-grid" style="margin:0">
               <div>
-                <label>पौधे डिलीवरी दर (₹/किमी)</label>
+                <label>फ्री डिलीवरी कुल दूरी (किमी)</label>
+                <input id="settingPlantFreeKm" type="number" min="0" value="5" title="इस कुल दूरी तक कोई चार्ज नहीं लगेगा">
+              </div>
+              <div>
+                <label>आगे की दर (₹/किमी)</label>
                 <input id="settingPlantDeliveryRate" type="number" min="0" value="10">
               </div>
               <div>
@@ -771,18 +775,18 @@ footer a:hover{text-decoration:underline}
                 <label>न्यूनतम आर्डर (₹)</label>
                 <input id="settingPlantMinOrder" type="number" min="0" value="50">
               </div>
-              <div>
-                <label>मुफ़्त डिलीवरी (₹ से ऊपर)</label>
-                <input id="settingPlantFreeAbove" type="number" min="0" value="500">
-              </div>
             </div>
           </div>
 
           <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:14px">
-            <h4 style="margin:0 0 10px;color:#b45309">🥬 ताज़ी सब्ज़ियों के डिलीवरी नियम</h4>
+            <h4 style="margin:0 0 10px;color:#b45309">🥬 ताज़ी सब्जियों के डिलीवरी नियम</h4>
             <div class="mandi-grid" style="margin:0">
               <div>
-                <label>सब्ज़ी डिलीवरी दर (₹/किमी)</label>
+                <label>फ्री डिलीवरी कुल दूरी (किमी)</label>
+                <input id="settingVegFreeKm" type="number" min="0" value="10" title="इस कुल दूरी तक कोई चार्ज नहीं लगेगा">
+              </div>
+              <div>
+                <label>आगे की दर (₹/किमी)</label>
                 <input id="settingVegDeliveryRate" type="number" min="0" value="10">
               </div>
               <div>
@@ -792,10 +796,6 @@ footer a:hover{text-decoration:underline}
               <div>
                 <label>न्यूनतम आर्डर (₹)</label>
                 <input id="settingVegMinOrder" type="number" min="0" value="50">
-              </div>
-              <div>
-                <label>मुफ़्त डिलीवरी (₹ से ऊपर)</label>
-                <input id="settingVegFreeAbove" type="number" min="0" value="300">
               </div>
             </div>
           </div>
@@ -903,7 +903,7 @@ const NURSERY_LOCATION = { lat: 28.010476, lon: 75.653594 };
 let upiCountdownInterval = null;
 
 // ==========================================
-// ⚙️ वेबसाइट सेटिंग्स लोड व सिंक सिस्टम (CMS - अलग-अलग डिलीवरी नियम)
+// ⚙️ वेबसाइट सेटिंग्स (फ्री डिलीवरी कुल दूरी कॉलम सहित)
 // ==========================================
 const DEFAULT_SITE_CONFIG = {
   nurseryName: 'श्री नीम करोली महाराज ग्रीन नर्सरी',
@@ -919,15 +919,15 @@ const DEFAULT_SITE_CONFIG = {
   upiId: 'BHARATPE2H0E0T6Z3P47445@unitype',
   upiName: 'ANIL KUMAR MEENA',
   // पौधे के नियम
+  plantFreeKm: 5,
   plantDeliveryRate: 10,
   plantMaxDistance: 50,
   plantMinOrder: 50,
-  plantFreeAbove: 500,
   // सब्जी के नियम
+  vegFreeKm: 10,
   vegDeliveryRate: 10,
   vegMaxDistance: 30,
   vegMinOrder: 50,
-  vegFreeAbove: 300,
   waWidget: 'on',
   couponCode: 'KISAN20'
 };
@@ -944,7 +944,6 @@ function getSiteConfig() {
 function applySiteConfigToUI() {
   const cfg = getSiteConfig();
 
-  // 1. नाम व पहचान
   document.getElementById('pageTitle').textContent = cfg.nurseryName;
   document.getElementById('headerNurseryName').textContent = cfg.nurseryName;
   document.getElementById('headerNurseryTagline').textContent = cfg.tagline;
@@ -954,7 +953,6 @@ function applySiteConfigToUI() {
   document.getElementById('footerNurseryName').textContent = '🌱 ' + cfg.nurseryName;
   document.getElementById('footerAddressText').textContent = '📍 ' + cfg.address;
   
-  // 2. संपर्क
   document.getElementById('footerPhoneText').textContent = cfg.phone;
   document.getElementById('footerPhoneLink').href = 'tel:' + cfg.phone;
   document.getElementById('contactPhoneText').textContent = cfg.phone;
@@ -962,7 +960,6 @@ function applySiteConfigToUI() {
   document.getElementById('contactCallBtn').href = 'tel:' + cfg.phone;
   document.getElementById('contactWaBtn').href = 'https://wa.me/91' + cfg.phone + '?text=नमस्ते,%20मुझे%20सहायता%20चाहिए।';
 
-  // 3. सूचना टिकर (Marquee)
   const tickerEl = document.getElementById('siteNoticeTicker');
   if (cfg.tickerStatus === 'on' && cfg.tickerText) {
     tickerEl.style.display = 'block';
@@ -971,7 +968,6 @@ function applySiteConfigToUI() {
     tickerEl.style.display = 'none';
   }
 
-  // 4. डिस्काउंट सेल बैनर
   const offerBanner = document.getElementById('siteOfferBanner');
   if (cfg.discountPercent > 0) {
     offerBanner.style.display = 'block';
@@ -980,7 +976,6 @@ function applySiteConfigToUI() {
     offerBanner.style.display = 'none';
   }
 
-  // 5. दुकान खुली / बंद स्थिति
   const closedBanner = document.getElementById('siteClosedBanner');
   const allBuyButtons = document.querySelectorAll('.plant-buy-button');
   if (cfg.shopStatus === 'closed') {
@@ -993,11 +988,9 @@ function applySiteConfigToUI() {
     closedBanner.style.display = 'none';
   }
 
-  // 6. UPI ID
   const upiIdDisplay = document.getElementById('displayUpiId');
   if (upiIdDisplay) upiIdDisplay.textContent = cfg.upiId;
 
-  // 7. फ़्लोटिंग WhatsApp बटन
   const waBtn = document.getElementById('floatingWaWidget');
   if (waBtn) {
     if (cfg.waWidget === 'on') {
@@ -1008,7 +1001,6 @@ function applySiteConfigToUI() {
     }
   }
 
-  // 8. थीम रंग लागू करना
   const header = document.getElementById('mainHeader');
   if (header) {
     if (cfg.themeColor === 'fresh') {
@@ -1031,16 +1023,15 @@ function fillSettingsForm() {
   document.getElementById('settingUpiId').value = cfg.upiId;
   document.getElementById('settingUpiName').value = cfg.upiName;
 
-  // अलग-अलग डिलीवरी मान भरना
+  document.getElementById('settingPlantFreeKm').value = cfg.plantFreeKm;
   document.getElementById('settingPlantDeliveryRate').value = cfg.plantDeliveryRate;
   document.getElementById('settingPlantMaxDistance').value = cfg.plantMaxDistance;
   document.getElementById('settingPlantMinOrder').value = cfg.plantMinOrder;
-  document.getElementById('settingPlantFreeAbove').value = cfg.plantFreeAbove;
 
+  document.getElementById('settingVegFreeKm').value = cfg.vegFreeKm;
   document.getElementById('settingVegDeliveryRate').value = cfg.vegDeliveryRate;
   document.getElementById('settingVegMaxDistance').value = cfg.vegMaxDistance;
   document.getElementById('settingVegMinOrder').value = cfg.vegMinOrder;
-  document.getElementById('settingVegFreeAbove').value = cfg.vegFreeAbove;
 
   document.getElementById('settingNurseryName').value = cfg.nurseryName;
   document.getElementById('settingNurseryTagline').value = cfg.tagline;
@@ -1058,7 +1049,6 @@ function fillSettingsForm() {
   document.getElementById('prevHours').textContent = '⏰ समय: ' + cfg.openingHours;
 }
 
-// सब-टैब्स स्विचिंग
 document.querySelectorAll('.settings-subtab').forEach(btn => {
   btn.addEventListener('click', function() {
     document.querySelectorAll('.settings-subtab').forEach(b => b.classList.remove('active'));
@@ -1079,15 +1069,15 @@ document.getElementById('siteSettingsForm')?.addEventListener('submit', function
     upiId: document.getElementById('settingUpiId').value.trim(),
     upiName: document.getElementById('settingUpiName').value.trim(),
     
+    plantFreeKm: Number(document.getElementById('settingPlantFreeKm').value) || 0,
     plantDeliveryRate: Number(document.getElementById('settingPlantDeliveryRate').value) || 10,
     plantMaxDistance: Number(document.getElementById('settingPlantMaxDistance').value) || 50,
     plantMinOrder: Number(document.getElementById('settingPlantMinOrder').value) || 50,
-    plantFreeAbove: Number(document.getElementById('settingPlantFreeAbove').value) || 500,
 
+    vegFreeKm: Number(document.getElementById('settingVegFreeKm').value) || 0,
     vegDeliveryRate: Number(document.getElementById('settingVegDeliveryRate').value) || 10,
     vegMaxDistance: Number(document.getElementById('settingVegMaxDistance').value) || 30,
     vegMinOrder: Number(document.getElementById('settingVegMinOrder').value) || 50,
-    vegFreeAbove: Number(document.getElementById('settingVegFreeAbove').value) || 300,
 
     nurseryName: document.getElementById('settingNurseryName').value.trim(),
     tagline: document.getElementById('settingNurseryTagline').value.trim(),
@@ -1105,12 +1095,12 @@ document.getElementById('siteSettingsForm')?.addEventListener('submit', function
 
   const stat = document.getElementById('siteSettingsStatus');
   stat.style.display = 'block';
-  stat.textContent = '✅ पौधों और सब्जियों की डिलीवरी सेटिंग्स अलग-अलग सुरक्षित हो गईं!';
+  stat.textContent = '✅ फ्री दूरी और डिलीवरी नियम सफलतापूर्वक सुरक्षित हो गए!';
   setTimeout(() => { stat.style.display = 'none'; }, 4000);
 });
 
 // ==========================================
-// 🎵 4 प्रकार की रिंगटोन इंजन
+// 🎵 रिंगटोन व आर्डर सिस्टम
 // ==========================================
 let alertAudioCtx = null;
 let alertSoundInterval = null;
@@ -1233,9 +1223,6 @@ document.getElementById('muteToggleBtn')?.addEventListener('click', function() {
   }
 });
 
-// ==========================================
-// 📦 डिलीवरी व रसीद प्रिंटिंग सिस्टम
-// ==========================================
 function getDeliveredCache() {
   try {
     return JSON.parse(localStorage.getItem('nursery_delivered_orders') || '[]');
@@ -1261,7 +1248,6 @@ function isOrderDelivered(o) {
          cache.includes(Number(o.id));
 }
 
-// 🖨️ 1-क्लिक पक्का बिल प्रिंट करने का फ़ंक्शन
 function printOrderInvoice(orderId, plantName, qty, unitPrice, custName, custPhone, custAddr, notes, createdAt) {
   const cfg = getSiteConfig();
   const isKg = String(notes || '').includes('UNIT:किलो');
@@ -1360,7 +1346,6 @@ function getISTDate(dateInput) {
   return ist.getFullYear() + '-' + String(ist.getMonth()+1).padStart(2,'0') + '-' + String(ist.getDate()).padStart(2,'0');
 }
 
-// 📦 होमपेज उत्पाद लोड करना (सब्जियों के लिए न्यूनतम 1 किलो फिक्स)
 async function loadPlants() {
   const pList = document.getElementById('plantOnlyList');
   const vList = document.getElementById('vegOnlyList');
@@ -1457,7 +1442,7 @@ async function loadPlants() {
   }
 }
 
-// 2. ऑर्डर व डिलीवरी (पौधे और सब्जियों के अलग-अलग नियमों के अनुसार गणना)
+// 2. ऑर्डर व डिलीवरी (फ्री कुल दूरी नियम के अनुसार गणना)
 function updateOrderTotal() {
   const cfg = getSiteConfig();
   const pId = Number(document.getElementById('plant').value);
@@ -1481,22 +1466,23 @@ function updateOrderTotal() {
   document.getElementById('plantAmountDisplay').textContent = '₹' + rawItemTotal.toFixed(2);
 
   if (deliveryDistanceKm !== null) {
-    // पौधे और सब्जी के अलग-अलग नियम लागू करना
     const maxDist = veg ? cfg.vegMaxDistance : cfg.plantMaxDistance;
     const rate = veg ? cfg.vegDeliveryRate : cfg.plantDeliveryRate;
-    const freeAbove = veg ? cfg.vegFreeAbove : cfg.plantFreeAbove;
+    const freeKm = veg ? cfg.vegFreeKm : cfg.plantFreeKm;
 
     if (deliveryDistanceKm > maxDist) {
-      document.getElementById('locationStatus').textContent = `❌ आपकी दूरी ${deliveryDistanceKm.toFixed(1)} किमी है (इस उत्पाद के लिए अधिकतम सीमा ${maxDist} किमी है)।`;
+      document.getElementById('locationStatus').textContent = `❌ आपकी कुल दूरी ${deliveryDistanceKm.toFixed(1)} किमी है (अधिकतम सीमा ${maxDist} किमी से बाहर)।`;
       return;
     }
 
-    let calculatedFee = Math.ceil(deliveryDistanceKm * 2 * rate);
-    if (freeAbove > 0 && finalItemTotal >= freeAbove) {
+    let calculatedFee = 0;
+    if (deliveryDistanceKm <= freeKm) {
       calculatedFee = 0;
-      document.getElementById('deliveryAmountDisplay').textContent = '₹0.00 (मुफ़्त डिलीवरी ऑफर! 🎉)';
+      document.getElementById('deliveryAmountDisplay').textContent = `₹0.00 (${freeKm} किमी तक मुफ़्त डिलीवरी! 🎉)`;
     } else {
-      document.getElementById('deliveryAmountDisplay').textContent = '₹' + calculatedFee.toFixed(2);
+      const chargeableKm = deliveryDistanceKm - freeKm;
+      calculatedFee = Math.ceil(chargeableKm * rate);
+      document.getElementById('deliveryAmountDisplay').textContent = '₹' + calculatedFee.toFixed(2) + ` (${freeKm} किमी फ्री के बाद)`;
     }
 
     const totalToPay = finalItemTotal + calculatedFee;
@@ -1524,13 +1510,14 @@ document.getElementById('locationButton').addEventListener('click', () => {
   stat.textContent = 'लोकेशन जाँची जा रही है…';
   navigator.geolocation.getCurrentPosition(pos => {
     const lat = pos.coords.latitude, lon = pos.coords.longitude;
-    const km = distanceKm(NURSERY_LOCATION.lat, NURSERY_LOCATION.lon, lat, lon);
+    const oneWayKm = distanceKm(NURSERY_LOCATION.lat, NURSERY_LOCATION.lon, lat, lon);
+    const roundTripKm = oneWayKm * 2; // आने और जाने का कुल राउंड-ट्रिप فاصلہ
     
-    deliveryDistanceKm = km;
+    deliveryDistanceKm = roundTripKm;
     customerLocation = { lat, lon, mapsUrl: `https://www.google.com/maps?q=${lat},${lon}` };
-    stat.textContent = `✅ लोकेशन मान्य (${km.toFixed(1)} किमी)।`;
+    stat.textContent = `✅ कुल दूरी (आना-जाना): ${roundTripKm.toFixed(1)} किमी`;
     document.getElementById('deliveryEstimate').style.display = 'block';
-    document.getElementById('deliveryEstimate').textContent = `दूरी: ${km.toFixed(1)} किमी`;
+    document.getElementById('deliveryEstimate').textContent = `कुल दूरी: ${roundTripKm.toFixed(1)} किमी`;
     document.getElementById('bharatpePaymentBox').style.display = 'block';
     updateOrderTotal();
   }, () => { stat.textContent = 'लोकेशन प्राप्त नहीं हो सकी।'; });
@@ -1620,13 +1607,14 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
     const discountAmt = cfg.discountPercent > 0 ? (rawTotal * cfg.discountPercent) / 100 : 0;
     const plantTotalAmount = rawTotal - discountAmt;
     
-    const maxDist = veg ? cfg.vegMaxDistance : cfg.plantMaxDistance;
+    const freeKm = veg ? cfg.vegFreeKm : cfg.plantFreeKm;
     const rate = veg ? cfg.vegDeliveryRate : cfg.plantDeliveryRate;
-    const freeAbove = veg ? cfg.vegFreeAbove : cfg.plantFreeAbove;
 
-    let appliedDeliveryFee = deliveryDistanceKm ? Math.ceil(deliveryDistanceKm * 2 * rate) : 0;
-    if (freeAbove > 0 && plantTotalAmount >= freeAbove) {
-      appliedDeliveryFee = 0;
+    let appliedDeliveryFee = 0;
+    if (deliveryDistanceKm !== null) {
+      if (deliveryDistanceKm > freeKm) {
+        appliedDeliveryFee = Math.ceil((deliveryDistanceKm - freeKm) * rate);
+      }
     }
     const totalAmount = (plantTotalAmount + Number(appliedDeliveryFee)).toFixed(2);
 
@@ -1637,7 +1625,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
       customer_name: customerName,
       customer_phone: cleanPhone,
       customer_address: fullAddress,
-      notes: `UNIT:${veg?'किलो':'पौधा'} | DELIVERY_FEE:${appliedDeliveryFee} | DISCOUNT:${discountAmt} | MAPS:${customerLocation?.mapsUrl || ''} | PROOF:${proofUrl}`,
+      notes: `UNIT:${veg?'किलो':'पौधा'} | DISTANCE:${deliveryDistanceKm?.toFixed(1)}km | DELIVERY_FEE:${appliedDeliveryFee} | DISCOUNT:${discountAmt} | MAPS:${customerLocation?.mapsUrl || ''} | PROOF:${proofUrl}`,
       status: 'pending'
     });
 
@@ -1839,7 +1827,6 @@ async function quickUpdateStock(id, inputId) {
   } catch (err) { alert('त्रुटि: ' + err.message); }
 }
 
-// डैशबोर्ड लोड करना
 async function loadAdminAll() {
   const statsBox = document.getElementById('ownerStats');
   if (!statsBox) return;
@@ -1980,7 +1967,6 @@ async function loadAdminAll() {
   }
 }
 
-// ऑर्डर कार्ड निर्माण
 function renderOrderHtml(o, allOrders) {
   const isDelivered = isOrderDelivered(o);
   const isPending = o.status === 'pending';
@@ -2042,7 +2028,6 @@ function renderOrderHtml(o, allOrders) {
   `;
 }
 
-// 1. ऑर्डर कन्फर्मेशन
 async function confirmOrder(event, orderId, plantName, qty) {
   if (event) { event.preventDefault(); event.stopPropagation(); }
   if (!confirm(`क्या आप ऑर्डर #${orderId} कन्फर्म करना चाहते हैं? इससे स्टॉक में से ${qty} कम हो जाएगा।`)) return;
@@ -2078,7 +2063,6 @@ async function confirmOrder(event, orderId, plantName, qty) {
   }
 }
 
-// 2. ऑर्डर डिलीवर मार्क करना
 async function markOrderDelivered(event, orderId, existingNotes) {
   if (event) { event.preventDefault(); event.stopPropagation(); }
   if (!confirm(`क्या आपने ऑर्डर #${orderId} ग्राहक तक पहुँचा दिया है?`)) return;
@@ -2121,7 +2105,6 @@ async function cancelOrder(event, orderId) {
   } catch (e) { alert('त्रुटि: ' + e.message); }
 }
 
-// बिक्री हिसाब लोड करना
 async function loadSalesLedger() {
   const pBox = document.getElementById('salesPlantRecords');
   const vBox = document.getElementById('salesVegRecords');
@@ -2205,7 +2188,6 @@ async function loadSalesLedger() {
   }
 }
 
-// मंडी भाव प्रणाली
 const MANDI_BASE_RATES = {
   'Tomato': { min: 14, modal: 20, max: 26 },
   'Cucumber': { min: 15, modal: 22, max: 28 },
@@ -2361,7 +2343,6 @@ async function renderAdminList() {
   document.getElementById('adminPlantSimpleListVeg').innerHTML = make(items.filter(x => isVeg(x)));
 }
 
-// 4. ग्राहक ट्रैकिंग
 document.getElementById('customerTrackingNav')?.addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('customerTracking').classList.add('tracking-modal-open');
@@ -2439,13 +2420,11 @@ document.getElementById('customerTrackingForm')?.addEventListener('submit', asyn
   }
 });
 
-// ChatGPT
 document.getElementById('nurseryAskChatGPT')?.addEventListener('click', () => {
   const q = document.getElementById('nurseryChatQuestion').value.trim();
   if (q) window.open('https://chatgpt.com/?q=' + encodeURIComponent(q), '_blank');
 });
 
-// पेज लोड पर सेटिंग्स व उत्पाद लागू करना
 applySiteConfigToUI();
 loadPlants();
 </script>
