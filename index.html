@@ -469,13 +469,13 @@ footer a:hover{text-decoration:underline}
     </div>
   </section>
 
-  <!-- 🛒 बॉटम फ्लोटिंग कार्ट बार -->
+  <!-- 🛒 कार्ट बार -->
   <div id="floatingBottomCartBar">
     <div>🛒 <strong id="barItemCount">0</strong> आइटम जोड़े गए | कुल: <strong id="barTotalPrice">₹0</strong></div>
     <button type="button" onclick="openCartModal()" style="background:#fff;color:var(--deep);border:0;padding:8px 16px;border-radius:10px;font-weight:900;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.2)">कार्ट देखें और आगे बढ़ें ➔</button>
   </div>
 
-  <!-- 💬 फ़्लोटिंग WhatsApp बटन -->
+  <!-- 💬 WhatsApp बटन -->
   <a id="floatingWaWidget" href="https://wa.me/919887666626?text=नमस्ते,%20मुझे%20पौधों%20और%20सब्जियों%20के%20बारे%20में%20जानकारी%20चाहिए।" target="_blank" rel="noopener" title="WhatsApp पर चैट करें">💬</a>
 
   <!-- ट्रैकिंग व रेफ़रल मॉडल -->
@@ -1158,7 +1158,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
   const { data, error } = await db.auth.signInWithPassword({ email, password });
-  if (error || data.user.id !== '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9') { alert('गलत लॉगिन!'); return; }
+  if (error || data.user.id !== OWNER_UID) { alert('गलत लॉगिन!'); return; }
   document.getElementById('loginForm').style.display = 'none';
   document.getElementById('ownerPanelHeader').style.display = 'block';
   document.getElementById('adminTabs').style.display = 'grid';
