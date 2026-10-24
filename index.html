@@ -270,7 +270,7 @@ button:disabled{opacity:.55;cursor:wait}
   border-top:2px solid #34d399;
 }
 
-/* ✅ आर्डर सफलता व विवरण का शानदार बैनर */
+/* ✅ आर्डर सफलता व रसीद का शानदार बैनर (1 मिनट / 60 सेकंड तक रुकने वाला) */
 #globalSuccessBanner{
   display:none;
   position:fixed;
@@ -336,7 +336,7 @@ footer a:hover{text-decoration:underline}
 <div id="siteOfferBanner">🎉 विशेष ऑफर: आज सभी आर्डर्स पर <span id="bannerDiscountText">10%</span> की सीधी छूट!</div>
 <div id="siteClosedBanner">⚠️ सूचना: आज नर्सरी बंद है। नए ऑर्डर कल से स्वीकार किए जाएँगे।</div>
 
-<!-- ✅ आर्डर सफलता और रसीद का ग्लोबल बैनर (जो होमपेज पर 35 सेकंड तक दिखेगा) -->
+<!-- ✅ आर्डर सफलता और पक्की रसीद का ग्लोबल बैनर (60 सेकंड तक रुकने वाला) -->
 <div id="globalSuccessBanner">
   <div style="font-size:32px;margin-bottom:4px">🎉✅</div>
   <h3 style="margin:0 0 6px;color:#fef08a;font-size:18px">आपका ऑर्डर सफलतापूर्वक दर्ज हो गया है!</h3>
@@ -344,14 +344,11 @@ footer a:hover{text-decoration:underline}
     <!-- यहाँ आर्डर विवरण भरेगा -->
   </div>
   <p style="margin:4px 0;font-size:12.5px;color:#d1fae5">
-    हम आपके भुगतान और UTR की जाँच करके बहुत जल्द आपसे संपर्क करेंगे।
+    हमें आपका आर्डर मिल गया है। हम आपके भुगतान और UTR की जाँच करके बहुत जल्द आपसे संपर्क करेंगे।
   </p>
   <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap">
-    <a id="successWaButton" href="#" target="_blank" rel="noopener" style="background:#25D366;color:#fff;text-decoration:none;padding:7px 14px;border-radius:8px;font-weight:800;font-size:13px">
-      📲 WhatsApp पर आर्डर भेजें
-    </a>
-    <button type="button" onclick="document.getElementById('globalSuccessBanner').style.display='none'" style="background:#fff;color:#064e3b;border:0;padding:7px 14px;border-radius:8px;font-weight:800;cursor:pointer;font-size:13px">
-      ✕ बंद करें
+    <button type="button" onclick="document.getElementById('globalSuccessBanner').style.display='none'" style="background:#fff;color:#064e3b;border:0;padding:7px 16px;border-radius:8px;font-weight:800;cursor:pointer;font-size:13px">
+      ✕ ठीक है (बंद करें)
     </button>
   </div>
 </div>
@@ -1707,7 +1704,7 @@ document.getElementById('paymentDoneButton').addEventListener('click', () => {
   document.getElementById('orderButton').style.display = 'block';
 });
 
-// कार्ट ऑर्डर सबमिट प्रक्रिया (ऑटोमैटिक WhatsApp खोलना और पक्की रसीद दिखाना)
+// कार्ट ऑर्डर सबमिट प्रक्रिया (ऑटोमैटिक WhatsApp खोलना, 1 मिनट तक रसीद दिखाना और बंद करने का विकल्प)
 document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const cfg = getSiteConfig();
@@ -1813,11 +1810,10 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
     button.style.display = 'none';
     status.style.display = 'none';
 
-    // 4. होमपेज पर ऊपर ले जाना, रसीद दिखाना और ऑटोमैटिक WhatsApp चैट खोलना
+    // 4. होमपेज पर ऊपर ले जाना, पक्की रसीद दिखाना (60 सेकंड तक)
     window.scrollTo({ top: 0, behavior: 'smooth' });
     const successBanner = document.getElementById('globalSuccessBanner');
     const receiptBox = document.getElementById('successReceiptDetails');
-    const waBtn = document.getElementById('successWaButton');
 
     if (receiptBox) {
       receiptBox.innerHTML = `
@@ -1828,16 +1824,16 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
         <b>UTR नंबर:</b> ${utrNumber}
       `;
     }
-    if (waBtn) waBtn.href = waUrl;
 
     if (successBanner) {
       successBanner.style.display = 'block';
+      // 60 सेकंड (60000 मिलीसेकंड) के बाद बैनर ऑटोमैटिक हटेगा
       setTimeout(() => {
         successBanner.style.display = 'none';
-      }, 35000);
+      }, 60000);
     }
 
-    // ऑटोमैटिक WhatsApp खोलना ताकि मालिक के पास तुरंत मेसेज पहुँच जाए[cite: 1]
+    // 5. ऑटोमैटिक WhatsApp चैट खोलना ताकि आपके पास मेसेज आ जाए
     window.open(waUrl, '_blank');
 
   } catch (err) {
