@@ -66,7 +66,7 @@ header p{margin:4px auto;max-width:760px;font-size:clamp(13px,1.6vw,15px);opacit
 .hours-pill{display:inline-block;background:rgba(255,255,255,0.15);backdrop-filter:blur(6px);padding:5px 14px;border-radius:20px;border:1px solid rgba(255,255,255,0.3);font-size:13px;margin-top:8px;font-weight:700;color:#fef08a;text-shadow:0 1px 4px rgba(0,0,0,0.5)}
 header:after{content:"🌱  🥦  🍅  🌶️  🌾";display:block;margin-top:10px;font-size:18px;letter-spacing:7px;opacity:0.85}
 
-/* 📱 मोबाइल-फ्रेंडली नेविगेशन बार (बिना कार्ट बटन के) */
+/* 📱 मोबाइल-फ्रेंडली नेविगेशन बार */
 nav{
   position:sticky;
   top:0;
@@ -253,7 +253,7 @@ button:disabled{opacity:.55;cursor:wait}
 .settings-subpane{display:none;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,0.03)}
 .settings-subpane.active{display:block}
 
-/* 🛒 बॉटम फ्लोटिंग कार्ट बार (जो सामान जोड़ते ही तुरंत नीचे दिखेगी) */
+/* 🛒 बॉटम फ्लोटिंग कार्ट बार */
 #floatingBottomCartBar{
   display:none;
   position:fixed;
@@ -268,14 +268,32 @@ button:disabled{opacity:.55;cursor:wait}
   align-items:center;
   justify-content:space-between;
   border-top:2px solid #34d399;
-  animation: slideUpBar 0.3s ease-out;
-}
-@keyframes slideUpBar {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
 }
 
-/* 💬 फ़्लोटिंग WhatsApp (जिसे नीचे-बाएँ या सुरक्षित कोने में सेट किया गया है ताकि रुकावट न आए) */
+/* ✅ आर्डर सफलता का शानदार बैनर (जो होमपेज पर ऊपर दिखेगा) */
+#globalSuccessBanner{
+  display:none;
+  position:fixed;
+  top:70px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:10500;
+  width:min(92%, 550px);
+  background:linear-gradient(135deg,#064e3b,#15803d);
+  color:#fff;
+  padding:18px 20px;
+  border-radius:16px;
+  box-shadow:0 12px 40px rgba(0,0,0,0.3);
+  border:2px solid #34d399;
+  text-align:center;
+  animation: fadeInDown 0.4s ease-out;
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translate(-50%, -20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* 💬 फ़्लोटिंग WhatsApp बटन */
 #floatingWaWidget{display:none;position:fixed;bottom:75px;left:20px;z-index:9970;background:#25D366;color:#fff;width:48px;height:48px;border-radius:50%;align-items:center;justify-content:center;font-size:26px;box-shadow:0 6px 20px rgba(37,211,102,0.4);text-decoration:none}
 
 .mandi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:14px 0}
@@ -318,6 +336,16 @@ footer a:hover{text-decoration:underline}
 <div id="siteOfferBanner">🎉 विशेष ऑफर: आज सभी आर्डर्स पर <span id="bannerDiscountText">10%</span> की सीधी छूट!</div>
 <div id="siteClosedBanner">⚠️ सूचना: आज नर्सरी बंद है। नए ऑर्डर कल से स्वीकार किए जाएँगे।</div>
 
+<!-- ✅ आर्डर सफलता का ग्लोबल बैनर (जो 35 सेकंड तक होमपेज पर दिखेगा) -->
+<div id="globalSuccessBanner">
+  <div style="font-size:28px;margin-bottom:6px">🌿🎉</div>
+  <h3 style="margin:0 0 6px;color:#fef08a;font-size:18px">आपका ऑर्डर सफलतापूर्व दर्ज हो गया है!</h3>
+  <p id="successBannerText" style="margin:0;font-size:14px;line-height:1.5;color:#f0fdf4">
+    हमें आपका आर्डर मिल गया है। हम आपके भुगतान और UTR की जाँच करके बहुत जल्द आपसे संपर्क करेंगे।
+  </p>
+  <button type="button" onclick="document.getElementById('globalSuccessBanner').style.display='none'" style="margin-top:10px;background:#fff;color:#064e3b;border:0;padding:5px 14px;border-radius:6px;font-weight:700;cursor:pointer;font-size:12px">ठीक है (बंद करें)</button>
+</div>
+
 <!-- 🌿 प्रीमियम हेडर डिज़ाइन -->
 <header id="mainHeader">
   <div class="header-badge-box">
@@ -331,7 +359,7 @@ footer a:hover{text-decoration:underline}
   </div>
 </header>
 
-<!-- मोबाइल फ्रेंडली चौड़े नेविगेशन टैब (बिना कार्ट बटन के) -->
+<!-- मोबाइल फ्रेंडली चौड़े नेविगेशन टैब -->
 <nav>
   <a href="#shopCategoriesContainer">🌱 पौधे और सब्ज़ियाँ</a>
   <a href="#about">🌿 हमारे बारे में</a>
@@ -451,7 +479,7 @@ footer a:hover{text-decoration:underline}
     </button>
   </div>
 
-  <!-- 💬 फ़्लोटिंग WhatsApp बटन (सुरक्षित कोने में) -->
+  <!-- 💬 फ़्लोटिंग WhatsApp बटन -->
   <a id="floatingWaWidget" href="https://wa.me/919887666626?text=नमस्ते,%20मुझे%20पौधों%20और%20सब्जियों%20के%20बारे%20में%20जानकारी%20चाहिए।" target="_blank" rel="noopener" title="WhatsApp पर चैट करें">💬</a>
 
   <!-- ट्रैकिंग मॉडल -->
@@ -1586,7 +1614,7 @@ function renderCartModal() {
 
     const totalToPay = finalSubtotal + calculatedFee;
     document.getElementById('grandTotalDisplay').textContent = '₹' + totalToPay.toFixed(2);
-    document.getElementById('bharatpeTotalAmount').textContent = 'कुल: ₹' + totalToPay.toFixed(2);
+    document.getElementById('bharatpeTotalAmount').textContent = 'कुल अनुदान: ₹' + totalToPay.toFixed(2);
     const payUri = 'upi://pay?' + new URLSearchParams({pa: cfg.upiId, pn: cfg.upiName, am: totalToPay.toFixed(2), cu: 'INR'});
     document.getElementById('upiPayButton').href = payUri;
   }
@@ -1669,7 +1697,7 @@ document.getElementById('paymentDoneButton').addEventListener('click', () => {
   document.getElementById('orderButton').style.display = 'block';
 });
 
-// कार्ट ऑर्डर सबमिट प्रक्रिया
+// कार्ट ऑर्डर सबमिट प्रक्रिया (सफल होने पर ऑटोमैटिक विंडो बंद होकर होमपेज पर जाना और 35 सेकंड मैसेज दिखाना)
 document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const cfg = getSiteConfig();
@@ -1738,34 +1766,33 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
       status: 'pending'
     });
 
-    const message = 'नया मल्टी-आइटम नर्सरी ऑर्डर' +
-      '\nनाम: ' + customerName +
-      '\nमोबाइल: ' + cleanPhone +
-      '\nआइटम्स: ' + itemsSummaryText +
-      '\nउत्पाद मूल्य: ₹' + finalSubtotal.toFixed(2) +
-      (discountAmt > 0 ? '\nछूट: -₹' + discountAmt.toFixed(2) : '') +
-      '\nडिलीवरी शुल्क: ₹' + Number(appliedDeliveryFee).toFixed(2) +
-      '\nकुल राशि: ₹' + totalAmount +
-      '\nUTR / Ref No: ' + utrNumber +
-      '\nपता: ' + fullAddress +
-      (customerLocation ? '\nGPS लोकेशन: ' + customerLocation.mapsUrl : '') +
-      (proofUrl ? '\nस्क्रीनशॉट: ' + proofUrl : '');
+    // 1. आर्डर विंडो (पॉप-अप) को ऑटोमैटिक बंद करना
+    closeOrderPopup();
 
-    const waUrl = 'https://wa.me/91' + cfg.phone + '?text=' + encodeURIComponent(message);
-
-    status.innerHTML = `
-      <div class="order-confirmation-box" style="text-align:center; padding:16px; border:2px solid #25884b; background:#f4fbf2; border-radius:14px; margin-top:12px;">
-        <h3 style="color:#176b37; margin-bottom:8px">✅ आपकी कार्ट का ऑर्डर सेव हो गया है!</h3>
-        <p style="font-size:14px; margin:6px 0">ऑर्डर की तुरंत पुष्टि के लिए नीचे बटन दबाकर हमें WhatsApp पर विवरण भेजें:</p>
-        <a class="btn" href="${waUrl}" target="_blank" rel="noopener" style="display:block;margin-top:10px;background:#25D366;font-size:16px">
-          📲 WhatsApp पर आर्डर भेजें
-        </a>
-      </div>`;
-
+    // 2. कार्ट खाली करना और बॉटम बार छुपाना
     shoppingCart = [];
     updateCartBadge();
     const bottomBar = document.getElementById('floatingBottomCartBar');
     if (bottomBar) bottomBar.style.display = 'none';
+
+    // 3. फॉर्म रीसेट करना
+    document.getElementById('orderForm').reset();
+    document.getElementById('postPaymentForm').style.display = 'none';
+    document.getElementById('bharatpePaymentBox').style.display = 'none';
+    button.disabled = false;
+    button.style.display = 'none';
+    status.style.display = 'none';
+
+    // 4. होमपेज पर ऊपर ले जाना और 35 सेकंड के लिए शानदार सफलता का मैसेज दिखाना
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const successBanner = document.getElementById('globalSuccessBanner');
+    if (successBanner) {
+      successBanner.style.display = 'block';
+      // 35 सेकंड (35000 मिलीसेकंड) के बाद मैसेज ऑटोमैटिक हट जाएगा
+      setTimeout(() => {
+        successBanner.style.display = 'none';
+      }, 35000);
+    }
 
   } catch (err) {
     status.textContent = '❌ त्रुटि: ' + err.message;
