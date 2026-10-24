@@ -633,15 +633,15 @@ footer a:hover{text-decoration:underline}
           <select id="vType"><option value="देसी">देसी</option><option value="हाइब्रिड">हाइब्रिड</option><option value="अन्य">अन्य</option></select>
           <label>किस्म का नाम (वैकल्पिक)</label><input id="vVariety">
           
-          <!-- 🟢 यहाँ यूनिट चयन जोड़ा गया है (किलो या ग्राम) -->
+          <!-- 🟢 यूनिट चयन (किलो या ग्राम) -->
           <label>बिक्री की इकाई (Unit Type)</label>
           <select id="vUnit">
             <option value="kg">किलो (Kg) - जैसे आलू, टमाटर, गोभी, लौकी</option>
             <option value="gram">ग्राम/बंडल (Gram) - जैसे धनिया, पुदीना, पालक, मेथी</option>
           </select>
 
-          <label>कीमत प्रति इकाई (₹) [किलो या प्रति 250g के हिसाब से]</label><input id="vPrice" type="number" min="0" step="0.01" required placeholder="30">
-          <label>स्टॉक (कुल मात्रा)</label><input id="vStock" type="number" min="0" step="0.5" required value="0">
+          <label>कीमत प्रति इकाई (₹) [किलो के हिसाब से]</label><input id="vPrice" type="number" min="0" step="0.01" required placeholder="30">
+          <label>स्टॉक (कुल मात्रा किलो में)</label><input id="vStock" type="number" min="0" step="0.5" required value="0">
           <label>विवरण</label><textarea id="vDesc" rows="2"></textarea>
           <label>सब्ज़ी की फोटो</label><input id="vImage" type="file" accept="image/*">
           <button type="submit">💾 सब्ज़ी सेव करें</button>
@@ -703,7 +703,7 @@ footer a:hover{text-decoration:underline}
       </div>
     </div>
 
-    <!-- मंडी भाव -->
+    <!-- मंडी भाव (सभी प्रमुख एवं पत्तेदार सब्जियों के साथ अपडेटेड) -->
     <div id="adminMandiPane" class="admin-pane">
       <div class="admin-section-card">
         <h2>📈 लाइव मंडी भाव (सरकारी AGMARKNET रिपोर्ट)</h2>
@@ -723,6 +723,15 @@ footer a:hover{text-decoration:underline}
             <label for="mandiVeg">सब्ज़ी चुनें</label>
             <select id="mandiVeg">
               <option value="Tomato" selected>टमाटर (Tomato)</option>
+              <option value="Coriander">हरा धनिया (Coriander)</option>
+              <option value="Mint">पुदीना (Mint)</option>
+              <option value="Fenugreek Leaves">मेथी (Fenugreek)</option>
+              <option value="Spinach">पालक (Spinach)</option>
+              <option value="Cauliflower">फूल गोभी (Cauliflower)</option>
+              <option value="Cabbage">पत्ता गोभी (Cabbage)</option>
+              <option value="Carrot">गाजर (Carrot)</option>
+              <option value="Radish">मूली (Radish)</option>
+              <option value="Capsicum">शिमला मिर्च (Capsicum)</option>
               <option value="Cucumber">खीरा (Cucumber)</option>
               <option value="Brinjal">बैंगन (Brinjal)</option>
               <option value="Green Chilli">हरी मिर्च (Green Chilli)</option>
@@ -1409,7 +1418,7 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
 function safe(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function isVeg(p) { return /सब्जी|सब्ज़ी|veg|vegetable/i.test(String(p && p.category || '')); }
 
-// 🟢 यह चेक करने के लिए कि क्या यह ग्राम (जैसे धनिया, पुदीना) वाली सब्जी है
+// 🟢 चेक करने के लिए कि क्या यह ग्राम (जैसे धनिया, पुदीना) वाली सब्जी है
 function isGramVeg(p) {
   const nameAndVariety = (p.name + ' ' + (p.variety || '')).toLowerCase();
   const isGramUnit = String(p.unit_type || '').toLowerCase() === 'gram' || 
@@ -1446,7 +1455,6 @@ async function loadPlants() {
       const veg = isVeg(p);
       const isGram = veg && isGramVeg(p);
       
-      // यूनिट और स्टेप सेटिंग्स
       let unit = 'पौधा';
       let stepVal = 1;
       let initialVal = minPlantLimit;
@@ -1457,7 +1465,7 @@ async function loadPlants() {
           unit = 'किलो (ग्राम में)';
           stepVal = 0.25; // 250 ग्राम (0.25 kg)
           initialVal = 0.25; // डिफ़ॉल्ट 250 ग्राम
-          unitLabelText = 'किलو (जैसे 0.25=250g, 0.5=500g, 1=1kg)';
+          unitLabelText = 'किलो (जैसे 0.25=250g, 0.5=500g, 1=1kg)';
         } else {
           unit = 'किलो';
           stepVal = 1; // 1 किलो
@@ -1475,7 +1483,6 @@ async function loadPlants() {
         ? `<img src="${safe(p.image_url)}" alt="${safe(p.name)}" loading="lazy">`
         : `<div style="height:148px;display:flex;align-items:center;justify-content:center;background:#ecfdf5;font-size:42px;border-radius:12px">${veg?'🥬':'🌱'}</div>`;
 
-      // स्टॉक दिखाने का तरीका (ग्राम वाली सब्जियों के लिए ग्राम में दिखा सकते हैं या किलो में)
       let stockDisplay = '';
       if (veg && isGram) {
         const stockKg = Number(p.stock_quantity) || 0;
@@ -1556,7 +1563,7 @@ async function loadPlants() {
   }
 }
 
-// 🛒 कार्ट में उत्पाद जोड़ना (ग्राम वाली सब्जियों के लिए सही लेबल दिखाने के साथ)
+// 🛒 कार्ट में उत्पाद जोड़ना
 function addToCart(plant, qty, veg, isGram) {
   const existingIndex = shoppingCart.findIndex(item => item.id === plant.id);
   if (existingIndex > -1) {
@@ -1575,7 +1582,7 @@ function addToCart(plant, qty, veg, isGram) {
 }
 
 function updateCartBadge() {
-  const totalCount = shoppingCart.reduce((sum, item) => sum + 1, 0); // कुल अलग-अलग आइटम
+  const totalCount = shoppingCart.reduce((sum, item) => sum + 1, 0);
   const totalPrice = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
   const bottomBar = document.getElementById('floatingBottomCartBar');
@@ -1623,7 +1630,6 @@ function renderCartModal() {
     const itemTotal = item.price * item.qty;
     subtotal += itemTotal;
 
-    // मात्रा का सुंदर डिसप्ले (ग्राम या किलो)
     let qtyText = '';
     if (item.veg && item.isGram) {
       if (item.qty < 1) {
@@ -2371,8 +2377,18 @@ async function loadSalesLedger() {
   }
 }
 
+// 🟢 अद्यतन मंडी भाव डेटाबेस (पत्तेदार सब्जियों सहित)
 const MANDI_BASE_RATES = {
   'Tomato': { min: 14, modal: 20, max: 26 },
+  'Coriander': { min: 30, modal: 50, max: 80 },
+  'Mint': { min: 25, modal: 40, max: 60 },
+  'Fenugreek Leaves': { min: 20, modal: 35, max: 50 },
+  'Spinach': { min: 15, modal: 25, max: 40 },
+  'Cauliflower': { min: 15, modal: 24, max: 35 },
+  'Cabbage': { min: 10, modal: 16, max: 25 },
+  'Carrot': { min: 15, modal: 22, max: 30 },
+  'Radish': { min: 10, modal: 15, max: 22 },
+  'Capsicum': { min: 30, modal: 45, max: 65 },
   'Cucumber': { min: 15, modal: 22, max: 28 },
   'Brinjal': { min: 12, modal: 18, max: 24 },
   'Green Chilli': { min: 28, modal: 38, max: 50 },
@@ -2453,7 +2469,7 @@ async function loadMandiDropdownPlants() {
     vegItems.forEach(p => {
       const opt = document.createElement('option');
       opt.value = p.id;
-      opt.textContent = `${p.name} (मौजूदा: ₹${p.selling_price}/किलो)`;
+      opt.textContent = `${p.name} (मौजूदा: ₹${p.selling_price}/किलो या प्रति यूनिट)`;
       sel.appendChild(opt);
     });
   } catch (e) {
@@ -2475,7 +2491,7 @@ document.getElementById('saveMandiToPortalBtn')?.addEventListener('click', async
   try {
     const { error } = await db.from('plants').update({ selling_price: newPrice }).eq('id', pId);
     if (error) throw error;
-    stat.textContent = `✅ नया भाव ₹${newPrice}/किलो लागू हो गया!`;
+    stat.textContent = `✅ नया भाव ₹${newPrice} लागू हो गया!`;
     await loadPlants();
     await loadMandiDropdownPlants();
   } catch (err) {
