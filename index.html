@@ -66,7 +66,7 @@ header p{margin:4px auto;max-width:760px;font-size:clamp(13px,1.6vw,15px);opacit
 .hours-pill{display:inline-block;background:rgba(255,255,255,0.15);backdrop-filter:blur(6px);padding:5px 14px;border-radius:20px;border:1px solid rgba(255,255,255,0.3);font-size:13px;margin-top:8px;font-weight:700;color:#fef08a;text-shadow:0 1px 4px rgba(0,0,0,0.5)}
 header:after{content:"🌱  🥦  🍅  🌶️  🌾";display:block;margin-top:10px;font-size:18px;letter-spacing:7px;opacity:0.85}
 
-/* 3. बड़े और चौड़े नेविगेशन टैब (बैनर कार्ड्स के बराबर) */
+/* 📱 मोबाइल रेस्पॉन्सिव नेविगेशन बार (मोबाइल्स पर कभी ऊपर-नीचे नहीं होगा) */
 nav{
   position:sticky;
   top:0;
@@ -74,48 +74,49 @@ nav{
   display:flex;
   justify-content:center;
   align-items:center;
-  flex-wrap:wrap;
-  gap:10px;
-  padding:12px 16px;
+  flex-wrap:nowrap;
+  overflow-x:auto;
+  gap:6px;
+  padding:10px 12px;
   background:#fffffffa;
   backdrop-filter:blur(14px);
   box-shadow:0 6px 22px rgba(0,0,0,0.08);
   border-bottom:1px solid #d1fae5;
+  scrollbar-width:none; /* Firefox scrollbar hide */
 }
+nav::-webkit-scrollbar{display:none} /* Chrome/Safari scrollbar hide */
+
 nav a{
-  flex:1;
-  min-width:130px;
-  max-width:200px;
+  flex:0 0 auto;
   text-align:center;
-  padding:11px 16px;
+  padding:9px 14px;
   border:1.5px solid #a7f3d0;
-  border-radius:14px;
+  border-radius:12px;
   background:linear-gradient(135deg,#f0fdf4,#dcfce7);
   color:var(--deep);
-  font-weight:900;
-  font-size:14px;
+  font-weight:800;
+  font-size:13px;
   text-decoration:none;
-  box-shadow:0 3px 10px rgba(16,185,129,0.1);
+  box-shadow:0 2px 8px rgba(16,185,129,0.08);
   transition:all 0.2s;
 }
-nav a:hover{background:#10b981;color:#fff;transform:translateY(-2px);box-shadow:0 6px 16px rgba(16,185,129,0.25)}
+nav a:hover{background:#10b981;color:#fff}
+
 #adminPanelNav{
-  flex:1;
-  min-width:120px;
-  max-width:180px;
+  flex:0 0 auto;
   text-align:center;
-  padding:11px 16px;
-  border-radius:14px;
+  padding:9px 14px;
+  border-radius:12px;
   background:linear-gradient(135deg,#ecfdf5,#d1fae5);
   color:var(--deep);
   border:1.5px solid #34d399;
-  font-weight:900;
-  font-size:14px;
+  font-weight:800;
+  font-size:13px;
   cursor:pointer;
-  box-shadow:0 3px 10px rgba(16,185,129,0.1);
+  box-shadow:0 2px 8px rgba(16,185,129,0.08);
   transition:all 0.2s;
 }
-#adminPanelNav:hover{background:#059669;color:#fff;transform:translateY(-2px);box-shadow:0 6px 16px rgba(5,150,105,0.25)}
+#adminPanelNav:hover{background:#059669;color:#fff}
 
 main{max-width:1160px;margin:0 auto;padding:18px 14px}
 .card{background:#fff;border:1px solid #e0ede0;border-radius:20px;padding:clamp(16px,2.2vw,24px);margin-bottom:18px;box-shadow:var(--shadow)}
@@ -251,7 +252,7 @@ button:disabled{opacity:.55;cursor:wait}
 .settings-subpane{display:none;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,0.03)}
 .settings-subpane.active{display:block}
 
-/* 💬 फ़्लोटिंग WhatsApp (सीधे आपके नंबर से लिंक्ड) */
+/* 💬 फ़्लोटिंग WhatsApp */
 #floatingWaWidget{display:none;position:fixed;bottom:20px;right:20px;z-index:9990;background:#25D366;color:#fff;width:56px;height:56px;border-radius:50%;align-items:center;justify-content:center;font-size:30px;box-shadow:0 6px 20px rgba(37,211,102,0.4);text-decoration:none}
 
 .mandi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:14px 0}
@@ -269,7 +270,7 @@ button:disabled{opacity:.55;cursor:wait}
 #about{display:none;padding:20px;background:#fff;border-radius:18px;margin-bottom:16px}
 #about.about-page-open{display:block}
 
-/* 🌿 आधुनिक और सुंदर फुटर डिज़ाइन */
+/* 🌿 सुंदर फुटर डिज़ाइन */
 footer{
   background:linear-gradient(135deg,#022c22,#064e3b);
   color:#fff;
@@ -307,7 +308,7 @@ footer a:hover{text-decoration:underline}
   </div>
 </header>
 
-<!-- 3. बड़े और सुंदर नेविगेशन टैब -->
+<!-- मोबाइल फ्रेंडली चौड़े नेविगेशन टैब -->
 <nav>
   <a href="#shopCategoriesContainer">🌱 पौधे और सब्ज़ियाँ</a>
   <a href="#about">🌿 हमारे बारे में</a>
@@ -411,7 +412,7 @@ footer a:hover{text-decoration:underline}
     </div>
   </section>
 
-  <!-- 4. फ़्लोटिंग WhatsApp बटन (आपके सीधे नंबर 9887666626 से लिंक्ड) -->
+  <!-- 💬 फ़्लोटिंग WhatsApp बटन (आपके सीधे नंबर 9887666626 से लिंक्ड) -->
   <a id="floatingWaWidget" href="https://wa.me/919887666626?text=नमस्ते,%20मुझे%20पौधों%20और%20सब्जियों%20के%20बारे%20में%20जानकारी%20चाहिए।" target="_blank" rel="noopener" title="WhatsApp पर चैट करें">💬</a>
 
   <!-- ट्रैकिंग मॉडल -->
@@ -853,7 +854,7 @@ footer a:hover{text-decoration:underline}
   </section>
 </main>
 
-<!-- 5. बेहतर और सुंदर फुटर डिज़ाइन -->
+<!-- 🌿 सुंदर फुटर डिज़ाइन -->
 <footer>
   <h3 id="footerNurseryName">🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</h3>
   <p id="footerAddressText">📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान</p>
@@ -964,7 +965,7 @@ function applySiteConfigToUI() {
   const upiIdDisplay = document.getElementById('displayUpiId');
   if (upiIdDisplay) upiIdDisplay.textContent = cfg.upiId;
 
-  // 7. फ़्लोटिंग WhatsApp बटन (आपके सीधे नंबर से लिंक्ड)
+  // 7. फ़्लोटिंग WhatsApp बटन
   const waBtn = document.getElementById('floatingWaWidget');
   if (waBtn) {
     if (cfg.waWidget === 'on') {
@@ -1312,7 +1313,7 @@ function getISTDate(dateInput) {
   return ist.getFullYear() + '-' + String(ist.getMonth()+1).padStart(2,'0') + '-' + String(ist.getDate()).padStart(2,'0');
 }
 
-// 📦 2. होमपेज उत्पाद लोड करना (सब्जियों के लिए न्यूनतम 1 किलो फिक्स)
+// 📦 होमपेज उत्पाद लोड करना (सब्जियों के लिए न्यूनतम 1 किलो फिक्स)
 async function loadPlants() {
   const pList = document.getElementById('plantOnlyList');
   const vList = document.getElementById('vegOnlyList');
@@ -1874,7 +1875,7 @@ async function loadAdminAll() {
         <div class="status" style="background:#fef2f2;border:1px solid #fecaca;color:#991b1b;margin-top:12px">
           <strong>⚠️ कम स्टॉक चेतावनी (Low Stock Alert):</strong>
           <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap">
-            ${lowStockItems.map(x => `<span style="background:#fee2e2;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700">${isVeg(x)?'🥬':'🌱'} ${safe(x.name)}: केवल ${x.stock_quantity} ${isVeg(x)?'किलो':'पौधे'} باقی</span>`).join('')}
+            ${lowStockItems.map(x => `<span style="background:#fee2e2;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700">${isVeg(x)?'🥬':'🌱'} ${safe(x.name)}: केवल ${x.stock_quantity} ${isVeg(x)?'किलो':'पौधे'} बाकी</span>`).join('')}
           </div>
         </div>
       ` : ''}
