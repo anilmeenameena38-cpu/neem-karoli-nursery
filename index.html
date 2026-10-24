@@ -66,7 +66,7 @@ header p{margin:4px auto;max-width:760px;font-size:clamp(13px,1.6vw,15px);opacit
 .hours-pill{display:inline-block;background:rgba(255,255,255,0.15);backdrop-filter:blur(6px);padding:5px 14px;border-radius:20px;border:1px solid rgba(255,255,255,0.3);font-size:13px;margin-top:8px;font-weight:700;color:#fef08a;text-shadow:0 1px 4px rgba(0,0,0,0.5)}
 header:after{content:"🌱  🥦  🍅  🌶️  🌾";display:block;margin-top:10px;font-size:18px;letter-spacing:7px;opacity:0.85}
 
-/* 📱 मोबाइल रेस्पॉन्सिव नेविगेशन बार */
+/* 📱 मोबाइल-फ्रेंडली नेविगेशन बार */
 nav{
   position:sticky;
   top:0;
@@ -76,8 +76,8 @@ nav{
   align-items:center;
   flex-wrap:nowrap;
   overflow-x:auto;
-  gap:6px;
-  padding:10px 12px;
+  gap:8px;
+  padding:10px 14px;
   background:#fffffffa;
   backdrop-filter:blur(14px);
   box-shadow:0 6px 22px rgba(0,0,0,0.08);
@@ -89,34 +89,34 @@ nav::-webkit-scrollbar{display:none}
 nav a{
   flex:0 0 auto;
   text-align:center;
-  padding:9px 14px;
+  padding:10px 16px;
   border:1.5px solid #a7f3d0;
-  border-radius:12px;
+  border-radius:14px;
   background:linear-gradient(135deg,#f0fdf4,#dcfce7);
   color:var(--deep);
-  font-weight:800;
-  font-size:13px;
+  font-weight:900;
+  font-size:13.5px;
   text-decoration:none;
-  box-shadow:0 2px 8px rgba(16,185,129,0.08);
+  box-shadow:0 3px 10px rgba(16,185,129,0.1);
   transition:all 0.2s;
 }
-nav a:hover{background:#10b981;color:#fff}
+nav a:hover{background:#10b981;color:#fff;transform:translateY(-1px)}
 
 #adminPanelNav{
   flex:0 0 auto;
   text-align:center;
-  padding:9px 14px;
-  border-radius:12px;
+  padding:10px 16px;
+  border-radius:14px;
   background:linear-gradient(135deg,#ecfdf5,#d1fae5);
   color:var(--deep);
   border:1.5px solid #34d399;
-  font-weight:800;
-  font-size:13px;
+  font-weight:900;
+  font-size:13.5px;
   cursor:pointer;
-  box-shadow:0 2px 8px rgba(16,185,129,0.08);
+  box-shadow:0 3px 10px rgba(16,185,129,0.1);
   transition:all 0.2s;
 }
-#adminPanelNav:hover{background:#059669;color:#fff}
+#adminPanelNav:hover{background:#059669;color:#fff;transform:translateY(-1px)}
 
 main{max-width:1160px;margin:0 auto;padding:18px 14px}
 .card{background:#fff;border:1px solid #e0ede0;border-radius:20px;padding:clamp(16px,2.2vw,24px);margin-bottom:18px;box-shadow:var(--shadow)}
@@ -270,7 +270,7 @@ button:disabled{opacity:.55;cursor:wait}
 #about{display:none;padding:20px;background:#fff;border-radius:18px;margin-bottom:16px}
 #about.about-page-open{display:block}
 
-/* 🌿 सुंदर फुटर डिज़ाइन */
+/* 🌿 सुंदर और आधुनिक फुटर डिज़ाइन */
 footer{
   background:linear-gradient(135deg,#022c22,#064e3b);
   color:#fff;
@@ -401,7 +401,11 @@ footer a:hover{text-decoration:underline}
 
         <div id="postPaymentForm" style="display:none">
           <div id="paymentProofSection" class="status" style="display:none">
-            <h3>📸 भुगतान स्क्रीनशॉट</h3>
+            <h3>📸 भुगतान स्क्रीनशॉट व UTR नंबर</h3>
+            <label>12 अंकों का UPI UTR / ट्रांजैक्शन नंबर (अनिवार्य)</label>
+            <input id="paymentUtrNumber" type="text" required placeholder="जैसे 432109876543" minlength="10" maxlength="16">
+            
+            <label>भुगतान का स्क्रीनशॉट</label>
             <input id="paymentProofFile" type="file" accept="image/*" required>
             <div id="paymentProofPreview"></div>
           </div>
@@ -690,7 +694,7 @@ footer a:hover{text-decoration:underline}
       </div>
     </div>
 
-    <!-- ⚙️ वेबसाइट मास्टर स्टूडियो (फ्री डिलीवरी राउंड-ट्रिप दूरी कॉलम के साथ) -->
+    <!-- ⚙️ वेबसाइट मास्टर स्टूडियो -->
     <div id="adminSettingsPane" class="admin-pane">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px">
         <div>
@@ -752,16 +756,16 @@ footer a:hover{text-decoration:underline}
           <input id="settingUpiName" required value="ANIL KUMAR MEENA">
         </div>
 
-        <!-- टैब 4: डिलीवरी & मुफ़्त ऑफर (फ्री दूरी राउंड-ट्रिप कॉलम सहित) -->
+        <!-- टैब 4: डिलीवरी & मुफ़्त ऑफर -->
         <div id="subpane-delivery" class="settings-subpane">
-          <h3 style="color:var(--green);margin-top:0">🚚 डिलीवरी नियम (दूरी और फ्री रेंज कंट्रोल)</h3>
+          <h3 style="color:var(--green);margin-top:0">🚚 डिलीवरी नियम (राउंड-ट्रिप फ्री रेंज कंट्रोल)</h3>
           
           <div style="background:#f4fbf7;border:1px solid #d1fae5;border-radius:14px;padding:14px;margin-bottom:14px">
             <h4 style="margin:0 0 10px;color:var(--deep)">🌱 नर्सरी पौधे के डिलीवरी नियम</h4>
             <div class="mandi-grid" style="margin:0">
               <div>
                 <label>फ्री डिलीवरी कुल दूरी (किमी)</label>
-                <input id="settingPlantFreeKm" type="number" min="0" value="5" title="इस कुल दूरी तक कोई चार्ज नहीं लगेगा">
+                <input id="settingPlantFreeKm" type="number" min="0" value="5" title="इस कुल दूरी (आना-जाना) तक कोई चार्ज नहीं लगेगा">
               </div>
               <div>
                 <label>आगे की दर (₹/किमी)</label>
@@ -783,7 +787,7 @@ footer a:hover{text-decoration:underline}
             <div class="mandi-grid" style="margin:0">
               <div>
                 <label>फ्री डिलीवरी कुल दूरी (किमी)</label>
-                <input id="settingVegFreeKm" type="number" min="0" value="10" title="इस कुल दूरी तक कोई चार्ज नहीं लगेगा">
+                <input id="settingVegFreeKm" type="number" min="0" value="10" title="इस कुल दूरी (आना-जाना) तक कोई चार्ज नहीं लगेगा">
               </div>
               <div>
                 <label>आगे की दर (₹/किमी)</label>
@@ -880,7 +884,7 @@ footer a:hover{text-decoration:underline}
   </section>
 </main>
 
-<!-- 🌿 सुंदर फुटर डिज़ाइन -->
+<!-- 🌿 सुंदर और आधुनिक फुटर डिज़ाइन -->
 <footer>
   <h3 id="footerNurseryName">🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</h3>
   <p id="footerAddressText">📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान</p>
@@ -902,9 +906,6 @@ let deliveryDistanceKm = null;
 const NURSERY_LOCATION = { lat: 28.010476, lon: 75.653594 };
 let upiCountdownInterval = null;
 
-// ==========================================
-// ⚙️ वेबसाइट सेटिंग्स (फ्री डिलीवरी कुल दूरी कॉलम सहित)
-// ==========================================
 const DEFAULT_SITE_CONFIG = {
   nurseryName: 'श्री नीम करोली महाराज ग्रीन नर्सरी',
   tagline: 'हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए',
@@ -918,12 +919,10 @@ const DEFAULT_SITE_CONFIG = {
   tickerText: '🌱 कल सुबह ताज़ा खीरा और टमाटर उपलब्ध रहेगा - अभी बुक करें!',
   upiId: 'BHARATPE2H0E0T6Z3P47445@unitype',
   upiName: 'ANIL KUMAR MEENA',
-  // पौधे के नियम
   plantFreeKm: 5,
   plantDeliveryRate: 10,
   plantMaxDistance: 50,
   plantMinOrder: 50,
-  // सब्जी के नियम
   vegFreeKm: 10,
   vegDeliveryRate: 10,
   vegMaxDistance: 30,
@@ -1013,7 +1012,6 @@ function applySiteConfigToUI() {
   }
 }
 
-// एडमिन सेटिंग्स फ़ॉर्म में मान भरना
 function fillSettingsForm() {
   const cfg = getSiteConfig();
   document.getElementById('settingShopStatus').value = cfg.shopStatus;
@@ -1095,13 +1093,10 @@ document.getElementById('siteSettingsForm')?.addEventListener('submit', function
 
   const stat = document.getElementById('siteSettingsStatus');
   stat.style.display = 'block';
-  stat.textContent = '✅ फ्री दूरी और डिलीवरी नियम सफलतापूर्वक सुरक्षित हो गए!';
+  stat.textContent = '✅ सेटिंग्स सुरक्षित हो गईं!';
   setTimeout(() => { stat.style.display = 'none'; }, 4000);
 });
 
-// ==========================================
-// 🎵 रिंगटोन व आर्डर सिस्टम
-// ==========================================
 let alertAudioCtx = null;
 let alertSoundInterval = null;
 let lastKnownPendingCount = null;
@@ -1442,7 +1437,6 @@ async function loadPlants() {
   }
 }
 
-// 2. ऑर्डर व डिलीवरी (फ्री कुल दूरी नियम के अनुसार गणना)
 function updateOrderTotal() {
   const cfg = getSiteConfig();
   const pId = Number(document.getElementById('plant').value);
@@ -1511,7 +1505,7 @@ document.getElementById('locationButton').addEventListener('click', () => {
   navigator.geolocation.getCurrentPosition(pos => {
     const lat = pos.coords.latitude, lon = pos.coords.longitude;
     const oneWayKm = distanceKm(NURSERY_LOCATION.lat, NURSERY_LOCATION.lon, lat, lon);
-    const roundTripKm = oneWayKm * 2; // आने और जाने का कुल राउंड-ट्रिप فاصلہ
+    const roundTripKm = oneWayKm * 2; 
     
     deliveryDistanceKm = roundTripKm;
     customerLocation = { lat, lon, mapsUrl: `https://www.google.com/maps?q=${lat},${lon}` };
@@ -1560,7 +1554,7 @@ document.getElementById('paymentDoneButton').addEventListener('click', () => {
   document.getElementById('orderButton').style.display = 'block';
 });
 
-// ऑर्डर सबमिट प्रक्रिया
+// ऑर्डर सबमिट प्रक्रिया (UTR और स्क्रीनशॉट सहित)
 document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const cfg = getSiteConfig();
@@ -1577,6 +1571,12 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
   const minOrd = veg ? cfg.vegMinOrder : cfg.plantMinOrder;
   if (minOrd > 0 && rawTotal < minOrd) {
     alert(`⚠️ ध्यान दें: न्यूनतम ऑर्डर राशि ₹${minOrd} है।`);
+    return;
+  }
+
+  const utrNumber = document.getElementById('paymentUtrNumber').value.trim();
+  if (!utrNumber || utrNumber.length < 8) {
+    alert('⚠️ कृपया सही 12 अंकों का UPI UTR / ट्रांजैक्शन नंबर दर्ज करें!');
     return;
   }
 
@@ -1625,7 +1625,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
       customer_name: customerName,
       customer_phone: cleanPhone,
       customer_address: fullAddress,
-      notes: `UNIT:${veg?'किलो':'पौधा'} | DISTANCE:${deliveryDistanceKm?.toFixed(1)}km | DELIVERY_FEE:${appliedDeliveryFee} | DISCOUNT:${discountAmt} | MAPS:${customerLocation?.mapsUrl || ''} | PROOF:${proofUrl}`,
+      notes: `UNIT:${veg?'किलो':'पौधा'} | UTR:${utrNumber} | DISTANCE:${deliveryDistanceKm?.toFixed(1)}km | DELIVERY_FEE:${appliedDeliveryFee} | DISCOUNT:${discountAmt} | MAPS:${customerLocation?.mapsUrl || ''} | PROOF:${proofUrl}`,
       status: 'pending'
     });
 
@@ -1639,6 +1639,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
       (discountAmt > 0 ? '\nछूट: -₹' + discountAmt.toFixed(2) : '') +
       '\nडिलीवरी शुल्क: ₹' + Number(appliedDeliveryFee).toFixed(2) +
       '\nकुल राशि: ₹' + totalAmount +
+      '\nUTR / Ref No: ' + utrNumber +
       '\nपता: ' + fullAddress +
       (customerLocation ? '\nGPS लोकेशन: ' + customerLocation.mapsUrl : '') +
       (proofUrl ? '\nस्क्रीनशॉट: ' + proofUrl : '');
@@ -1660,7 +1661,6 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
   }
 });
 
-// 3. एडमिन पैनल व डैशबोर्ड
 const ownerModal = document.getElementById('owner');
 document.getElementById('adminPanelNav').addEventListener('click', () => { 
   ownerModal.classList.add('login-visible');
@@ -1976,6 +1976,8 @@ function renderOrderHtml(o, allOrders) {
   const total = (Number(o.unit_price || 0) * Number(o.quantity || 0)).toFixed(2);
   const mapsMatch = String(o.notes || '').match(/MAPS:(https:\/\/www\.google\.com\/maps\?q=[0-9.,-]+)/);
   const proofMatch = String(o.notes || '').match(/PROOF:(https:[^|]+)/);
+  const utrMatch = String(o.notes || '').match(/UTR:([^\s|]+)/);
+  const cancelReasonMatch = String(o.notes || '').match(/CANCEL_REASON:([^|]+)/);
   const phone = safe(o.customer_phone || '');
   const cleanPhone = phone.replace(/\D/g, '').slice(-10);
 
@@ -2004,11 +2006,12 @@ function renderOrderHtml(o, allOrders) {
       </div>
 
       ${isDuplicate ? '<div style="margin-top:4px;font-size:12px;color:#b91c1c;font-weight:700">⚠️ ध्यान दें: 5 मिनट में एक ही ग्राहक का दोहरा ऑर्डर!</div>' : ''}
-      ${!mapsMatch ? '<div style="margin-top:2px;font-size:12px;color:#d97706;font-weight:700">📍 लोकेशन शेयर नहीं की गई।</div>' : ''}
+      ${isCancelled && cancelReasonMatch ? `<div style="margin-top:4px;font-size:13px;color:#b91c1c;font-weight:700">❌ रद्द होने का कारण: ${safe(cancelReasonMatch[1])}</div>` : ''}
 
       <p style="margin:6px 0;font-size:14px;color:#2c3e50">
         👤 <b>ग्राहक:</b> ${safe(o.customer_name)} | 📞 <b>मोबाइल:</b> ${phone}<br>
         📍 <b>पता:</b> ${safe(o.customer_address)}<br>
+        💳 <b>UPI UTR नंबर:</b> <span style="background:#eef7ed;color:var(--green);padding:2px 6px;border-radius:4px;font-weight:800">${safe(utrMatch ? utrMatch[1] : 'उपलब्ध नहीं')}</span><br>
         💰 <b>कुल मूल्य:</b> ₹${total} | ⏰ <b>समय:</b> ${o.created_at ? new Date(o.created_at).toLocaleString('hi-IN', {timeZone:'Asia/Kolkata', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : '—'}
       </p>
 
@@ -2022,7 +2025,7 @@ function renderOrderHtml(o, allOrders) {
 
         ${isPending ? `<button type="button" onclick="confirmOrder(event, ${o.id}, '${safe(o.plant_name)}', ${o.quantity})" style="padding:5px 12px;font-size:12px;background:#16a34a">✅ कन्फर्म</button>` : ''}
         ${isConfirmed ? `<button type="button" id="deliver-btn-${o.id}" onclick="markOrderDelivered(event, ${o.id}, '${safe(o.notes || '')}')" style="padding:5px 12px;font-size:12px;background:#2563eb">📦 डिलीवर</button>` : ''}
-        ${isPending ? `<button type="button" onclick="cancelOrder(event, ${o.id})" style="padding:5px 10px;font-size:12px;background:#dc2626">❌ रद्द</button>` : ''}
+        ${isPending || isConfirmed ? `<button type="button" onclick="cancelOrderPrompt(event, ${o.id}, '${safe(o.notes || '')}')" style="padding:5px 10px;font-size:12px;background:#dc2626">❌ रद्द करें</button>` : ''}
       </div>
     </div>
   `;
@@ -2093,16 +2096,25 @@ async function markOrderDelivered(event, orderId, existingNotes) {
   alert('🚚 ऑर्डर डिलीवर मार्क हो गया!');
 }
 
-async function cancelOrder(event, orderId) {
+async function cancelOrderPrompt(event, orderId, existingNotes) {
   if (event) { event.preventDefault(); event.stopPropagation(); }
-  if (!confirm('क्या आप इस ऑर्डर को रद्द करना चाहते हैं?')) return;
+  
+  const reason = prompt('कृपया ऑर्डर रद्द करने का कारण चुनें या लिखें:\n\n1. फर्जी भुगतान स्क्रीनशॉट / UTR नंबर अमान्य\n2. स्टॉक में माल उपलब्ध नहीं है\n3. गलत पता या संपर्क नंबर\n4. अन्य कारण', 'फर्जी भुगतान स्क्रीनशॉट / UTR नंबर अमान्य');
+  if (reason === null) return;
+
+  const cleanReason = reason.trim() || 'अन्य कारण';
+
   try {
-    const { error } = await db.from('order_requests').update({ status: 'cancelled' }).eq('id', orderId);
+    const updatedNotes = (existingNotes || '') + ' | CANCEL_REASON:' + cleanReason;
+    const { error } = await db.from('order_requests').update({ status: 'cancelled', notes: updatedNotes }).eq('id', orderId);
     if (error) throw error;
+
     stopLoudAlert();
     await loadAdminAll();
-    alert('❌ ऑर्डर रद्द कर दिया गया!');
-  } catch (e) { alert('त्रुटि: ' + e.message); }
+    alert(`❌ ऑर्डर #${orderId} को इस कारण से रद्द कर दिया गया:\n"${cleanReason}"`);
+  } catch (e) {
+    alert('रद्द करने में त्रुटि: ' + e.message);
+  }
 }
 
 async function loadSalesLedger() {
@@ -2171,7 +2183,6 @@ async function loadSalesLedger() {
       const isKg = String(o.notes || '').includes('UNIT:किलो');
       const total = (Number(o.unit_price || 0) * Number(o.quantity || 0)).toFixed(2);
       const isDel = isOrderDelivered(o);
-      const dateStr = o.created_at ? new Date(o.created_at).toLocaleString('hi-IN', {timeZone:'Asia/Kolkata', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'}) : '—';
       return `
         <div class="sale-row" style="padding:10px 4px;border-bottom:1px solid #eef2eb">
           <div>
@@ -2350,6 +2361,7 @@ document.getElementById('customerTrackingNav')?.addEventListener('click', (e) =>
 document.getElementById('closeTrackingModal')?.addEventListener('click', () => {
   document.getElementById('customerTracking').classList.remove('tracking-modal-open');
 });
+
 document.getElementById('customerTrackingForm')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const rawPhone = document.getElementById('trackingPhone').value.trim();
@@ -2380,6 +2392,8 @@ document.getElementById('customerTrackingForm')?.addEventListener('submit', asyn
     res.innerHTML = data.map(o => {
       const total = (Number(o.unit_price || 0) * Number(o.quantity || 0)).toFixed(2);
       const proofMatch = String(o.notes || '').match(/PROOF:(https:[^|]+)/);
+      const utrMatch = String(o.notes || '').match(/UTR:([^\s|]+)/);
+      const cancelReasonMatch = String(o.notes || '').match(/CANCEL_REASON:([^|]+)/);
       const dateObj = o.created_at ? new Date(o.created_at) : null;
       const formattedDate = dateObj ? dateObj.toLocaleDateString('hi-IN', { timeZone:'Asia/Kolkata', day: 'numeric', month: 'long', year: 'numeric' }) : '—';
       const formattedTime = dateObj ? dateObj.toLocaleTimeString('hi-IN', { timeZone:'Asia/Kolkata', hour: '2-digit', minute: '2-digit' }) : '—';
@@ -2391,7 +2405,7 @@ document.getElementById('customerTrackingForm')?.addEventListener('submit', asyn
       } else if (o.status === 'confirmed') {
         custStatusText = '<b style="color:#16a34a">✅ ऑर्डर कन्फर्म है (तैयारी जारी)</b>';
       } else if (o.status === 'cancelled') {
-        custStatusText = '<b style="color:#dc2626">❌ ऑर्डर रद्द कर दिया गया</b>';
+        custStatusText = `<b style="color:#dc2626">❌ ऑर्डर रद्द कर दिया गया</b><br><span style="color:#b91c1c;font-size:13px">कारण: ${safe(cancelReasonMatch ? cancelReasonMatch[1] : 'भुगतान/पेमेंट सत्यापित नहीं')}</span>`;
       } else {
         custStatusText = '<b style="color:#d97706">⏳ लंबित (जाँच जारी)</b>';
       }
@@ -2402,6 +2416,7 @@ document.getElementById('customerTrackingForm')?.addEventListener('submit', asyn
           <p style="margin:4px 0; font-size:14px">
             📦 <b>मात्रा:</b> ${o.quantity} ${isKg ? 'किलो' : 'पौधे'}<br>
             💰 <b>कुल राशि:</b> ₹${total}<br>
+            💳 <b>UTR नंबर:</b> ${safe(utrMatch ? utrMatch[1] : '—')}<br>
             📅 <b>तारीख:</b> ${formattedDate} (${formattedTime})<br>
             📍 <b>स्थिति:</b> ${custStatusText}
           </p>
