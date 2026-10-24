@@ -40,7 +40,7 @@ paymentProofInput.addEventListener('change', function () {
   --shadow:0 10px 30px rgba(10,50,25,0.08);
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:90px}
+html{scroll-behavior:smooth;scroll-padding-top:110px}
 body{margin:0;font-family:Arial,"Noto Sans Devanagari",sans-serif;background:linear-gradient(180deg,#f0fdf4 0,#ffffff 35%,#f8faf7 100%);color:var(--ink);line-height:1.6}
 
 /* 📢 टिकर व बैनर */
@@ -66,33 +66,61 @@ header p{margin:4px auto;max-width:760px;font-size:clamp(13px,1.6vw,15px);opacit
 .hours-pill{display:inline-block;background:rgba(255,255,255,0.15);backdrop-filter:blur(6px);padding:5px 14px;border-radius:20px;border:1px solid rgba(255,255,255,0.3);font-size:13px;margin-top:8px;font-weight:700;color:#fef08a;text-shadow:0 1px 4px rgba(0,0,0,0.5)}
 header:after{content:"🌱  🥦  🍅  🌶️  🌾";display:block;margin-top:10px;font-size:18px;letter-spacing:7px;opacity:0.85}
 
-/* नेविगेशन बार */
-nav{position:sticky;top:0;z-index:1000;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;padding:9px 12px;background:#fffffffa;backdrop-filter:blur(14px);box-shadow:0 4px 20px rgba(0,0,0,0.06);border-bottom:1px solid #e2ece0}
-nav a{display:inline-block;padding:8px 14px;border:1px solid #d1fae5;border-radius:12px;background:#f0fdf4;color:var(--deep);font-weight:800;font-size:13.5px;text-decoration:none;transition:all 0.2s}
-nav a:hover{background:#dcfce7;transform:translateY(-1px)}
-#adminPanelNav{padding:8px 14px;border-radius:12px;background:#ecfdf5;color:var(--deep);border:1px solid #a7f3d0;font-weight:800;font-size:13.5px;cursor:pointer}
-#adminPanelNav:hover{background:#d1fae5;transform:translateY(-1px)}
+/* 3. बड़े और चौड़े नेविगेशन टैब (बैनर कार्ड्स के बराबर) */
+nav{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  padding:12px 16px;
+  background:#fffffffa;
+  backdrop-filter:blur(14px);
+  box-shadow:0 6px 22px rgba(0,0,0,0.08);
+  border-bottom:1px solid #d1fae5;
+}
+nav a{
+  flex:1;
+  min-width:130px;
+  max-width:200px;
+  text-align:center;
+  padding:11px 16px;
+  border:1.5px solid #a7f3d0;
+  border-radius:14px;
+  background:linear-gradient(135deg,#f0fdf4,#dcfce7);
+  color:var(--deep);
+  font-weight:900;
+  font-size:14px;
+  text-decoration:none;
+  box-shadow:0 3px 10px rgba(16,185,129,0.1);
+  transition:all 0.2s;
+}
+nav a:hover{background:#10b981;color:#fff;transform:translateY(-2px);box-shadow:0 6px 16px rgba(16,185,129,0.25)}
+#adminPanelNav{
+  flex:1;
+  min-width:120px;
+  max-width:180px;
+  text-align:center;
+  padding:11px 16px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#ecfdf5,#d1fae5);
+  color:var(--deep);
+  border:1.5px solid #34d399;
+  font-weight:900;
+  font-size:14px;
+  cursor:pointer;
+  box-shadow:0 3px 10px rgba(16,185,129,0.1);
+  transition:all 0.2s;
+}
+#adminPanelNav:hover{background:#059669;color:#fff;transform:translateY(-2px);box-shadow:0 6px 16px rgba(5,150,105,0.25)}
 
 main{max-width:1160px;margin:0 auto;padding:18px 14px}
 .card{background:#fff;border:1px solid #e0ede0;border-radius:20px;padding:clamp(16px,2.2vw,24px);margin-bottom:18px;box-shadow:var(--shadow)}
 
-/* 🔍 इंस्टेंट लाइव सर्च बार */
-.search-bar-container{margin-bottom:18px}
-.search-bar-input{
-  width:100%;
-  padding:12px 18px;
-  font-size:16px;
-  font-weight:700;
-  border:2px solid #a7f3d0;
-  border-radius:16px;
-  background:#f4fbf7;
-  color:var(--ink);
-  box-shadow:0 4px 12px rgba(0,0,0,0.03);
-  transition:all 0.2s;
-}
-.search-bar-input:focus{outline:none;border-color:var(--green);background:#fff;box-shadow:0 6px 18px rgba(21,128,61,0.12)}
-
-/* 🌟 शानदार विज़ुअल बैनर कार्ड्स */
+/* 🌟 शानदार विजुअल बैनर कार्ड्स */
 .category-hero-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit, minmax(min(100%, 280px), 1fr));
@@ -223,7 +251,7 @@ button:disabled{opacity:.55;cursor:wait}
 .settings-subpane{display:none;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,0.03)}
 .settings-subpane.active{display:block}
 
-/* 💬 फ़्लोटिंग WhatsApp */
+/* 💬 फ़्लोटिंग WhatsApp (सीधे आपके नंबर से लिंक्ड) */
 #floatingWaWidget{display:none;position:fixed;bottom:20px;right:20px;z-index:9990;background:#25D366;color:#fff;width:56px;height:56px;border-radius:50%;align-items:center;justify-content:center;font-size:30px;box-shadow:0 6px 20px rgba(37,211,102,0.4);text-decoration:none}
 
 .mandi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:14px 0}
@@ -240,9 +268,21 @@ button:disabled{opacity:.55;cursor:wait}
 #customerTracking.tracking-modal-open{display:block}
 #about{display:none;padding:20px;background:#fff;border-radius:18px;margin-bottom:16px}
 #about.about-page-open{display:block}
-footer{background:linear-gradient(125deg,#062b18,#0b4d29);color:#fff;text-align:center;padding:22px 14px;margin-top:24px;border-radius:20px 20px 0 0}
-footer p{margin:4px 0}
-footer a{color:#fff}
+
+/* 🌿 आधुनिक और सुंदर फुटर डिज़ाइन */
+footer{
+  background:linear-gradient(135deg,#022c22,#064e3b);
+  color:#fff;
+  text-align:center;
+  padding:32px 16px;
+  margin-top:30px;
+  border-radius:24px 24px 0 0;
+  box-shadow:0 -10px 30px rgba(0,0,0,0.1);
+}
+footer h3{margin:0 0 8px;font-size:20px;color:#34d399}
+footer p{margin:6px 0;font-size:14px;opacity:0.9}
+footer a{color:#34d399;text-decoration:none;font-weight:700}
+footer a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -267,8 +307,9 @@ footer a{color:#fff}
   </div>
 </header>
 
+<!-- 3. बड़े और सुंदर नेविगेशन टैब -->
 <nav>
-  <a href="#shopCategoriesContainer">🌱 पौधे और 🥬 सब्ज़ियाँ</a>
+  <a href="#shopCategoriesContainer">🌱 पौधे और सब्ज़ियाँ</a>
   <a href="#about">🌿 हमारे बारे में</a>
   <a href="#contact">📞 संपर्क</a>
   <a href="#customerTracking" id="customerTrackingNav">📦 ट्रैकिंग</a>
@@ -283,14 +324,14 @@ footer a{color:#fff}
 
   <!-- 🌟 बड़े विजुअल बैनर कार्ड्स -->
   <div class="category-hero-grid" id="shopCategoriesContainer">
-    <div class="cat-hero-card plant-theme" onclick="document.getElementById('searchProductInput').value=''; filterProducts(''); document.getElementById('viewPlantCategory').scrollIntoView({behavior: 'smooth'});">
+    <div class="cat-hero-card plant-theme" onclick="document.getElementById('viewPlantCategory').scrollIntoView({behavior: 'smooth'});">
       <div>
         <h3>🌱 नर्सरी के पौधे</h3>
         <p>उच्च गुणवत्ता वाले स्वस्थ फलदार व फूलदार पौधे</p>
       </div>
       <div class="cat-hero-action">पौधे देखें ➔</div>
     </div>
-    <div class="cat-hero-card veg-theme" onclick="document.getElementById('searchProductInput').value=''; filterProducts(''); document.getElementById('viewVegCategory').scrollIntoView({behavior: 'smooth'});">
+    <div class="cat-hero-card veg-theme" onclick="document.getElementById('viewVegCategory').scrollIntoView({behavior: 'smooth'});">
       <div>
         <h3>🥬 ताज़ी हरी सब्जियाँ</h3>
         <p>खेत से सीधी ताज़ी और ऑर्गेनिक सब्जियाँ</p>
@@ -299,13 +340,8 @@ footer a{color:#fff}
     </div>
   </div>
 
-  <!-- 🔍 इंस्टेंट लाइव सर्च बार -->
-  <div class="search-bar-container">
-    <input type="text" id="searchProductInput" class="search-bar-input" placeholder="🔍 टमाटर, गुलाब, खीरा या कोई भी पौधा/सब्ज़ी यहाँ खोजें..." oninput="filterProducts(this.value)">
-  </div>
-
   <!-- पौधे श्रेणी व्यू -->
-  <section class="card cat-section-view active" id="viewPlantCategory">
+  <section class="card" id="viewPlantCategory">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:8px">
       <h2 style="margin:0">🌱 नर्सरी के पौधे</h2>
       <small style="color:var(--muted);font-weight:700">कीमत प्रति पौधा</small>
@@ -313,11 +349,11 @@ footer a{color:#fff}
     <div id="plantOnlyList" class="plants">पौधों की सूची लोड हो रही है…</div>
   </section>
 
-  <!-- सब्जियाँ श्रेणी व्यू -->
-  <section class="card cat-section-view active" id="viewVegCategory">
+  <!-- सब्जियाँ श्रेणी व्यू (न्यूनतम मात्रा 1 किलो फिक्स) -->
+  <section class="card" id="viewVegCategory">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin:12px 0 8px">
       <h2 style="margin:0">🥬 खाने के लिए ताज़ी सब्ज़ियाँ</h2>
-      <small style="color:var(--muted);font-weight:700">कीमत प्रति किलो</small>
+      <small style="color:var(--muted);font-weight:700">कीमत प्रति किलो (न्यूनतम 1 किलो)</small>
     </div>
     <div id="vegOnlyList" class="plants">सब्ज़ियों की सूची लोड हो रही है…</div>
   </section>
@@ -358,7 +394,7 @@ footer a{color:#fff}
           <div id="upiCountdown" class="status" style="display:none;text-align:center;font-size:22px;font-weight:800;color:#176b35">00:10</div>
           <div id="paymentCountdownStatus" class="status" style="display:none;text-align:center;font-weight:700">UPI ऐप में भुगतान करने के बाद यहाँ वापस आएँ।</div>
 
-          <button id="paymentDoneButton" type="button" class="btn" style="display:none;margin:8px auto;background:#176b35">✅ मैंने भुगतान कर दिया</button>
+          <button id="paymentDoneButton" type="button" class="btn" style="display:none;margin:8px auto;background:#16a34a">✅ मैंने भुगतान कर दिया</button>
           <p id="bharatpeTotalAmount" style="font-weight:700"></p>
         </div>
 
@@ -375,8 +411,8 @@ footer a{color:#fff}
     </div>
   </section>
 
-  <!-- 💬 फ़्लोटिंग WhatsApp बटन -->
-  <a id="floatingWaWidget" href="https://wa.me/919887666626" target="_blank" rel="noopener" title="WhatsApp पर चैट करें">💬</a>
+  <!-- 4. फ़्लोटिंग WhatsApp बटन (आपके सीधे नंबर 9887666626 से लिंक्ड) -->
+  <a id="floatingWaWidget" href="https://wa.me/919887666626?text=नमस्ते,%20मुझे%20पौधों%20और%20सब्जियों%20के%20बारे%20में%20जानकारी%20चाहिए।" target="_blank" rel="noopener" title="WhatsApp पर चैट करें">💬</a>
 
   <!-- ट्रैकिंग मॉडल -->
   <section class="card" id="customerTracking">
@@ -397,7 +433,7 @@ footer a{color:#fff}
     <h2>📞 संपर्क करें</h2>
     <p>संपर्क नंबर: <a id="contactPhoneLink" href="tel:9887666626"><span id="contactPhoneText">9887666626</span></a></p>
     <a class="btn" id="contactCallBtn" href="tel:9887666626">📞 कॉल करें</a>
-    <a class="btn" id="contactWaBtn" href="https://wa.me/919887666626" target="_blank" rel="noopener">💬 WhatsApp</a>
+    <a class="btn" id="contactWaBtn" href="https://wa.me/919887666626?text=नमस्ते,%20मुझे%20सहायता%20चाहिए।" target="_blank" rel="noopener">💬 WhatsApp</a>
   </section>
 
   <!-- एडमिन पैनल -->
@@ -817,9 +853,12 @@ footer a{color:#fff}
   </section>
 </main>
 
+<!-- 5. बेहतर और सुंदर फुटर डिज़ाइन -->
 <footer>
-  <p id="footerNurseryName">श्री नीम करोली महाराज ग्रीन नर्सरी | चारावास, झुंझुनू</p>
-  <p>संपर्क: <span id="footerPhoneText">9887666626</span></p>
+  <h3 id="footerNurseryName">🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</h3>
+  <p id="footerAddressText">📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान</p>
+  <p>📞 संपर्क / WhatsApp: <a id="footerPhoneLink" href="tel:9887666626"><span id="footerPhoneText">9887666626</span></a></p>
+  <p style="margin-top:12px;font-size:13px;opacity:0.75">© 2026 श्री नीम करोली महाराज ग्रीन नर्सरी | सर्वाधिकार सुरक्षित</p>
 </footer>
 
 <script>
@@ -879,14 +918,16 @@ function applySiteConfigToUI() {
   document.getElementById('headerNurseryAddress').textContent = '📍 ' + cfg.address;
   document.getElementById('headerNurseryHours').textContent = '⏰ समय: ' + cfg.openingHours;
   document.getElementById('aboutNurseryTitle').textContent = '🌿 ' + cfg.nurseryName;
-  document.getElementById('footerNurseryName').textContent = cfg.nurseryName + ' | ' + cfg.address.split(',')[0];
+  document.getElementById('footerNurseryName').textContent = '🌱 ' + cfg.nurseryName;
+  document.getElementById('footerAddressText').textContent = '📍 ' + cfg.address;
   
   // 2. संपर्क
-  document.getElementById('contactPhoneText').textContent = cfg.phone;
   document.getElementById('footerPhoneText').textContent = cfg.phone;
+  document.getElementById('footerPhoneLink').href = 'tel:' + cfg.phone;
+  document.getElementById('contactPhoneText').textContent = cfg.phone;
   document.getElementById('contactPhoneLink').href = 'tel:' + cfg.phone;
   document.getElementById('contactCallBtn').href = 'tel:' + cfg.phone;
-  document.getElementById('contactWaBtn').href = 'https://wa.me/91' + cfg.phone;
+  document.getElementById('contactWaBtn').href = 'https://wa.me/91' + cfg.phone + '?text=नमस्ते,%20मुझे%20सहायता%20चाहिए।';
 
   // 3. सूचना टिकर (Marquee)
   const tickerEl = document.getElementById('siteNoticeTicker');
@@ -923,12 +964,12 @@ function applySiteConfigToUI() {
   const upiIdDisplay = document.getElementById('displayUpiId');
   if (upiIdDisplay) upiIdDisplay.textContent = cfg.upiId;
 
-  // 7. फ़्लोटिंग WhatsApp बटन
+  // 7. फ़्लोटिंग WhatsApp बटन (आपके सीधे नंबर से लिंक्ड)
   const waBtn = document.getElementById('floatingWaWidget');
   if (waBtn) {
     if (cfg.waWidget === 'on') {
       waBtn.style.display = 'flex';
-      waBtn.href = 'https://wa.me/91' + cfg.phone;
+      waBtn.href = 'https://wa.me/91' + cfg.phone + '?text=नमस्ते,%20मुझे%20पौधों%20और%20सब्जियों%20के%20बारे%20में%20जानकारी%20चाहिए।';
     } else {
       waBtn.style.display = 'none';
     }
@@ -945,24 +986,6 @@ function applySiteConfigToUI() {
       header.style.background = 'radial-gradient(circle at 50% 18%,#10b98130,transparent 55%),linear-gradient(135deg,#022c22 0%,#064e3b 50%,#0f5132 100%)';
     }
   }
-}
-
-// 🔍 लाइव सर्च फ़िल्टर फ़ंक्शन
-function filterProducts(query) {
-  const q = query.toLowerCase().trim();
-  const plantCards = document.querySelectorAll('#plantOnlyList .plant');
-  const vegCards = document.querySelectorAll('#vegOnlyList .plant');
-
-  let matchCount = 0;
-  [...plantCards, ...vegCards].forEach(card => {
-    const title = card.querySelector('h3').textContent.toLowerCase();
-    if (title.includes(q)) {
-      card.style.display = 'flex';
-      matchCount++;
-    } else {
-      card.style.display = 'none';
-    }
-  });
 }
 
 // एडमिन सेटिंग्स फ़ॉर्म में मान भरना
@@ -1289,7 +1312,7 @@ function getISTDate(dateInput) {
   return ist.getFullYear() + '-' + String(ist.getMonth()+1).padStart(2,'0') + '-' + String(ist.getDate()).padStart(2,'0');
 }
 
-// 📦 होमपेज उत्पाद लोड करना (+/- बटन्स के साथ)
+// 📦 2. होमपेज उत्पाद लोड करना (सब्जियों के लिए न्यूनतम 1 किलो फिक्स)
 async function loadPlants() {
   const pList = document.getElementById('plantOnlyList');
   const vList = document.getElementById('vegOnlyList');
@@ -1305,7 +1328,7 @@ async function loadPlants() {
       const veg = isVeg(p);
       const unit = veg ? 'किलो' : 'पौधा';
       const stepVal = veg ? 0.5 : 1;
-      const initialVal = veg ? 0.5 : 1;
+      const initialVal = veg ? 1 : 1; // सब्ज़ियों के लिए न्यूनतम मात्रा 1 किलो फिक्स
       const target = veg ? vList : pList;
       const isSoldOut = (!p.is_active || Number(p.stock_quantity) <= 0 || cfg.shopStatus === 'closed');
       const card = document.createElement('div'); 
@@ -1851,7 +1874,7 @@ async function loadAdminAll() {
         <div class="status" style="background:#fef2f2;border:1px solid #fecaca;color:#991b1b;margin-top:12px">
           <strong>⚠️ कम स्टॉक चेतावनी (Low Stock Alert):</strong>
           <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap">
-            ${lowStockItems.map(x => `<span style="background:#fee2e2;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700">${isVeg(x)?'🥬':'🌱'} ${safe(x.name)}: केवल ${x.stock_quantity} ${isVeg(x)?'किलो':'पौधे'} बाकी</span>`).join('')}
+            ${lowStockItems.map(x => `<span style="background:#fee2e2;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700">${isVeg(x)?'🥬':'🌱'} ${safe(x.name)}: केवल ${x.stock_quantity} ${isVeg(x)?'किलो':'पौधे'} باقی</span>`).join('')}
           </div>
         </div>
       ` : ''}
