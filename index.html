@@ -270,7 +270,7 @@ button:disabled{opacity:.55;cursor:wait}
   border-top:2px solid #34d399;
 }
 
-/* ✅ आर्डर सफलता का शानदार बैनर (जो होमपेज पर ऊपर दिखेगा) */
+/* ✅ आर्डर सफलता व विवरण का शानदार बैनर (जो होमपेज पर ऊपर दिखेगा) */
 #globalSuccessBanner{
   display:none;
   position:fixed;
@@ -278,12 +278,12 @@ button:disabled{opacity:.55;cursor:wait}
   left:50%;
   transform:translateX(-50%);
   z-index:10500;
-  width:min(92%, 550px);
+  width:min(94%, 580px);
   background:linear-gradient(135deg,#064e3b,#15803d);
   color:#fff;
-  padding:18px 20px;
-  border-radius:16px;
-  box-shadow:0 12px 40px rgba(0,0,0,0.3);
+  padding:20px;
+  border-radius:18px;
+  box-shadow:0 12px 40px rgba(0,0,0,0.35);
   border:2px solid #34d399;
   text-align:center;
   animation: fadeInDown 0.4s ease-out;
@@ -336,14 +336,24 @@ footer a:hover{text-decoration:underline}
 <div id="siteOfferBanner">🎉 विशेष ऑफर: आज सभी आर्डर्स पर <span id="bannerDiscountText">10%</span> की सीधी छूट!</div>
 <div id="siteClosedBanner">⚠️ सूचना: आज नर्सरी बंद है। नए ऑर्डर कल से स्वीकार किए जाएँगे।</div>
 
-<!-- ✅ आर्डर सफलता का ग्लोबल बैनर (जो 35 सेकंड तक होमपेज पर दिखेगा) -->
+<!-- ✅ आर्डर सफलता और विवरण का ग्लोबल बैनर (जो 35 सेकंड तक होमपेज पर दिखेगा) -->
 <div id="globalSuccessBanner">
-  <div style="font-size:28px;margin-bottom:6px">🌿🎉</div>
-  <h3 style="margin:0 0 6px;color:#fef08a;font-size:18px">आपका ऑर्डर सफलतापूर्व दर्ज हो गया है!</h3>
-  <p id="successBannerText" style="margin:0;font-size:14px;line-height:1.5;color:#f0fdf4">
-    हमें आपका आर्डर मिल गया है। हम आपके भुगतान और UTR की जाँच करके बहुत जल्द आपसे संपर्क करेंगे।
+  <div style="font-size:32px;margin-bottom:4px">🎉✅</div>
+  <h3 style="margin:0 0 6px;color:#fef08a;font-size:18px">आपका ऑर्डर सफलतापूर्वक दर्ज हो गया है!</h3>
+  <div id="successReceiptDetails" style="background:rgba(255,255,255,0.12);padding:10px;border-radius:10px;margin:8px 0;text-align:left;font-size:13.5px;line-height:1.5;color:#f0fdf4">
+    <!-- यहाँ आर्डर विवरण динамически भरेगा -->
+  </div>
+  <p style="margin:4px 0;font-size:12.5px;color:#d1fae5">
+    हम आपके भुगतान और UTR की जाँच करके बहुत जल्द आपसे संपर्क करेंगे।
   </p>
-  <button type="button" onclick="document.getElementById('globalSuccessBanner').style.display='none'" style="margin-top:10px;background:#fff;color:#064e3b;border:0;padding:5px 14px;border-radius:6px;font-weight:700;cursor:pointer;font-size:12px">ठीक है (बंद करें)</button>
+  <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+    <a id="successWaButton" href="#" target="_blank" rel="noopener" style="background:#25D366;color:#fff;text-decoration:none;padding:7px 14px;border-radius:8px;font-weight:800;font-size:13px">
+      📲 WhatsApp पर आर्डर भेजें
+    </a>
+    <button type="button" onclick="document.getElementById('globalSuccessBanner').style.display='none'" style="background:#fff;color:#064e3b;border:0;padding:7px 14px;border-radius:8px;font-weight:800;cursor:pointer;font-size:13px">
+      ✕ बंद करें
+    </button>
+  </div>
 </div>
 
 <!-- 🌿 प्रीमियम हेडर डिज़ाइन -->
@@ -1614,7 +1624,7 @@ function renderCartModal() {
 
     const totalToPay = finalSubtotal + calculatedFee;
     document.getElementById('grandTotalDisplay').textContent = '₹' + totalToPay.toFixed(2);
-    document.getElementById('bharatpeTotalAmount').textContent = 'कुल अनुदान: ₹' + totalToPay.toFixed(2);
+    document.getElementById('bharatpeTotalAmount').textContent = 'कुल: ₹' + totalToPay.toFixed(2);
     const payUri = 'upi://pay?' + new URLSearchParams({pa: cfg.upiId, pn: cfg.upiName, am: totalToPay.toFixed(2), cu: 'INR'});
     document.getElementById('upiPayButton').href = payUri;
   }
@@ -1697,7 +1707,7 @@ document.getElementById('paymentDoneButton').addEventListener('click', () => {
   document.getElementById('orderButton').style.display = 'block';
 });
 
-// कार्ट ऑर्डर सबमिट प्रक्रिया (सफल होने पर ऑटोमैटिक विंडो बंद होकर होमपेज पर जाना और 35 सेकंड मैसेज दिखाना)
+// कार्ट ऑर्डर सबमिट प्रक्रिया (ऑटोमैटिक बंद होना, रसीद दिखाना और WhatsApp का विकल्प देना)
 document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const cfg = getSiteConfig();
@@ -1754,17 +1764,37 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
     const totalAmount = (finalSubtotal + Number(appliedDeliveryFee)).toFixed(2);
 
     const itemsSummaryText = shoppingCart.map(i => `${i.name} (${i.qty} ${i.veg ? 'किलो' : 'पौधे'})`).join(', ');
+    const totalQtyCount = shoppingCart.reduce((sum, i) => sum + i.qty, 0);
 
-    await db.from('order_requests').insert({
+    const { data: insertedOrder, error: insErr } = await db.from('order_requests').insert({
       plant_name: itemsSummaryText,
-      quantity: shoppingCart.reduce((sum, i) => sum + i.qty, 0),
+      quantity: totalQtyCount,
       unit_price: Number(totalAmount),
       customer_name: customerName,
       customer_phone: cleanPhone,
       customer_address: fullAddress,
       notes: `CART_ORDER | UTR:${utrNumber} | DISTANCE:${deliveryDistanceKm?.toFixed(1)}km | DELIVERY_FEE:${appliedDeliveryFee} | DISCOUNT:${discountAmt} | MAPS:${customerLocation?.mapsUrl || ''} | PROOF:${proofUrl}`,
       status: 'pending'
-    });
+    }).select('id').single();
+
+    if (insErr) throw insErr;
+    const newOrderId = insertedOrder ? insertedOrder.id : 'नया';
+
+    const message = 'नया मल्टी-आइटम नर्सरी ऑर्डर' +
+      '\nऑर्डर आईडी: #' + newOrderId +
+      '\nनाम: ' + customerName +
+      '\nमोबाइल: ' + cleanPhone +
+      '\nआइटम्स: ' + itemsSummaryText +
+      '\nउत्पाद मूल्य: ₹' + finalSubtotal.toFixed(2) +
+      (discountAmt > 0 ? '\nछूट: -₹' + discountAmt.toFixed(2) : '') +
+      '\nडिलीवरी शुल्क: ₹' + Number(appliedDeliveryFee).toFixed(2) +
+      '\nकुल राशि: ₹' + totalAmount +
+      '\nUTR / Ref No: ' + utrNumber +
+      '\nपता: ' + fullAddress +
+      (customerLocation ? '\nGPS लोकेशन: ' + customerLocation.mapsUrl : '') +
+      (proofUrl ? '\nस्क्रीनशॉट: ' + proofUrl : '');
+
+    const waUrl = 'https://wa.me/91' + cfg.phone + '?text=' + encodeURIComponent(message);
 
     // 1. आर्डर विंडो (पॉप-अप) को ऑटोमैटिक बंद करना
     closeOrderPopup();
@@ -1783,12 +1813,25 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
     button.style.display = 'none';
     status.style.display = 'none';
 
-    // 4. होमपेज पर ऊपर ले जाना और 35 सेकंड के लिए शानदार सफलता का मैसेज दिखाना
+    // 4. होमपेज पर ऊपर ले जाना और सफलता का बैनर रसीद के साथ दिखाना (35 सेकंड)
     window.scrollTo({ top: 0, behavior: 'smooth' });
     const successBanner = document.getElementById('globalSuccessBanner');
+    const receiptBox = document.getElementById('successReceiptDetails');
+    const waBtn = document.getElementById('successWaButton');
+
+    if (receiptBox) {
+      receiptBox.innerHTML = `
+        <b>ऑर्डर आईडी:</b> #${newOrderId}<br>
+        <b>ग्राहक नाम:</b> ${customerName} (📞 ${cleanPhone})<br>
+        <b>खरीदा गया सामान:</b> ${itemsSummaryText}<br>
+        <b>कुल भुगतान राशि:</b> ₹${totalAmount}<br>
+        <b>UTR नंबर:</b> ${utrNumber}
+      `;
+    }
+    if (waBtn) waBtn.href = waUrl;
+
     if (successBanner) {
       successBanner.style.display = 'block';
-      // 35 सेकंड (35000 मिलीसेकंड) के बाद मैसेज ऑटोमैटिक हट जाएगा
       setTimeout(() => {
         successBanner.style.display = 'none';
       }, 35000);
