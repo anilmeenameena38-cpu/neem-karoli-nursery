@@ -270,7 +270,7 @@ button:disabled{opacity:.55;cursor:wait}
   border-top:2px solid #34d399;
 }
 
-/* ✅ आर्डर सफलता व रसीद का ग्लोबल बैनर (60 सेकंड तक रुकने वाला) */
+/* ✅ आर्डर सफलता व रसीद का ग्लोबल बैनर */
 #globalSuccessBanner{
   display:none;
   position:fixed;
@@ -360,7 +360,7 @@ footer a:hover{text-decoration:underline}
   </div>
 </header>
 
-<!-- मोबाइल फ्रेंडली चौड़े नेविगेशन टैब -->
+<!-- मोबाइल फ्रेंडली नेविगेशन बार -->
 <nav>
   <a href="#shopCategoriesContainer">🌱 पौधे और सब्ज़ियाँ</a>
   <a href="#about">🌿 हमारे बारे में</a>
@@ -805,6 +805,7 @@ const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let plants = [];
 let shoppingCart = [];
 let customerLocation = null;
+let deliveryFee = null;
 let deliveryDistanceKm = null;
 const NURSERY_LOCATION = { lat: 28.010476, lon: 75.653594 };
 let upiCountdownInterval = null;
@@ -1071,7 +1072,6 @@ document.getElementById('paymentDoneButton').addEventListener('click', () => {
 // 🌐 10-Level रेफ़रल कमीशन वितरण लॉजिक (₹10 डिस्ट्रीब्यूशन: ₹9 लेवल्स + ₹1 Admin Profit)
 async function processReferralAndOrder(customerPhone, orderTotal, refCodeUsed) {
   try {
-    // 1. यूजर रजिस्टर या फेच करें
     let { data: user } = await db.from('customers').select('*').eq('phone', customerPhone).single();
     let myRefCode = 'NEEM' + Math.floor(1000 + Math.random() * 9000);
     let uplineCode = refCodeUsed || localStorage.getItem('applied_ref_code') || null;
@@ -1086,7 +1086,6 @@ async function processReferralAndOrder(customerPhone, orderTotal, refCodeUsed) {
       user = newUser;
     }
 
-    // 2. 10 Level तक ₹9 का समान वितरण (90 पैसे प्रति लेवल) + ₹1 एडमिन प्रॉफिट
     let currentUpline = user.referred_by;
     let levelPayout = 0.90; // ₹9 / 10 levels = ₹0.90 per level
     let levelsDistributed = 0;
@@ -1095,11 +1094,9 @@ async function processReferralAndOrder(customerPhone, orderTotal, refCodeUsed) {
       let { data: uplineUser } = await db.from('customers').select('*').eq('ref_code', currentUpline).single();
       if (!uplineUser) break;
 
-      // वॉलेट में कमीशन जोड़ें
       let newBalance = (Number(uplineUser.wallet_balance) || 0) + levelPayout;
       await db.from('customers').update({ wallet_balance: newBalance }).eq('id', uplineUser.id);
 
-      // लेज़र रिकॉर्ड सेव करें
       await db.from('referral_ledger').insert({
         from_phone: customerPhone,
         to_phone: uplineUser.phone,
@@ -1111,7 +1108,6 @@ async function processReferralAndOrder(customerPhone, orderTotal, refCodeUsed) {
       levelsDistributed++;
     }
 
-    // एडमिन का ₹1 फिक्स प्रॉफिट रिकॉर्ड करें
     await db.from('admin_profits').insert({
       customer_phone: customerPhone,
       profit_amount: 1.00
@@ -1120,7 +1116,6 @@ async function processReferralAndOrder(customerPhone, orderTotal, refCodeUsed) {
   } catch (err) { console.error('Referral Processing Error:', err); }
 }
 
-// ऑर्डर सबमिट
 document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const customerName = document.getElementById('customer').value.trim();
@@ -1145,7 +1140,6 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
   if (error) { alert('त्रुटि: ' + error.message); return; }
 
-  // 🌐 रेफ़रल कमीशन ट्रिगर करें
   await processReferralAndOrder(phone, subtotal, refCode);
 
   document.getElementById('order').hidden = true;
@@ -1155,7 +1149,6 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
   updateCartBadge();
 });
 
-// एडमिन लॉगिन व पैनल
 const ownerModal = document.getElementById('owner');
 document.getElementById('adminPanelNav').addEventListener('click', () => { ownerModal.classList.add('login-visible'); });
 document.getElementById('ownerCloseButton').addEventListener('click', () => { ownerModal.classList.remove('login-visible'); });
@@ -1197,10 +1190,9 @@ async function loadAdminReferralLedger() {
       });
     }
     container.innerHTML = html;
-  } catch (err) { container.innerHTML = 'डेटा लोड करने में त्रुटि। (कृपया सुनिश्चित करें कि Supabase में referral_ledger और admin_profits टेबल बनी हुई हैं)'; }
+  } catch (err) { container.innerHTML = 'डेटा लोड करने में त्रुटि।'; }
 }
 
-// ट्रैकिंग व रेफ़रल वॉलेट चेक
 document.getElementById('customerTrackingNav').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('customerTracking').classList.add('tracking-modal-open'); });
 document.getElementById('closeTrackingModal').addEventListener('click', () => { document.getElementById('customerTracking').classList.remove('tracking-modal-open'); });
 
@@ -1215,7 +1207,6 @@ document.getElementById('customerTrackingForm').addEventListener('submit', async
     let { data: cust } = await db.from('customers').select('*').eq('phone', phone).single();
     let refLink = cust ? window.location.origin + window.location.pathname + '?ref=' + cust.ref_code : 'खरीदारी के बाद रेफ़रल कोड बनेगा';
     let walletBal = cust ? Number(cust.wallet_balance || 0).toFixed(2) : '0.00';
-
     let { data: orders } = await db.from('order_requests').select('*').ilike('customer_phone', `%${phone}%`);
 
     stat.textContent = 'विवरण मिल गया:';
@@ -1232,7 +1223,6 @@ document.getElementById('customerTrackingForm').addEventListener('submit', async
   } catch (err) { stat.textContent = 'डेटा लोड करने में त्रुटि हुई।'; }
 });
 
-// URL से रेफ़रल कोड कैप्चर करना
 window.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const ref = urlParams.get('ref');
