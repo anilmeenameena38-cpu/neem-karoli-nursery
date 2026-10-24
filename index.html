@@ -76,7 +76,23 @@ nav a:hover{background:#dcfce7;transform:translateY(-1px)}
 main{max-width:1160px;margin:0 auto;padding:18px 14px}
 .card{background:#fff;border:1px solid #e0ede0;border-radius:20px;padding:clamp(16px,2.2vw,24px);margin-bottom:18px;box-shadow:var(--shadow)}
 
-/* 🌟 शानदार विज़ुअल बैनर कार्ड्स (Visual Category Hero Cards) */
+/* 🔍 इंस्टेंट लाइव सर्च बार */
+.search-bar-container{margin-bottom:18px}
+.search-bar-input{
+  width:100%;
+  padding:12px 18px;
+  font-size:16px;
+  font-weight:700;
+  border:2px solid #a7f3d0;
+  border-radius:16px;
+  background:#f4fbf7;
+  color:var(--ink);
+  box-shadow:0 4px 12px rgba(0,0,0,0.03);
+  transition:all 0.2s;
+}
+.search-bar-input:focus{outline:none;border-color:var(--green);background:#fff;box-shadow:0 6px 18px rgba(21,128,61,0.12)}
+
+/* 🌟 शानदार विज़ुअल बैनर कार्ड्स */
 .category-hero-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit, minmax(min(100%, 280px), 1fr));
@@ -115,53 +131,6 @@ main{max-width:1160px;margin:0 auto;padding:18px 14px}
   width:fit-content;
   box-shadow:0 3px 10px rgba(0,0,0,0.1);
 }
-
-/* 📂 स्टिकी श्रेणी चयन सब-टैब्स बार (Sticky Category Bar) */
-.category-control-bar{
-  position:sticky;
-  top:58px;
-  z-index:900;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:18px;
-  background:#ffffffea;
-  backdrop-filter:blur(12px);
-  border:1px solid var(--line);
-  padding:10px 16px;
-  border-radius:16px;
-  box-shadow:0 6px 20px rgba(10,50,25,0.06);
-}
-.category-control-label{
-  font-weight:900;
-  font-size:14px;
-  color:var(--deep);
-}
-.cat-pill-btn{
-  background:#f8faf6;
-  color:var(--deep);
-  border:1px solid #cbd5e1;
-  border-radius:24px;
-  padding:7px 16px;
-  font-size:13.5px;
-  font-weight:800;
-  cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  transition:all 0.2s;
-}
-.cat-pill-btn:hover{background:#ecfdf5;border-color:#10b981}
-.cat-pill-btn.active{
-  background:linear-gradient(135deg,#15803d,#064e3b);
-  color:#fff;
-  border-color:#064e3b;
-  box-shadow:0 4px 12px rgba(21,128,61,0.28);
-}
-
-.cat-section-view{display:none}
-.cat-section-view.active{display:block}
 
 /* 📦 सुपर कॉम्पैक्ट उत्पाद कार्ड्स */
 .plants{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,215px),1fr));gap:14px}
@@ -312,16 +281,16 @@ footer a{color:#fff}
     <p>हमारा उद्देश्य घरों, खेतों और बगीचों तक स्वस्थ पौधों, हरियाली और उपयोगी बागवानी जानकारी को पहुँचाना है।</p>
   </section>
 
-  <!-- 🌟 बड़े विजुअल बैनर कार्ड्स (Visual Hero Cards) -->
+  <!-- 🌟 बड़े विजुअल बैनर कार्ड्स -->
   <div class="category-hero-grid" id="shopCategoriesContainer">
-    <div class="cat-hero-card plant-theme" onclick="document.querySelector('[data-cat-target=\'plants\']').click()">
+    <div class="cat-hero-card plant-theme" onclick="document.getElementById('searchProductInput').value=''; filterProducts(''); document.getElementById('viewPlantCategory').scrollIntoView({behavior: 'smooth'});">
       <div>
         <h3>🌱 नर्सरी के पौधे</h3>
         <p>उच्च गुणवत्ता वाले स्वस्थ फलदार व फूलदार पौधे</p>
       </div>
       <div class="cat-hero-action">पौधे देखें ➔</div>
     </div>
-    <div class="cat-hero-card veg-theme" onclick="document.querySelector('[data-cat-target=\'vegs\']').click()">
+    <div class="cat-hero-card veg-theme" onclick="document.getElementById('searchProductInput').value=''; filterProducts(''); document.getElementById('viewVegCategory').scrollIntoView({behavior: 'smooth'});">
       <div>
         <h3>🥬 ताज़ी हरी सब्जियाँ</h3>
         <p>खेत से सीधी ताज़ी और ऑर्गेनिक सब्जियाँ</p>
@@ -330,13 +299,10 @@ footer a{color:#fff}
     </div>
   </div>
 
-  <!-- 📂 स्टिकी श्रेणी चयन सब-टैब्स बार (Sticky Category Bar) -->
-  <section class="category-control-bar">
-    <span class="category-control-label">श्रेणी चुनें:</span>
-    <button type="button" class="cat-pill-btn active" data-cat-target="plants">🌱 नर्सरी के पौधे</button>
-    <button type="button" class="cat-pill-btn" data-cat-target="vegs">🥬 ताज़ी सब्ज़ियाँ</button>
-    <button type="button" class="cat-pill-btn" data-cat-target="offers">💥 विशेष ऑफर</button>
-  </section>
+  <!-- 🔍 इंस्टेंट लाइव सर्च बार -->
+  <div class="search-bar-container">
+    <input type="text" id="searchProductInput" class="search-bar-input" placeholder="🔍 टमाटर, गुलाब, खीरा या कोई भी पौधा/सब्ज़ी यहाँ खोजें..." oninput="filterProducts(this.value)">
+  </div>
 
   <!-- पौधे श्रेणी व्यू -->
   <section class="card cat-section-view active" id="viewPlantCategory">
@@ -348,25 +314,12 @@ footer a{color:#fff}
   </section>
 
   <!-- सब्जियाँ श्रेणी व्यू -->
-  <section class="card cat-section-view" id="viewVegCategory">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:8px">
+  <section class="card cat-section-view active" id="viewVegCategory">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin:12px 0 8px">
       <h2 style="margin:0">🥬 खाने के लिए ताज़ी सब्ज़ियाँ</h2>
       <small style="color:var(--muted);font-weight:700">कीमत प्रति किलो</small>
     </div>
     <div id="vegOnlyList" class="plants">सब्ज़ियों की सूची लोड हो रही है…</div>
-  </section>
-
-  <!-- विशेष ऑफर व्यू -->
-  <section class="card cat-section-view" id="viewOfferCategory">
-    <h2>💥 विशेष ऑफर एवं छूट</h2>
-    <div class="status" style="background:#fffbeb;border:1px solid #fde68a;text-align:center;padding:24px">
-      <div style="font-size:38px">🎁</div>
-      <h3 style="color:#b45309;margin:8px 0">बंपर बचत सेल चालू है!</h3>
-      <p style="font-size:15px;color:#92400e;margin:4px 0">आज ही स्वस्थ पौधे व ताज़ी हरी सब्जियाँ अपने घर और खेत के लिए ऑर्डर करें।</p>
-      <div style="margin-top:14px">
-        <button type="button" class="btn" onclick="document.querySelector('[data-cat-target=\'plants\']').click()" style="background:#b45309">🛒 अभी खरीदारी करें</button>
-      </div>
-    </div>
   </section>
 
   <!-- ऑर्डर मॉडल -->
@@ -700,7 +653,7 @@ footer a{color:#fff}
       </div>
     </div>
 
-    <!-- ⚙️ वेबसाइट मास्टर स्टूडियो (Sub-Tabs Layout CMS) -->
+    <!-- ⚙️ वेबसाइट मास्टर स्टूडियो -->
     <div id="adminSettingsPane" class="admin-pane">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px">
         <div>
@@ -994,23 +947,23 @@ function applySiteConfigToUI() {
   }
 }
 
-// 📂 श्रेणी चयन टैब क्लिक इवेंट (Category Switch Handler)
-document.querySelectorAll('.cat-pill-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.cat-pill-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.cat-section-view').forEach(v => v.classList.remove('active'));
-    this.classList.add('active');
+// 🔍 लाइव सर्च फ़िल्टर फ़ंक्शन
+function filterProducts(query) {
+  const q = query.toLowerCase().trim();
+  const plantCards = document.querySelectorAll('#plantOnlyList .plant');
+  const vegCards = document.querySelectorAll('#vegOnlyList .plant');
 
-    const target = this.dataset.catTarget;
-    if (target === 'plants') {
-      document.getElementById('viewPlantCategory').classList.add('active');
-    } else if (target === 'vegs') {
-      document.getElementById('viewVegCategory').classList.add('active');
-    } else if (target === 'offers') {
-      document.getElementById('viewOfferCategory').classList.add('active');
+  let matchCount = 0;
+  [...plantCards, ...vegCards].forEach(card => {
+    const title = card.querySelector('h3').textContent.toLowerCase();
+    if (title.includes(q)) {
+      card.style.display = 'flex';
+      matchCount++;
+    } else {
+      card.style.display = 'none';
     }
   });
-});
+}
 
 // एडमिन सेटिंग्स फ़ॉर्म में मान भरना
 function fillSettingsForm() {
@@ -1034,7 +987,6 @@ function fillSettingsForm() {
   document.getElementById('settingWaWidget').value = cfg.waWidget;
   document.getElementById('settingCouponCode').value = cfg.couponCode;
 
-  // लाइव प्रीव्यू अपडेट
   document.getElementById('prevTicker').textContent = '📢 ' + cfg.tickerText;
   document.getElementById('prevOffer').textContent = '🎉 विशेष ऑफर: ' + cfg.discountPercent + '% की छूट!';
   document.getElementById('prevName').textContent = '🌱 ' + cfg.nurseryName;
