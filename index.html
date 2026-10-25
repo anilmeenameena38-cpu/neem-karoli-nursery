@@ -162,6 +162,12 @@ main{max-width:1160px;margin:0 auto;padding:18px 14px}
   box-shadow:0 3px 10px rgba(0,0,0,0.1);
 }
 
+/* 🌐 10-Level Referral Section Styling */
+#referralSection {background:#f4fbf7;border:2px solid #34d399;border-radius:18px;padding:20px;margin-bottom:18px;box-shadow:var(--shadow)}
+.ref-level-box{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:12px}
+.ref-card{background:#fff;border:1px solid #a7f3d0;padding:12px;border-radius:12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.03)}
+.ref-card strong{color:var(--green);font-size:18px}
+
 /* 📦 सुपर कॉम्पैक्ट उत्पाद कार्ड्स */
 .plants{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,215px),1fr));gap:14px}
 .plant{
@@ -368,8 +374,8 @@ footer a:hover{text-decoration:underline}
 
 <!-- मोबाइल फ्रेंडली चौड़े नेविगेशन टैब -->
 <nav>
-  <a href="#referralSection">🌐 10-Level रेफरल</a>
   <a href="#shopCategoriesContainer">🌱 पौधे और सब्ज़ियाँ</a>
+  <a href="#referralSection">🌐 10-Level रेफरल</a>
   <a href="#about">🌿 हमारे बारे में</a>
   <a href="#contact">📞 संपर्क</a>
   <a href="#customerTracking" id="customerTrackingNav">📦 ट्रैकिंग</a>
@@ -402,8 +408,11 @@ footer a:hover{text-decoration:underline}
     </div>
 
     <h3 style="margin:16px 0 8px;color:var(--green)">📊 10 Levels Breakdown (₹2 Profit per Level)</h3>
-    <div class="ref-level-box" id="refLevelsContainer"></div>
+    <div class="ref-level-box" id="refLevelsContainer">
+      <!-- Levels 1 to 10 rendered via JS -->
+    </div>
   </section>
+
   <section class="card" id="about">
     <h2 id="aboutNurseryTitle">🌿 श्री नीम करोली महाराज ग्रीन नर्सरी</h2>
     <p>हमारा उद्देश्य घरों, खेतों और बगीचों तक स्वस्थ पौधों, हरियाली और उपयोगी बागवानी जानकारी को पहुँचाना है।</p>
@@ -870,7 +879,7 @@ footer a:hover{text-decoration:underline}
 
         <!-- टैब 3: UPI पेमेंट -->
         <div id="subpane-payment" class="settings-subpane">
-          <h3 style="color:var(--green);margin-top:0">💳 UPI भुगतान व QR कोड सेटिंग्स</h3>
+          <h3 style="color:var(--green);margin-top:0">💳 UPI पेमेंट व QR कोड सेटिंग्स</h3>
           <label>आपकी UPI ID (जिस पर ग्राहक पेमेंट करेंगे)</label>
           <input id="settingUpiId" required value="BHARATPE2H0E0T6Z3P47445@unitype">
 
@@ -1015,7 +1024,21 @@ footer a:hover{text-decoration:underline}
 </footer>
 
 <script>
-  // 🌐 10-Level Referral System Initialization
+const SUPABASE_URL = 'https://knwpnjzwknnzdkyboeuy.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ANudpZPHHiFcBeI3U7SaEA_QRzMOywA';
+const OWNER_UID = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9';
+const OWNER_EMAIL = 'anilmeena.meena38@gmail.com';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let plants = [];
+let shoppingCart = [];
+let customerLocation = null;
+let deliveryFee = null;
+let deliveryDistanceKm = null;
+const NURSERY_LOCATION = { lat: 28.010476, lon: 75.653594 };
+let upiCountdownInterval = null;
+
+// 🌐 10-Level Referral System Initialization
 function initReferralSystem() {
   const urlParams = new URLSearchParams(window.location.search);
   const refCode = urlParams.get('ref');
@@ -1053,7 +1076,7 @@ function renderReferralLevelsDemo() {
 
   for (let i = 1; i <= 10; i++) {
     const membersCount = Math.max(0, (11 - i) * 2);
-    const profit = membersCount * 2;
+    const profit = membersCount * 2; // ₹2 per member profit across 10 levels
     totalWallet += profit;
     totalMembers += membersCount;
 
@@ -1070,22 +1093,6 @@ function renderReferralLevelsDemo() {
   document.getElementById('walletBalanceDisplay').textContent = '₹' + totalWallet.toFixed(2);
   document.getElementById('totalDownlineDisplay').textContent = totalMembers + ' Members';
 }
-
-// Call it on load
-initReferralSystem();
-const SUPABASE_URL = 'https://knwpnjzwknnzdkyboeuy.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_ANudpZPHHiFcBeI3U7SaEA_QRzMOywA';
-const OWNER_UID = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9';
-const OWNER_EMAIL = 'anilmeena.meena38@gmail.com';
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-let plants = [];
-let shoppingCart = [];
-let customerLocation = null;
-let deliveryFee = null;
-let deliveryDistanceKm = null;
-const NURSERY_LOCATION = { lat: 28.010476, lon: 75.653594 };
-let upiCountdownInterval = null;
 
 const DEFAULT_SITE_CONFIG = {
   nurseryName: 'श्री नीम करोली महाराज ग्रीन नर्सरी',
@@ -1504,7 +1511,6 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
 function safe(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function isVeg(p) { return /सब्जी|सब्ज़ी|veg|vegetable/i.test(String(p && p.category || '')); }
 
-// 🟢 चेक करने के लिए कि क्या यह ग्राम (जैसे धनिया, पुदीना) वाली सब्जी है
 function isGramVeg(p) {
   const nameAndVariety = (p.name + ' ' + (p.variety || '')).toLowerCase();
   const isGramUnit = String(p.unit_type || '').toLowerCase() === 'gram' || 
@@ -1549,13 +1555,13 @@ async function loadPlants() {
       if (veg) {
         if (isGram) {
           unit = 'किलो (ग्राम में)';
-          stepVal = 0.25; // 250 ग्राम (0.25 kg)
-          initialVal = 0.25; // डिफ़ॉल्ट 250 ग्राम
+          stepVal = 0.25; 
+          initialVal = 0.25; 
           unitLabelText = 'किलो (जैसे 0.25=250g, 0.5=500g, 1=1kg)';
         } else {
           unit = 'किलो';
-          stepVal = 1; // 1 किलो
-          initialVal = 1; // डिफ़ॉल्ट 1 किलो
+          stepVal = 1; 
+          initialVal = 1; 
           unitLabelText = 'न्यूनतम 1 किलो';
         }
       }
@@ -1649,7 +1655,6 @@ async function loadPlants() {
   }
 }
 
-// 🛒 कार्ट में उत्पाद जोड़ना
 function addToCart(plant, qty, veg, isGram) {
   const existingIndex = shoppingCart.findIndex(item => item.id === plant.id);
   if (existingIndex > -1) {
@@ -1684,7 +1689,6 @@ function updateCartBadge() {
   }
 }
 
-// कार्ट मॉडल खोलना
 function openCartModal(e) {
   if (e) e.preventDefault();
   if (shoppingCart.length === 0) {
@@ -1860,7 +1864,6 @@ document.getElementById('paymentDoneButton').addEventListener('click', () => {
   document.getElementById('orderButton').style.display = 'block';
 });
 
-// कार्ट ऑर्डर सबमिट प्रक्रिया
 document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const cfg = getSiteConfig();
@@ -2123,7 +2126,7 @@ document.getElementById('newVegOnlyForm').addEventListener('submit', async (e) =
       category: 'सब्जी',
       selling_price: Number(document.getElementById('vPrice').value),
       stock_quantity: Number(document.getElementById('vStock').value),
-      unit_type: unitType, // 🟢 यूनिट सेव हो रही है (kg या gram)
+      unit_type: unitType, 
       description: document.getElementById('vDesc').value.trim() || null,
       is_active: true
     };
@@ -2728,6 +2731,7 @@ document.getElementById('nurseryAskChatGPT')?.addEventListener('click', () => {
   if (q) window.open('https://chatgpt.com/?q=' + encodeURIComponent(q), '_blank');
 });
 
+initReferralSystem();
 applySiteConfigToUI();
 loadPlants();
 </script>
