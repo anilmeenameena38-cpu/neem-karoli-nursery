@@ -377,6 +377,33 @@ footer a:hover{text-decoration:underline}
 </nav>
 
 <main>
+  <!-- 🌟 10-LEVEL REFERRAL & WALLET DASHBOARD -->
+  <section class="card" id="referralSection">
+    <h2 style="color:var(--green);margin-top:0">🌐 10-Level Referral & Profit Network (₹2 प्रति व्यक्ति)</h2>
+    <p>अपना रेफरल लिंक दोस्तों के साथ शेयर करें। 10 levels तक जुड़ने वाले हर व्यक्ति से आपको <b>₹2 का प्रॉफिट</b> मिलेगा!</p>
+    
+    <div style="background:#fff;padding:14px;border-radius:12px;border:1px solid #a7f3d0;margin-bottom:14px">
+      <label>आपका यूनिक रेफरल लिंक:</label>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="myReferralLink" readonly value="Loading..." style="margin:0">
+        <button type="button" onclick="copyReferralLink()" style="background:var(--green)">📋 Copy</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+      <div class="ref-card">
+        <small>Total Referral Wallet Balance</small>
+        <strong id="walletBalanceDisplay">₹0.00</strong>
+      </div>
+      <div class="ref-card">
+        <small>Active Downline Members</small>
+        <strong id="totalDownlineDisplay">0 Members</strong>
+      </div>
+    </div>
+
+    <h3 style="margin:16px 0 8px;color:var(--green)">📊 10 Levels Breakdown (₹2 Profit per Level)</h3>
+    <div class="ref-level-box" id="refLevelsContainer"></div>
+  </section>
   <section class="card" id="about">
     <h2 id="aboutNurseryTitle">🌿 श्री नीम करोली महाराज ग्रीन नर्सरी</h2>
     <p>हमारा उद्देश्य घरों, खेतों और बगीचों तक स्वस्थ पौधों, हरियाली और उपयोगी बागवानी जानकारी को पहुँचाना है।</p>
@@ -988,6 +1015,64 @@ footer a:hover{text-decoration:underline}
 </footer>
 
 <script>
+  // 🌐 10-Level Referral System Initialization
+function initReferralSystem() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const refCode = urlParams.get('ref');
+  if (refCode) {
+    localStorage.setItem('nursery_ref_parent', refCode);
+  }
+
+  let myCode = localStorage.getItem('nursery_my_ref_code');
+  if (!myCode) {
+    myCode = 'NURSERY' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    localStorage.setItem('nursery_my_ref_code', myCode);
+  }
+
+  const fullLink = window.location.origin + window.location.pathname + '?ref=' + myCode;
+  const linkInput = document.getElementById('myReferralLink');
+  if (linkInput) linkInput.value = fullLink;
+
+  renderReferralLevelsDemo();
+}
+
+function copyReferralLink() {
+  const copyText = document.getElementById('myReferralLink');
+  copyText.select();
+  navigator.clipboard.writeText(copyText.value);
+  alert('✅ Referral Link Copied: ' + copyText.value);
+}
+
+function renderReferralLevelsDemo() {
+  const container = document.getElementById('refLevelsContainer');
+  if (!container) return;
+
+  let html = '';
+  let totalWallet = 0;
+  let totalMembers = 0;
+
+  for (let i = 1; i <= 10; i++) {
+    const membersCount = Math.max(0, (11 - i) * 2);
+    const profit = membersCount * 2;
+    totalWallet += profit;
+    totalMembers += membersCount;
+
+    html += `
+      <div class="ref-card">
+        <div style="font-weight:800;color:var(--deep)">Level ${i}</div>
+        <div style="font-size:13px;color:var(--muted)">${membersCount} Members</div>
+        <strong>₹${profit}</strong>
+      </div>
+    `;
+  }
+
+  container.innerHTML = html;
+  document.getElementById('walletBalanceDisplay').textContent = '₹' + totalWallet.toFixed(2);
+  document.getElementById('totalDownlineDisplay').textContent = totalMembers + ' Members';
+}
+
+// Call it on load
+initReferralSystem();
 const SUPABASE_URL = 'https://knwpnjzwknnzdkyboeuy.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ANudpZPHHiFcBeI3U7SaEA_QRzMOywA';
 const OWNER_UID = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9';
