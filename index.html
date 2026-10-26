@@ -106,6 +106,10 @@ nav a:hover{background:#10b981;color:#fff;transform:translateY(-1px)}
 html{scroll-behavior:smooth;scroll-padding-top:90px}
 main section[id], main div[id]{scroll-margin-top:90px}
 #about, #plantCare, #plantTypes, #contact, #customerTracking{scroll-margin-top:90px}
+/* जानकारी वाले पेज शुरुआत में छिपे रहेंगे; नेविगेशन पर क्लिक करने पर ही खुलेंगे */
+#about, #plantCare, #plantTypes{display:none}
+#about.nav-page-open, #plantCare.nav-page-open, #plantTypes.nav-page-open{display:block}
+nav a.nav-active{background:linear-gradient(135deg,#059669,#047857);color:#fff;border-color:#047857}
 
 #adminPanelNav{
   flex:0 0 auto;
@@ -2714,6 +2718,50 @@ document.getElementById('nurseryAskChatGPT')?.addEventListener('click', () => {
 
 applySiteConfigToUI();
 loadPlants();
+</script>
+
+<script>
+// नेविगेशन के जानकारी वाले सेक्शन क्लिक करने पर ही खोलें
+(function () {
+  function initInfoNavigation() {
+    const infoIds = ['about', 'plantCare', 'plantTypes'];
+    const infoLinks = Array.from(document.querySelectorAll('nav a[href^="#"]'));
+    const hideInfoPages = () => infoIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.classList.remove('nav-page-open'); el.style.display = 'none'; }
+    });
+    infoLinks.forEach(link => {
+      link.addEventListener('click', function (event) {
+        const targetId = (link.getAttribute('href') || '').slice(1);
+        if (!infoIds.includes(targetId)) {
+          hideInfoPages();
+          infoLinks.forEach(a => a.classList.remove('nav-active'));
+          if (targetId === 'shopCategoriesContainer' || targetId === 'contact' || targetId === 'customerTracking') {
+            link.classList.add('nav-active');
+          }
+          return;
+        }
+        const target = document.getElementById(targetId);
+        if (!target) return;
+        event.preventDefault();
+        hideInfoPages();
+        target.style.display = 'block';
+        target.classList.add('nav-page-open');
+        infoLinks.forEach(a => a.classList.toggle('nav-active', a === link));
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    // दूसरे मुख्य नेविगेशन लिंक पर जाने पर जानकारी वाला पेज छिपाएँ
+    document.querySelectorAll('nav a[href="#shopCategoriesContainer"], nav a[href="#contact"], nav a[href="#customerTracking"]').forEach(link => {
+      link.addEventListener('click', () => {
+        hideInfoPages();
+        infoLinks.forEach(a => a.classList.toggle('nav-active', a === link));
+      });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initInfoNavigation);
+  else initInfoNavigation();
+})();
 </script>
 </body>
 </html>
