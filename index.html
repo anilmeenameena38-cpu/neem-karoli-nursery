@@ -102,6 +102,10 @@ nav a{
   transition:all 0.2s;
 }
 nav a:hover{background:#10b981;color:#fff;transform:translateY(-1px)}
+/* नेविगेशन लिंक पर जाने पर सेक्शन sticky menu के पीछे न छिपे */
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+main section[id], main div[id]{scroll-margin-top:90px}
+#about, #plantCare, #plantTypes, #contact, #customerTracking{scroll-margin-top:90px}
 
 #adminPanelNav{
   flex:0 0 auto;
@@ -370,6 +374,8 @@ footer a:hover{text-decoration:underline}
 <nav>
   <a href="#shopCategoriesContainer">🌱 पौधे और सब्ज़ियाँ</a>
   <a href="#about">🌿 हमारे बारे में</a>
+  <a href="#plantCare">🪴 पौधों की देखभाल</a>
+  <a href="#plantTypes">🌱 पौधों के प्रकार</a>
   <a href="#contact">📞 संपर्क</a>
   <a href="#customerTracking" id="customerTrackingNav">📦 ट्रैकिंग</a>
   <button id="adminPanelNav" type="button">🔐 एडमिन</button>
@@ -377,8 +383,59 @@ footer a:hover{text-decoration:underline}
 
 <main>
   <section class="card" id="about">
-    <h2 id="aboutNurseryTitle">🌿 श्री नीम करोली महाराज ग्रीन नर्सरी</h2>
-    <p>हमारा उद्देश्य घरों, खेतों और बगीचों तक स्वस्थ पौधों, हरियाली और उपयोगी बागवानी जानकारी को पहुँचाना है।</p>
+    <h2 id="aboutNurseryTitle">🌿 श्री नीम करोली महाराज ग्रीन नर्सरी — हमारे बारे में</h2>
+    <p><strong>हमारा परिचय:</strong> श्री नीम करोली महाराज ग्रीन नर्सरी, मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान से घरों, खेतों और किचन गार्डन के लिए पौधे तथा ताज़ी सब्ज़ियाँ उपलब्ध कराने का प्रयास करती है। हमारा उद्देश्य ग्राहकों को पौधों की सही जानकारी, देखभाल के सरल सुझाव और उपलब्ध स्टॉक के अनुसार पौधे/सब्ज़ियाँ आसानी से उपलब्ध कराना है।</p>
+    <h3>🌿 हमारी खासियत</h3>
+    <ul>
+      <li>पौधों और सब्ज़ियों की उपलब्धता मौसम तथा वर्तमान स्टॉक के अनुसार।</li>
+      <li>ऑर्डर से पहले कीमत और उपलब्ध मात्रा वेबसाइट पर देखने की सुविधा।</li>
+      <li>घर, छत, आँगन, किचन गार्डन और खेत के लिए उपयोगी पौधों के बारे में मार्गदर्शन।</li>
+      <li>पौधे लगाते समय धूप, पानी, मिट्टी और उचित दूरी का ध्यान रखने की सलाह।</li>
+    </ul>
+    <p><strong>हमारा वादा:</strong> पौधे की किस्म, आकार, कीमत और उपलब्धता ऑर्डर करने से पहले स्पष्ट रखें। हर पौधे की जरूरत अलग हो सकती है, इसलिए देखभाल के निर्देश पौधे और मौसम के अनुसार अपनाएँ।</p>
+  </section>
+
+  <section class="card" id="plantCare">
+    <h2>🪴 पौधों की देखभाल कैसे करें?</h2>
+    <div class="care-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+      <article style="padding:14px;border:1px solid #d1fae5;border-radius:14px;background:#f0fdf4">
+        <h3>💧 1. पानी सही मात्रा में</h3>
+        <p>पानी देने से पहले मिट्टी की ऊपरी सतह जाँचें। मिट्टी बहुत गीली हो तो तुरंत दोबारा पानी न दें। गमले या ग्रो बैग में पानी निकलने के छेद खुले रखें; लगातार पानी भरा रहने से जड़ों को नुकसान हो सकता है।</p>
+      </article>
+      <article style="padding:14px;border:1px solid #d1fae5;border-radius:14px;background:#f0fdf4">
+        <h3>☀️ 2. धूप और तापमान</h3>
+        <p>टमाटर, मिर्च और बैंगन जैसे फल देने वाले पौधों को सामान्यतः पर्याप्त धूप चाहिए। नई रोपाई को तेज दोपहर की धूप में अचानक न रखें; कुछ दिनों में धीरे-धीरे धूप का समय बढ़ाएँ।</p>
+      </article>
+      <article style="padding:14px;border:1px solid #d1fae5;border-radius:14px;background:#f0fdf4">
+        <h3>🌱 3. मिट्टी और निकास</h3>
+        <p>मिट्टी भुरभुरी हो और अतिरिक्त पानी आसानी से निकल सके। गमले में बगीचे की भारी मिट्टी अकेले भरने के बजाय साफ, अच्छी जल-निकासी वाला उपयुक्त माध्यम इस्तेमाल करें।</p>
+      </article>
+      <article style="padding:14px;border:1px solid #d1fae5;border-radius:14px;background:#f0fdf4">
+        <h3>🌿 4. खाद का इस्तेमाल</h3>
+        <p>अच्छी तरह सड़ी हुई कम्पोस्ट या वर्मी-कम्पोस्ट सीमित मात्रा में दें। ताज़ा गोबर या जरूरत से ज्यादा खाद जड़ों को नुकसान पहुँचा सकती है। किसी समस्या के बिना तेज रासायनिक खाद या दवा न डालें।</p>
+      </article>
+      <article style="padding:14px;border:1px solid #d1fae5;border-radius:14px;background:#f0fdf4">
+        <h3>🔎 5. पत्तियों की नियमित जाँच</h3>
+        <p>पत्तियों का मुड़ना, पीला पड़ना, धब्बे, कीट या मुरझाना दिखे तो पहले मिट्टी की नमी, पानी के निकास और पत्तियों के दोनों तरफ जाँच करें। समस्या की पहचान किए बिना कीटनाशक न मिलाएँ।</p>
+      </article>
+      <article style="padding:14px;border:1px solid #d1fae5;border-radius:14px;background:#f0fdf4">
+        <h3>🪴 6. पौधा लगाने के बाद</h3>
+        <p>रोपाई के बाद हल्का पानी दें और पौधे को तुरंत तेज गर्मी या तेज हवा के तनाव से बचाएँ। पौधे की किस्म के अनुसार दूरी रखें और बढ़ने के लिए पर्याप्त जगह दें।</p>
+      </article>
+    </div>
+    <p style="margin-top:14px"><strong>ध्यान दें:</strong> ये सामान्य सुझाव हैं। सही पानी, धूप और खाद की मात्रा पौधे की किस्म, उम्र, मौसम और गमले/मिट्टी पर निर्भर करती है।</p>
+  </section>
+
+  <section class="card" id="plantTypes">
+    <h2>🌱 हमारी नर्सरी में किस प्रकार के पौधे और सब्ज़ियाँ?</h2>
+    <p>नर्सरी में उपलब्ध किस्में और संख्या मौसम तथा स्टॉक के अनुसार बदल सकती हैं। वेबसाइट पर दिख रही वर्तमान सूची और कीमत को अंतिम मानें।</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+      <article style="padding:14px;border:1px solid #d1fae5;border-radius:14px"><h3>🍅 सब्ज़ियों के पौधे</h3><p><strong>टमाटर:</strong> धूप और सहारे की जरूरत पड़ सकती है; नियमित लेकिन संतुलित पानी दें।</p><p><strong>हरी मिर्च:</strong> गर्म मौसम में अच्छी बढ़वार करती है; जलभराव से बचाएँ।</p><p><strong>बैंगन:</strong> पर्याप्त धूप, उपजाऊ मिट्टी और कीटों की नियमित जाँच उपयोगी है।</p></article>
+      <article style="padding:14px;border:1px solid #d1fae5;border-radius:14px"><h3>🥬 हरी सब्ज़ियाँ</h3><p>मौसम और उपलब्धता के अनुसार पालक, धनिया, मेथी जैसी पत्तेदार सब्ज़ियाँ तथा अन्य ताज़ी सब्ज़ियाँ सूची में रखी जा सकती हैं। खरीदने से पहले वेबसाइट पर स्टॉक देखें।</p></article>
+      <article style="padding:14px;border:1px solid #d1fae5;border-radius:14px"><h3>🍈 अन्य मौसमी पौधे</h3><p>मौसम और वास्तविक स्टॉक के अनुसार गोभी वर्ग, खीरा, लौकी, करेला, पपीता या अन्य सब्ज़ियों/फलदार पौधों की उपलब्धता बदल सकती है। ये सभी किस्में हर समय उपलब्ध होने की गारंटी नहीं हैं।</p></article>
+      <article style="padding:14px;border:1px solid #d1fae5;border-radius:14px"><h3>🌼 घर और बगीचे के पौधे</h3><p>यदि सजावटी, फूलदार या फलदार पौधे उपलब्ध हों, तो उनकी किस्म, आकार और कीमत उत्पाद सूची में देखें। पौधे को चुनते समय अपने स्थान की धूप और जगह पर विचार करें।</p></article>
+    </div>
+    <p style="margin-top:14px">किसी खास पौधे या सब्ज़ी की उपलब्धता पूछने के लिए <a href="#contact">हमसे संपर्क करें</a>।</p>
   </section>
 
   <!-- 🌟 बड़े विजुअल बैनर कार्ड्स -->
