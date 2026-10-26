@@ -86,9 +86,9 @@ nav{
 }
 nav::-webkit-scrollbar{display:none}
 
-.about-nav-menu{position:relative;flex:0 0 auto;}
-.about-nav-menu>a{display:block;flex:0 0 auto;text-align:center;padding:10px 16px;border:1.5px solid #a7f3d0;border-radius:14px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);color:var(--deep);font-weight:900;font-size:13.5px;text-decoration:none;cursor:pointer;box-shadow:0 3px 10px rgba(16,185,129,0.1)}
-.about-nav-submenu{position:absolute;top:calc(100% + 6px);left:0;min-width:210px;display:flex;flex-direction:column;gap:6px;padding:8px;background:#fff;border:1px solid #a7f3d0;border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,.15);z-index:1100}
+.about-nav-menu{position:relative;flex:0 0 auto;z-index:1500;pointer-events:auto;}
+.about-nav-menu>a{position:relative;z-index:1501;display:block;flex:0 0 auto;pointer-events:auto;text-align:center;padding:10px 16px;border:1.5px solid #a7f3d0;border-radius:14px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);color:var(--deep);font-weight:900;font-size:13.5px;text-decoration:none;cursor:pointer;box-shadow:0 3px 10px rgba(16,185,129,0.1)}
+.about-nav-submenu{pointer-events:auto;position:absolute;top:calc(100% + 6px);left:0;min-width:210px;display:flex;flex-direction:column;gap:6px;padding:8px;background:#fff;border:1px solid #a7f3d0;border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,.15);z-index:1100}
 .about-nav-submenu[hidden]{display:none!important}
 .about-nav-submenu a{display:block;white-space:nowrap;text-align:left;padding:10px 12px;border-radius:10px;background:#f0fdf4;color:var(--deep);font-weight:800;text-decoration:none}
 .about-nav-submenu a:hover{background:#10b981;color:#fff}
@@ -2748,12 +2748,42 @@ loadPlants();
       if (el) { el.classList.remove('nav-page-open'); el.style.display = 'none'; }
     });
     if (toggle && submenu) {
+      // Capture the click before older navigation handlers can interfere.
       toggle.addEventListener('click', function(event) {
         event.preventDefault();
-        submenu.hidden = !submenu.hidden;
-        toggle.setAttribute('aria-expanded', String(!submenu.hidden));
+        event.stopPropagation();
+        const willOpen = submenu.hidden;
+        submenu.hidden = !willOpen;
+        toggle.setAttribute('aria-expanded', String(willOpen));
+        if (willOpen) submenu.style.display = 'flex';
+        else submenu.style.display = 'none';
+      }, true);
+      toggle.setAttribute('role', 'button');
+      toggle.setAttribute('tabindex', '0');
+      toggle.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          toggle.click();
+        }
       });
     }
+    // Make submenu links reliably open their corresponding information section.
+    if (submenu) submenu.querySelectorAll('a[href]').forEach(function(link) {
+      link.addEventListener('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const targetId = (link.getAttribute('href') || '').slice(1);
+        const target = document.getElementById(targetId);
+        if (!target) return;
+        hideInfoPages();
+        target.style.display = 'block';
+        target.classList.add('nav-page-open');
+        closeSubmenu();
+        infoLinks.forEach(a => a.classList.remove('nav-active'));
+        toggle.classList.add('nav-active');
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+      }, true);
+    });
     infoLinks.forEach(link => {
       if (link === toggle) return;
       link.addEventListener('click', function (event) {
