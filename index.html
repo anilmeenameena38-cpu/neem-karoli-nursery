@@ -86,6 +86,14 @@ nav{
 }
 nav::-webkit-scrollbar{display:none}
 
+.about-nav-menu{position:relative;flex:0 0 auto;}
+.about-nav-menu>a{display:block;flex:0 0 auto;text-align:center;padding:10px 16px;border:1.5px solid #a7f3d0;border-radius:14px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);color:var(--deep);font-weight:900;font-size:13.5px;text-decoration:none;cursor:pointer;box-shadow:0 3px 10px rgba(16,185,129,0.1)}
+.about-nav-submenu{position:absolute;top:calc(100% + 6px);left:0;min-width:210px;display:flex;flex-direction:column;gap:6px;padding:8px;background:#fff;border:1px solid #a7f3d0;border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,.15);z-index:1100}
+.about-nav-submenu[hidden]{display:none!important}
+.about-nav-submenu a{display:block;white-space:nowrap;text-align:left;padding:10px 12px;border-radius:10px;background:#f0fdf4;color:var(--deep);font-weight:800;text-decoration:none}
+.about-nav-submenu a:hover{background:#10b981;color:#fff}
+@media(max-width:600px){.about-nav-submenu{position:fixed;top:auto;left:12px;right:12px;min-width:0}}
+
 nav a{
   flex:0 0 auto;
   text-align:center;
@@ -377,9 +385,14 @@ footer a:hover{text-decoration:underline}
 <!-- मोबाइल फ्रेंडली चौड़े नेविगेशन टैब -->
 <nav>
   <a href="#shopCategoriesContainer">🌱 पौधे और सब्ज़ियाँ</a>
-  <a href="#about">🌿 हमारे बारे में</a>
-  <a href="#plantCare">🪴 पौधों की देखभाल</a>
-  <a href="#plantTypes">🌱 पौधों के प्रकार</a>
+  <div class="about-nav-menu" id="aboutNavMenu">
+    <a href="#about" id="aboutNavToggle" aria-expanded="false" aria-controls="aboutNavSubmenu">🌿 हमारे बारे में ▾</a>
+    <div class="about-nav-submenu" id="aboutNavSubmenu" hidden>
+      <a href="#about">हमारी नर्सरी</a>
+      <a href="#plantCare">🪴 पौधों की देखभाल</a>
+      <a href="#plantTypes">🌱 पौधों के प्रकार</a>
+    </div>
+  </div>
   <a href="#contact">📞 संपर्क</a>
   <a href="#customerTracking" id="customerTrackingNav">📦 ट्रैकिंग</a>
   <button id="adminPanelNav" type="button">🔐 एडमिन</button>
@@ -2721,24 +2734,34 @@ loadPlants();
 </script>
 
 <script>
-// नेविगेशन के जानकारी वाले सेक्शन क्लिक करने पर ही खोलें
+// जानकारी वाले सेक्शन और हमारे बारे में ड्रॉपडाउन
 (function () {
   function initInfoNavigation() {
     const infoIds = ['about', 'plantCare', 'plantTypes'];
     const infoLinks = Array.from(document.querySelectorAll('nav a[href^="#"]'));
+    const toggle = document.getElementById('aboutNavToggle');
+    const submenu = document.getElementById('aboutNavSubmenu');
+    const aboutMenu = document.getElementById('aboutNavMenu');
+    const closeSubmenu = () => { if (submenu) submenu.hidden = true; if (toggle) toggle.setAttribute('aria-expanded','false'); };
     const hideInfoPages = () => infoIds.forEach(id => {
       const el = document.getElementById(id);
       if (el) { el.classList.remove('nav-page-open'); el.style.display = 'none'; }
     });
+    if (toggle && submenu) {
+      toggle.addEventListener('click', function(event) {
+        event.preventDefault();
+        submenu.hidden = !submenu.hidden;
+        toggle.setAttribute('aria-expanded', String(!submenu.hidden));
+      });
+    }
     infoLinks.forEach(link => {
+      if (link === toggle) return;
       link.addEventListener('click', function (event) {
         const targetId = (link.getAttribute('href') || '').slice(1);
         if (!infoIds.includes(targetId)) {
-          hideInfoPages();
+          hideInfoPages(); closeSubmenu();
           infoLinks.forEach(a => a.classList.remove('nav-active'));
-          if (targetId === 'shopCategoriesContainer' || targetId === 'contact' || targetId === 'customerTracking') {
-            link.classList.add('nav-active');
-          }
+          if (targetId === 'shopCategoriesContainer' || targetId === 'contact' || targetId === 'customerTracking') link.classList.add('nav-active');
           return;
         }
         const target = document.getElementById(targetId);
@@ -2747,16 +2770,16 @@ loadPlants();
         hideInfoPages();
         target.style.display = 'block';
         target.classList.add('nav-page-open');
-        infoLinks.forEach(a => a.classList.toggle('nav-active', a === link));
+        closeSubmenu();
+        infoLinks.forEach(a => a.classList.toggle('nav-active', a === link || (targetId === 'about' && a === toggle)));
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
-    // दूसरे मुख्य नेविगेशन लिंक पर जाने पर जानकारी वाला पेज छिपाएँ
+    document.addEventListener('click', function(event) {
+      if (aboutMenu && !aboutMenu.contains(event.target)) closeSubmenu();
+    });
     document.querySelectorAll('nav a[href="#shopCategoriesContainer"], nav a[href="#contact"], nav a[href="#customerTracking"]').forEach(link => {
-      link.addEventListener('click', () => {
-        hideInfoPages();
-        infoLinks.forEach(a => a.classList.toggle('nav-active', a === link));
-      });
+      link.addEventListener('click', () => { hideInfoPages(); closeSubmenu(); infoLinks.forEach(a => a.classList.toggle('nav-active', a === link)); });
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initInfoNavigation);
