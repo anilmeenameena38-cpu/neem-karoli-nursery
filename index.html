@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title id="pageTitle">श्री नीम करोली महाराज ग्रीन नर्सरी</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -40,8 +40,8 @@ paymentProofInput.addEventListener('change', function () {
   --shadow:0 10px 30px rgba(10,50,25,0.08);
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:110px}
-body{margin:0;font-family:Arial,"Noto Sans Devanagari",sans-serif;background:linear-gradient(180deg,#f0fdf4 0,#ffffff 35%,#f8faf7 100%);color:var(--ink);line-height:1.6}
+html{scroll-behavior:smooth;scroll-padding-top:110px;width:100%;overflow-x:hidden}
+body{margin:0;padding:0;width:100%;overflow-x:hidden;font-family:Arial,"Noto Sans Devanagari",sans-serif;background:linear-gradient(180deg,#f0fdf4 0,#ffffff 35%,#f8faf7 100%);color:var(--ink);line-height:1.6}
 
 /* 📢 टिकर व बैनर */
 #siteNoticeTicker{display:none;background:#064e3b;color:#fef08a;padding:8px 14px;font-size:14px;font-weight:700;overflow:hidden;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
@@ -72,7 +72,7 @@ nav{
   top:0;
   z-index:1000;
   display:flex;
-  justify-content:center;
+  justify-content:flex-start;
   align-items:center;
   flex-wrap:nowrap;
   overflow-x:auto;
@@ -83,6 +83,7 @@ nav{
   box-shadow:0 6px 22px rgba(0,0,0,0.08);
   border-bottom:1px solid #d1fae5;
   scrollbar-width:none;
+  width: 100%;
 }
 nav::-webkit-scrollbar{display:none}
 
@@ -110,11 +111,9 @@ nav a{
   transition:all 0.2s;
 }
 nav a:hover{background:#10b981;color:#fff;transform:translateY(-1px)}
-/* नेविगेशन लिंक पर जाने पर सेक्शन sticky menu के पीछे न छिपे */
 html{scroll-behavior:smooth;scroll-padding-top:90px}
 main section[id], main div[id]{scroll-margin-top:90px}
 #about, #plantCare, #plantTypes, #contact, #customerTracking{scroll-margin-top:90px}
-/* जानकारी वाले पेज शुरुआत में छिपे रहेंगे; नेविगेशन पर क्लिक करने पर ही खुलेंगे */
 #about, #plantCare, #plantTypes{display:none}
 #about.nav-page-open, #plantCare.nav-page-open, #plantTypes.nav-page-open{display:block}
 nav a.nav-active{background:linear-gradient(135deg,#059669,#047857);color:#fff;border-color:#047857}
@@ -135,8 +134,8 @@ nav a.nav-active{background:linear-gradient(135deg,#059669,#047857);color:#fff;b
 }
 #adminPanelNav:hover{background:#059669;color:#fff;transform:translateY(-1px)}
 
-main{max-width:1160px;margin:0 auto;padding:18px 14px}
-.card{background:#fff;border:1px solid #e0ede0;border-radius:20px;padding:clamp(16px,2.2vw,24px);margin-bottom:18px;box-shadow:var(--shadow)}
+main{max-width:1160px;margin:0 auto;padding:18px 14px;width:100%}
+.card{background:#fff;border:1px solid #e0ede0;border-radius:20px;padding:clamp(16px,2.2vw,24px);margin-bottom:18px;box-shadow:var(--shadow);max-width:100%}
 
 /* 🌟 शानदार विजुअल बैनर कार्ड्स */
 .category-hero-grid{
@@ -207,12 +206,12 @@ main{max-width:1160px;margin:0 auto;padding:18px 14px}
 .stepper-row{display:flex;align-items:center;gap:4px}
 .stepper-btn{width:32px;height:32px;min-width:32px;padding:0;font-size:18px;font-weight:900;background:#fff;color:var(--deep);border:1px solid #cbd5e1;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .stepper-btn:hover{background:#ecfdf5;border-color:var(--green)}
-.card-qty-input{margin:0!important;padding:5px 6px!important;text-align:center;font-weight:800;font-size:15px!important;border-radius:8px!important;border:1px solid #cbd5e1!important}
+.card-qty-input{margin:0!important;padding:5px 6px!important;text-align:center;font-weight:800;font-size:15px!important;border-radius:8px!important;border:1px solid #cbd5e1!important;width:100%!important}
 .plant-buy-button{width:100%!important;padding:8px 12px!important;font-size:13.5px!important;font-weight:800;border-radius:10px;margin-top:6px;box-shadow:0 3px 10px rgba(21,128,61,0.2)}
 .plant-buy-button:disabled{background:#cbd5e1!important;color:#64748b!important;cursor:not-allowed;box-shadow:none}
 
 label{display:block;font-weight:700;margin:10px 0 3px;color:#294d32}
-input,select,textarea{display:block;width:100%;padding:10px 12px;margin:6px 0 10px;border:1px solid #c9ddc4;border-radius:10px;background:#fff;font:inherit;font-size:15px}
+input,select,textarea{display:block;width:100%;max-width:100%;padding:10px 12px;margin:6px 0 10px;border:1px solid #c9ddc4;border-radius:10px;background:#fff;font:inherit;font-size:15px}
 input:focus,select:focus,textarea:focus{outline:3px solid #25884b25;border-color:#25884b}
 button,.btn{display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#25884b,#116334);color:#fff;border:0;border-radius:10px;padding:10px 16px;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
 button:disabled{opacity:.55;cursor:wait}
@@ -286,7 +285,7 @@ button:disabled{opacity:.55;cursor:wait}
   border-top:2px solid #34d399;
 }
 
-/* ✅ आर्डर सफलता व रसीद का ग्लोबल बैनर (60 सेकंड तक रुकने वाला) */
+/* ✅ आर्डर सफलता व रसीद का ग्लोबल बैनर */
 #globalSuccessBanner{
   display:none;
   position:fixed;
@@ -352,7 +351,7 @@ footer a:hover{text-decoration:underline}
 <div id="siteOfferBanner">🎉 विशेष ऑफर: आज सभी आर्डर्स पर <span id="bannerDiscountText">10%</span> की सीधी छूट!</div>
 <div id="siteClosedBanner">⚠️ सूचना: आज नर्सरी बंद है। नए ऑर्डर कल से स्वीकार किए जाएँगे।</div>
 
-<!-- ✅ आर्डर सफलता और पक्की रसीद का ग्लोबल बैनर (60 सेकंड तक रुकने वाला) -->
+<!-- ✅ आर्डर सफलता और पक्की रसीद का ग्लोबल बैनर -->
 <div id="globalSuccessBanner">
   <div style="font-size:32px;margin-bottom:4px">🎉✅</div>
   <h3 style="margin:0 0 6px;color:#fef08a;font-size:18px">आपका ऑर्डर सफलतापूर्वक दर्ज हो गया है!</h3>
@@ -452,7 +451,7 @@ footer a:hover{text-decoration:underline}
       <article style="padding:14px;border:1px solid #d1fae5;border-radius:14px"><h3>🍈 अन्य मौसमी पौधे</h3><p>मौसम और वास्तविक स्टॉक के अनुसार गोभी वर्ग, खीरा, लौकी, करेला, पपीता या अन्य सब्ज़ियों/फलदार पौधों की उपलब्धता बदल सकती है। ये सभी किस्में हर समय उपलब्ध होने की गारंटी नहीं हैं।</p></article>
       <article style="padding:14px;border:1px solid #d1fae5;border-radius:14px"><h3>🌼 घर और बगीचे के पौधे</h3><p>यदि सजावटी, फूलदार या फलदार पौधे उपलब्ध हों, तो उनकी किस्म, आकार और कीमत उत्पाद सूची में देखें। पौधे को चुनते समय अपने स्थान की धूप और जगह पर विचार करें।</p></article>
     </div>
-    <p style="margin-top:14px">किसी खास पौधे या सब्ज़ी की उपलब्धता पूछने के लिए <a href="#contact">हमसे संपर्क करें</a>।</p>
+    <p style="margin-top:14px">किसी खास पौधे या सब्ज़ी की उपलब्धता पूछने के लिए <a href="#contact">हमसे संपर्क करें</a>。</p>
   </section>
 
   <!-- 🌟 बड़े विजुअल बैनर कार्ड्स -->
@@ -550,7 +549,7 @@ footer a:hover{text-decoration:underline}
     </div>
   </section>
 
-  <!-- 🛒 स्क्रीन के नीचे तुरंत उभरने वाली हरी पट्टी (Bottom Floating Bar) -->
+  <!-- 🛒 स्क्रीन के नीचे तुरंत उभरने वाली हरी पट्टी -->
   <div id="floatingBottomCartBar">
     <div>
       🛒 <strong id="barItemCount">0</strong> आइटम जोड़े गए | कुल: <strong id="barTotalPrice">₹0</strong>
@@ -707,7 +706,6 @@ footer a:hover{text-decoration:underline}
           <select id="vType"><option value="देसी">देसी</option><option value="हाइब्रिड">हाइब्रिड</option><option value="अन्य">अन्य</option></select>
           <label>किस्म का नाम (वैकल्पिक)</label><input id="vVariety">
           
-          <!-- 🟢 यूनिट चयन (किलो या ग्राम) -->
           <label>बिक्री की इकाई (Unit Type)</label>
           <select id="vUnit">
             <option value="kg">किलो (Kg) - जैसे आलू, टमाटर, गोभी, लौकी</option>
@@ -777,7 +775,7 @@ footer a:hover{text-decoration:underline}
       </div>
     </div>
 
-    <!-- मंडी भाव (सभी प्रमुख एवं पत्तेदार सब्जियों के साथ अपडेटेड) -->
+    <!-- मंडी भाव -->
     <div id="adminMandiPane" class="admin-pane">
       <div class="admin-section-card">
         <h2>📈 लाइव मंडी भाव (सरकारी AGMARKNET रिपोर्ट)</h2>
@@ -933,7 +931,7 @@ footer a:hover{text-decoration:underline}
             <div class="mandi-grid" style="margin:0">
               <div>
                 <label>फ्री डिलीवरी कुल दूरी (किमी)</label>
-                <input id="settingPlantFreeKm" type="number" min="0" value="5" title="इस कुल दूरी (आना-जाना) तक कोई चार्ज नहीं लगेगा">
+                <input id="settingPlantFreeKm" type="number" min="0" value="5">
               </div>
               <div>
                 <label>आगे की दर (₹/किमी)</label>
@@ -955,7 +953,7 @@ footer a:hover{text-decoration:underline}
             <div class="mandi-grid" style="margin:0">
               <div>
                 <label>फ्री डिलीवरी कुल दूरी (किमी)</label>
-                <input id="settingVegFreeKm" type="number" min="0" value="10" title="इस कुल दूरी (आना-जाना) तक कोई चार्ज नहीं लगेगा">
+                <input id="settingVegFreeKm" type="number" min="0" value="10">
               </div>
               <div>
                 <label>आगे की दर (₹/किमी)</label>
@@ -1004,7 +1002,7 @@ footer a:hover{text-decoration:underline}
           <h3 style="color:var(--green);margin-top:0">💬 फ़्लोटिंग WhatsApp विजेट व गुप्त कूपन कोड</h3>
           <label>फ़्लोटिंग गोल WhatsApp बटन स्क्रीन पर रखें?</label>
           <select id="settingWaWidget">
-            <option value="on">✅ चालू रखें (कोने में हरा बटन दिखेगा)</option>
+            <option value="on">✅ चालू रखें</option>
             <option value="off">❌ बंद रखें</option>
           </select>
 
@@ -1014,7 +1012,7 @@ footer a:hover{text-decoration:underline}
 
         <!-- टैब 7: लाइव प्रीव्यू -->
         <div id="subpane-preview" class="settings-subpane">
-          <h3 style="color:var(--green);margin-top:0">👁️ लाइव प्रीव्यू (ग्राहक को कैसा दिखेगा)</h3>
+          <h3 style="color:var(--green);margin-top:0">👁️ लाइव प्रीव्यू</h3>
           <div style="border:1px dashed #25884b;border-radius:12px;padding:14px;background:#fbfef9">
             <div id="prevTicker" style="background:#14532d;color:#fef08a;padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;margin-bottom:8px">📢 सूचना: कल सुबह ताज़ा खीरा और टमाटर उपलब्ध रहेगा!</div>
             <div id="prevOffer" style="background:#b45309;color:#fff;padding:6px 10px;font-size:13px;font-weight:700;border-radius:6px;margin-bottom:8px">🎉 विशेष ऑफर: 20% की छूट लागू है!</div>
@@ -1492,7 +1490,6 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
 function safe(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function isVeg(p) { return /सब्जी|सब्ज़ी|veg|vegetable/i.test(String(p && p.category || '')); }
 
-// 🟢 चेक करने के लिए कि क्या यह ग्राम (जैसे धनिया, पुदीना) वाली सब्जी है
 function isGramVeg(p) {
   const nameAndVariety = (p.name + ' ' + (p.variety || '')).toLowerCase();
   const isGramUnit = String(p.unit_type || '').toLowerCase() === 'gram' || 
@@ -1537,13 +1534,13 @@ async function loadPlants() {
       if (veg) {
         if (isGram) {
           unit = 'किलो (ग्राम में)';
-          stepVal = 0.25; // 250 ग्राम (0.25 kg)
-          initialVal = 0.25; // डिफ़ॉल्ट 250 ग्राम
+          stepVal = 0.25; 
+          initialVal = 0.25; 
           unitLabelText = 'किलो (जैसे 0.25=250g, 0.5=500g, 1=1kg)';
         } else {
           unit = 'किलो';
-          stepVal = 1; // 1 किलो
-          initialVal = 1; // डिफ़ॉल्ट 1 किलो
+          stepVal = 1; 
+          initialVal = 1; 
           unitLabelText = 'न्यूनतम 1 किलो';
         }
       }
@@ -1637,7 +1634,6 @@ async function loadPlants() {
   }
 }
 
-// 🛒 कार्ट में उत्पाद जोड़ना
 function addToCart(plant, qty, veg, isGram) {
   const existingIndex = shoppingCart.findIndex(item => item.id === plant.id);
   if (existingIndex > -1) {
@@ -1656,9 +1652,7 @@ function addToCart(plant, qty, veg, isGram) {
 }
 
 function updateCartBadge() {
-  const totalCount = shoppingCart.reduce((sum, item) => sum + 1, 0);
   const totalPrice = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-
   const bottomBar = document.getElementById('floatingBottomCartBar');
   const barCount = document.getElementById('barItemCount');
   const barPrice = document.getElementById('barTotalPrice');
@@ -1672,7 +1666,6 @@ function updateCartBadge() {
   }
 }
 
-// कार्ट मॉडल खोलना
 function openCartModal(e) {
   if (e) e.preventDefault();
   if (shoppingCart.length === 0) {
@@ -1802,25 +1795,18 @@ document.getElementById('locationButton').addEventListener('click', () => {
   navigator.geolocation.getCurrentPosition(pos => {
     const lat = pos.coords.latitude, lon = pos.coords.longitude;
     const accuracyM = Number(pos.coords.accuracy || 0);
-    // Use one-way straight-line GPS distance only; do not multiply it by two.
-    // Exact road distance requires a configured Google Maps Routes API service.
     const oneWayKm = distanceKm(NURSERY_LOCATION.lat, NURSERY_LOCATION.lon, lat, lon);
     deliveryDistanceKm = oneWayKm;
     const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${NURSERY_LOCATION.lat},${NURSERY_LOCATION.lon}&destination=${lat},${lon}&travelmode=driving`;
     customerLocation = { lat, lon, accuracyM, mapsUrl, pointUrl: `https://www.google.com/maps?q=${lat},${lon}` };
     const accuracyText = accuracyM ? ` GPS सटीकता लगभग ${Math.round(accuracyM)} मीटर।` : '';
-    stat.textContent = `✅ नर्सरी से सीधी GPS दूरी: ${oneWayKm.toFixed(1)} किमी।${accuracyText} सड़क की दूरी Google Maps में देखें।`;
+    stat.textContent = `✅ नर्सरी से सीधी GPS दूरी: ${oneWayKm.toFixed(1)} किमी।${accuracyText}`;
     document.getElementById('deliveryEstimate').style.display = 'block';
-    document.getElementById('deliveryEstimate').textContent = `सीधी GPS दूरी: ${oneWayKm.toFixed(1)} किमी (सड़क की दूरी अलग हो सकती है)`;
+    document.getElementById('deliveryEstimate').textContent = `सीधी GPS दूरी: ${oneWayKm.toFixed(1)} किमी`;
     document.getElementById('bharatpePaymentBox').style.display = 'block';
     renderCartModal();
   }, err => {
-    const messages = {
-      1: 'लोकेशन की अनुमति नहीं मिली। ब्राउज़र की Location permission चालू करके दोबारा कोशिश करें।',
-      2: 'GPS लोकेशन नहीं मिल सकी। GPS चालू करें और खुले स्थान पर दोबारा कोशिश करें।',
-      3: 'GPS लेने में समय लग गया। कृपया दोबारा कोशिश करें।'
-    };
-    stat.textContent = messages[err.code] || 'लोकेशन प्राप्त नहीं हो सकी। GPS चालू करके दोबारा कोशिश करें।';
+    stat.textContent = 'लोकेशन प्राप्त नहीं हो सकी। GPS चालू करके दोबारा कोशिश करें।';
   }, { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
 });
 
@@ -1861,7 +1847,6 @@ document.getElementById('paymentDoneButton').addEventListener('click', () => {
   document.getElementById('orderButton').style.display = 'block';
 });
 
-// कार्ट ऑर्डर सबमिट प्रक्रिया
 document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const cfg = getSiteConfig();
@@ -2124,7 +2109,7 @@ document.getElementById('newVegOnlyForm').addEventListener('submit', async (e) =
       category: 'सब्जी',
       selling_price: Number(document.getElementById('vPrice').value),
       stock_quantity: Number(document.getElementById('vStock').value),
-      unit_type: unitType, // 🟢 यूनिट सेव हो रही है (kg या gram)
+      unit_type: unitType,
       description: document.getElementById('vDesc').value.trim() || null,
       is_active: true
     };
@@ -2170,7 +2155,6 @@ async function loadAdminAll() {
 
   try {
     const todayStr = getISTDate();
-
     const [plantsRes, ordersRes] = await Promise.all([
       db.from('plants').select('*').order('name'),
       db.from('order_requests').select('*').order('created_at', { ascending: false })
@@ -2464,7 +2448,6 @@ async function loadSalesLedger() {
   }
 }
 
-// 🟢 अद्यतन मंडी भाव डेटाबेस (पत्तेदार सब्जियों सहित)
 const MANDI_BASE_RATES = {
   'Tomato': { min: 14, modal: 20, max: 26 },
   'Coriander': { min: 30, modal: 50, max: 80 },
@@ -2556,7 +2539,7 @@ async function loadMandiDropdownPlants() {
     vegItems.forEach(p => {
       const opt = document.createElement('option');
       opt.value = p.id;
-      opt.textContent = `${p.name} (मौजूदा: ₹${p.selling_price}/किलो या प्रति यूनिट)`;
+      opt.textContent = `${p.name} (मौजूदा: ₹${p.selling_price}/किलो)`;
       sel.appendChild(opt);
     });
   } catch (e) {
@@ -2695,7 +2678,7 @@ document.getElementById('customerTrackingForm')?.addEventListener('submit', asyn
       } else if (o.status === 'confirmed') {
         custStatusText = '<b style="color:#16a34a">✅ ऑर्डर कन्फर्म है (तैयारी जारी)</b>';
       } else if (o.status === 'cancelled') {
-        custStatusText = `<b style="color:#dc2626">❌ ऑर्डर रद्द कर दिया गया</b><br><span style="color:#b91c1c;font-size:13px">कारण: ${safe(cancelReasonMatch ? cancelReasonMatch[1] : 'भुगतान/पेमेंट सत्यापित नहीं')}</span>`;
+        custStatusText = `<b style="color:#dc2626">❌ ऑर्डर रद्द कर दिया गया</b><br><span style="color:#b91c1c;font-size:13px">कारण: ${safe(cancelReasonMatch ? cancelReasonMatch[1] : 'भुगतान सत्यापित नहीं')}</span>`;
       } else {
         custStatusText = '<b style="color:#d97706">⏳ लंबित (जाँच जारी)</b>';
       }
@@ -2734,7 +2717,6 @@ loadPlants();
 </script>
 
 <script>
-// जानकारी वाले सेक्शन और हमारे बारे में ड्रॉपडाउन
 (function () {
   function initInfoNavigation() {
     const infoIds = ['about', 'plantCare', 'plantTypes'];
@@ -2748,7 +2730,6 @@ loadPlants();
       if (el) { el.classList.remove('nav-page-open'); el.style.display = 'none'; }
     });
     if (toggle && submenu) {
-      // Capture the click before older navigation handlers can interfere.
       toggle.addEventListener('click', function(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -2767,7 +2748,6 @@ loadPlants();
         }
       });
     }
-    // Make submenu links reliably open their corresponding information section.
     if (submenu) submenu.querySelectorAll('a[href]').forEach(function(link) {
       link.addEventListener('click', function(event) {
         event.preventDefault();
