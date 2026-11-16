@@ -558,6 +558,46 @@ footer a:hover{text-decoration:underline}
   }
 }
 
+
+/* V6: मोबाइल हेडर में मेनू और नर्सरी नाम हमेशा एक ही पंक्ति में */
+@media (max-width:700px){
+  header#mainHeader{
+    display:grid !important;
+    grid-template-columns:max-content minmax(0,1fr) !important;
+    grid-template-rows:minmax(40px,auto) !important;
+    align-items:center !important;
+    justify-content:stretch !important;
+    gap:0 9px !important;
+    min-height:64px !important;
+    padding:10px 12px !important;
+    text-align:left !important;
+  }
+  header#mainHeader > #menuToggleButton{
+    display:inline-flex !important;
+    grid-column:1 !important; grid-row:1 !important;
+    justify-self:start !important; align-self:center !important;
+    margin:0 !important; white-space:nowrap !important;
+  }
+  header#mainHeader > #headerNurseryName{
+    display:block !important;
+    grid-column:2 !important; grid-row:1 !important;
+    width:100% !important; max-width:none !important; min-width:0 !important;
+    margin:0 !important; padding:0 !important;
+    text-align:left !important;
+    font-size:clamp(12px,3.6vw,15px) !important;
+    line-height:1.25 !important;
+    overflow-wrap:anywhere !important; word-break:normal !important;
+  }
+  header#mainHeader > .header-badge-box,
+  header#mainHeader > #headerNurseryTagline,
+  header#mainHeader > #headerNurseryAddress,
+  header#mainHeader > div:not(.header-badge-box){display:none !important}
+  header#mainHeader > #mainNavigation{
+    grid-column:1 / -1 !important; grid-row:2 !important;
+    position:absolute !important; top:calc(100% + 5px) !important;
+    left:10px !important; right:10px !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -2280,6 +2320,11 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
 const ownerModal = document.getElementById('owner');
 document.getElementById('adminPanelNav').addEventListener('click', () => { 
+  // एडमिन लॉगिन खोलने से पहले नेविगेशन मेनू बंद करें।
+  const navMenu = document.getElementById('mainNavigation');
+  const navButton = document.getElementById('menuToggleButton');
+  if (navMenu) { navMenu.classList.remove('menu-open'); navMenu.style.display = 'none'; }
+  if (navButton) { navButton.setAttribute('aria-expanded', 'false'); navButton.setAttribute('aria-label', 'मेनू खोलें'); }
   ownerModal.classList.add('login-visible');
   initAudioContext();
   const sel = document.getElementById('ringtoneSelector');
@@ -2299,6 +2344,11 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   stat.style.display = 'block'; stat.textContent = 'लॉगिन हो रहा है…';
   const { data, error } = await db.auth.signInWithPassword({ email, password });
   if (error || data.user.id !== OWNER_UID) { stat.textContent = 'गलत लॉगिन!'; return; }
+  // सफल लॉगिन के बाद भी नेविगेशन मेनू बंद ही रहे।
+  const navMenuAfterLogin = document.getElementById('mainNavigation');
+  const navButtonAfterLogin = document.getElementById('menuToggleButton');
+  if (navMenuAfterLogin) { navMenuAfterLogin.classList.remove('menu-open'); navMenuAfterLogin.style.display = 'none'; }
+  if (navButtonAfterLogin) { navButtonAfterLogin.setAttribute('aria-expanded', 'false'); navButtonAfterLogin.setAttribute('aria-label', 'मेनू खोलें'); }
   document.getElementById('loginForm').style.display = 'none';
   document.getElementById('ownerPanelHeader').style.display = 'block';
   document.getElementById('adminTabs').style.display = 'grid';
