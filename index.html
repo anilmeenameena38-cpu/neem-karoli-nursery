@@ -1134,6 +1134,70 @@ header#mainHeader .hours-pill{color:#14532d !important;background:#f0fdf4 !impor
   html body main section#contact.card .contact-actions a{font-size:11px !important;padding:7px 4px !important;}
 }
 
+
+
+/* V15: Mobile admin workspace attached neatly below the nursery header */
+@media screen and (max-width:700px){
+  body.admin-panel-open{overflow:hidden !important;}
+  body.admin-panel-open #mainHeader{
+    position:fixed !important; top:0 !important; left:0 !important; right:0 !important;
+    width:100% !important; z-index:20010 !important;
+    border-radius:0 0 14px 14px !important;
+  }
+  body.admin-panel-open #owner.login-visible{
+    display:block !important; position:fixed !important;
+    top:var(--admin-header-height,60px) !important; left:0 !important; right:0 !important; bottom:0 !important;
+    width:100% !important; max-width:none !important;
+    z-index:20000 !important; overflow-x:hidden !important; overflow-y:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+    padding:10px 10px calc(16px + env(safe-area-inset-bottom)) !important;
+    margin:0 !important; border-radius:0 !important;
+    background:linear-gradient(180deg,#eaf5ed 0%,#f5f8f5 100%) !important;
+    box-sizing:border-box !important;
+  }
+  body.admin-panel-open .mobile-store-nav{display:none !important;}
+  body.admin-panel-open #floatingBottomCartBar{display:none !important;}
+  body.admin-panel-open #floatingWaWidget{display:none !important;}
+  body.admin-panel-open #owner.login-visible > div:first-child{
+    position:sticky !important; top:0 !important; z-index:5 !important;
+    display:flex !important; justify-content:flex-end !important;
+    padding:0 0 8px !important; margin:0 0 8px !important;
+    background:linear-gradient(180deg,#eaf5ed 75%,rgba(234,245,237,0)) !important;
+  }
+  body.admin-panel-open #ownerCloseButton{
+    min-height:36px !important; padding:7px 13px !important; margin:0 !important;
+    border:1px solid #d5e5d9 !important; border-radius:10px !important;
+    background:#fff !important; color:#14532d !important; font-size:12px !important;
+    box-shadow:0 2px 8px rgba(6,78,59,.08) !important;
+  }
+  body.admin-panel-open #loginForm,
+  body.admin-panel-open #ownerPanelHeader,
+  body.admin-panel-open #adminCustomerSearch,
+  body.admin-panel-open #adminTabs,
+  body.admin-panel-open .admin-pane{
+    width:100% !important; max-width:none !important;
+    margin:0 0 10px !important; padding:13px !important;
+    border:1px solid #dcebe0 !important; border-radius:15px !important;
+    background:#fff !important; box-shadow:0 3px 12px rgba(6,78,59,.06) !important;
+    box-sizing:border-box !important;
+  }
+  body.admin-panel-open #ownerPanelHeader{padding:13px !important;}
+  body.admin-panel-open #ownerPanelHeader h3{font-size:17px !important; line-height:1.35 !important;}
+  body.admin-panel-open #ownerPanelHeader small{font-size:11px !important; line-height:1.45 !important;}
+  body.admin-panel-open #adminTabs{
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:7px !important; padding:10px !important;
+  }
+  body.admin-panel-open #adminTabs .admin-tab{
+    min-width:0 !important; min-height:43px !important; padding:7px 4px !important;
+    border-radius:10px !important; font-size:11px !important; line-height:1.25 !important;
+    overflow-wrap:anywhere !important;
+  }
+  body.admin-panel-open .admin-pane{overflow:visible !important;}
+  body.admin-panel-open .admin-pane h2{font-size:18px !important; line-height:1.35 !important;}
+  body.admin-panel-open #loudAlertBanner{position:relative !important;top:auto !important;margin:0 0 10px !important;}
+}
+
 </style>
 </head>
 <body>
@@ -2923,12 +2987,20 @@ document.getElementById('adminPanelNav').addEventListener('click', () => {
   if (navMenu) { navMenu.classList.remove('menu-open'); navMenu.style.setProperty('display', 'none', 'important'); }
   if (navButton) { navButton.setAttribute('aria-expanded', 'false'); navButton.setAttribute('aria-label', 'मेनू खोलें'); }
   ownerModal.classList.add('login-visible');
+  // मोबाइल पर एडमिन वर्कस्पेस को नर्सरी हेडर के ठीक नीचे खोलें।
+  document.body.classList.add('admin-panel-open');
+  const adminHeader = document.getElementById('mainHeader');
+  if (adminHeader && window.matchMedia('(max-width:700px)').matches) {
+    ownerModal.style.setProperty('--admin-header-height', Math.ceil(adminHeader.getBoundingClientRect().height) + 'px');
+  }
   initAudioContext();
   const sel = document.getElementById('ringtoneSelector');
   if (sel) sel.value = selectedRingtone;
 });
 document.getElementById('ownerCloseButton').addEventListener('click', () => { 
-  ownerModal.classList.remove('login-visible'); 
+  ownerModal.classList.remove('login-visible');
+  document.body.classList.remove('admin-panel-open');
+  ownerModal.style.removeProperty('--admin-header-height');
   stopLoudAlert();
 });
 
