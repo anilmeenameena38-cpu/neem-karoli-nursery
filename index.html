@@ -5106,5 +5106,52 @@ header#mainHeader {
 }
 </style>
 
+
+<style id="v24-final-header-modal-layer-fix">
+/* Admin login: remove the header from the overlay stacking layer on every screen. */
+body.admin-panel-open:not(.admin-authenticated) header#mainHeader {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  z-index: 0 !important;
+}
+body.admin-panel-open:not(.admin-authenticated) #owner.login-visible {
+  display: block !important;
+  position: fixed !important;
+  inset: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 50000 !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  box-sizing: border-box !important;
+  padding: max(14px, env(safe-area-inset-top)) 12px
+           max(18px, env(safe-area-inset-bottom)) !important;
+}
+/* Keep the login card comfortably readable on phones and desktops. */
+body.admin-panel-open:not(.admin-authenticated) #owner.login-visible #loginForm {
+  width: 100% !important;
+  max-width: 500px !important;
+  margin: 0 auto 12px !important;
+  box-sizing: border-box !important;
+}
+/* Tracking and order dialogs must sit above both the header and mobile bottom bar. */
+#customerTracking.tracking-modal-open {
+  position: fixed !important;
+  z-index: 60000 !important;
+}
+#order:not([hidden]) {
+  position: fixed !important;
+  z-index: 60000 !important;
+}
+</style>
+
 </body>
 </html>
