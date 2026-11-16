@@ -476,6 +476,12 @@ footer a:hover{text-decoration:underline}
 #mainHeader{position:relative}
 @media(min-width:701px){#menuToggleButton{margin:0 0 10px}#mainNavigation{left:16px;right:auto;width:250px}}
 @media(max-width:700px){header#mainHeader{padding:10px 14px 12px!important}#menuToggleButton{margin:0 0 8px;padding:7px 11px}#mainNavigation{top:100%;left:10px;right:10px}}
+
+.plant-buy-button.in-cart-remove {
+  background: linear-gradient(135deg,#dc2626,#991b1b) !important;
+  color: #fff !important;
+}
+
 </style>
 </head>
 <body>
@@ -1736,7 +1742,26 @@ async function loadPlants() {
       });
 
       if (!isSoldOut) {
-        card.querySelector('.plant-buy-button').addEventListener('click', () => {
+        const buyButton = card.querySelector('.plant-buy-button');
+        card.dataset.cartKey = `${veg ? 'veg' : 'plant'}-${p.id}`;
+        const syncButton = () => {
+          const inCart = shoppingCart.some(item => item.id === p.id && Boolean(item.veg) === Boolean(veg));
+          buyButton.textContent = inCart ? '✕ कार्ट से हटाएँ' : '🛒 कार्ट में जोड़ें';
+          buyButton.classList.toggle('in-cart-remove', inCart);
+        };
+        syncButton();
+
+        buyButton.addEventListener('click', () => {
+          const existingIndex = shoppingCart.findIndex(item => item.id === p.id && Boolean(item.veg) === Boolean(veg));
+          if (existingIndex !== -1) {
+            shoppingCart.splice(existingIndex, 1);
+            updateCartBadge();
+            updateProductCartButtons();
+            if (!shoppingCart.length && !document.getElementById('order').hidden) closeOrderPopup();
+            else if (!document.getElementById('order').hidden) renderCartModal();
+            return;
+          }
+
           const q = Number(qtyInput.value);
           const limit = veg ? (isGram ? 0.25 : 1) : minPlantLimit;
           if (q < limit) {
@@ -1744,8 +1769,8 @@ async function loadPlants() {
             qtyInput.value = limit;
             return;
           }
-
           addToCart(p, q, veg, isGram);
+          syncButton();
         });
       }
 
@@ -1772,6 +1797,20 @@ function addToCart(plant, qty, veg, isGram) {
     });
   }
   updateCartBadge();
+  updateProductCartButtons();
+}
+
+function updateProductCartButtons() {
+  document.querySelectorAll('.plant[data-cart-key]').forEach(card => {
+    const button = card.querySelector('.plant-buy-button');
+    if (!button) return;
+    const key = card.dataset.cartKey;
+    const inCart = shoppingCart.some(item =>
+      `${item.veg ? 'veg' : 'plant'}-${item.id}` === key
+    );
+    button.textContent = inCart ? '✕ कार्ट से हटाएँ' : '🛒 कार्ट में जोड़ें';
+    button.classList.toggle('in-cart-remove', inCart);
+  });
 }
 
 function updateCartBadge() {
@@ -1893,6 +1932,7 @@ function renderCartModal() {
 function removeFromCart(index) {
   shoppingCart.splice(index, 1);
   updateCartBadge();
+  updateProductCartButtons();
   if (shoppingCart.length === 0) {
     closeOrderPopup();
     const bottomBar = document.getElementById('floatingBottomCartBar');
