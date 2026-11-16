@@ -1320,6 +1320,8 @@ body > main::after{
   #viewPlantCategory,#viewVegCategory{background:rgba(255,255,255,.96) !important;}
 }
 
+
+#order.empty-cart #orderForm,#order.empty-cart #openDeliveryDetailsButton{display:none!important}
 </style>
 </head>
 <body>
@@ -1430,9 +1432,12 @@ body > main::after{
   </section>
 
   <!-- मोबाइल पर पौधे और ताजी सब्जियाँ अलग टैब में -->
+  <div id="shopCategoriesContainer" style="scroll-margin-top:12px">
   <div class="store-view-tabs" id="storeViewTabs" role="tablist" aria-label="खरीदारी का प्रकार">
     <button type="button" class="store-view-tab active" id="showPlantsTab" role="tab" aria-selected="true" aria-controls="viewPlantCategory">🌱 नर्सरी के पौधे</button>
     <button type="button" class="store-view-tab" id="showVegTab" role="tab" aria-selected="false" aria-controls="viewVegCategory">🧺 ताजी सब्जियाँ</button>
+  </div>
+
   </div>
 
   <!-- पौधे श्रेणी व्यू -->
@@ -1465,7 +1470,7 @@ body > main::after{
       </div>
 
       <button id="openDeliveryDetailsButton" type="button" class="btn" style="display:none;width:100%;margin:12px 0">📍 डिलीवरी विवरण भरें और आगे बढ़ें</button>
-      <form id="orderForm" style="display:none">
+      <form id="orderForm" hidden style="display:none">
         <div class="status">
           <div>उत्पाद कुल मूल्य: <strong id="plantAmountDisplay">₹0.00</strong></div>
           <div id="discountRowDisplay" style="display:none;color:#b45309">विशेष छूट: <strong id="discountAmountDisplay">-₹0.00</strong></div>
@@ -2844,15 +2849,17 @@ function renderCartModal() {
   const checkoutButton = document.getElementById('openDeliveryDetailsButton');
   if (!container) return;
 
+  const orderModal = document.getElementById('order');
   if (shoppingCart.length === 0) {
     checkoutDetailsOpen = false;
-    container.innerHTML = '<div style="text-align:center;padding:24px 12px"><div style="font-size:42px;margin-bottom:8px">🛒</div><strong style="font-size:17px;color:var(--deep)">आपका कार्ट खाली है।</strong><p style="margin:8px 0 0;color:var(--muted);font-size:14px">पसंद के पौधे या सब्जियाँ चुनकर यहाँ जोड़ें।</p><button type="button" class="btn" onclick="closeOrderPopup();document.getElementById(\'storeViewTabs\')?.scrollIntoView({behavior:\'smooth\',block:\'start\'})" style="margin-top:14px">🌱 खरीदारी जारी रखें</button></div>';
-    if (form) form.style.display = 'none';
-    if (checkoutButton) checkoutButton.style.display = 'none';
-    document.getElementById('plantAmountDisplay').textContent = '₹0.00';
-    document.getElementById('grandTotalDisplay').textContent = '₹0.00';
+    orderModal?.classList.add('empty-cart');
+    container.innerHTML = '<div style="text-align:center;padding:28px 12px"><div style="font-size:46px;margin-bottom:10px">🛒</div><strong style="font-size:18px;color:var(--deep)">आपका कार्ट खाली है।</strong><p style="margin:9px 0 0;color:var(--muted);font-size:14px">पसंद के पौधे या सब्जियाँ चुनकर यहाँ जोड़ें।</p><button type="button" class="btn" onclick="closeOrderPopup();document.getElementById(\'shopCategoriesContainer\')?.scrollIntoView({behavior:\'smooth\',block:\'start\'})" style="margin-top:15px">🌱 खरीदारी जारी रखें</button></div>';
+    if (form) { form.hidden = true; form.style.setProperty('display','none','important'); }
+    if (checkoutButton) checkoutButton.style.setProperty('display','none','important');
     return;
   }
+  orderModal?.classList.remove('empty-cart');
+  if (form) { form.hidden = false; form.style.removeProperty('display'); }
 
   let html = '<h4 style="margin:0 0 10px;color:var(--green)">🛍️ आपके चुने हुए सामान:</h4>';
   let subtotal = 0;
@@ -4057,7 +4064,7 @@ loadPlants();
     btn.classList.add('active');
     const action=btn.dataset.storeAction;
     if(action==='home') window.scrollTo({top:0,behavior:'smooth'});
-    if(action==='categories') document.getElementById('shopCategoriesContainer')?.scrollIntoView({behavior:'smooth',block:'start'});
+    if(action==='categories') { document.getElementById('showPlantsTab')?.click(); document.getElementById('shopCategoriesContainer')?.scrollIntoView({behavior:'smooth',block:'start'}); }
     if(action==='account') document.getElementById('customerTrackingNav')?.click();
     if(action==='cart') { if(typeof openCartModal==='function') openCartModal(); else document.getElementById('floatingBottomCartBar')?.querySelector('button')?.click(); }
   }));
