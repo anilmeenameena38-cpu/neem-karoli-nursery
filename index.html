@@ -1240,6 +1240,85 @@ header#mainHeader .hours-pill{color:#14532d !important;background:#f0fdf4 !impor
   body.store-view-veg #viewVegCategory{display:block !important}
   #viewPlantCategory,#viewVegCategory{margin-top:0 !important}
 }
+
+
+/* V20: homepage nature background coordinated with the existing deep-green header.
+   Header, product data, cart, tabs and navigation behavior remain untouched. */
+:root{
+  --home-leaf:#dff3d5;
+  --home-mint:#eff9e9;
+  --home-deep:#075b35;
+}
+html, body{min-height:100%;}
+body{
+  background-color:#e7f5df !important;
+  background-image:
+    radial-gradient(ellipse at 2% 18%, rgba(104,177,70,.20) 0 7%, transparent 24%),
+    radial-gradient(ellipse at 98% 34%, rgba(70,153,61,.17) 0 8%, transparent 25%),
+    radial-gradient(ellipse at 8% 72%, rgba(134,190,91,.14) 0 7%, transparent 23%),
+    linear-gradient(180deg,#dff2d5 0%,#edf8e8 28%,#f5faef 66%,#e5f3dc 100%) !important;
+  background-attachment:scroll !important;
+}
+/* Keep the content surface airy so the green nature background is visible around cards. */
+body > main{
+  background:transparent !important;
+  position:relative;
+  isolation:isolate;
+}
+body > main::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  pointer-events:none;
+  inset:0;
+  border-radius:26px;
+  background:
+    radial-gradient(ellipse at 0% 12%,rgba(79,145,48,.12),transparent 25%),
+    radial-gradient(ellipse at 100% 38%,rgba(88,157,55,.10),transparent 24%),
+    linear-gradient(180deg,rgba(255,255,255,.10),rgba(221,243,208,.18));
+}
+#storeViewTabs, .store-view-tabs{
+  background:rgba(245,253,240,.94) !important;
+  border:1px solid rgba(117,174,98,.38) !important;
+  box-shadow:0 5px 16px rgba(22,82,39,.10) !important;
+  backdrop-filter:blur(8px);
+}
+#viewPlantCategory, #viewVegCategory{
+  background:rgba(255,255,255,.94) !important;
+  border:1px solid rgba(179,214,164,.72) !important;
+  box-shadow:0 7px 22px rgba(22,82,39,.09) !important;
+}
+#viewPlantCategory .plant, #viewVegCategory .plant{
+  background:#fff !important;
+  border-color:#dcebd5 !important;
+  box-shadow:0 3px 12px rgba(28,75,35,.08) !important;
+}
+/* A subtle nursery-field illustration sits at the foot of the main page, not behind text. */
+body > main::after{
+  content:"";
+  display:block;
+  height:clamp(90px,18vw,170px);
+  margin:10px -2px 0;
+  border-radius:18px 18px 0 0;
+  pointer-events:none;
+  background-color:#cce8b7;
+  background-image:
+    linear-gradient(180deg,rgba(231,247,219,.05),rgba(5,79,43,.05)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 260'%3E%3Cdefs%3E%3ClinearGradient id='sky' x2='0' y2='1'%3E%3Cstop stop-color='%23d9f3bd'/%3E%3Cstop offset='1' stop-color='%23a8d98a'/%3E%3C/linearGradient%3E%3ClinearGradient id='field' x2='0' y2='1'%3E%3Cstop stop-color='%2389bd55'/%3E%3Cstop offset='1' stop-color='%230b6738'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='260' fill='url(%23sky)'/%3E%3Ccircle cx='590' cy='80' r='43' fill='%23fff4a8' opacity='.8'/%3E%3Cpath d='M0 150 Q180 90 360 145 T720 135 T1200 120 V260 H0Z' fill='%237eb95a'/%3E%3Cpath d='M0 180 Q240 125 470 178 T900 160 T1200 165 V260 H0Z' fill='url(%23field)'/%3E%3Cg stroke='%23d9ef9b' stroke-width='5' opacity='.8' fill='none'%3E%3Cpath d='M0 220 Q250 145 500 220 M0 245 Q250 170 500 245 M250 260 Q430 170 650 260 M500 260 Q760 165 1000 260'/%3E%3C/g%3E%3Cg stroke='%230b7650' stroke-width='8' fill='none' opacity='.85'%3E%3Cpath d='M825 250 V95 L1030 35 L1190 95 V250 M825 95 H1190 M1030 35 V250 M825 95 L900 250 M1190 95 L1120 250'/%3E%3C/g%3E%3Cpath d='M840 105 L1030 48 L1175 105 V245 H840Z' fill='%2384d9c0' opacity='.18'/%3E%3Cg fill='%232f8b45'%3E%3Cellipse cx='100' cy='175' rx='28' ry='12' transform='rotate(-25 100 175)'/%3E%3Cellipse cx='150' cy='160' rx='25' ry='11' transform='rotate(25 150 160)'/%3E%3Cellipse cx='220' cy='190' rx='28' ry='12' transform='rotate(-20 220 190)'/%3E%3Cellipse cx='700' cy='175' rx='30' ry='12' transform='rotate(20 700 175)'/%3E%3Cellipse cx='760' cy='190' rx='27' ry='11' transform='rotate(-25 760 190)'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:cover,cover;
+  background-position:center,bottom center;
+  background-repeat:no-repeat;
+  box-shadow:inset 0 8px 18px rgba(255,255,255,.22);
+}
+@media(max-width:700px){
+  body{background-image:
+    radial-gradient(ellipse at 0% 15%,rgba(104,177,70,.18) 0 8%,transparent 27%),
+    radial-gradient(ellipse at 100% 45%,rgba(70,153,61,.14) 0 8%,transparent 27%),
+    linear-gradient(180deg,#e1f3d8 0%,#eff8e9 42%,#e6f3dd 100%) !important;}
+  body > main::after{height:112px;margin:8px 0 0;border-radius:14px 14px 0 0;}
+  #viewPlantCategory,#viewVegCategory{background:rgba(255,255,255,.96) !important;}
+}
+
 </style>
 </head>
 <body>
