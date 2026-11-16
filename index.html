@@ -875,6 +875,89 @@ header#mainHeader .hours-pill{color:#14532d !important;background:#f0fdf4 !impor
   header#mainHeader #headerNurseryAddress{grid-column:3;grid-row:3;margin:0 !important;font-size:12px !important}
 }
 
+
+
+/* V12: FINAL MOBILE HEADER OVERRIDE — ensure logo and tagline remain visible on phones */
+@media screen and (max-width:700px){
+  header#mainHeader{
+    display:grid !important;
+    grid-template-columns:56px minmax(0,1fr) !important;
+    grid-template-rows:auto auto auto !important;
+    align-items:center !important;
+    justify-content:stretch !important;
+    gap:3px 10px !important;
+    min-height:unset !important;
+    padding:10px 12px 12px !important;
+    text-align:left !important;
+    overflow:visible !important;
+  }
+  header#mainHeader > #menuToggleButton{
+    display:inline-flex !important;
+    grid-column:1 !important;
+    grid-row:1 / span 3 !important;
+    order:initial !important;
+    align-self:center !important;
+    justify-self:start !important;
+    flex:none !important;
+    margin:0 !important;
+    padding:7px 8px !important;
+    min-height:36px !important;
+    font-size:12px !important;
+    white-space:nowrap !important;
+  }
+  header#mainHeader > #headerBrandLogo{
+    display:block !important;
+    grid-column:2 !important;
+    grid-row:1 / span 3 !important;
+    justify-self:start !important;
+    width:54px !important;
+    height:54px !important;
+    max-width:54px !important;
+    object-fit:cover !important;
+  }
+  header#mainHeader > #headerNurseryName{
+    display:block !important;
+    grid-column:2 !important;
+    grid-row:1 !important;
+    margin-left:62px !important;
+    margin-top:0 !important;
+    width:calc(100% - 62px) !important;
+    min-width:0 !important;
+    font-size:clamp(12px,3.6vw,15px) !important;
+    line-height:1.2 !important;
+    text-align:left !important;
+    white-space:normal !important;
+    overflow-wrap:anywhere !important;
+  }
+  header#mainHeader > #headerNurseryTagline{
+    display:block !important;
+    grid-column:2 !important;
+    grid-row:2 !important;
+    margin-left:62px !important;
+    margin-top:0 !important;
+    width:calc(100% - 62px) !important;
+    min-width:0 !important;
+    font-size:10px !important;
+    line-height:1.25 !important;
+    text-align:left !important;
+    white-space:normal !important;
+  }
+  header#mainHeader > #headerNurseryAddress,
+  header#mainHeader > div:not(#mainNavigation),
+  header#mainHeader > .header-badge-box,
+  header#mainHeader > .hours-pill{display:none !important}
+  header#mainHeader > #mainNavigation{
+    position:absolute !important;
+    display:none !important;
+    top:100% !important;
+    left:10px !important;
+    right:10px !important;
+    width:auto !important;
+    z-index:10000 !important;
+  }
+  header#mainHeader > #mainNavigation.menu-open{display:flex !important}
+}
+
 </style>
 </head>
 <body>
