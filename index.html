@@ -1667,6 +1667,21 @@ body > main::after{
   }
 }
 </style>
+
+<style id="v32-tracking-body-portal-layer">
+@media (max-width:700px) {
+  body.tracking-open { overflow:hidden !important; }
+  body > #customerTracking.tracking-modal-open {
+    position:fixed !important;
+    top:var(--tracking-header-bottom, 64px) !important;
+    left:0 !important; right:0 !important; bottom:0 !important;
+    width:100vw !important; max-width:none !important;
+    height:auto !important; max-height:none !important;
+    margin:0 !important; transform:none !important;
+    z-index:50000 !important;
+  }
+}
+</style>
 </head>
 <body>
 
@@ -4485,18 +4500,28 @@ async function renderAdminList() {
   document.getElementById('adminPlantSimpleListVeg').innerHTML = make(items.filter(x => isVeg(x)));
 }
 
-// मोबाइल ट्रैकिंग: हेडर को अस्थायी रूप से स्क्रीन के शीर्ष पर स्थिर रखें,
-// और ट्रैकिंग पैनल को उसकी वास्तविक ऊँचाई के ठीक नीचे रखें।
+// मोबाइल ट्रैकिंग: पैनल को अस्थायी रूप से body के सीधे अंदर ले जाएँ,
+// ताकि main/section के layout या stacking context से उसकी position प्रभावित न हो।
 let trackingSavedScrollY = 0;
 let trackingHeaderOriginalStyle = null;
+let trackingPanelPlaceholder = null;
 function openCustomerTracking() {
   const panel = document.getElementById('customerTracking');
   const header = document.getElementById('mainHeader');
   if (!panel) return;
   const isMobile = window.matchMedia('(max-width:700px)').matches;
+
   if (isMobile && !document.body.classList.contains('tracking-open')) {
     trackingSavedScrollY = window.scrollY || window.pageYOffset || 0;
     document.body.dataset.trackingScrollY = String(trackingSavedScrollY);
+
+    // Original DOM position सुरक्षित रखें और panel को body का direct child बनाएँ।
+    if (panel.parentElement !== document.body) {
+      trackingPanelPlaceholder = document.createComment('customerTracking original position');
+      panel.parentNode.insertBefore(trackingPanelPlaceholder, panel);
+      document.body.appendChild(panel);
+    }
+
     if (header) {
       trackingHeaderOriginalStyle = header.getAttribute('style');
       header.style.setProperty('position', 'fixed', 'important');
@@ -4513,6 +4538,7 @@ function openCustomerTracking() {
     document.body.style.width = '100%';
     document.body.classList.add('tracking-open');
   }
+
   const headerHeight = isMobile && header ? Math.ceil(header.getBoundingClientRect().height) : 0;
   panel.style.setProperty('--tracking-header-bottom', headerHeight + 'px');
   panel.classList.add('tracking-modal-open');
@@ -4521,6 +4547,14 @@ function closeCustomerTracking() {
   const panel = document.getElementById('customerTracking');
   if (panel) panel.classList.remove('tracking-modal-open');
   const wasOpen = document.body.classList.contains('tracking-open');
+
+  // Panel को उसके original स्थान पर वापस रखें, ताकि desktop और बाकी page flow सुरक्षित रहे।
+  if (panel && trackingPanelPlaceholder && trackingPanelPlaceholder.parentNode) {
+    trackingPanelPlaceholder.parentNode.insertBefore(panel, trackingPanelPlaceholder);
+    trackingPanelPlaceholder.remove();
+    trackingPanelPlaceholder = null;
+  }
+
   document.body.classList.remove('tracking-open');
   if (wasOpen && window.matchMedia('(max-width:700px)').matches) {
     const y = Number(document.body.dataset.trackingScrollY || trackingSavedScrollY || 0);
