@@ -1622,52 +1622,6 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
         window.onload = function() { window.print(); }
       <\/script>
 
-<script>
-/* Robust menu controller: inline click + delegated listener fallback */
-window.toggleNurseryMenu = function(event) {
-  if (event) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-  const button = document.getElementById('menuToggleButton');
-  const menu = document.getElementById('mainNavigation');
-  if (!button || !menu) return;
-  const willOpen = !menu.classList.contains('menu-open');
-  menu.classList.toggle('menu-open', willOpen);
-  menu.style.display = willOpen ? 'flex' : 'none';
-  button.setAttribute('aria-expanded', String(willOpen));
-  button.setAttribute('aria-label', willOpen ? 'मेनू बंद करें' : 'मेनू खोलें');
-};
-document.addEventListener('click', function(event) {
-  const button = event.target.closest && event.target.closest('#menuToggleButton');
-  if (button) {
-    // Inline handler handles the primary toggle.
-    return;
-  }
-  const menu = document.getElementById('mainNavigation');
-  const toggle = document.getElementById('menuToggleButton');
-  if (menu && toggle && menu.classList.contains('menu-open') &&
-      !menu.contains(event.target)) {
-    menu.classList.remove('menu-open');
-    menu.style.display = 'none';
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-label', 'मेनू खोलें');
-  }
-});
-document.addEventListener('keydown', function(event) {
-  if (event.key === 'Escape') {
-    const menu = document.getElementById('mainNavigation');
-    const toggle = document.getElementById('menuToggleButton');
-    if (menu && toggle) {
-      menu.classList.remove('menu-open');
-      menu.style.display = 'none';
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.setAttribute('aria-label', 'मेनू खोलें');
-    }
-  }
-});
-</script>
-
 </body>
     </html>
   `);
