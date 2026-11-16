@@ -3059,17 +3059,16 @@ function renderCartModal() {
       </div>`;
   });
 
-  // सामान की सूची के नीचे कुल रकम और स्पष्ट "अब खरीदें" बटन दिखाएँ।
+  // कुल रकम हमेशा दिखे; "अब खरीदें" केवल समीक्षा चरण में दिखे।
+  // डिलीवरी फॉर्म खुल जाने के बाद यह बटन पूरी तरह हट जाता है।
   const previewDiscount = cfg.discountPercent > 0 ? (subtotal * cfg.discountPercent) / 100 : 0;
-  const previewTotal = subtotal - previewDiscount;
   html += `
     <div class="cart-before-checkout" style="margin-top:12px;padding:12px;border:1px solid #d8e9dc;border-radius:12px;background:#f4fbf5">
       <div style="display:flex;justify-content:space-between;gap:10px;font-weight:700;color:#174b2b">
         <span>सामान का कुल मूल्य</span><span>₹${subtotal.toFixed(2)}</span>
       </div>
       ${previewDiscount > 0 ? `<div style="display:flex;justify-content:space-between;gap:10px;color:#a16207;font-size:13px;margin-top:5px"><span>छूट (${cfg.discountPercent}%)</span><span>-₹${previewDiscount.toFixed(2)}</span></div>` : ''}
-      <button type="button" id="startCheckoutButton" style="width:100%;margin-top:12px;background:#167443;color:#fff;border:0;border-radius:10px;padding:12px 16px;font-size:15px;font-weight:800;cursor:pointer">अब खरीदें →</button>
-      <p style="margin:7px 0 0;text-align:center;color:#64748b;font-size:12px">अगले चरण में डिलीवरी का विवरण भरें</p>
+      ${checkoutStarted ? '<p style="margin:7px 0 0;text-align:center;color:#64748b;font-size:12px">कृपया डिलीवरी विवरण भरकर ऑर्डर कन्फर्म करें।</p>' : '<button type="button" id="startCheckoutButton" style="width:100%;margin-top:12px;background:#167443;color:#fff;border:0;border-radius:10px;padding:12px 16px;font-size:15px;font-weight:800;cursor:pointer">अब खरीदें →</button><p style="margin:7px 0 0;text-align:center;color:#64748b;font-size:12px">अगले चरण में डिलीवरी का विवरण भरें</p>'}
     </div>`;
   container.innerHTML = html;
   document.getElementById('startCheckoutButton')?.addEventListener('click', () => {
