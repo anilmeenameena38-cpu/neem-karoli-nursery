@@ -1321,6 +1321,47 @@ body > main::after{
 }
 
 </style>
+
+<style id="v22-cart-mobile-fix">
+/* Cart overlay fix: keep the full cart above the sticky header and bottom navigation. */
+#order:not([hidden]){
+  position:fixed !important;
+  inset:0 !important;
+  z-index:30000 !important;
+  box-sizing:border-box !important;
+}
+#order .order-modal-card{box-sizing:border-box !important;min-width:0 !important;}
+@media (max-width:700px){
+  body.cart-modal-open{overflow:hidden !important;}
+  body.cart-modal-open header#mainHeader,
+  body.cart-modal-open .mobile-store-nav,
+  body.cart-modal-open #floatingBottomCartBar,
+  body.cart-modal-open #floatingWaWidget{z-index:1 !important;}
+  #order:not([hidden]){
+    align-items:flex-start !important;
+    justify-content:center !important;
+    padding:calc(env(safe-area-inset-top, 0px) + 12px) 10px calc(env(safe-area-inset-bottom, 0px) + 12px) !important;
+    overflow-y:auto !important;
+    overscroll-behavior:contain !important;
+    -webkit-overflow-scrolling:touch !important;
+  }
+  #order .order-modal-card{
+    width:100% !important;
+    max-width:600px !important;
+    max-height:calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 24px) !important;
+    margin:0 auto !important;
+    padding:16px 14px calc(20px + env(safe-area-inset-bottom, 0px)) !important;
+    border-radius:16px !important;
+    overflow-x:hidden !important;
+    overflow-y:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+  }
+  #closeOrderModal{position:sticky !important;top:0 !important;z-index:3 !important;float:right !important;margin:0 0 8px 8px !important;}
+  #orderModalTitle{font-size:20px !important;line-height:1.35 !important;padding-top:2px !important;}
+  #cartItemsContainer{clear:both !important;}
+}
+</style>
+
 </head>
 <body>
 
@@ -2829,8 +2870,13 @@ function openCartModal(e) {
   if (e) e.preventDefault();
   renderCartModal();
   const orderModal = document.getElementById('order');
+  document.body.classList.add('cart-modal-open');
   orderModal.hidden = false;
   orderModal.style.display = 'flex';
+  // Mobile browsers may retain the previous page scroll position; start the cart at its top.
+  orderModal.scrollTop = 0;
+  const card = orderModal.querySelector('.order-modal-card');
+  if (card) card.scrollTop = 0;
 }
 
 function renderCartModal() {
@@ -2936,6 +2982,7 @@ function closeOrderPopup() {
   const orderModal = document.getElementById('order');
   orderModal.hidden = true;
   orderModal.style.display = 'none';
+  document.body.classList.remove('cart-modal-open');
   if (upiCountdownInterval) clearInterval(upiCountdownInterval);
 }
 
