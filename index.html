@@ -394,6 +394,7 @@ footer a:hover{text-decoration:underline}
  .card-qty-input{font-size:13px!important;padding:4px!important;min-width:0}
  .plant-buy-button{font-size:11px!important;padding:7px 5px!important}
  .mobile-store-nav{position:fixed;display:flex;left:0;right:0;bottom:0;z-index:9985;background:#fff;border-top:1px solid #e5e7eb;box-shadow:0 -3px 14px #00000012;justify-content:space-around;align-items:center;padding:6px 4px calc(6px + env(safe-area-inset-bottom));}
+ .mobile-store-nav{position:fixed;left:0;right:0;bottom:0;z-index:9990;display:flex;align-items:center;justify-content:space-around;gap:2px;padding:5px 8px calc(5px + env(safe-area-inset-bottom));background:rgba(255,255,255,.97);backdrop-filter:blur(14px);border-top:1px solid #dce8df;box-shadow:0 -4px 18px rgba(15,60,35,.10)}
  .mobile-store-link{position:relative;display:flex;flex:1;flex-direction:column;gap:1px;align-items:center;justify-content:center;background:transparent!important;color:#64748b!important;padding:2px 3px!important;border-radius:8px!important;font-weight:600;min-height:48px}
  .mobile-store-link span{font-size:23px;line-height:1.1}
  .mobile-store-link small{font-size:10px}
@@ -2020,7 +2021,7 @@ body > main::after{
   <button type="button" class="mobile-store-link active" data-store-action="home"><span>⌂</span><small>होम</small></button>
   <button type="button" class="mobile-store-link" data-store-action="categories"><span>▦</span><small>कैटेगरी</small></button>
   <button type="button" class="mobile-store-link" data-store-action="account"><span>♙</span><small>खाता</small></button>
-  <button type="button" class="mobile-store-link" data-store-action="cart"><span>🛒</span><small>कार्ट</small><b id="mobileCartCount">0</b></button>
+  <button type="button" class="mobile-store-link" data-store-action="cart"><span>🛒</span><small>कार्ट</small><b id="mobileCartCount" aria-label="कार्ट में कुल मात्रा">0</b></button>
 </div>
 
 <!-- 🌿 सुंदर और आधुनिक फुटर डिज़ाइन -->
@@ -2808,29 +2809,24 @@ function updateProductCartButtons() {
 }
 
 function updateCartBadge() {
-  const totalCount = shoppingCart.reduce((sum, item) => sum + 1, 0);
+  // बैज में अलग-अलग उत्पाद नहीं, कुल चुनी हुई मात्रा दिखाएँ।
+  const totalCount = shoppingCart.reduce((sum, item) => sum + (Number(item.qty) || 0), 0);
   const totalPrice = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
   const bottomBar = document.getElementById('floatingBottomCartBar');
   const barCount = document.getElementById('barItemCount');
   const barPrice = document.getElementById('barTotalPrice');
+  const mobileCount = document.getElementById('mobileCartCount');
 
-  if (shoppingCart.length > 0) {
-    if (barCount) barCount.textContent = shoppingCart.length;
-    if (barPrice) barPrice.textContent = '₹' + totalPrice.toFixed(2);
-    if (bottomBar) bottomBar.style.display = 'flex';
-  } else {
-    if (bottomBar) bottomBar.style.display = 'none';
-  }
+  if (barCount) barCount.textContent = Number.isInteger(totalCount) ? totalCount : totalCount.toFixed(2);
+  if (mobileCount) mobileCount.textContent = Number.isInteger(totalCount) ? totalCount : totalCount.toFixed(2);
+  if (barPrice) barPrice.textContent = '₹' + totalPrice.toFixed(2);
+  if (bottomBar) bottomBar.style.display = shoppingCart.length > 0 ? 'flex' : 'none';
 }
 
-// कार्ट मॉडल खोलना
+// कार्ट मॉडल खोलना — खाली कार्ट में भी खाली स्थिति दिखाएँ।
 function openCartModal(e) {
   if (e) e.preventDefault();
-  if (shoppingCart.length === 0) {
-    alert('🛒 आपकी शॉपिंग कार्ट खाली है! पहले कोई पौधा या सब्ज़ी चुनें।');
-    return;
-  }
   renderCartModal();
   const orderModal = document.getElementById('order');
   orderModal.hidden = false;
@@ -4054,11 +4050,8 @@ loadPlants();
     if(action==='account') document.getElementById('customerTrackingNav')?.click();
     if(action==='cart') { if(typeof openCartModal==='function') openCartModal(); else document.getElementById('floatingBottomCartBar')?.querySelector('button')?.click(); }
   }));
-  const count=document.getElementById('mobileCartCount');
-  const sync=()=>{const source=document.getElementById('barItemCount');if(count&&source)count.textContent=source.textContent||'0';};
-  const bar=document.getElementById('barItemCount');
-  if(bar&&window.MutationObserver)new MutationObserver(sync).observe(bar,{childList:true,characterData:true,subtree:true});
-  sync();
+  // कार्ट बैज updateCartBadge() से सीधे अपडेट होता है, ताकि मात्रा और बैज हमेशा समान रहें।
+  if (typeof updateCartBadge === 'function') updateCartBadge();
 })();
 </script>
 
