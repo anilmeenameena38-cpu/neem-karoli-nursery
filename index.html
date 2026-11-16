@@ -1202,6 +1202,11 @@ header#mainHeader .hours-pill{color:#14532d !important;background:#f0fdf4 !impor
 }
 
 
+/* V19: ensure the category tabs are visibly placed above the product list */
+.store-view-tabs{display:none}
+@media screen and (max-width:700px){
+  main #storeViewTabs.store-view-tabs{display:grid !important;position:relative;z-index:2}
+}
 /* V18: Mobile product switcher — plants and edible vegetables shown in separate views */
 .store-view-tabs{display:none}
 @media screen and (max-width:700px){
@@ -1288,11 +1293,6 @@ header#mainHeader .hours-pill{color:#14532d !important;background:#f0fdf4 !impor
 </nav>
 
 <main>
-  <!-- मोबाइल पर पौधे और ताजी सब्जियाँ अलग टैब में -->
-  <div class="store-view-tabs" id="storeViewTabs" role="tablist" aria-label="खरीदारी का प्रकार">
-    <button type="button" class="store-view-tab active" id="showPlantsTab" role="tab" aria-selected="true" aria-controls="viewPlantCategory">🌱 नर्सरी के पौधे</button>
-    <button type="button" class="store-view-tab" id="showVegTab" role="tab" aria-selected="false" aria-controls="viewVegCategory">🧺 ताजी सब्जियाँ</button>
-  </div>
   <section class="card" id="about">
     <h2 id="aboutNurseryTitle">🌿 श्री नीम करोली महाराज ग्रीन नर्सरी — हमारे बारे में</h2>
     <p><strong>हमारा परिचय:</strong> श्री नीम करोली महाराज ग्रीन नर्सरी, मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान से घरों, खेतों और किचन गार्डन के लिए पौधे तथा ताज़ी सब्ज़ियाँ उपलब्ध कराने का प्रयास करती है। हमारा उद्देश्य ग्राहकों को पौधों की सही जानकारी, देखभाल के सरल सुझाव और उपलब्ध स्टॉक के अनुसार पौधे/सब्ज़ियाँ आसानी से उपलब्ध कराना है।</p>
@@ -1348,6 +1348,12 @@ header#mainHeader .hours-pill{color:#14532d !important;background:#f0fdf4 !impor
     </div>
     <p style="margin-top:14px">किसी खास पौधे या सब्ज़ी की उपलब्धता पूछने के लिए <a href="#contact">हमसे संपर्क करें</a>।</p>
   </section>
+
+  <!-- मोबाइल पर पौधे और ताजी सब्जियाँ अलग टैब में -->
+  <div class="store-view-tabs" id="storeViewTabs" role="tablist" aria-label="खरीदारी का प्रकार">
+    <button type="button" class="store-view-tab active" id="showPlantsTab" role="tab" aria-selected="true" aria-controls="viewPlantCategory">🌱 नर्सरी के पौधे</button>
+    <button type="button" class="store-view-tab" id="showVegTab" role="tab" aria-selected="false" aria-controls="viewVegCategory">🧺 ताजी सब्जियाँ</button>
+  </div>
 
   <!-- पौधे श्रेणी व्यू -->
   <section class="card" id="viewPlantCategory">
@@ -3978,27 +3984,47 @@ loadPlants();
 </script>
 
 <script>
-// V18: mobile home tabs switch only the visible product category; cart/data logic remains shared.
+// V19: reliable mobile category switcher. Product data and shared cart logic remain unchanged.
 (function(){
-  const plantBtn=document.getElementById('showPlantsTab');
-  const vegBtn=document.getElementById('showVegTab');
-  const tabs=document.getElementById('storeViewTabs');
-  if(!plantBtn || !vegBtn || !tabs) return;
-  function setStoreView(view, shouldScroll){
-    const veg=view==='veg';
-    document.body.classList.toggle('store-view-veg',veg);
-    document.body.classList.toggle('store-view-plants',!veg);
-    plantBtn.classList.toggle('active',!veg);
-    vegBtn.classList.toggle('active',veg);
-    plantBtn.setAttribute('aria-selected',String(!veg));
-    vegBtn.setAttribute('aria-selected',String(veg));
-    if(shouldScroll && window.matchMedia('(max-width:700px)').matches){
-      tabs.scrollIntoView({behavior:'smooth',block:'start'});
+  const plantBtn = document.getElementById('showPlantsTab');
+  const vegBtn = document.getElementById('showVegTab');
+  const tabs = document.getElementById('storeViewTabs');
+  const plantSection = document.getElementById('viewPlantCategory');
+  const vegSection = document.getElementById('viewVegCategory');
+  if (!plantBtn || !vegBtn || !tabs || !plantSection || !vegSection) return;
+
+  function setStoreView(view) {
+    const isVeg = view === 'veg';
+    const isMobile = window.matchMedia('(max-width:700px)').matches;
+
+    document.body.classList.toggle('store-view-veg', isVeg);
+    document.body.classList.toggle('store-view-plants', !isVeg);
+    plantBtn.classList.toggle('active', !isVeg);
+    vegBtn.classList.toggle('active', isVeg);
+    plantBtn.setAttribute('aria-selected', String(!isVeg));
+    vegBtn.setAttribute('aria-selected', String(isVeg));
+
+    // On phones show one category at a time; on desktop retain the existing two-section layout.
+    if (isMobile) {
+      plantSection.style.setProperty('display', isVeg ? 'none' : 'block', 'important');
+      vegSection.style.setProperty('display', isVeg ? 'block' : 'none', 'important');
+      tabs.style.setProperty('display', 'grid', 'important');
+    } else {
+      plantSection.style.removeProperty('display');
+      vegSection.style.removeProperty('display');
+      tabs.style.setProperty('display', 'none', 'important');
     }
   }
-  plantBtn.addEventListener('click',()=>setStoreView('plants',true));
-  vegBtn.addEventListener('click',()=>setStoreView('veg',true));
-  setStoreView('plants',false);
+
+  plantBtn.addEventListener('click', function(){ setStoreView('plants'); });
+  vegBtn.addEventListener('click', function(){ setStoreView('veg'); });
+  setStoreView('plants');
+
+  // Keep the appropriate layout if the device is rotated or resized.
+  window.addEventListener('resize', function(){
+    const currentView = document.body.classList.contains('store-view-veg') ? 'veg' : 'plants';
+    setStoreView(currentView);
+  });
 })();
 </script>
 </body>
