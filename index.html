@@ -450,6 +450,23 @@ footer a:hover{text-decoration:underline}
   #viewPlantCategory h2,#viewVegCategory h2{font-size:15px!important}
 }
 
+
+/* वास्तविक मोबाइल सुधार: ऊपर के बड़े हरे प्रमोशनल/कैटेगरी बैनर हटाएँ और उत्पाद सूची को फोन पर निश्चित 3 कॉलम में दिखाएँ */
+@media (max-width: 700px) {
+  .category-hero-grid, .store-promo-card { display: none !important; }
+  #plantOnlyList.plants, #vegOnlyList.plants { display:grid !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:6px !important; width:100% !important; }
+  #plantOnlyList .plant, #vegOnlyList .plant { display:flex !important; min-width:0 !important; width:100% !important; padding:5px !important; margin:0 !important; overflow:hidden !important; }
+  #plantOnlyList .plant img, #vegOnlyList .plant img { width:100% !important; height:82px !important; object-fit:contain !important; }
+  #plantOnlyList .plant h3, #vegOnlyList .plant h3 { font-size:10px !important; line-height:1.25 !important; overflow-wrap:anywhere !important; }
+  #plantOnlyList .price-tag, #vegOnlyList .price-tag { font-size:9px !important; padding:2px 3px !important; white-space:normal !important; }
+  #plantOnlyList .stock-text, #vegOnlyList .stock-text { font-size:8px !important; }
+  #plantOnlyList .stepper-label, #vegOnlyList .stepper-label { font-size:8px !important; }
+  #plantOnlyList .stepper-label span:last-child, #vegOnlyList .stepper-label span:last-child { display:none !important; }
+  #plantOnlyList .stepper-btn, #vegOnlyList .stepper-btn { width:19px !important; min-width:19px !important; height:23px !important; font-size:12px !important; }
+  #plantOnlyList .card-qty-input, #vegOnlyList .card-qty-input { min-width:0 !important; width:100% !important; font-size:10px !important; padding:2px 0 !important; }
+  #plantOnlyList .plant-buy-button, #vegOnlyList .plant-buy-button { width:100% !important; font-size:8px !important; line-height:1.2 !important; padding:5px 1px !important; white-space:normal !important; }
+}
+
 </style>
 </head>
 <body>
@@ -490,11 +507,6 @@ footer a:hover{text-decoration:underline}
     <span class="hours-pill" id="headerNurseryHours">⏰ समय: सुबह 07:00 AM से शाम 10:00 PM</span>
   </div>
 </header>
-
-<!-- नया ई-कॉमर्स सर्च बार: केवल उत्पाद कार्ड फ़िल्टर करता है, डेटा नहीं बदलता -->
-<div class="store-search-wrap" role="search">
-  <div class="store-search-box"><span aria-hidden="true">⌕</span><input id="storeProductSearch" type="search" placeholder="पौधे और सब्ज़ियाँ खोजें..." autocomplete="off" aria-label="पौधे और सब्ज़ियाँ खोजें"><button type="button" id="clearStoreSearch" aria-label="खोज हटाएँ">✕</button></div>
-</div>
 
 <!-- मोबाइल स्टोर कैटेगरी टैब और प्रमोशनल बैनर -->
 <div class="store-category-strip" aria-label="शॉपिंग कैटेगरी">
