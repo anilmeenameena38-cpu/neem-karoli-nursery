@@ -1688,6 +1688,99 @@ body > main::after{
 @media(max-width:700px){#adminCodeStudioPane .code-studio-editor{min-height:210px;font-size:11px}#adminCodeStudioPane .code-studio-actions button{flex:1 1 42%;min-height:42px}#adminCodeStudioPane #codeStudioPreviewFrame{height:230px}}
 </style>
 
+
+<style id="admin-header-clearance-fix-v1">
+/* Keep the nursery header separate from the admin workspace on desktop and mobile. */
+body.admin-panel-open{overflow:hidden !important;}
+body.admin-panel-open header#mainHeader{
+  position:fixed !important;
+  top:0 !important; left:0 !important; right:0 !important;
+  width:100% !important;
+  z-index:20010 !important;
+}
+body.admin-panel-open #owner.login-visible{
+  display:block !important;
+  position:fixed !important;
+  top:calc(var(--admin-header-height, 80px) + 10px) !important;
+  right:0 !important; bottom:0 !important; left:0 !important;
+  width:100% !important; max-width:none !important;
+  height:auto !important; min-height:0 !important;
+  margin:0 !important;
+  padding:12px clamp(12px, 2.5vw, 28px) calc(18px + env(safe-area-inset-bottom, 0px)) !important;
+  border:0 !important; border-radius:0 !important;
+  overflow-x:hidden !important; overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch !important;
+  overscroll-behavior:contain !important;
+  box-sizing:border-box !important;
+  background:linear-gradient(180deg,#edf6ef 0%,#f6f9f6 100%) !important;
+  z-index:20000 !important;
+}
+body.admin-panel-open #owner.login-visible > div:first-child{
+  position:sticky !important; top:0 !important; z-index:20 !important;
+  display:flex !important; justify-content:flex-end !important;
+  width:100% !important; max-width:1180px !important;
+  margin:0 auto 12px !important; padding:0 0 8px !important;
+  background:linear-gradient(180deg,#edf6ef 75%,rgba(237,246,239,0)) !important;
+}
+body.admin-panel-open #ownerCloseButton{
+  min-height:38px !important; padding:7px 14px !important; margin:0 !important;
+  border:1px solid #d5e5d9 !important; border-radius:10px !important;
+  background:#fff !important; color:#14532d !important;
+  box-shadow:0 2px 8px rgba(6,78,59,.08) !important;
+}
+body.admin-panel-open #owner.login-visible > #loginForm{
+  width:min(100%,540px) !important; max-width:540px !important;
+  margin:10px auto 18px !important; padding:17px 20px !important;
+  border:1px solid #d7e8db !important; border-radius:16px !important;
+  background:#fff !important; box-shadow:0 8px 24px rgba(6,78,59,.10) !important;
+  box-sizing:border-box !important;
+}
+body.admin-panel-open #loginForm h2{margin:0 0 8px !important;font-size:20px !important;line-height:1.3 !important;}
+body.admin-panel-open #loginForm label{margin:4px 0 2px !important;font-size:13px !important;line-height:1.25 !important;}
+body.admin-panel-open #loginForm input{min-height:36px !important;margin:3px 0 7px !important;padding:7px 10px !important;font-size:14px !important;}
+body.admin-panel-open #loginForm button{min-height:38px !important;padding:7px 14px !important;}
+body.admin-panel-open #ownerStatus{margin:6px 0 0 !important;padding:7px 9px !important;font-size:12px !important;}
+body.admin-panel-open #ownerPanelHeader,
+body.admin-panel-open #adminCustomerSearch,
+body.admin-panel-open #adminTabs,
+body.admin-panel-open #owner.login-visible > .admin-pane{
+  width:100% !important; max-width:1180px !important;
+  margin:0 auto 14px !important; padding:16px !important;
+  border:1px solid #dcebe0 !important; border-radius:15px !important;
+  background:#fff !important; box-shadow:0 4px 14px rgba(6,78,59,.07) !important;
+  box-sizing:border-box !important;
+}
+body.admin-panel-open #ownerPanelHeader{margin-top:4px !important;}
+body.admin-panel-open #adminTabs{
+  grid-template-columns:repeat(auto-fit,minmax(112px,1fr)) !important;
+  gap:8px !important;
+}
+body.admin-panel-open #adminTabs .admin-tab{
+  min-width:0 !important; min-height:48px !important;
+  padding:8px 6px !important; border-radius:10px !important;
+  font-size:12px !important; line-height:1.3 !important;
+  overflow-wrap:anywhere !important;
+}
+body.admin-panel-open #owner.login-visible > .admin-pane{overflow:visible !important;}
+body.admin-panel-open #owner.login-visible > .admin-pane.active{display:block !important;}
+body.admin-panel-open #owner.login-visible > .admin-pane h2{margin-top:0 !important;}
+body.admin-panel-open .mobile-store-nav,
+body.admin-panel-open #floatingBottomCartBar,
+body.admin-panel-open #floatingWaWidget{display:none !important;}
+@media(max-width:700px){
+  body.admin-panel-open #owner.login-visible{
+    padding:10px 10px calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  body.admin-panel-open #owner.login-visible > #loginForm{padding:16px !important;}
+  body.admin-panel-open #ownerPanelHeader,
+  body.admin-panel-open #adminCustomerSearch,
+  body.admin-panel-open #adminTabs,
+  body.admin-panel-open #owner.login-visible > .admin-pane{padding:12px !important;}
+  body.admin-panel-open #adminTabs{grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:7px !important;}
+  body.admin-panel-open #adminTabs .admin-tab{min-height:44px !important;padding:7px 4px !important;font-size:11px !important;}
+}
+</style>
+
 </head>
 <body>
 
@@ -3729,6 +3822,14 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 });
 
 const ownerModal = document.getElementById('owner');
+function updateAdminPanelHeaderOffset(){
+  if (!ownerModal || !ownerModal.classList.contains('login-visible') || !document.body.classList.contains('admin-panel-open')) return;
+  const adminHeader = document.getElementById('mainHeader');
+  if (adminHeader) {
+    ownerModal.style.setProperty('--admin-header-height', Math.ceil(adminHeader.getBoundingClientRect().height) + 'px');
+  }
+}
+window.addEventListener('resize', updateAdminPanelHeaderOffset, { passive:true });
 document.getElementById('adminPanelNav').addEventListener('click', () => { 
   // एडमिन लॉगिन खोलने से पहले नेविगेशन मेनू बंद करें।
   if (window.closeNurseryMenu) window.closeNurseryMenu();
@@ -3737,12 +3838,10 @@ document.getElementById('adminPanelNav').addEventListener('click', () => {
   if (navMenu) { navMenu.classList.remove('menu-open'); navMenu.style.setProperty('display', 'none', 'important'); }
   if (navButton) { navButton.setAttribute('aria-expanded', 'false'); navButton.setAttribute('aria-label', 'मेनू खोलें'); }
   ownerModal.classList.add('login-visible');
-  // मोबाइल पर एडमिन वर्कस्पेस को नर्सरी हेडर के ठीक नीचे खोलें।
+  // हर स्क्रीन पर एडमिन वर्कस्पेस को हेडर के नीचे अलग रखें।
   document.body.classList.add('admin-panel-open');
-  const adminHeader = document.getElementById('mainHeader');
-  if (adminHeader && window.matchMedia('(max-width:700px)').matches) {
-    ownerModal.style.setProperty('--admin-header-height', Math.ceil(adminHeader.getBoundingClientRect().height) + 'px');
-  }
+  updateAdminPanelHeaderOffset();
+  requestAnimationFrame(updateAdminPanelHeaderOffset);
   initAudioContext();
   const sel = document.getElementById('ringtoneSelector');
   if (sel) sel.value = selectedRingtone;
