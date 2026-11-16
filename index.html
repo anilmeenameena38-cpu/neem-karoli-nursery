@@ -482,6 +482,19 @@ footer a:hover{text-decoration:underline}
   color: #fff !important;
 }
 
+
+/* Toggle menu click reliability fix */
+#mainHeader { position: relative !important; z-index: 6000 !important; }
+#menuToggleButton {
+  position: relative !important;
+  z-index: 10001 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation;
+  cursor: pointer !important;
+}
+#mainNavigation { z-index: 10000 !important; pointer-events: auto !important; }
+#mainNavigation.menu-open { display: flex !important; }
+
 </style>
 </head>
 <body>
@@ -515,7 +528,7 @@ footer a:hover{text-decoration:underline}
   <div class="header-badge-box">
     <div class="header-logo-glow">🪴</div>
   </div>
-  <button id="menuToggleButton" type="button" aria-label="मेनू खोलें" aria-expanded="false" aria-controls="mainNavigation">☰ मेनू</button>
+  <button id="menuToggleButton" type="button" onclick="toggleNurseryMenu(event)" aria-label="मेनू खोलें" aria-expanded="false" aria-controls="mainNavigation">☰ मेनू</button>
   <h1 id="headerNurseryName">श्री नीम करोली महाराज ग्रीन नर्सरी</h1>
   <p id="headerNurseryTagline">हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए</p>
   <p id="headerNurseryAddress">📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान</p>
@@ -1608,6 +1621,53 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
       <script>
         window.onload = function() { window.print(); }
       <\/script>
+
+<script>
+/* Robust menu controller: inline click + delegated listener fallback */
+window.toggleNurseryMenu = function(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  const button = document.getElementById('menuToggleButton');
+  const menu = document.getElementById('mainNavigation');
+  if (!button || !menu) return;
+  const willOpen = !menu.classList.contains('menu-open');
+  menu.classList.toggle('menu-open', willOpen);
+  menu.style.display = willOpen ? 'flex' : 'none';
+  button.setAttribute('aria-expanded', String(willOpen));
+  button.setAttribute('aria-label', willOpen ? 'मेनू बंद करें' : 'मेनू खोलें');
+};
+document.addEventListener('click', function(event) {
+  const button = event.target.closest && event.target.closest('#menuToggleButton');
+  if (button) {
+    // Inline handler handles the primary toggle.
+    return;
+  }
+  const menu = document.getElementById('mainNavigation');
+  const toggle = document.getElementById('menuToggleButton');
+  if (menu && toggle && menu.classList.contains('menu-open') &&
+      !menu.contains(event.target)) {
+    menu.classList.remove('menu-open');
+    menu.style.display = 'none';
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'मेनू खोलें');
+  }
+});
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    const menu = document.getElementById('mainNavigation');
+    const toggle = document.getElementById('menuToggleButton');
+    if (menu && toggle) {
+      menu.classList.remove('menu-open');
+      menu.style.display = 'none';
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'मेनू खोलें');
+    }
+  }
+});
+</script>
+
 </body>
     </html>
   `);
