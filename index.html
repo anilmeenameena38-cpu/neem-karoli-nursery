@@ -2975,6 +2975,51 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
 }
 </style>
 
+
+
+<style id="v23-header-modal-layer-fix">
+/* Header ko modal/login overlays ke peeche rakhein; menu normal page par hi upar rahe. */
+header#mainHeader {
+  z-index: 1 !important;
+}
+/* Owner login ko header ke neeche se shuru karne ke bajay poori viewport par dikhayein. */
+#owner.login-visible {
+  position: fixed !important;
+  inset: 0 !important;
+  top: 0 !important;
+  z-index: 30000 !important;
+  width: 100% !important;
+  max-width: none !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+}
+/* Login ke dauran mobile admin-header ka fixed offset hata dein. */
+@media screen and (max-width:700px) {
+  body.admin-panel-open:not(.admin-authenticated) header#mainHeader {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    z-index: 1 !important;
+  }
+  body.admin-panel-open:not(.admin-authenticated) #owner.login-visible {
+    inset: 0 !important;
+    top: 0 !important;
+    z-index: 30000 !important;
+    padding: max(12px, env(safe-area-inset-top)) 10px
+      max(16px, env(safe-area-inset-bottom)) !important;
+  }
+}
+/* Tracking/order popups should always cover the header, not sit below it. */
+#customerTracking.tracking-modal-open {
+  z-index: 30000 !important;
+}
+#order:not([hidden]) {
+  z-index: 30000 !important;
+}
+</style>
+
 </body>
     </html>
   `);
@@ -5016,5 +5061,50 @@ loadPlants();
 }
 
 </style>
+
+
+<style id="v23-header-modal-layer-fix">
+/* Header ko modal/login overlays ke peeche rakhein; menu normal page par hi upar rahe. */
+header#mainHeader {
+  z-index: 1 !important;
+}
+/* Owner login ko header ke neeche se shuru karne ke bajay poori viewport par dikhayein. */
+#owner.login-visible {
+  position: fixed !important;
+  inset: 0 !important;
+  top: 0 !important;
+  z-index: 30000 !important;
+  width: 100% !important;
+  max-width: none !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+}
+/* Login ke dauran mobile admin-header ka fixed offset hata dein. */
+@media screen and (max-width:700px) {
+  body.admin-panel-open:not(.admin-authenticated) header#mainHeader {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    z-index: 1 !important;
+  }
+  body.admin-panel-open:not(.admin-authenticated) #owner.login-visible {
+    inset: 0 !important;
+    top: 0 !important;
+    z-index: 30000 !important;
+    padding: max(12px, env(safe-area-inset-top)) 10px
+      max(16px, env(safe-area-inset-bottom)) !important;
+  }
+}
+/* Tracking/order popups should always cover the header, not sit below it. */
+#customerTracking.tracking-modal-open {
+  z-index: 30000 !important;
+}
+#order:not([hidden]) {
+  z-index: 30000 !important;
+}
+</style>
+
 </body>
 </html>
