@@ -1399,6 +1399,27 @@ body > main::after{
   #cartItemsContainer .cart-before-checkout button:focus-visible{outline:3px solid #86efac;outline-offset:2px}
   #order #orderForm[hidden]{display:none !important}
 </style>
+<style id="v22-cart-final-mobile-centering-fix">
+  #order:not([hidden]) {
+    position:fixed !important; inset:0 !important; width:100vw !important;
+    height:100vh !important; height:100dvh !important; margin:0 !important;
+    display:flex !important; align-items:center !important; justify-content:center !important;
+    box-sizing:border-box !important; overflow-y:auto !important;
+    padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)) !important;
+    z-index:30000 !important;
+  }
+  #order .order-modal-card.empty-cart-state {
+    align-self:center !important; margin:auto !important;
+    width:min(100%,440px) !important; max-height:calc(100dvh - 32px) !important;
+    overflow:auto !important;
+  }
+  #order #orderForm[hidden] { display:none !important; }
+  @media(max-width:700px) {
+    body.cart-modal-open { overflow:hidden !important; }
+    #order:not([hidden]) { min-height:100dvh !important; }
+    #order .order-modal-card.empty-cart-state { transform:none !important; }
+  }
+</style>
 </head>
 <body>
 
@@ -2116,6 +2137,10 @@ const SUPABASE_KEY = 'sb_publishable_ANudpZPHHiFcBeI3U7SaEA_QRzMOywA';
 const OWNER_UID = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9';
 const OWNER_EMAIL = 'anilmeena.meena38@gmail.com';
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Keep the cart modal directly under body so mobile fixed positioning is centered in the viewport.
+const cartModalRoot = document.getElementById('order');
+if (cartModalRoot && cartModalRoot.parentElement !== document.body) document.body.appendChild(cartModalRoot);
 
 let plants = [];
 let shoppingCart = [];
@@ -2907,6 +2932,8 @@ function updateCartBadge() {
 // कार्ट मॉडल खोलना — खाली कार्ट में भी खाली स्थिति दिखाएँ।
 function openCartModal(e) {
   if (e) e.preventDefault();
+  const card = document.querySelector('#order .order-modal-card');
+  if (card) card.dataset.checkoutStarted = 'false';
   renderCartModal();
   const orderModal = document.getElementById('order');
   document.body.classList.add('cart-modal-open');
@@ -2914,8 +2941,8 @@ function openCartModal(e) {
   orderModal.style.display = 'flex';
   // Mobile browsers may retain the previous page scroll position; start the cart at its top.
   orderModal.scrollTop = 0;
-  const card = orderModal.querySelector('.order-modal-card');
-  if (card) card.scrollTop = 0;
+  const modalCard = orderModal.querySelector('.order-modal-card');
+  if (modalCard) modalCard.scrollTop = 0;
 }
 
 function renderCartModal() {
