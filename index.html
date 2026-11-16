@@ -3636,6 +3636,142 @@ nav a[href="#customerTracking"],
 }
 </style>
 
+
+
+<style id="v39-mobile-tracking-viewport-final">
+/* V39: reserve the full usable phone viewport for tracking; keep only the results region scrollable. */
+@media screen and (max-width:700px) {
+  html:has(body.tracking-open) {
+    overflow:hidden !important;
+    overscroll-behavior:none !important;
+  }
+  body.tracking-open {
+    position:fixed !important;
+    overflow:hidden !important;
+    width:100% !important;
+    height:100% !important;
+    min-height:100% !important;
+    touch-action:auto !important;
+    overscroll-behavior:none !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open {
+    position:fixed !important;
+    top:calc(var(--tracking-header-bottom, 64px) + 6px) !important;
+    bottom:calc(env(safe-area-inset-bottom, 0px) + 6px) !important;
+    left:8px !important;
+    right:8px !important;
+    width:auto !important;
+    max-width:none !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    margin:0 !important;
+    padding:10px 10px 8px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    gap:5px !important;
+    overflow:hidden !important;
+    box-sizing:border-box !important;
+    transform:none !important;
+    touch-action:auto !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #closeTrackingModal {
+    position:absolute !important;
+    top:7px !important;
+    right:7px !important;
+    flex:0 0 36px !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > h2,
+  body.tracking-open > #customerTracking.tracking-modal-open > p,
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm,
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingStatus,
+  body.tracking-open > #customerTracking.tracking-modal-open > #trackingFilters {
+    flex:0 0 auto !important;
+    min-height:0 !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > h2 {
+    text-align:center !important;
+    padding:3px 44px 5px !important;
+    margin:0 !important;
+    line-height:1.25 !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > p {
+    margin:0 !important;
+    line-height:1.3 !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm {
+    margin:0 !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm label {
+    margin:2px 0 !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm input {
+    min-height:36px !important;
+    margin:3px 0 5px !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm button {
+    min-height:36px !important;
+    padding:6px 13px !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingStatus {
+    margin:0 !important;
+    line-height:1.25 !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #trackingFilters {
+    display:block !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #trackingFilters[hidden] {
+    display:none !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingResults {
+    display:block !important;
+    flex:1 1 0% !important;
+    min-height:0 !important;
+    height:1px !important;
+    max-height:none !important;
+    width:100% !important;
+    margin:0 !important;
+    padding:4px 3px 12px !important;
+    overflow-y:scroll !important;
+    overflow-x:hidden !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior-y:contain !important;
+    touch-action:pan-y !important;
+    pointer-events:auto !important;
+    scrollbar-width:thin !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open .customer-order-card {
+    flex:none !important;
+    margin:0 0 9px !important;
+  }
+  body.tracking-open .mobile-store-nav,
+  body.tracking-open #floatingBottomCartBar,
+  body.tracking-open #floatingWaWidget { display:none !important; }
+}
+@media screen and (min-width:701px) {
+  #customerTracking.tracking-modal-open {
+    display:flex !important;
+    flex-direction:column !important;
+    height:min(86vh,820px) !important;
+    max-height:86vh !important;
+    min-height:300px !important;
+    overflow:hidden !important;
+  }
+  #customerTracking.tracking-modal-open #customerTrackingResults {
+    flex:1 1 0% !important;
+    min-height:0 !important;
+    height:1px !important;
+    overflow-y:scroll !important;
+    overflow-x:hidden !important;
+    overscroll-behavior:contain !important;
+    touch-action:pan-y !important;
+  }
+}
+</style>
+
 </body>
     </html>
   `);
@@ -6198,6 +6334,142 @@ nav a[href="#customerTracking"],
     padding:20px 22px !important;
   }
   #customerTracking.tracking-modal-open #customerTrackingResults { min-height:180px !important; }
+}
+</style>
+
+
+
+<style id="v39-mobile-tracking-viewport-final">
+/* V39: reserve the full usable phone viewport for tracking; keep only the results region scrollable. */
+@media screen and (max-width:700px) {
+  html:has(body.tracking-open) {
+    overflow:hidden !important;
+    overscroll-behavior:none !important;
+  }
+  body.tracking-open {
+    position:fixed !important;
+    overflow:hidden !important;
+    width:100% !important;
+    height:100% !important;
+    min-height:100% !important;
+    touch-action:auto !important;
+    overscroll-behavior:none !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open {
+    position:fixed !important;
+    top:calc(var(--tracking-header-bottom, 64px) + 6px) !important;
+    bottom:calc(env(safe-area-inset-bottom, 0px) + 6px) !important;
+    left:8px !important;
+    right:8px !important;
+    width:auto !important;
+    max-width:none !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    margin:0 !important;
+    padding:10px 10px 8px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    gap:5px !important;
+    overflow:hidden !important;
+    box-sizing:border-box !important;
+    transform:none !important;
+    touch-action:auto !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #closeTrackingModal {
+    position:absolute !important;
+    top:7px !important;
+    right:7px !important;
+    flex:0 0 36px !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > h2,
+  body.tracking-open > #customerTracking.tracking-modal-open > p,
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm,
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingStatus,
+  body.tracking-open > #customerTracking.tracking-modal-open > #trackingFilters {
+    flex:0 0 auto !important;
+    min-height:0 !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > h2 {
+    text-align:center !important;
+    padding:3px 44px 5px !important;
+    margin:0 !important;
+    line-height:1.25 !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > p {
+    margin:0 !important;
+    line-height:1.3 !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm {
+    margin:0 !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm label {
+    margin:2px 0 !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm input {
+    min-height:36px !important;
+    margin:3px 0 5px !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm button {
+    min-height:36px !important;
+    padding:6px 13px !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingStatus {
+    margin:0 !important;
+    line-height:1.25 !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #trackingFilters {
+    display:block !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #trackingFilters[hidden] {
+    display:none !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingResults {
+    display:block !important;
+    flex:1 1 0% !important;
+    min-height:0 !important;
+    height:1px !important;
+    max-height:none !important;
+    width:100% !important;
+    margin:0 !important;
+    padding:4px 3px 12px !important;
+    overflow-y:scroll !important;
+    overflow-x:hidden !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior-y:contain !important;
+    touch-action:pan-y !important;
+    pointer-events:auto !important;
+    scrollbar-width:thin !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open .customer-order-card {
+    flex:none !important;
+    margin:0 0 9px !important;
+  }
+  body.tracking-open .mobile-store-nav,
+  body.tracking-open #floatingBottomCartBar,
+  body.tracking-open #floatingWaWidget { display:none !important; }
+}
+@media screen and (min-width:701px) {
+  #customerTracking.tracking-modal-open {
+    display:flex !important;
+    flex-direction:column !important;
+    height:min(86vh,820px) !important;
+    max-height:86vh !important;
+    min-height:300px !important;
+    overflow:hidden !important;
+  }
+  #customerTracking.tracking-modal-open #customerTrackingResults {
+    flex:1 1 0% !important;
+    min-height:0 !important;
+    height:1px !important;
+    overflow-y:scroll !important;
+    overflow-x:hidden !important;
+    overscroll-behavior:contain !important;
+    touch-action:pan-y !important;
+  }
 }
 </style>
 
