@@ -343,7 +343,8 @@ button:disabled{opacity:.55;cursor:wait}
 #order:not([hidden]){position:fixed;inset:0;z-index:9999;background:rgba(8,25,13,.68);padding:18px;display:flex;align-items:center;justify-content:center;overflow:auto}
 #order[hidden]{display:none !important;}
 #order .order-modal-card{width:min(100%,600px);max-height:calc(100dvh - 36px);overflow:auto;background:#fff;border-radius:20px;padding:20px;border-top:5px solid #25884b}
-#customerTracking{display:none;position:fixed;inset:0;z-index:10000;width:min(100% - 24px,520px);max-height:calc(100dvh - 28px);overflow:auto;margin:auto!important;background:#fff;padding:20px;border-radius:18px;box-shadow:0 22px 70px #0006}
+#customerTracking{display:none;position:fixed;inset:0;z-index:10000;width:min(92vw,420px);max-height:min(72dvh,560px);overflow:auto;margin:auto!important;background:#fff;padding:16px;border-radius:18px;box-shadow:0 22px 70px #0006;align-self:center}
+@media(max-width:700px){#customerTracking{width:min(90vw,390px);max-height:70dvh;padding:14px;border-radius:16px}#customerTracking h2{font-size:19px;margin:4px 38px 10px 0}#customerTracking p{margin:6px 0 12px}#customerTrackingForm input{min-height:42px}}
 #customerTracking.tracking-modal-open{display:block}
 #about{display:none;padding:20px;background:#fff;border-radius:18px;margin-bottom:16px}
 #about.about-page-open{display:block}
@@ -1492,7 +1493,6 @@ body > main::after{
 <!-- मोबाइल/डेस्कटॉप टॉगल मेनू -->
 <!-- मोबाइल फ्रेंडली चौड़े नेविगेशन टैब -->
 <nav id="mainNavigation" aria-label="मुख्य नेविगेशन">
-  <a href="#mainHeader">🏠 होम</a>
   <a href="#contact">📞 संपर्क</a>
   <a href="#customerTracking" id="customerTrackingNav">📦 ऑर्डर ट्रैकिंग</a>
   <button id="adminPanelNav" type="button">🔐 एडमिन लॉगिन</button>
@@ -2145,7 +2145,6 @@ body > main::after{
 <!-- मोबाइल ऐप जैसा नीचे का नेविगेशन -->
 <div class="mobile-store-nav" aria-label="मुख्य नेविगेशन">
   <button type="button" class="mobile-store-link active" data-store-action="home"><span>⌂</span><small>होम</small></button>
-  <button type="button" class="mobile-store-link" data-store-action="categories"><span>▦</span><small>कैटेगरी</small></button>
   <button type="button" class="mobile-store-link" data-store-action="account"><span>♙</span><small>खाता</small></button>
   <button type="button" class="mobile-store-link" data-store-action="cart"><span>🛒</span><small>कार्ट</small><b id="mobileCartCount" aria-label="कार्ट में कुल मात्रा">0</b></button>
 </div>
@@ -4287,8 +4286,17 @@ loadPlants();
     document.querySelectorAll('.mobile-store-link').forEach(x=>x.classList.remove('active'));
     btn.classList.add('active');
     const action=btn.dataset.storeAction;
-    if(action==='home') window.scrollTo({top:0,behavior:'smooth'});
-    if(action==='categories') document.getElementById('shopCategoriesContainer')?.scrollIntoView({behavior:'smooth',block:'start'});
+    if(action==='home') {
+      // सभी खुले हुए ग्राहक पॉपअप/पेज बंद करके मुख्य होमपेज पर लौटें।
+      if (typeof window.closeNurseryMenu === 'function') window.closeNurseryMenu();
+      document.getElementById('customerTracking')?.classList.remove('tracking-modal-open');
+      document.getElementById('about')?.classList.remove('about-page-open');
+      const orderModal = document.getElementById('order');
+      if (orderModal && !orderModal.hidden && typeof closeOrderPopup === 'function') closeOrderPopup();
+      document.querySelectorAll('.mobile-store-link').forEach(x=>x.classList.remove('active'));
+      btn.classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
     if(action==='account') document.getElementById('customerTrackingNav')?.click();
     if(action==='cart') { if(typeof openCartModal==='function') openCartModal(); else document.getElementById('floatingBottomCartBar')?.querySelector('button')?.click(); }
   }));
