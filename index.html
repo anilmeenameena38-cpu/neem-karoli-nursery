@@ -1679,7 +1679,64 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
         th{background:#f4fbf2}
         .total-box{text-align:right;font-size:15px;margin-top:10px}
         .footer{text-align:center;margin-top:24px;font-size:12px;border-top:1px solid #ddd;padding-top:10px}
-      </style>
+      
+
+/* V7 FINAL OVERRIDE: keep admin login above the header/menu and align mobile header in one row */
+#owner.login-visible{
+  z-index:20000 !important;
+}
+@media (max-width:700px){
+  header#mainHeader{
+    display:flex !important;
+    flex-direction:row !important;
+    flex-wrap:nowrap !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:9px !important;
+    min-height:64px !important;
+    padding:10px 12px !important;
+    text-align:left !important;
+  }
+  header#mainHeader > #menuToggleButton{
+    display:inline-flex !important;
+    flex:0 0 auto !important;
+    order:0 !important;
+    margin:0 !important;
+    white-space:nowrap !important;
+  }
+  header#mainHeader > #headerNurseryName{
+    display:block !important;
+    flex:1 1 auto !important;
+    order:1 !important;
+    min-width:0 !important;
+    width:auto !important;
+    max-width:none !important;
+    margin:0 !important;
+    padding:0 !important;
+    text-align:left !important;
+    font-size:13px !important;
+    line-height:1.25 !important;
+    overflow-wrap:anywhere !important;
+    word-break:normal !important;
+  }
+  header#mainHeader > .header-badge-box,
+  header#mainHeader > #headerNurseryTagline,
+  header#mainHeader > #headerNurseryAddress,
+  header#mainHeader > div:not(.header-badge-box){
+    display:none !important;
+  }
+  header#mainHeader > #mainNavigation{
+    position:absolute !important;
+    display:none;
+    top:100% !important;
+    left:10px !important;
+    right:10px !important;
+    width:auto !important;
+    z-index:10000 !important;
+  }
+  header#mainHeader > #mainNavigation.menu-open{display:flex !important;}
+}
+</style>
     </head>
     <body>
       <div class="header">
