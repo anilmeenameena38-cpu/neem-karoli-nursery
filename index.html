@@ -467,6 +467,15 @@ footer a:hover{text-decoration:underline}
   #plantOnlyList .plant-buy-button, #vegOnlyList .plant-buy-button { width:100% !important; font-size:8px !important; line-height:1.2 !important; padding:5px 1px !important; white-space:normal !important; }
 }
 
+
+/* सरल टॉगल नेविगेशन: सभी मेनू लिंक काम करते हैं */
+#menuToggleButton{display:inline-flex;align-items:center;gap:7px;margin:0 0 9px;padding:8px 12px;border:1px solid #ffffff70;border-radius:9px;background:#ffffff;color:#14532d;font-weight:800;cursor:pointer}
+#mainNavigation{display:none;position:absolute;top:100%;left:12px;right:12px;z-index:5000;flex-direction:column;align-items:stretch;gap:6px;padding:10px;background:#fff;border:1px solid #d1fae5;border-radius:12px;box-shadow:0 12px 28px #0002}
+#mainNavigation.menu-open{display:flex}
+#mainNavigation a,#mainNavigation button{display:flex;align-items:center;width:100%;padding:11px 13px;border:0;border-radius:8px;background:#f0fdf4;color:#14532d;text-align:left;text-decoration:none;font-weight:800;cursor:pointer}
+#mainHeader{position:relative}
+@media(min-width:701px){#menuToggleButton{margin:0 0 10px}#mainNavigation{left:16px;right:auto;width:250px}}
+@media(max-width:700px){header#mainHeader{padding:10px 14px 12px!important}#menuToggleButton{margin:0 0 8px;padding:7px 11px}#mainNavigation{top:100%;left:10px;right:10px}}
 </style>
 </head>
 <body>
@@ -500,6 +509,7 @@ footer a:hover{text-decoration:underline}
   <div class="header-badge-box">
     <div class="header-logo-glow">🪴</div>
   </div>
+  <button id="menuToggleButton" type="button" aria-label="मेनू खोलें" aria-expanded="false" aria-controls="mainNavigation">☰ मेनू</button>
   <h1 id="headerNurseryName">श्री नीम करोली महाराज ग्रीन नर्सरी</h1>
   <p id="headerNurseryTagline">हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए</p>
   <p id="headerNurseryAddress">📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान</p>
@@ -508,27 +518,13 @@ footer a:hover{text-decoration:underline}
   </div>
 </header>
 
-<!-- मोबाइल स्टोर कैटेगरी टैब और प्रमोशनल बैनर -->
-<div class="store-category-strip" aria-label="शॉपिंग कैटेगरी">
-  <a href="#shopCategoriesContainer">सभी</a><a href="#viewPlantCategory">पौधों के पौधे</a><a href="#viewVegCategory">ताज़ी सब्ज़ियाँ</a><a href="#plantCare">देखभाल</a><a href="#contact">संपर्क</a>
-</div>
-
-<div class="store-section-heading"><strong>आपके लिए सुझाव</strong><a href="#shopCategoriesContainer">सभी देखें →</a></div>
-
+<!-- मोबाइल/डेस्कटॉप टॉगल मेनू -->
 <!-- मोबाइल फ्रेंडली चौड़े नेविगेशन टैब -->
-<nav>
-  <a href="#shopCategoriesContainer">🌱 पौधे और सब्ज़ियाँ</a>
-  <div class="about-nav-menu" id="aboutNavMenu">
-    <a href="#about" id="aboutNavToggle" aria-expanded="false" aria-controls="aboutNavSubmenu">🌿 हमारे बारे में ▾</a>
-    <div class="about-nav-submenu" id="aboutNavSubmenu" hidden>
-      <a href="#about">हमारी नर्सरी</a>
-      <a href="#plantCare">🪴 पौधों की देखभाल</a>
-      <a href="#plantTypes">🌱 पौधों के प्रकार</a>
-    </div>
-  </div>
+<nav id="mainNavigation" aria-label="मुख्य नेविगेशन">
+  <a href="#mainHeader">🏠 होम</a>
   <a href="#contact">📞 संपर्क</a>
-  <a href="#customerTracking" id="customerTrackingNav">📦 ट्रैकिंग</a>
-  <button id="adminPanelNav" type="button">🔐 एडमिन</button>
+  <a href="#customerTracking" id="customerTrackingNav">📦 ऑर्डर ट्रैकिंग</a>
+  <button id="adminPanelNav" type="button">🔐 एडमिन लॉगिन</button>
 </nav>
 
 <main>
@@ -2856,6 +2852,19 @@ applySiteConfigToUI();
 loadPlants();
 </script>
 
+<script>
+// टॉगल मेनू खोलना/बंद करना और मेनू लिंक पर जाने के बाद बंद करना
+(function(){
+  const btn=document.getElementById('menuToggleButton');
+  const menu=document.getElementById('mainNavigation');
+  if(!btn||!menu) return;
+  const close=()=>{menu.classList.remove('menu-open');btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-label','मेनू खोलें');};
+  btn.addEventListener('click',()=>{const open=!menu.classList.contains('menu-open');menu.classList.toggle('menu-open',open);btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'मेनू बंद करें':'मेनू खोलें');});
+  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
+  document.addEventListener('click',e=>{if(!menu.contains(e.target)&&!btn.contains(e.target)) close();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
+})();
+</script>
 <script>
 // जानकारी वाले सेक्शन और हमारे बारे में ड्रॉपडाउन
 (function () {
