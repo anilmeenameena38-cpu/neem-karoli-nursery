@@ -1331,22 +1331,30 @@ body > main::after{
 .v25-category-filters button[aria-pressed="true"]{background:#167a43;color:#fff;border-color:#167a43}
 </style>
 
-<style id="v28-two-step-category-style">
-#v28CategoryChooser{background:#fff;border:1px solid #d6ead9;border-radius:16px;padding:16px;margin:8px 0 14px;box-shadow:0 3px 12px rgba(20,80,40,.07)}
-#v28CategoryChooser h2{margin:0 0 5px;color:#14532d;font-size:clamp(18px,2vw,23px)}
-#v28CategoryChooser p{margin:0 0 14px;color:#64748b;font-size:13px}
-.v28-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.v28-choice{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-height:145px;padding:16px 12px;border:1px solid #b9ddc2;border-radius:14px;background:linear-gradient(145deg,#f5fff6,#e6f5e8);color:#14532d;cursor:pointer;text-align:center}
+<style id="v29-two-step-category-style">
+#shopCategoriesContainer.v29-home #storeViewTabs,
+#shopCategoriesContainer.v29-home #viewPlantCategory,
+#shopCategoriesContainer.v29-home #viewVegCategory{display:none!important}
+#shopCategoriesContainer.v29-plants #v28CategoryChooser,
+#shopCategoriesContainer.v29-veg #v28CategoryChooser,
+#shopCategoriesContainer.v29-plants #storeViewTabs,
+#shopCategoriesContainer.v29-veg #storeViewTabs{display:none!important}
+#shopCategoriesContainer.v29-plants #viewPlantCategory{display:block!important}
+#shopCategoriesContainer.v29-plants #viewVegCategory{display:none!important}
+#shopCategoriesContainer.v29-veg #viewPlantCategory{display:none!important}
+#shopCategoriesContainer.v29-veg #viewVegCategory{display:block!important}
+#v28CategoryChooser{max-width:1160px;margin:12px auto;padding:18px;background:#fff;border:1px solid #d7ead9;border-radius:16px;box-shadow:0 3px 12px #14532d12}
+#v28CategoryChooser h2{margin:0 0 5px;font-size:20px;color:#14532d}
+#v28CategoryChooser p{margin:0 0 14px;color:#647568;font-size:13px}
+.v28-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.v28-choice{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-height:145px;padding:16px 12px;border:1px solid #b9ddc2;border-radius:14px;background:linear-gradient(145deg,#f5fff6,#e6f5e8);color:#14532d;cursor:pointer;text-align:center;touch-action:manipulation}
 .v28-choice-emoji{font-size:36px;line-height:1.2}.v28-choice strong{font-size:16px}.v28-choice small{font-size:12px;color:#55705d}.v28-choice-cta{margin-top:3px;background:#167a43;color:white;border-radius:20px;padding:7px 15px;font-weight:700;font-size:12px}
-.v28-back{border:1px solid #b9d9c2!important;background:#f2faf3!important;color:#176239!important;border-radius:20px!important;padding:7px 12px!important;margin:0 0 10px!important;font-size:13px!important}
-#shopCategoriesContainer.v28-home #storeViewTabs,#shopCategoriesContainer.v28-home #viewPlantCategory,#shopCategoriesContainer.v28-home #viewVegCategory{display:none!important}
-#shopCategoriesContainer.v28-plants #v28CategoryChooser,#shopCategoriesContainer.v28-veg #v28CategoryChooser{display:none!important}
-#shopCategoriesContainer.v28-plants #storeViewTabs,#shopCategoriesContainer.v28-veg #storeViewTabs{display:none!important}
-#shopCategoriesContainer.v28-plants #viewPlantCategory{display:block!important}
-#shopCategoriesContainer.v28-plants #viewVegCategory{display:none!important}
-#shopCategoriesContainer.v28-veg #viewPlantCategory{display:none!important}
-#shopCategoriesContainer.v28-veg #viewVegCategory{display:block!important}
-@media(max-width:700px){#v28CategoryChooser{padding:12px;margin:7px 0 12px}.v28-choice-grid{gap:9px}.v28-choice{min-height:125px;padding:12px 7px}.v28-choice-emoji{font-size:31px}.v28-choice strong{font-size:14px}.v28-choice small{font-size:11px}}
+.v28-back{border:1px solid #b9d9c2!important;background:#f2faf3!important;color:#176239!important;border-radius:20px!important;padding:7px 12px!important;margin:0 0 10px!important;font-size:13px!important;cursor:pointer;touch-action:manipulation}
+#shopCategoriesContainer.v29-plants #viewPlantCategory,#shopCategoriesContainer.v29-veg #viewVegCategory{max-width:1160px;margin:10px auto}
+#shopCategoriesContainer .v25-category-filters{display:flex;gap:7px;overflow-x:auto;padding:8px 0 12px;white-space:nowrap;scrollbar-width:thin}
+#shopCategoriesContainer .v25-category-filters button{flex:0 0 auto;border:1px solid #b9ddc2;border-radius:20px;background:#f3fbf4;color:#14532d;padding:7px 13px;font-weight:700;cursor:pointer}
+#shopCategoriesContainer .v25-category-filters button[aria-pressed="true"]{background:#167a43;color:#fff;border-color:#167a43}
+@media(max-width:700px){#v28CategoryChooser{margin:8px 0 12px;padding:12px}.v28-choice-grid{gap:9px}.v28-choice{min-height:125px;padding:12px 7px}.v28-choice-emoji{font-size:31px}.v28-choice strong{font-size:14px}.v28-choice small{font-size:11px}#shopCategoriesContainer.v29-plants #viewPlantCategory,#shopCategoriesContainer.v29-veg #viewVegCategory{margin:8px 0;padding:10px!important}}
 @media(min-width:701px){#v28CategoryChooser{padding:22px}.v28-choice{min-height:170px}.v28-choice:hover{border-color:#16834c;box-shadow:0 5px 16px rgba(22,131,76,.13);transform:translateY(-1px)}}
 </style>
 
@@ -1459,7 +1467,7 @@ body > main::after{
   </section>
 
   <!-- मोबाइल पर पौधे और ताजी सब्जियाँ अलग टैब में -->
-  <div id="shopCategoriesContainer" style="scroll-margin-top:12px">
+  <div id="shopCategoriesContainer" class="v29-home" style="scroll-margin-top:12px">
   <div id="v28CategoryChooser">
     <h2>आप क्या खरीदना चाहते हैं?</h2>
     <p>पहले चुनें, फिर अपनी पसंद की कैटेगरी देखें</p>
@@ -4155,7 +4163,7 @@ loadPlants();
   });
 })();
 </script>
-\n<script id="v25-category-script">
+<script id="v25-category-script">
 (function(){
   const definitions = [
     {section:'viewPlantCategory', list:'plantOnlyList', labels:[['सभी','all'],['टमाटर','tomato'],['हरी मिर्च','chilli'],['बैंगन','brinjal'],['पपीता','papaya'],['अन्य पौधे','other']]},
@@ -4189,20 +4197,45 @@ loadPlants();
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
 </script>\n
-<script id="v28-two-step-category-controller">
+<script id="v29-two-step-category-controller">
 (function(){
- const root=document.getElementById('shopCategoriesContainer');
- const chooser=document.getElementById('v28CategoryChooser');
- if(!root||!chooser)return;
- const plant=document.getElementById('viewPlantCategory');
- const veg=document.getElementById('viewVegCategory');
- function home(){root.classList.remove('v28-plants','v28-veg');root.classList.add('v28-home');root.scrollIntoView({behavior:'smooth',block:'start'});}
- function open(which){root.classList.remove('v28-home','v28-plants','v28-veg');root.classList.add(which==='veg'?'v28-veg':'v28-plants');const target=which==='veg'?veg:plant;if(target)target.scrollIntoView({behavior:'smooth',block:'start'});}
- chooser.querySelectorAll('[data-v28-choice]').forEach(b=>b.addEventListener('click',()=>open(b.dataset.v28Choice)));
- root.querySelectorAll('[data-v28-back]').forEach(b=>b.addEventListener('click',home));
- // Capture the bottom navigation tap before the legacy one-step handler.
- document.querySelectorAll('.mobile-store-link[data-store-action="categories"]').forEach(b=>b.addEventListener('click',function(e){e.preventDefault();e.stopImmediatePropagation();document.querySelectorAll('.mobile-store-link').forEach(x=>x.classList.remove('active'));b.classList.add('active');home();},true));
- home();
+  function init(){
+    const root=document.getElementById('shopCategoriesContainer');
+    if(!root || root.dataset.v29Ready==='yes') return;
+    const chooser=document.getElementById('v28CategoryChooser');
+    const plant=document.getElementById('viewPlantCategory');
+    const veg=document.getElementById('viewVegCategory');
+    if(!chooser||!plant||!veg) return;
+    root.dataset.v29Ready='yes';
+    function setView(view, scroll){
+      root.classList.remove('v29-home','v29-plants','v29-veg');
+      root.classList.add(view==='plants'?'v29-plants':view==='veg'?'v29-veg':'v29-home');
+      if(scroll) root.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    chooser.querySelectorAll('[data-v28-choice]').forEach(function(button){
+      button.addEventListener('click',function(){
+        const choice=button.getAttribute('data-v28-choice');
+        setView(choice==='veg'?'veg':'plants',true);
+      });
+    });
+    root.querySelectorAll('[data-v28-back]').forEach(function(button){
+      button.addEventListener('click',function(){setView('home',true);});
+    });
+    document.querySelectorAll('.mobile-store-link[data-store-action="categories"]').forEach(function(button){
+      button.addEventListener('click',function(event){
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        document.querySelectorAll('.mobile-store-link').forEach(function(item){item.classList.remove('active');});
+        button.classList.add('active');
+        setView('home',true);
+      },true);
+    });
+    // पुराने एक-स्तरीय टैब क्लिक से दो-स्तरीय चयन प्रभावित न हो।
+    document.getElementById('showPlantsTab')?.addEventListener('click',function(){setView('plants',false);});
+    document.getElementById('showVegTab')?.addEventListener('click',function(){setView('veg',false);});
+    setView('home',false);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
 </script>
 </body>
