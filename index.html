@@ -1550,17 +1550,21 @@ body > main::after{
 </style>
 
 <style id="v28-mobile-order-tracking-layout">
-/* केवल मोबाइल ऑर्डर ट्रैकिंग: फुल-स्क्रीन लेआउट, अलग स्क्रॉल क्षेत्र */
+/* केवल मोबाइल ऑर्डर ट्रैकिंग: फुल-स्क्रीन लेआउट, हेडर ओवरलैप फिक्स और अलग स्क्रॉल क्षेत्र */
 @media (max-width:700px) {
   body.tracking-open {
     overflow:hidden !important;
     height:100%;
-    touch-action:none;
   }
+  body.tracking-open header#mainHeader,
+  body.tracking-open #siteNoticeTicker,
+  body.tracking-open #siteOfferBanner,
+  body.tracking-open #siteClosedBanner,
   body.tracking-open .mobile-store-nav,
   body.tracking-open #floatingBottomCartBar,
   body.tracking-open #floatingWaWidget {
     display:none !important;
+    z-index:1 !important;
   }
   #customerTracking.tracking-modal-open {
     position:fixed !important;
@@ -1576,7 +1580,7 @@ body > main::after{
     height:100dvh !important;
     max-height:none !important;
     margin:0 !important;
-    padding:calc(12px + env(safe-area-inset-top)) 14px calc(12px + env(safe-area-inset-bottom)) !important;
+    padding:calc(14px + env(safe-area-inset-top)) 14px calc(14px + env(safe-area-inset-bottom)) !important;
     border:0 !important;
     border-radius:0 !important;
     box-shadow:none !important;
@@ -1591,18 +1595,23 @@ body > main::after{
   }
   #customerTracking #closeTrackingModal {
     position:absolute !important;
-    top:calc(10px + env(safe-area-inset-top)) !important;
-    right:12px !important;
+    top:calc(12px + env(safe-area-inset-top)) !important;
+    right:14px !important;
     float:none !important;
     width:38px !important;
     height:38px !important;
     min-width:38px !important;
     margin:0 !important;
     z-index:5 !important;
+    background:#fee2e2 !important;
+    color:#991b1b !important;
+    border:1px solid #fecaca !important;
+    font-size:18px !important;
+    font-weight:900 !important;
   }
   #customerTracking h2 {
     flex:0 0 auto !important;
-    margin:4px 48px 0 0 !important;
+    margin:2px 48px 0 0 !important;
     padding:4px 0 8px !important;
     font-size:19px !important;
     line-height:1.35 !important;
@@ -1626,10 +1635,12 @@ body > main::after{
   }
   #customerTrackingForm button {
     min-height:42px !important;
+    width:100% !important;
   }
   #customerTrackingStatus {
     flex:0 0 auto !important;
     margin:0 !important;
+    font-weight:700 !important;
   }
   #customerTrackingResults {
     flex:1 1 auto !important;
@@ -1637,11 +1648,15 @@ body > main::after{
     overflow-y:auto !important;
     overscroll-behavior:contain !important;
     -webkit-overflow-scrolling:touch !important;
+    touch-action:pan-y !important;
     margin:0 !important;
-    padding:2px 2px calc(12px + env(safe-area-inset-bottom)) !important;
+    padding:4px 2px calc(80px + env(safe-area-inset-bottom)) !important;
   }
-  #customerTrackingResults .order-item-card {
-    margin:0 0 9px !important;
+  #customerTrackingResults .order-item-card,
+  #customerTrackingResults .status {
+    margin:0 0 10px !important;
+    border-radius:12px !important;
+    padding:12px !important;
   }
 }
 </style>
@@ -2363,9 +2378,11 @@ const OWNER_UID = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9';
 const OWNER_EMAIL = 'anilmeena.meena38@gmail.com';
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Keep the cart modal directly under body so mobile fixed positioning is centered in the viewport.
+// Keep the cart and tracking modals directly under body so mobile fixed positioning works above all stacking contexts.
 const cartModalRoot = document.getElementById('order');
 if (cartModalRoot && cartModalRoot.parentElement !== document.body) document.body.appendChild(cartModalRoot);
+const trackingModalRoot = document.getElementById('customerTracking');
+if (trackingModalRoot && trackingModalRoot.parentElement !== document.body) document.body.appendChild(trackingModalRoot);
 
 let plants = [];
 let shoppingCart = [];
