@@ -598,6 +598,10 @@ footer a:hover{text-decoration:underline}
     left:10px !important; right:10px !important;
   }
 }
+
+/* V8: बंद Navigation menu हमेशा छिपा रहे, चाहे कोई पुराना !important नियम हो */
+#mainNavigation:not(.menu-open){display:none !important;pointer-events:none !important}
+#mainNavigation.menu-open{pointer-events:auto !important}
 </style>
 </head>
 <body>
@@ -2378,9 +2382,10 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 const ownerModal = document.getElementById('owner');
 document.getElementById('adminPanelNav').addEventListener('click', () => { 
   // एडमिन लॉगिन खोलने से पहले नेविगेशन मेनू बंद करें।
+  if (window.closeNurseryMenu) window.closeNurseryMenu();
   const navMenu = document.getElementById('mainNavigation');
   const navButton = document.getElementById('menuToggleButton');
-  if (navMenu) { navMenu.classList.remove('menu-open'); navMenu.style.display = 'none'; }
+  if (navMenu) { navMenu.classList.remove('menu-open'); navMenu.style.setProperty('display', 'none', 'important'); }
   if (navButton) { navButton.setAttribute('aria-expanded', 'false'); navButton.setAttribute('aria-label', 'मेनू खोलें'); }
   ownerModal.classList.add('login-visible');
   initAudioContext();
@@ -2402,9 +2407,10 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   const { data, error } = await db.auth.signInWithPassword({ email, password });
   if (error || data.user.id !== OWNER_UID) { stat.textContent = 'गलत लॉगिन!'; return; }
   // सफल लॉगिन के बाद भी नेविगेशन मेनू बंद ही रहे।
+  if (window.closeNurseryMenu) window.closeNurseryMenu();
   const navMenuAfterLogin = document.getElementById('mainNavigation');
   const navButtonAfterLogin = document.getElementById('menuToggleButton');
-  if (navMenuAfterLogin) { navMenuAfterLogin.classList.remove('menu-open'); navMenuAfterLogin.style.display = 'none'; }
+  if (navMenuAfterLogin) { navMenuAfterLogin.classList.remove('menu-open'); navMenuAfterLogin.style.setProperty('display', 'none', 'important'); }
   if (navButtonAfterLogin) { navButtonAfterLogin.setAttribute('aria-expanded', 'false'); navButtonAfterLogin.setAttribute('aria-label', 'मेनू खोलें'); }
   document.getElementById('loginForm').style.display = 'none';
   document.getElementById('ownerPanelHeader').style.display = 'block';
@@ -3133,23 +3139,33 @@ loadPlants();
   if (menu.parentElement !== header) header.appendChild(menu);
   const setMenu = (open) => {
     menu.classList.toggle('menu-open', open);
-    menu.style.display = open ? 'flex' : 'none';
+    // !important CSS rules are also overridden so a closed menu cannot remain visible.
+    if (open) menu.style.setProperty('display', 'flex', 'important');
+    else menu.style.setProperty('display', 'none', 'important');
     btn.setAttribute('aria-expanded', String(open));
     btn.setAttribute('aria-label', open ? 'मेनू बंद करें' : 'मेनू खोलें');
   };
+  // Other scripts (Admin Login) can close the same menu reliably.
+  window.closeNurseryMenu = () => setMenu(false);
   btn.addEventListener('click', (event) => {
-    event.preventDefault(); event.stopPropagation();
+    event.preventDefault();
+    event.stopPropagation();
     setMenu(!menu.classList.contains('menu-open'));
   });
+  // हर मेनू विकल्प पर क्लिक होते ही ड्रॉपडाउन बंद होगा; मूल लिंक/बटन का काम जारी रहेगा।
   menu.addEventListener('click', (event) => {
-    if (event.target.closest('a')) setMenu(false);
-  });
+    const item = event.target.closest('a, button');
+    if (item) setMenu(false);
+  }, true);
   document.addEventListener('click', (event) => {
     if (!menu.contains(event.target) && !btn.contains(event.target)) setMenu(false);
   });
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') setMenu(false);
   });
+  // Admin login open event must always close dropdown before showing the panel.
+  const adminButton = document.getElementById('adminPanelNav');
+  if (adminButton) adminButton.addEventListener('click', () => setMenu(false), true);
   setMenu(false);
 })();
 </script>
