@@ -484,7 +484,7 @@ footer a:hover{text-decoration:underline}
 
 
 /* Toggle menu click reliability fix */
-#mainHeader { position: relative !important; z-index: 6000 !important; }
+#mainHeader { position: relative !important; z-index: 6000 !important; overflow:visible !important; }
 #menuToggleButton {
   position: relative !important;
   z-index: 10001 !important;
@@ -1622,51 +1622,6 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
         window.onload = function() { window.print(); }
       <\/script>
 
-<script>
-/* Robust menu controller: inline click + delegated listener fallback */
-window.toggleNurseryMenu = function(event) {
-  if (event) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-  const button = document.getElementById('menuToggleButton');
-  const menu = document.getElementById('mainNavigation');
-  if (!button || !menu) return;
-  const willOpen = !menu.classList.contains('menu-open');
-  menu.classList.toggle('menu-open', willOpen);
-  menu.style.display = willOpen ? 'flex' : 'none';
-  button.setAttribute('aria-expanded', String(willOpen));
-  button.setAttribute('aria-label', willOpen ? 'मेनू बंद करें' : 'मेनू खोलें');
-};
-document.addEventListener('click', function(event) {
-  const button = event.target.closest && event.target.closest('#menuToggleButton');
-  if (button) {
-    // Inline handler handles the primary toggle.
-    return;
-  }
-  const menu = document.getElementById('mainNavigation');
-  const toggle = document.getElementById('menuToggleButton');
-  if (menu && toggle && menu.classList.contains('menu-open') &&
-      !menu.contains(event.target)) {
-    menu.classList.remove('menu-open');
-    menu.style.display = 'none';
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-label', 'मेनू खोलें');
-  }
-});
-document.addEventListener('keydown', function(event) {
-  if (event.key === 'Escape') {
-    const menu = document.getElementById('mainNavigation');
-    const toggle = document.getElementById('menuToggleButton');
-    if (menu && toggle) {
-      menu.classList.remove('menu-open');
-      menu.style.display = 'none';
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.setAttribute('aria-label', 'मेनू खोलें');
-    }
-  }
-});
-</script>
 
 </body>
     </html>
@@ -2953,41 +2908,33 @@ loadPlants();
 </script>
 
 <script>
-// मुख्य Navigation Menu: एक ही नियंत्रक, ताकि क्लिक पर मेनू दो बार toggle होकर बंद न हो।
+// एक ही Navigation controller; मेनू को हेडर के अंदर रखकर ठीक नीचे दिखाएँ।
 (function(){
+  const header = document.getElementById('mainHeader');
   const btn = document.getElementById('menuToggleButton');
   const menu = document.getElementById('mainNavigation');
-  if (!btn || !menu || btn.dataset.menuControllerReady === 'true') return;
+  if (!header || !btn || !menu || btn.dataset.menuControllerReady === 'true') return;
   btn.dataset.menuControllerReady = 'true';
-
+  if (menu.parentElement !== header) header.appendChild(menu);
   const setMenu = (open) => {
     menu.classList.toggle('menu-open', open);
     menu.style.display = open ? 'flex' : 'none';
     btn.setAttribute('aria-expanded', String(open));
     btn.setAttribute('aria-label', open ? 'मेनू बंद करें' : 'मेनू खोलें');
   };
-
   btn.addEventListener('click', (event) => {
-    event.preventDefault();
-    event.stopPropagation();
+    event.preventDefault(); event.stopPropagation();
     setMenu(!menu.classList.contains('menu-open'));
   });
-
   menu.addEventListener('click', (event) => {
-    const link = event.target.closest('a');
-    if (link) setMenu(false);
+    if (event.target.closest('a')) setMenu(false);
   });
-
   document.addEventListener('click', (event) => {
-    if (!menu.contains(event.target) && !btn.contains(event.target)) {
-      setMenu(false);
-    }
+    if (!menu.contains(event.target) && !btn.contains(event.target)) setMenu(false);
   });
-
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') setMenu(false);
   });
-
   setMenu(false);
 })();
 </script>
