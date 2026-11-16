@@ -4837,5 +4837,184 @@ loadPlants();
 }
 </style>
 
+<style id="unified-responsive-header-v22">
+
+/* V22: Unified responsive header rules for phone, tablet and desktop.
+   Visual/layout only: existing menu controller, store logic and data flows remain unchanged. */
+#mainHeader {
+  box-sizing:border-box !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  z-index:6000 !important;
+  overflow:visible !important;
+}
+#mainHeader, #mainHeader * { box-sizing:border-box; }
+#mainHeader #menuToggleButton {
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:7px !important;
+  max-width:100% !important;
+  white-space:nowrap !important;
+  touch-action:manipulation;
+}
+#mainHeader #headerBrandLogo {
+  display:block !important;
+  object-fit:contain !important;
+  max-width:100% !important;
+  height:auto;
+}
+#mainHeader #headerNurseryName,
+#mainHeader #headerNurseryTagline,
+#mainHeader #headerNurseryAddress,
+#mainHeader > div:not(.header-badge-box):not(#mainNavigation) {
+  min-width:0 !important;
+  max-width:100% !important;
+  overflow-wrap:anywhere !important;
+}
+#mainNavigation {
+  box-sizing:border-box !important;
+  z-index:12000 !important;
+  max-height: min(70vh, 520px) !important;
+  overflow-y:auto !important;
+  overscroll-behavior:contain !important;
+}
+#mainNavigation:not(.menu-open) {
+  display:none !important;
+  pointer-events:none !important;
+}
+#mainNavigation.menu-open {
+  display:flex !important;
+  pointer-events:auto !important;
+}
+
+/* Compact phones */
+@media screen and (max-width:380px) {
+  header#mainHeader {
+    display:grid !important;
+    grid-template-columns:max-content 44px minmax(0,1fr) !important;
+    grid-template-rows:auto auto !important;
+    align-items:center !important;
+    justify-content:stretch !important;
+    gap:3px 7px !important;
+    width:100% !important;
+    min-height:0 !important;
+    padding:8px 9px !important;
+    text-align:left !important;
+  }
+  header#mainHeader > #menuToggleButton {
+    grid-column:1 !important; grid-row:1 / span 2 !important;
+    justify-self:start !important; align-self:center !important;
+    min-width:0 !important; min-height:36px !important;
+    padding:7px 8px !important; margin:0 !important;
+    gap:5px !important; font-size:11px !important;
+  }
+  header#mainHeader > #headerBrandLogo {
+    grid-column:2 !important; grid-row:1 / span 2 !important;
+    width:42px !important; height:42px !important;
+    justify-self:center !important; align-self:center !important;
+  }
+  header#mainHeader > #headerNurseryName {
+    grid-column:3 !important; grid-row:1 !important;
+    width:100% !important; margin:0 !important;
+    font-size:clamp(11px,3.5vw,13px) !important;
+    line-height:1.2 !important; text-align:left !important;
+  }
+  header#mainHeader > #headerNurseryTagline {
+    grid-column:3 !important; grid-row:2 !important;
+    width:100% !important; margin:0 !important;
+    font-size:9px !important; line-height:1.2 !important;
+    text-align:left !important;
+  }
+  header#mainHeader > #headerNurseryAddress,
+  header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) { display:none !important; }
+  #mainNavigation { position:absolute !important; top:calc(100% + 5px) !important; left:8px !important; right:8px !important; width:auto !important; max-width:none !important; }
+}
+
+/* Regular phones */
+@media screen and (min-width:381px) and (max-width:700px) {
+  header#mainHeader {
+    display:grid !important;
+    grid-template-columns:max-content 52px minmax(0,1fr) !important;
+    grid-template-rows:auto auto !important;
+    align-items:center !important;
+    justify-content:stretch !important;
+    gap:4px 9px !important;
+    width:100% !important; min-height:0 !important;
+    padding:9px 11px !important; text-align:left !important;
+  }
+  header#mainHeader > #menuToggleButton {
+    grid-column:1 !important; grid-row:1 / span 2 !important;
+    justify-self:start !important; align-self:center !important;
+    min-width:0 !important; min-height:38px !important;
+    padding:8px 9px !important; margin:0 !important;
+    font-size:12px !important;
+  }
+  header#mainHeader > #headerBrandLogo {
+    grid-column:2 !important; grid-row:1 / span 2 !important;
+    width:50px !important; height:50px !important;
+    justify-self:center !important; align-self:center !important;
+  }
+  header#mainHeader > #headerNurseryName {
+    grid-column:3 !important; grid-row:1 !important;
+    width:100% !important; margin:0 !important;
+    font-size:clamp(13px,3.6vw,16px) !important;
+    line-height:1.2 !important; text-align:left !important;
+  }
+  header#mainHeader > #headerNurseryTagline {
+    grid-column:3 !important; grid-row:2 !important;
+    width:100% !important; margin:0 !important;
+    font-size:10px !important; line-height:1.25 !important;
+    text-align:left !important;
+  }
+  header#mainHeader > #headerNurseryAddress,
+  header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) { display:none !important; }
+  #mainNavigation { position:absolute !important; top:calc(100% + 5px) !important; left:10px !important; right:10px !important; width:auto !important; max-width:none !important; }
+}
+
+/* Small tablets and narrow desktop windows */
+@media screen and (min-width:701px) and (max-width:900px) {
+  header#mainHeader {
+    display:grid !important;
+    grid-template-columns:max-content 60px minmax(0,1fr) !important;
+    grid-template-rows:auto auto auto !important;
+    align-items:center !important;
+    gap:4px 12px !important;
+    min-height:112px !important;
+    padding:14px 16px !important;
+    text-align:left !important;
+  }
+  header#mainHeader > #menuToggleButton { grid-column:1 !important; grid-row:1 / span 3 !important; width:auto !important; min-width:118px !important; margin:0 !important; justify-self:start !important; }
+  header#mainHeader > #headerBrandLogo { grid-column:2 !important; grid-row:1 / span 3 !important; width:58px !important; height:58px !important; justify-self:center !important; }
+  header#mainHeader > #headerNurseryName { grid-column:3 !important; grid-row:1 !important; font-size:clamp(18px,2.4vw,23px) !important; line-height:1.2 !important; margin:0 !important; }
+  header#mainHeader > #headerNurseryTagline { grid-column:3 !important; grid-row:2 !important; font-size:12px !important; margin:0 !important; }
+  header#mainHeader > #headerNurseryAddress { grid-column:3 !important; grid-row:3 !important; font-size:11px !important; margin:0 !important; }
+  header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) { display:none !important; }
+  #mainNavigation { position:absolute !important; top:calc(100% + 7px) !important; left:16px !important; right:auto !important; width:270px !important; max-width:calc(100vw - 32px) !important; }
+}
+
+/* Full desktop */
+@media screen and (min-width:901px) {
+  header#mainHeader {
+    display:grid !important;
+    grid-template-columns:minmax(12px,1fr) max-content 76px minmax(0, min(560px, 52vw)) minmax(12px,1fr) !important;
+    grid-template-rows:auto auto auto auto !important;
+    align-items:center !important; justify-content:center !important;
+    gap:4px 14px !important;
+    min-height:126px !important;
+    padding:16px 24px !important;
+    text-align:left !important;
+  }
+  header#mainHeader > #menuToggleButton { grid-column:2 !important; grid-row:1 / span 4 !important; width:140px !important; min-height:44px !important; margin:0 !important; justify-self:end !important; }
+  header#mainHeader > #headerBrandLogo { grid-column:3 !important; grid-row:1 / span 4 !important; width:72px !important; height:72px !important; justify-self:center !important; }
+  header#mainHeader > #headerNurseryName { grid-column:4 !important; grid-row:1 !important; font-size:clamp(21px,2vw,28px) !important; line-height:1.2 !important; margin:0 !important; }
+  header#mainHeader > #headerNurseryTagline { grid-column:4 !important; grid-row:2 !important; font-size:14px !important; margin:0 !important; }
+  header#mainHeader > #headerNurseryAddress { grid-column:4 !important; grid-row:3 !important; font-size:12px !important; margin:0 !important; }
+  header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) { grid-column:4 !important; grid-row:4 !important; margin:0 !important; }
+  #mainNavigation { position:absolute !important; top:calc(100% + 8px) !important; left:auto !important; right:calc(50% + 210px) !important; width:290px !important; max-width:calc(100vw - 32px) !important; }
+}
+
+</style>
 </body>
 </html>
