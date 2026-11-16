@@ -470,7 +470,7 @@ footer a:hover{text-decoration:underline}
 
 /* सरल टॉगल नेविगेशन: सभी मेनू लिंक काम करते हैं */
 #menuToggleButton{display:inline-flex;align-items:center;gap:7px;margin:0 0 9px;padding:8px 12px;border:1px solid #ffffff70;border-radius:9px;background:#ffffff;color:#14532d;font-weight:800;cursor:pointer}
-#mainNavigation{display:none;position:absolute;top:100%;left:12px;right:12px;z-index:5000;flex-direction:column;align-items:stretch;gap:6px;padding:10px;background:#fff;border:1px solid #d1fae5;border-radius:12px;box-shadow:0 12px 28px #0002}
+#mainNavigation{display:none;position:absolute;top:calc(100% + 6px);left:12px;right:12px;width:auto;z-index:10000;flex-direction:column;align-items:stretch;gap:6px;padding:10px;background:#fff;border:1px solid #d1fae5;border-radius:12px;box-shadow:0 12px 28px #0002}
 #mainNavigation.menu-open{display:flex}
 #mainNavigation a,#mainNavigation button{display:flex;align-items:center;width:100%;padding:11px 13px;border:0;border-radius:8px;background:#f0fdf4;color:#14532d;text-align:left;text-decoration:none;font-weight:800;cursor:pointer}
 #mainHeader{position:relative}
@@ -528,7 +528,7 @@ footer a:hover{text-decoration:underline}
   <div class="header-badge-box">
     <div class="header-logo-glow">🪴</div>
   </div>
-  <button id="menuToggleButton" type="button" onclick="toggleNurseryMenu(event)" aria-label="मेनू खोलें" aria-expanded="false" aria-controls="mainNavigation">☰ मेनू</button>
+  <button id="menuToggleButton" type="button" aria-label="मेनू खोलें" aria-expanded="false" aria-controls="mainNavigation">☰ मेनू</button>
   <h1 id="headerNurseryName">श्री नीम करोली महाराज ग्रीन नर्सरी</h1>
   <p id="headerNurseryTagline">हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए</p>
   <p id="headerNurseryAddress">📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान</p>
@@ -1622,6 +1622,52 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
         window.onload = function() { window.print(); }
       <\/script>
 
+<script>
+/* Robust menu controller: inline click + delegated listener fallback */
+window.toggleNurseryMenu = function(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  const button = document.getElementById('menuToggleButton');
+  const menu = document.getElementById('mainNavigation');
+  if (!button || !menu) return;
+  const willOpen = !menu.classList.contains('menu-open');
+  menu.classList.toggle('menu-open', willOpen);
+  menu.style.display = willOpen ? 'flex' : 'none';
+  button.setAttribute('aria-expanded', String(willOpen));
+  button.setAttribute('aria-label', willOpen ? 'मेनू बंद करें' : 'मेनू खोलें');
+};
+document.addEventListener('click', function(event) {
+  const button = event.target.closest && event.target.closest('#menuToggleButton');
+  if (button) {
+    // Inline handler handles the primary toggle.
+    return;
+  }
+  const menu = document.getElementById('mainNavigation');
+  const toggle = document.getElementById('menuToggleButton');
+  if (menu && toggle && menu.classList.contains('menu-open') &&
+      !menu.contains(event.target)) {
+    menu.classList.remove('menu-open');
+    menu.style.display = 'none';
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'मेनू खोलें');
+  }
+});
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    const menu = document.getElementById('mainNavigation');
+    const toggle = document.getElementById('menuToggleButton');
+    if (menu && toggle) {
+      menu.classList.remove('menu-open');
+      menu.style.display = 'none';
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'मेनू खोलें');
+    }
+  }
+});
+</script>
+
 </body>
     </html>
   `);
@@ -1733,40 +1779,17 @@ async function loadPlants() {
       const minusBtn = card.querySelector('.minus-btn');
       const plusBtn = card.querySelector('.plus-btn');
 
-      // यदि उत्पाद पहले से कार्ट में है, तो कार्ड में वही मात्रा दिखाएँ।
-      const cartItemForCard = shoppingCart.find(item =>
-        item.id === p.id && Boolean(item.veg) === Boolean(veg)
-      );
-      if (cartItemForCard) {
-        qtyInput.value = isGram ? Number(cartItemForCard.qty).toFixed(2) :
-          (veg ? Number(cartItemForCard.qty).toFixed(1) : Math.round(cartItemForCard.qty));
-      }
-
-      const updateSelectedQuantity = (nextValue) => {
-        const limit = veg ? (isGram ? 0.25 : 1) : minPlantLimit;
-        const safeValue = Math.max(limit, Math.min(Number(p.stock_quantity) || 9999, nextValue));
-        qtyInput.value = isGram ? safeValue.toFixed(2) :
-          (veg ? safeValue.toFixed(1) : Math.round(safeValue));
-
-        // कार्ट में मौजूद उत्पाद की मात्रा बदलते ही नीचे कुल रकम अपडेट करें।
-        const cartIndex = shoppingCart.findIndex(item =>
-          item.id === p.id && Boolean(item.veg) === Boolean(veg)
-        );
-        if (cartIndex !== -1) {
-          shoppingCart[cartIndex].qty = safeValue;
-          updateCartBadge();
-          if (!document.getElementById('order').hidden) renderCartModal();
-        }
-      };
-
       minusBtn?.addEventListener('click', () => {
-        const val = Number(qtyInput.value) || initialVal;
-        updateSelectedQuantity(val - stepVal);
+        let val = Number(qtyInput.value) || initialVal;
+        const limit = veg ? (isGram ? 0.25 : 1) : minPlantLimit;
+        val = Math.max(limit, val - stepVal);
+        qtyInput.value = isGram ? val.toFixed(2) : (veg ? val.toFixed(1) : Math.round(val));
       });
 
       plusBtn?.addEventListener('click', () => {
-        const val = Number(qtyInput.value) || initialVal;
-        updateSelectedQuantity(val + stepVal);
+        let val = Number(qtyInput.value) || initialVal;
+        val = Math.min(Number(p.stock_quantity) || 9999, val + stepVal);
+        qtyInput.value = isGram ? val.toFixed(2) : (veg ? val.toFixed(1) : Math.round(val));
       });
 
       qtyInput?.addEventListener('change', () => {
@@ -1820,7 +1843,7 @@ async function loadPlants() {
 
 // 🛒 कार्ट में उत्पाद जोड़ना
 function addToCart(plant, qty, veg, isGram) {
-  const existingIndex = shoppingCart.findIndex(item => item.id === plant.id && Boolean(item.veg) === Boolean(veg));
+  const existingIndex = shoppingCart.findIndex(item => item.id === plant.id);
   if (existingIndex > -1) {
     shoppingCart[existingIndex].qty += qty;
   } else {
@@ -1851,21 +1874,20 @@ function updateProductCartButtons() {
 }
 
 function updateCartBadge() {
-  // कुल आइटम = कार्ट में सभी उत्पादों की वास्तविक मात्रा का जोड़।
-  const totalCount = shoppingCart.reduce((sum, item) => sum + (Number(item.qty) || 0), 0);
-  const totalPrice = shoppingCart.reduce((sum, item) =>
-    sum + ((Number(item.price) || 0) * (Number(item.qty) || 0)), 0);
+  const totalCount = shoppingCart.reduce((sum, item) => sum + 1, 0);
+  const totalPrice = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
   const bottomBar = document.getElementById('floatingBottomCartBar');
   const barCount = document.getElementById('barItemCount');
   const barPrice = document.getElementById('barTotalPrice');
-  const mobileCount = document.getElementById('mobileCartCount');
 
-  if (barCount) barCount.textContent = Number.isInteger(totalCount) ? totalCount : totalCount.toFixed(2);
-  if (barPrice) barPrice.textContent = '₹' + totalPrice.toFixed(2);
-  if (mobileCount) mobileCount.textContent = Number.isInteger(totalCount) ? totalCount : totalCount.toFixed(2);
-
-  if (bottomBar) bottomBar.style.display = shoppingCart.length > 0 ? 'flex' : 'none';
+  if (shoppingCart.length > 0) {
+    if (barCount) barCount.textContent = shoppingCart.length;
+    if (barPrice) barPrice.textContent = '₹' + totalPrice.toFixed(2);
+    if (bottomBar) bottomBar.style.display = 'flex';
+  } else {
+    if (bottomBar) bottomBar.style.display = 'none';
+  }
 }
 
 // कार्ट मॉडल खोलना
@@ -2931,16 +2953,42 @@ loadPlants();
 </script>
 
 <script>
-// टॉगल मेनू खोलना/बंद करना और मेनू लिंक पर जाने के बाद बंद करना
+// मुख्य Navigation Menu: एक ही नियंत्रक, ताकि क्लिक पर मेनू दो बार toggle होकर बंद न हो।
 (function(){
-  const btn=document.getElementById('menuToggleButton');
-  const menu=document.getElementById('mainNavigation');
-  if(!btn||!menu) return;
-  const close=()=>{menu.classList.remove('menu-open');btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-label','मेनू खोलें');};
-  btn.addEventListener('click',()=>{const open=!menu.classList.contains('menu-open');menu.classList.toggle('menu-open',open);btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'मेनू बंद करें':'मेनू खोलें');});
-  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
-  document.addEventListener('click',e=>{if(!menu.contains(e.target)&&!btn.contains(e.target)) close();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
+  const btn = document.getElementById('menuToggleButton');
+  const menu = document.getElementById('mainNavigation');
+  if (!btn || !menu || btn.dataset.menuControllerReady === 'true') return;
+  btn.dataset.menuControllerReady = 'true';
+
+  const setMenu = (open) => {
+    menu.classList.toggle('menu-open', open);
+    menu.style.display = open ? 'flex' : 'none';
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'मेनू बंद करें' : 'मेनू खोलें');
+  };
+
+  btn.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setMenu(!menu.classList.contains('menu-open'));
+  });
+
+  menu.addEventListener('click', (event) => {
+    const link = event.target.closest('a');
+    if (link) setMenu(false);
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!menu.contains(event.target) && !btn.contains(event.target)) {
+      setMenu(false);
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') setMenu(false);
+  });
+
+  setMenu(false);
 })();
 </script>
 <script>
