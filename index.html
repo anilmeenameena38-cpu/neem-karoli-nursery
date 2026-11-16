@@ -4197,19 +4197,36 @@ loadPlants();
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
 </script>\n
-<script id="v29-two-step-category-controller">
+<script id="v30-two-step-category-controller">
 (function(){
   function init(){
     const root=document.getElementById('shopCategoriesContainer');
-    if(!root || root.dataset.v29Ready==='yes') return;
+    if(!root || root.dataset.v30Ready==='yes') return;
     const chooser=document.getElementById('v28CategoryChooser');
+    const tabs=document.getElementById('storeViewTabs');
     const plant=document.getElementById('viewPlantCategory');
     const veg=document.getElementById('viewVegCategory');
-    if(!chooser||!plant||!veg) return;
-    root.dataset.v29Ready='yes';
+    if(!chooser||!tabs||!plant||!veg) return;
+    root.dataset.v30Ready='yes';
+    function show(el, value){ el.style.setProperty('display',value,'important'); }
     function setView(view, scroll){
       root.classList.remove('v29-home','v29-plants','v29-veg');
       root.classList.add(view==='plants'?'v29-plants':view==='veg'?'v29-veg':'v29-home');
+      // Explicit inline visibility overrides the older V19 tab script's inline styles.
+      show(chooser, view==='home'?'block':'none');
+      show(tabs, 'none');
+      show(plant, view==='plants'?'block':'none');
+      show(veg, view==='veg'?'block':'none');
+      if(view==='home'){
+        document.body.classList.remove('store-view-veg','store-view-plants');
+      } else {
+        const isVeg=view==='veg';
+        document.body.classList.toggle('store-view-veg',isVeg);
+        document.body.classList.toggle('store-view-plants',!isVeg);
+        const pb=document.getElementById('showPlantsTab'), vb=document.getElementById('showVegTab');
+        if(pb){pb.classList.toggle('active',!isVeg);pb.setAttribute('aria-selected',String(!isVeg));}
+        if(vb){vb.classList.toggle('active',isVeg);vb.setAttribute('aria-selected',String(isVeg));}
+      }
       if(scroll) root.scrollIntoView({behavior:'smooth',block:'start'});
     }
     chooser.querySelectorAll('[data-v28-choice]').forEach(function(button){
@@ -4223,14 +4240,12 @@ loadPlants();
     });
     document.querySelectorAll('.mobile-store-link[data-store-action="categories"]').forEach(function(button){
       button.addEventListener('click',function(event){
-        event.preventDefault();
-        event.stopImmediatePropagation();
+        event.preventDefault(); event.stopImmediatePropagation();
         document.querySelectorAll('.mobile-store-link').forEach(function(item){item.classList.remove('active');});
-        button.classList.add('active');
-        setView('home',true);
+        button.classList.add('active'); setView('home',true);
       },true);
     });
-    // पुराने एक-स्तरीय टैब क्लिक से दो-स्तरीय चयन प्रभावित न हो।
+    // Hidden legacy tabs remain harmless; if triggered programmatically, route through the two-step view.
     document.getElementById('showPlantsTab')?.addEventListener('click',function(){setView('plants',false);});
     document.getElementById('showVegTab')?.addEventListener('click',function(){setView('veg',false);});
     setView('home',false);
