@@ -2565,6 +2565,45 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
       <\/script>
 
 
+
+<style>
+/* V24: mobile category filters */
+.product-filter-chips{display:flex;gap:8px;overflow-x:auto;padding:8px 0 12px;margin:0 0 8px;scrollbar-width:none}
+.product-filter-chips::-webkit-scrollbar{display:none}
+.product-filter-chip{flex:0 0 auto;border:1px solid #b7d9c1;background:#f4fbf5;color:#175b35;border-radius:999px;padding:8px 13px;font-size:13px;font-weight:700;cursor:pointer}
+.product-filter-chip.active{background:#167a43;color:#fff;border-color:#167a43;box-shadow:0 2px 7px #167a4333}
+@media(max-width:700px){.product-filter-chips{position:relative;z-index:2}}
+</style>
+<script>
+// V24: उत्पाद सूची के ऊपर काम करने वाले category filters; मौजूदा cart/Supabase डेटा अछूता।
+(function(){
+ const groups=[
+  {id:'plantOnlyList',wrap:'viewPlantCategory',items:[['सभी','all'],['टमाटर','tomato'],['हरी मिर्च','chilli'],['बैंगन','brinjal'],['अन्य पौधे','other']]},
+  {id:'vegOnlyList',wrap:'viewVegCategory',items:[['सभी','all'],['टमाटर','tomato'],['हरी मिर्च','chilli'],['बैंगन','brinjal'],['पत्तेदार','leafy'],['अन्य सब्जियाँ','other']]}
+ ];
+ const terms={tomato:['टमाटर','tomato'],chilli:['मिर्च','chilli','chili'],brinjal:['बैंगन','brinjal','eggplant'],leafy:['पालक','धनिया','मेथी','पत्तेदार','spinach','coriander'],other:[]};
+ function norm(s){return (s||'').toLocaleLowerCase('hi').replace(/\s+/g,' ')}
+ function matches(card,key){if(key==='all')return true;const t=norm(card.innerText);if(key==='other')return !Object.entries(terms).filter(([k])=>k!=='other').some(([,ws])=>ws.some(w=>t.includes(norm(w))));return terms[key].some(w=>t.includes(norm(w)))}
+ function setup(g){
+  const list=document.getElementById(g.id), section=document.getElementById(g.wrap);if(!list||!section||section.dataset.filtersReady)return;section.dataset.filtersReady='1';
+  const bar=document.createElement('div');bar.className='product-filter-chips';bar.setAttribute('aria-label','उत्पाद कैटेगरी');
+  let selected='all';
+  g.items.forEach(([label,key])=>{const b=document.createElement('button');b.type='button';b.className='product-filter-chip'+(key==='all'?' active':'');b.textContent=label;b.setAttribute('aria-pressed',String(key==='all'));b.addEventListener('click',()=>{selected=key;bar.querySelectorAll('button').forEach(x=>{const on=x===b;x.classList.toggle('active',on);x.setAttribute('aria-pressed',String(on))});apply()});bar.appendChild(b)});
+  list.parentNode.insertBefore(bar,list);
+  function apply(){list.querySelectorAll('.plant').forEach(card=>{card.style.display=matches(card,selected)?'':'none'})}
+  const observer=new MutationObserver(apply);observer.observe(list,{childList:true,subtree:true});apply();
+ }
+ function init(){groups.forEach(setup);}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+ // Bottom category shortcut reliably opens the category area and leaves products/cart intact.
+ document.querySelectorAll('.mobile-store-link[data-store-action="categories"]').forEach(btn=>btn.addEventListener('click',()=>{
+  const target=document.getElementById('shopCategoriesContainer');
+  document.getElementById('showPlantsTab')?.click();
+  setTimeout(()=>target?.scrollIntoView({behavior:'smooth',block:'start'}),80);
+ }));
+})();
+</script>
+
 </body>
     </html>
   `);
@@ -4117,5 +4156,44 @@ loadPlants();
   });
 })();
 </script>
+
+<style>
+/* V24: mobile category filters */
+.product-filter-chips{display:flex;gap:8px;overflow-x:auto;padding:8px 0 12px;margin:0 0 8px;scrollbar-width:none}
+.product-filter-chips::-webkit-scrollbar{display:none}
+.product-filter-chip{flex:0 0 auto;border:1px solid #b7d9c1;background:#f4fbf5;color:#175b35;border-radius:999px;padding:8px 13px;font-size:13px;font-weight:700;cursor:pointer}
+.product-filter-chip.active{background:#167a43;color:#fff;border-color:#167a43;box-shadow:0 2px 7px #167a4333}
+@media(max-width:700px){.product-filter-chips{position:relative;z-index:2}}
+</style>
+<script>
+// V24: उत्पाद सूची के ऊपर काम करने वाले category filters; मौजूदा cart/Supabase डेटा अछूता।
+(function(){
+ const groups=[
+  {id:'plantOnlyList',wrap:'viewPlantCategory',items:[['सभी','all'],['टमाटर','tomato'],['हरी मिर्च','chilli'],['बैंगन','brinjal'],['अन्य पौधे','other']]},
+  {id:'vegOnlyList',wrap:'viewVegCategory',items:[['सभी','all'],['टमाटर','tomato'],['हरी मिर्च','chilli'],['बैंगन','brinjal'],['पत्तेदार','leafy'],['अन्य सब्जियाँ','other']]}
+ ];
+ const terms={tomato:['टमाटर','tomato'],chilli:['मिर्च','chilli','chili'],brinjal:['बैंगन','brinjal','eggplant'],leafy:['पालक','धनिया','मेथी','पत्तेदार','spinach','coriander'],other:[]};
+ function norm(s){return (s||'').toLocaleLowerCase('hi').replace(/\s+/g,' ')}
+ function matches(card,key){if(key==='all')return true;const t=norm(card.innerText);if(key==='other')return !Object.entries(terms).filter(([k])=>k!=='other').some(([,ws])=>ws.some(w=>t.includes(norm(w))));return terms[key].some(w=>t.includes(norm(w)))}
+ function setup(g){
+  const list=document.getElementById(g.id), section=document.getElementById(g.wrap);if(!list||!section||section.dataset.filtersReady)return;section.dataset.filtersReady='1';
+  const bar=document.createElement('div');bar.className='product-filter-chips';bar.setAttribute('aria-label','उत्पाद कैटेगरी');
+  let selected='all';
+  g.items.forEach(([label,key])=>{const b=document.createElement('button');b.type='button';b.className='product-filter-chip'+(key==='all'?' active':'');b.textContent=label;b.setAttribute('aria-pressed',String(key==='all'));b.addEventListener('click',()=>{selected=key;bar.querySelectorAll('button').forEach(x=>{const on=x===b;x.classList.toggle('active',on);x.setAttribute('aria-pressed',String(on))});apply()});bar.appendChild(b)});
+  list.parentNode.insertBefore(bar,list);
+  function apply(){list.querySelectorAll('.plant').forEach(card=>{card.style.display=matches(card,selected)?'':'none'})}
+  const observer=new MutationObserver(apply);observer.observe(list,{childList:true,subtree:true});apply();
+ }
+ function init(){groups.forEach(setup);}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+ // Bottom category shortcut reliably opens the category area and leaves products/cart intact.
+ document.querySelectorAll('.mobile-store-link[data-store-action="categories"]').forEach(btn=>btn.addEventListener('click',()=>{
+  const target=document.getElementById('shopCategoriesContainer');
+  document.getElementById('showPlantsTab')?.click();
+  setTimeout(()=>target?.scrollIntoView({behavior:'smooth',block:'start'}),80);
+ }));
+})();
+</script>
+
 </body>
 </html>
