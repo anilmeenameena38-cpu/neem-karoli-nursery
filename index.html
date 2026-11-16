@@ -1488,62 +1488,64 @@ body > main::after{
 </style>
 
 
-<style id="desktop-product-card-improvements-v16">
-/* V16: Fix the narrow desktop content column; all changes are tablet/desktop only. */
-@media screen and (min-width: 701px) {
-  body > main {
+<style id="desktop-product-card-improvements-v17">
+/* Desktop-only layout correction: widen the actual main content and product panels.
+   The mobile layout (<=700px), header, data and shopping logic are intentionally untouched. */
+@media screen and (min-width:701px){
+  body > main{
     display:block !important;
-    width:calc(100% - 32px) !important;
-    max-width:1400px !important;
-    margin-left:auto !important;
-    margin-right:auto !important;
-    padding:18px 20px !important;
+    box-sizing:border-box !important;
+    width:calc(100% - 40px) !important;
+    max-width:1500px !important;
+    min-width:0 !important;
+    margin:0 auto !important;
+    padding:18px 18px !important;
   }
-  #storeViewTabs, main #storeViewTabs.store-view-tabs,
-  #viewPlantCategory, #viewVegCategory {
+  body > main > #storeViewTabs,
+  body > main > #viewPlantCategory,
+  body > main > #viewVegCategory{
+    display:block !important;
+    box-sizing:border-box !important;
     width:100% !important;
     max-width:none !important;
-    box-sizing:border-box !important;
+    min-width:0 !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
   }
-  #viewPlantCategory, #viewVegCategory { padding:20px !important; }
-  #viewPlantCategory h2, #viewVegCategory h2 {
-    font-size:22px !important; margin-bottom:14px !important;
-  }
-  #plantOnlyList.plants, #vegOnlyList.plants {
+  body > main > #viewPlantCategory,
+  body > main > #viewVegCategory{padding:20px !important;}
+  body > main #plantOnlyList.plants,
+  body > main #vegOnlyList.plants{
     display:grid !important;
+    box-sizing:border-box !important;
     width:100% !important;
     max-width:none !important;
     grid-template-columns:repeat(4,minmax(0,1fr)) !important;
     gap:16px !important;
-    align-items:stretch !important;
   }
-  #plantOnlyList .plant, #vegOnlyList .plant {
+  body > main #plantOnlyList .plant,
+  body > main #vegOnlyList .plant{
     display:flex !important;
-    min-width:0 !important;
+    box-sizing:border-box !important;
     width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
     padding:12px !important;
-    border-radius:16px !important;
   }
-  #plantOnlyList .plant img, #vegOnlyList .plant img {
-    width:100% !important; height:180px !important;
-    object-fit:cover !important; border-radius:12px !important;
+  body > main #plantOnlyList .plant img,
+  body > main #vegOnlyList .plant img{
+    width:100% !important;
+    height:180px !important;
+    object-fit:cover !important;
   }
-  #plantOnlyList .plant h3, #vegOnlyList .plant h3 {
-    font-size:17px !important; line-height:1.4 !important;
-  }
-  #plantOnlyList .price-tag, #vegOnlyList .price-tag {
-    font-size:14px !important; padding:4px 10px !important;
-  }
-  #plantOnlyList .stock-text, #vegOnlyList .stock-text { font-size:12px !important; }
-  #plantOnlyList .stepper-btn, #vegOnlyList .stepper-btn {
-    width:32px !important; min-width:32px !important; height:34px !important;
-  }
-  #plantOnlyList .card-qty-input, #vegOnlyList .card-qty-input {
-    font-size:14px !important; padding:6px !important;
-  }
-  #plantOnlyList .plant-buy-button, #vegOnlyList .plant-buy-button {
-    font-size:13px !important; padding:9px 10px !important;
-  }
+  body > main #plantOnlyList .plant h3,
+  body > main #vegOnlyList .plant h3{font-size:17px !important;line-height:1.4 !important;}
+  body > main #plantOnlyList .price-tag,
+  body > main #vegOnlyList .price-tag{font-size:14px !important;padding:4px 10px !important;}
+  body > main #plantOnlyList .stock-text,
+  body > main #vegOnlyList .stock-text{font-size:12px !important;}
+  body > main #plantOnlyList .plant-buy-button,
+  body > main #vegOnlyList .plant-buy-button{font-size:13px !important;padding:9px 10px !important;}
 }
 </style>
 </head>
