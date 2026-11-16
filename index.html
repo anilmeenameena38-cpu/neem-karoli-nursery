@@ -1464,7 +1464,8 @@ body > main::after{
         <p style="margin:0;font-size:14px;color:var(--muted)">कार्ट खाली है।</p>
       </div>
 
-      <form id="orderForm">
+      <button id="openDeliveryDetailsButton" type="button" class="btn" style="display:none;width:100%;margin:12px 0">📍 डिलीवरी विवरण भरें और आगे बढ़ें</button>
+      <form id="orderForm" style="display:none">
         <div class="status">
           <div>उत्पाद कुल मूल्य: <strong id="plantAmountDisplay">₹0.00</strong></div>
           <div id="discountRowDisplay" style="display:none;color:#b45309">विशेष छूट: <strong id="discountAmountDisplay">-₹0.00</strong></div>
@@ -2041,6 +2042,7 @@ const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let plants = [];
 let shoppingCart = [];
+let checkoutDetailsOpen = false;
 let customerLocation = null;
 let deliveryFee = null;
 let deliveryDistanceKm = null;
@@ -2788,7 +2790,8 @@ function addToCart(plant, qty, veg, isGram) {
       price: Number(plant.selling_price),
       qty: qty,
       veg: veg,
-      isGram: isGram
+      isGram: isGram,
+      image_url: plant.image_url || ''
     });
   }
   updateCartBadge();
@@ -2827,6 +2830,7 @@ function updateCartBadge() {
 // कार्ट मॉडल खोलना — खाली कार्ट में भी खाली स्थिति दिखाएँ।
 function openCartModal(e) {
   if (e) e.preventDefault();
+  checkoutDetailsOpen = false;
   renderCartModal();
   const orderModal = document.getElementById('order');
   orderModal.hidden = false;
@@ -2836,99 +2840,100 @@ function openCartModal(e) {
 function renderCartModal() {
   const container = document.getElementById('cartItemsContainer');
   const cfg = getSiteConfig();
+  const form = document.getElementById('orderForm');
+  const checkoutButton = document.getElementById('openDeliveryDetailsButton');
   if (!container) return;
 
   if (shoppingCart.length === 0) {
-    container.innerHTML = '<p style="margin:0;font-size:14px;color:var(--muted)">कार्ट खाली है।</p>';
+    checkoutDetailsOpen = false;
+    container.innerHTML = '<div style="text-align:center;padding:24px 12px"><div style="font-size:42px;margin-bottom:8px">🛒</div><strong style="font-size:17px;color:var(--deep)">आपका कार्ट खाली है।</strong><p style="margin:8px 0 0;color:var(--muted);font-size:14px">पसंद के पौधे या सब्जियाँ चुनकर यहाँ जोड़ें।</p><button type="button" class="btn" onclick="closeOrderPopup();document.getElementById(\'storeViewTabs\')?.scrollIntoView({behavior:\'smooth\',block:\'start\'})" style="margin-top:14px">🌱 खरीदारी जारी रखें</button></div>';
+    if (form) form.style.display = 'none';
+    if (checkoutButton) checkoutButton.style.display = 'none';
     document.getElementById('plantAmountDisplay').textContent = '₹0.00';
     document.getElementById('grandTotalDisplay').textContent = '₹0.00';
     return;
   }
 
-  let html = '<h4 style="margin:0 0 8px;color:var(--green)">🛍️ आपके चुने हुए सामान:</h4>';
+  let html = '<h4 style="margin:0 0 10px;color:var(--green)">🛍️ आपके चुने हुए सामान:</h4>';
   let subtotal = 0;
 
   shoppingCart.forEach((item, idx) => {
-    const itemTotal = item.price * item.qty;
+    const itemTotal = Number(item.price) * Number(item.qty);
     subtotal += itemTotal;
-
     let qtyText = '';
     if (item.veg && item.isGram) {
-      if (item.qty < 1) {
-        qtyText = Math.round(item.qty * 1000) + ' ग्राम';
-      } else if (item.qty === 1) {
-        qtyText = '1 किलो';
-      } else {
+      if (item.qty < 1) qtyText = Math.round(item.qty * 1000) + ' ग्राम';
+      else if (item.qty === 1) qtyText = '1 किलो';
+      else {
         const kgPart = Math.floor(item.qty);
         const gPart = Math.round((item.qty - kgPart) * 1000);
         qtyText = gPart > 0 ? `${kgPart} किलो ${gPart} ग्राम` : `${kgPart} किलो`;
       }
-    } else {
-      qtyText = item.qty + (item.veg ? ' किलो' : ' पौधे');
-    }
+    } else qtyText = item.qty + (item.veg ? ' किलो' : ' पौधे');
+
+    // Use the exact image URL already used by this product's website card.
+    const currentProduct = (Array.isArray(plants) ? plants : []).find(p => String(p.id) === String(item.id));
+    const productImage = item.image_url || currentProduct?.image_url || '';
+    const imageHtml = productImage
+      ? `<img src="${safe(productImage)}" alt="${safe(item.name)}" loading="lazy" style="width:88px;height:88px;object-fit:cover;border-radius:10px;border:1px solid #dbe7d7;flex:0 0 88px">`
+      : `<div style="width:88px;height:88px;display:flex;align-items:center;justify-content:center;background:#ecfdf5;border-radius:10px;font-size:34px;flex:0 0 88px">${item.veg ? '🥬' : '🌱'}</div>`;
 
     html += `
-      <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;padding:8px;border-radius:8px;margin-bottom:6px;border:1px solid #e0ede0">
-        <div>
-          <strong>${safe(item.name)}</strong> (${qtyText})
-          <div style="font-size:12px;color:var(--muted)">₹${item.price} × ${item.veg && item.isGram && item.qty < 1 ? item.qty + 'kg' : item.qty} = ₹${itemTotal.toFixed(2)}</div>
+      <div style="display:flex;gap:11px;align-items:center;background:#fff;padding:10px;border-radius:10px;margin-bottom:9px;border:1px solid #e0ede0">
+        ${imageHtml}
+        <div style="min-width:0;flex:1">
+          <strong style="display:block;color:var(--deep);margin-bottom:4px">${safe(item.name)}</strong>
+          <div style="font-size:12px;color:var(--muted)">₹${Number(item.price).toFixed(2)} × ${safe(qtyText)} = <strong style="color:var(--deep)">₹${itemTotal.toFixed(2)}</strong></div>
+          <div style="display:flex;align-items:center;gap:7px;margin-top:8px;flex-wrap:wrap">
+            <button type="button" onclick="changeCartItemQuantity(${idx},-1)" aria-label="मात्रा घटाएँ" style="width:30px;height:30px;border:1px solid #b7d8c1;border-radius:7px;background:#f0fdf4;font-weight:800">−</button>
+            <strong>${safe(item.qty)}</strong>
+            <button type="button" onclick="changeCartItemQuantity(${idx},1)" aria-label="मात्रा बढ़ाएँ" style="width:30px;height:30px;border:1px solid #b7d8c1;border-radius:7px;background:#f0fdf4;font-weight:800">+</button>
+            <button type="button" onclick="removeFromCart(${idx})" style="margin-left:auto;background:#fee2e2;color:#b91c1c;border:0;padding:6px 9px;border-radius:7px;font-size:12px;font-weight:700">🗑 हटाएँ</button>
+          </div>
         </div>
-        <button type="button" onclick="removeFromCart(${idx})" style="background:#fee2e2;color:#b91c1c;border:0;padding:4px 8px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">✕ हटाएँ</button>
       </div>`;
   });
 
-  container.innerHTML = html;
-
   let discountAmt = 0;
-  if (cfg.discountPercent > 0) {
-    discountAmt = (subtotal * cfg.discountPercent) / 100;
-    document.getElementById('discountRowDisplay').style.display = 'block';
-    document.getElementById('discountAmountDisplay').textContent = `-₹${discountAmt.toFixed(2)} (${cfg.discountPercent}% Off)`;
-  } else {
-    document.getElementById('discountRowDisplay').style.display = 'none';
-  }
-
+  if (cfg.discountPercent > 0) discountAmt = (subtotal * cfg.discountPercent) / 100;
   const finalSubtotal = subtotal - discountAmt;
+  html += `<div style="border-top:1px solid #dbe7d7;padding-top:10px;margin-top:8px;display:grid;gap:6px"><div style="display:flex;justify-content:space-between"><span>उत्पाद कुल मूल्य</span><strong>₹${subtotal.toFixed(2)}</strong></div>${discountAmt > 0 ? `<div style="display:flex;justify-content:space-between;color:#b45309"><span>विशेष छूट (${cfg.discountPercent}%)</span><strong>-₹${discountAmt.toFixed(2)}</strong></div>` : ''}<div style="font-size:12px;color:var(--muted)">डिलीवरी शुल्क पता भरने के बाद जाँचा जाएगा।</div></div>`;
+  container.innerHTML = html;
   document.getElementById('plantAmountDisplay').textContent = '₹' + subtotal.toFixed(2);
+  document.getElementById('discountRowDisplay').style.display = discountAmt > 0 ? 'block' : 'none';
+  if (discountAmt > 0) document.getElementById('discountAmountDisplay').textContent = '-₹' + discountAmt.toFixed(2);
+  document.getElementById('deliveryAmountDisplay').textContent = 'पता भरने के बाद जाँच होगी';
+  document.getElementById('grandTotalDisplay').textContent = 'पता भरने के बाद जाँच होगी';
 
-  if (deliveryDistanceKm !== null) {
-    let maxDist = cfg.plantMaxDistance;
-    let rate = cfg.plantDeliveryRate;
-    let freeKm = cfg.plantFreeKm;
+  if (form) form.style.display = checkoutDetailsOpen ? 'block' : 'none';
+  if (checkoutButton) checkoutButton.style.display = checkoutDetailsOpen ? 'none' : 'block';
+}
 
-    if (deliveryDistanceKm > maxDist) {
-      document.getElementById('locationStatus').textContent = `❌ आपकी कुल दूरी ${deliveryDistanceKm.toFixed(1)} किमी है (अधिकतम सीमा ${maxDist} किमी से बाहर)।`;
-      return;
-    }
-
-    let calculatedFee = 0;
-    if (deliveryDistanceKm <= freeKm) {
-      calculatedFee = 0;
-      document.getElementById('deliveryAmountDisplay').textContent = `₹0.00 (${freeKm} किमी तक मुफ़्त डिलीवरी! 🎉)`;
-    } else {
-      const chargeableKm = deliveryDistanceKm - freeKm;
-      calculatedFee = Math.ceil(chargeableKm * rate);
-      document.getElementById('deliveryAmountDisplay').textContent = '₹' + calculatedFee.toFixed(2) + ` (${freeKm} किमी फ्री के बाद)`;
-    }
-
-    const totalToPay = finalSubtotal + calculatedFee;
-    document.getElementById('grandTotalDisplay').textContent = '₹' + totalToPay.toFixed(2);
-    document.getElementById('bharatpeTotalAmount').textContent = 'कुल: ₹' + totalToPay.toFixed(2);
-    const payUri = 'upi://pay?' + new URLSearchParams({pa: cfg.upiId, pn: cfg.upiName, am: totalToPay.toFixed(2), cu: 'INR'});
-    document.getElementById('upiPayButton').href = payUri;
+function changeCartItemQuantity(index, direction) {
+  const item = shoppingCart[index];
+  if (!item) return;
+  const step = item.veg ? (item.isGram ? 0.25 : 1) : 1;
+  const min = step;
+  const next = Number(item.qty) + (direction * step);
+  if (next < min) return;
+  const product = (Array.isArray(plants) ? plants : []).find(p => String(p.id) === String(item.id));
+  if (product && next > Number(product.stock_quantity)) {
+    alert('उपलब्ध स्टॉक से अधिक मात्रा नहीं चुन सकते।');
+    return;
   }
+  item.qty = Number(next.toFixed(2));
+  updateCartBadge();
+  renderCartModal();
 }
 
 function removeFromCart(index) {
   shoppingCart.splice(index, 1);
   updateCartBadge();
   updateProductCartButtons();
+  renderCartModal();
   if (shoppingCart.length === 0) {
-    closeOrderPopup();
     const bottomBar = document.getElementById('floatingBottomCartBar');
     if (bottomBar) bottomBar.style.display = 'none';
-  } else {
-    renderCartModal();
   }
 }
 
@@ -2940,6 +2945,12 @@ function closeOrderPopup() {
 }
 
 document.getElementById('closeOrderModal').addEventListener('click', closeOrderPopup);
+document.getElementById('openDeliveryDetailsButton')?.addEventListener('click', () => {
+  if (!shoppingCart.length) return;
+  checkoutDetailsOpen = true;
+  renderCartModal();
+  document.getElementById('orderForm')?.scrollIntoView({behavior:'smooth', block:'start'});
+});
 
 document.getElementById('locationButton').addEventListener('click', () => {
   const stat = document.getElementById('locationStatus');
