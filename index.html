@@ -1993,6 +1993,7 @@ body > main::after{
     <!-- स्टॉक प्रबंधन -->
     <div id="adminStockPane" class="admin-pane">
       <h2>📦 स्टॉक प्रबंधन (Sold Out व स्टॉक बदलाव)</h2>
+      <div class="status" style="margin:8px 0 12px;background:#ecfdf5;border:1px solid #a7f3d0;color:#14532d">ऑर्डर सेव होते ही स्टॉक रिजर्व होगा। ऑर्डर रद्द होने पर रिजर्व मात्रा केवल एक बार अपने आप वापस जुड़ेगी।</div>
       <div class="stock-category-columns">
         <section class="stock-category-card">
           <h3>🌱 नर्सरी के पौधे</h3>
@@ -3639,10 +3640,26 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
       customer_address: fullAddress,
       notes: `CART_ORDER | UTR:${utrNumber} | DISTANCE:${deliveryDistanceKm?.toFixed(1)}km | DELIVERY_FEE:${appliedDeliveryFee} | DISCOUNT:${discountAmt} | MAPS:${customerLocation?.mapsUrl || ''} | PROOF:${proofUrl}`,
       status: 'pending'
-    }).select('id').single();
+    }).select('id, stock_reserved').single();
 
     if (insErr) throw insErr;
-    const newOrderId = insertedOrder ? insertedOrder.id : 'नया';
+    if (!insertedOrder || insertedOrder.stock_reserved !== true) {
+      if (insertedOrder && insertedOrder.id) {
+        const { data: savedOrder } = await db.from('order_requests').select('notes').eq('id', insertedOrder.id).maybeSingle();
+        const savedNotes = String(savedOrder?.notes || '');
+        await db.from('order_requests').update({
+          status: 'cancelled',
+          notes: savedNotes + ' | CANCEL_REASON:स्टॉक रिजर्वेशन पूरा नहीं हुआ'
+        }).eq('id', insertedOrder.id);
+      }
+      throw new Error('ऑटोमैटिक स्टॉक रिजर्वेशन चालू नहीं है। एडमिन को Supabase में दिया गया Stock Reserve SQL एक बार Run करना होगा। ऑर्डर कन्फर्म नहीं किया गया।');
+    }
+    const newOrderId = insertedOrder.id;
+    // डेटाबेस ट्रिगर ने ऑर्डर insert के साथ ही स्टॉक घटा दिया है; दोनों पैनल तुरंत रिफ्रेश करें।
+    if (typeof window.loadPlants === 'function') await window.loadPlants();
+    if (document.body.classList.contains('admin-authenticated') && typeof window.loadAdminAll === 'function') {
+      await window.loadAdminAll();
+    }
 
     const message = 'नया मल्टी-आइटम नर्सरी ऑर्डर' +
       '\nऑर्डर आईडी: #' + newOrderId +
@@ -3698,7 +3715,15 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
     window.open(waUrl, '_blank');
 
   } catch (err) {
-    status.textContent = '❌ त्रुटि: ' + err.message;
+    let message = String(err && err.message || 'अज्ञात त्रुटि');
+    if (/STOCK_INSUFFICIENT/i.test(message)) {
+      message = 'माफ़ कीजिए, चुने गए किसी उत्पाद का स्टॉक अभी कम हो गया है। कार्ट की मात्रा और उपलब्ध स्टॉक दोबारा जाँचें।';
+    } else if (/STOCK_PRODUCT_NOT_FOUND|STOCK_ITEM_FORMAT|STOCK_ITEMS_/i.test(message)) {
+      message = 'ऑर्डर के किसी उत्पाद का नाम या मात्रा स्टॉक सूची से मेल नहीं खा रही। एडमिन से उत्पाद का नाम/कैटेगरी जाँचने को कहें।';
+    } else if (/stock_reserved|column.*does not exist|schema cache/i.test(message)) {
+      message = 'ऑटोमैटिक स्टॉक रिजर्वेशन का Supabase SQL सेटअप अभी पूरा नहीं हुआ है। एडमिन को Stock Reserve SQL Run करना होगा।';
+    }
+    status.textContent = '❌ ' + message;
     button.disabled = false;
   }
 });
@@ -4542,37 +4567,9 @@ window.loadAdminAll = loadAdminAll;
     return map;
   }
 
-  // जब ग्राहक नया ऑर्डर सबमिट करे, तो तुरंत स्टॉक घटाएँ या STOCK_SYNC:pending मार्क करें
-  const orderFormEl = document.getElementById('orderForm');
-  if (orderFormEl) {
-    orderFormEl.addEventListener('submit', function () {
-      setTimeout(async () => {
-        try {
-          const { data: recentOrders } = await db
-            .from('order_requests')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(3);
+  // नए ऑर्डर का स्टॉक public.order_requests पर SQL BEFORE INSERT trigger
+  // उसी transaction में रिजर्व करता है। यहाँ 'सबसे नया ऑर्डर' खोजकर दोबारा घटाना नहीं है.
 
-          if (recentOrders && recentOrders.length) {
-            const latest = recentOrders[0];
-            const notes = String(latest.notes || '');
-            if (!notes.includes('STOCK_DEDUCTED:1') && !notes.includes('STOCK_SYNC:')) {
-              const updatedInDb = await adjustDatabaseStockForOrder(latest, -1);
-              const newNotes = notes + (updatedInDb ? ' | STOCK_DEDUCTED:1' : ' | STOCK_SYNC:pending');
-              await db.from('order_requests').update({ notes: newNotes }).eq('id', latest.id);
-            }
-          }
-          await window.loadPlants();
-          if (document.body.classList.contains('admin-authenticated')) {
-            await window.loadAdminAll();
-          }
-        } catch (err) {
-          console.error('Auto stock deduct after order error:', err);
-        }
-      }, 1500);
-    });
-  }
 
   // कस्टमर पैनल (loadPlants) में भी पेंडिंग सिंक वाले ऑर्डर्स का स्टॉक घटाकर दिखाएँ
   const originalLoadPlants = window.loadPlants;
@@ -4641,10 +4638,21 @@ window.loadAdminAll = loadAdminAll;
           if (ord.status === 'cancelled') continue;
           const notes = String(ord.notes || '');
           if (notes.includes('STOCK_DEDUCTED:1')) continue;
-          const ok = await adjustDatabaseStockForOrder(ord, -1);
+          const legacyItems = parseOrderItemsFromText(ord, plants || []).filter(it => it.id && it.qty > 0);
+          const ok = legacyItems.length > 0 && await adjustDatabaseStockForOrder(ord, -1);
           if (ok) {
             const updatedNotes = notes.replace('STOCK_SYNC:pending', 'STOCK_DEDUCTED:1');
-            await db.from('order_requests').update({ notes: updatedNotes }).eq('id', ord.id);
+            const { error: markError } = await db.from('order_requests').update({
+              notes: updatedNotes,
+              stock_items: legacyItems.map(it => ({ id: String(it.id), qty: Number(it.qty) })),
+              stock_reserved: true,
+              stock_restored: false
+            }).eq('id', ord.id);
+            if (markError) {
+              // Roll the legacy deduction back if its once-only marker could not be saved.
+              await adjustDatabaseStockForOrder(ord, +1);
+              console.error('Legacy stock reservation marker failed; stock deduction rolled back:', markError);
+            }
           }
         }
       }
@@ -4656,79 +4664,85 @@ window.loadAdminAll = loadAdminAll;
   window.confirmOrderSimple = async function (event, orderId) {
     if (event) { event.preventDefault(); event.stopPropagation(); }
     if (!confirm(`क्या आप ऑर्डर #${orderId} कन्फर्म करना चाहते हैं?`)) return;
-
-    const btn = event ? event.target : null;
+    const btn = event && event.target;
     if (btn) { btn.disabled = true; btn.textContent = 'प्रोसेसिंग…'; }
-
     try {
-      const { data: ord, error: fetchErr } = await db
-        .from('order_requests')
-        .select('*')
-        .eq('id', orderId)
-        .single();
+      const { data: ord, error: fetchErr } = await db.from('order_requests').select('*').eq('id', orderId).single();
       if (fetchErr) throw fetchErr;
-
+      if (ord.status === 'cancelled') throw new Error('रद्द ऑर्डर कन्फर्म नहीं किया जा सकता।');
       let notes = String(ord.notes || '');
-      if (!notes.includes('STOCK_DEDUCTED:1')) {
-        const deducted = await adjustDatabaseStockForOrder(ord, -1);
-        if (deducted) {
-          notes = notes.replace('STOCK_SYNC:pending', '').trim() + ' | STOCK_DEDUCTED:1';
+      if (!ord.stock_reserved && !notes.includes('STOCK_DEDUCTED:1')) {
+        const legacyItems = parseOrderItemsFromText(ord, plants || []).filter(it => it.id && it.qty > 0);
+        if (!legacyItems.length || !(await adjustDatabaseStockForOrder(ord, -1))) {
+          throw new Error('पुराने ऑर्डर का स्टॉक रिजर्व नहीं हो पाया। स्टॉक जाँचें।');
         }
+        notes = notes.replace('STOCK_SYNC:pending', '').trim() + ' | STOCK_DEDUCTED:1';
+        const { error: markError } = await db.from('order_requests').update({
+          notes,
+          stock_items: legacyItems.map(it => ({ id: String(it.id), qty: Number(it.qty) })),
+          stock_reserved: true,
+          stock_restored: false
+        }).eq('id', orderId);
+        if (markError) throw markError;
       }
-
-      const { error: ordErr } = await db
-        .from('order_requests')
-        .update({ status: 'confirmed', notes: notes })
-        .eq('id', orderId);
+      const { error: ordErr } = await db.from('order_requests').update({ status: 'confirmed', notes }).eq('id', orderId);
       if (ordErr) throw ordErr;
-
       stopLoudAlert();
       await window.loadAdminAll();
       await window.loadPlants();
-      alert('✅ ऑर्डर कन्फर्म हो गया और स्टॉक अपडेट कर दिया गया!');
+      alert('✅ ऑर्डर कन्फर्म हो गया! ऑर्डर बनते समय स्टॉक पहले ही रिजर्व हो चुका है।');
     } catch (e) {
       alert('त्रुटि: ' + e.message);
       if (btn) { btn.disabled = false; btn.textContent = '✅ कन्फर्म'; }
     }
   };
 
+
   // एडमिन द्वारा "❌ रद्द करें" दबाने पर घटा हुआ स्टॉक वापस जोड़ें
   window.cancelOrderPrompt = async function (event, orderId, existingNotes) {
     if (event) { event.preventDefault(); event.stopPropagation(); }
-
     const reason = prompt(
       'कृपया ऑर्डर रद्द करने का कारण चुनें या लिखें:\n\n1. फर्जी भुगतान स्क्रीनशॉट / UTR नंबर अमान्य\n2. स्टॉक में माल उपलब्ध नहीं है\n3. गलत पता या संपर्क नंबर\n4. अन्य कारण',
       'फर्जी भुगतान स्क्रीनशॉट / UTR नंबर अमान्य'
     );
     if (reason === null) return;
     const cleanReason = reason.trim() || 'अन्य कारण';
-
+    const btn = event && event.target;
+    if (btn) { btn.disabled = true; btn.textContent = 'रद्द हो रहा है…'; }
     try {
-      const { data: ord } = await db.from('order_requests').select('*').eq('id', orderId).single();
-      let notes = String((ord && ord.notes) || existingNotes || '');
-
-      if (notes.includes('STOCK_DEDUCTED:1') && !notes.includes('STOCK_RESTORED:1')) {
-        const restored = await adjustDatabaseStockForOrder(ord, +1);
-        if (restored) {
-          notes += ' | STOCK_RESTORED:1';
-        }
+      const { data: ord, error: fetchErr } = await db
+        .from('order_requests').select('*').eq('id', orderId).single();
+      if (fetchErr) throw fetchErr;
+      if (ord.status === 'cancelled') {
+        alert('यह ऑर्डर पहले ही रद्द हो चुका है। स्टॉक दोबारा नहीं जोड़ा जाएगा।');
+        if (btn) btn.disabled = false;
+        return;
       }
-      notes = notes.replace('STOCK_SYNC:pending', 'STOCK_SYNC:cancelled') + ' | CANCEL_REASON:' + cleanReason;
-
-      const { error } = await db
-        .from('order_requests')
-        .update({ status: 'cancelled', notes: notes })
-        .eq('id', orderId);
+      if (isOrderDelivered(ord)) {
+        throw new Error('डिलीवर हो चुके ऑर्डर को रद्द नहीं किया जा सकता।');
+      }
+      let notes = String(ord.notes || existingNotes || '');
+      if (!notes.includes('CANCEL_REASON:')) notes += ' | CANCEL_REASON:' + cleanReason;
+      // SQL UPDATE trigger स्टॉक को उसी transaction में एक बार वापस जोड़ता है।
+      const { data: updated, error } = await db.from('order_requests')
+        .update({ status: 'cancelled', notes })
+        .eq('id', orderId).neq('status', 'cancelled')
+        .select('id,status,stock_reserved,stock_restored').maybeSingle();
       if (error) throw error;
-
+      if (!updated) throw new Error('ऑर्डर की स्थिति नहीं बदली। पेज रिफ्रेश करके फिर जाँचें।');
+      if (updated.stock_reserved && !updated.stock_restored) {
+        throw new Error('ऑर्डर रद्द हुआ, लेकिन स्टॉक वापसी की पुष्टि नहीं मिली। Supabase Stock Reserve SQL और trigger जाँचें।');
+      }
       stopLoudAlert();
       await window.loadAdminAll();
       await window.loadPlants();
-      alert(`❌ ऑर्डर #${orderId} रद्द कर दिया गया और स्टॉक वापस अपडेट हो गया!`);
+      alert(`❌ ऑर्डर #${orderId} रद्द हो गया। रिजर्व किया गया स्टॉक अपने आप एक बार वापस जुड़ गया।`);
     } catch (e) {
       alert('रद्द करने में त्रुटि: ' + e.message);
+      if (btn) { btn.disabled = false; btn.textContent = '❌ रद्द करें'; }
     }
   };
+
 
   // बिक्री हिसाब (loadSalesLedger) में कुल बिके पौधे और कुल बिकी सब्ज़ी की सही गिनती दिखाएँ
   window.loadSalesLedger = async function () {
@@ -4804,6 +4818,35 @@ window.loadAdminAll = loadAdminAll;
       allList.innerHTML = '<div class="status">त्रुटि: ' + err.message + '</div>';
     }
   };
+})();
+
+// ग्राहक और एडमिन दोनों के खुले पेज पर स्टॉक बदलाव तुरंत दिखाएँ (Supabase Realtime enabled होना चाहिए).
+(function setupNurseryStockRealtime(){
+  if (typeof db === 'undefined' || !db || typeof db.channel !== 'function') return;
+  let refreshBusy = false;
+  let refreshAgain = false;
+  const refresh = async () => {
+    if (document.visibilityState === 'hidden') return;
+    if (refreshBusy) { refreshAgain = true; return; }
+    refreshBusy = true;
+    try {
+      if (typeof window.loadPlants === 'function') await window.loadPlants();
+      if (document.body.classList.contains('admin-authenticated') && typeof window.loadAdminAll === 'function') {
+        await window.loadAdminAll();
+      }
+    } catch (err) { console.warn('Live stock refresh failed:', err); }
+    finally {
+      refreshBusy = false;
+      if (refreshAgain) { refreshAgain = false; refresh(); }
+    }
+  };
+  try {
+    db.channel('nursery-live-stock')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'plants' }, refresh)
+      .subscribe();
+    window.addEventListener('focus', refresh);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+  } catch (err) { console.warn('Supabase stock realtime is unavailable:', err); }
 })();
 
 applySiteConfigToUI();
