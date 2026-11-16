@@ -1201,6 +1201,40 @@ header#mainHeader .hours-pill{color:#14532d !important;background:#f0fdf4 !impor
   body.admin-panel-open #loudAlertBanner{position:relative !important;top:auto !important;margin:0 0 10px !important;}
 }
 
+
+/* V18: Mobile product switcher — plants and edible vegetables shown in separate views */
+.store-view-tabs{display:none}
+@media screen and (max-width:700px){
+  .store-view-tabs{
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+    margin:10px 10px 12px;
+    padding:5px;
+    background:#e7f4ea;
+    border:1px solid #cce8d3;
+    border-radius:15px;
+    box-shadow:0 2px 8px rgba(6,78,59,.07);
+  }
+  .store-view-tab{
+    display:flex !important; align-items:center; justify-content:center;
+    min-width:0; min-height:43px; margin:0 !important; padding:8px 5px !important;
+    border:1px solid #cce8d3 !important; border-radius:11px !important;
+    background:#fff !important; color:#14532d !important;
+    font-size:12px !important; font-weight:900 !important; line-height:1.25 !important;
+    white-space:normal; box-shadow:none !important;
+  }
+  .store-view-tab.active{
+    color:#fff !important; border-color:#08783c !important;
+    background:linear-gradient(135deg,#08783c,#064e2b) !important;
+    box-shadow:0 3px 8px rgba(6,78,59,.18) !important;
+  }
+  body.store-view-plants #viewVegCategory{display:none !important}
+  body.store-view-veg #viewPlantCategory{display:none !important}
+  body.store-view-plants #viewPlantCategory,
+  body.store-view-veg #viewVegCategory{display:block !important}
+  #viewPlantCategory,#viewVegCategory{margin-top:0 !important}
+}
 </style>
 </head>
 <body>
@@ -1254,6 +1288,11 @@ header#mainHeader .hours-pill{color:#14532d !important;background:#f0fdf4 !impor
 </nav>
 
 <main>
+  <!-- मोबाइल पर पौधे और ताजी सब्जियाँ अलग टैब में -->
+  <div class="store-view-tabs" id="storeViewTabs" role="tablist" aria-label="खरीदारी का प्रकार">
+    <button type="button" class="store-view-tab active" id="showPlantsTab" role="tab" aria-selected="true" aria-controls="viewPlantCategory">🌱 नर्सरी के पौधे</button>
+    <button type="button" class="store-view-tab" id="showVegTab" role="tab" aria-selected="false" aria-controls="viewVegCategory">🧺 ताजी सब्जियाँ</button>
+  </div>
   <section class="card" id="about">
     <h2 id="aboutNurseryTitle">🌿 श्री नीम करोली महाराज ग्रीन नर्सरी — हमारे बारे में</h2>
     <p><strong>हमारा परिचय:</strong> श्री नीम करोली महाराज ग्रीन नर्सरी, मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान से घरों, खेतों और किचन गार्डन के लिए पौधे तथा ताज़ी सब्ज़ियाँ उपलब्ध कराने का प्रयास करती है। हमारा उद्देश्य ग्राहकों को पौधों की सही जानकारी, देखभाल के सरल सुझाव और उपलब्ध स्टॉक के अनुसार पौधे/सब्ज़ियाँ आसानी से उपलब्ध कराना है।</p>
@@ -3935,6 +3974,31 @@ loadPlants();
   const bar=document.getElementById('barItemCount');
   if(bar&&window.MutationObserver)new MutationObserver(sync).observe(bar,{childList:true,characterData:true,subtree:true});
   sync();
+})();
+</script>
+
+<script>
+// V18: mobile home tabs switch only the visible product category; cart/data logic remains shared.
+(function(){
+  const plantBtn=document.getElementById('showPlantsTab');
+  const vegBtn=document.getElementById('showVegTab');
+  const tabs=document.getElementById('storeViewTabs');
+  if(!plantBtn || !vegBtn || !tabs) return;
+  function setStoreView(view, shouldScroll){
+    const veg=view==='veg';
+    document.body.classList.toggle('store-view-veg',veg);
+    document.body.classList.toggle('store-view-plants',!veg);
+    plantBtn.classList.toggle('active',!veg);
+    vegBtn.classList.toggle('active',veg);
+    plantBtn.setAttribute('aria-selected',String(!veg));
+    vegBtn.setAttribute('aria-selected',String(veg));
+    if(shouldScroll && window.matchMedia('(max-width:700px)').matches){
+      tabs.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  }
+  plantBtn.addEventListener('click',()=>setStoreView('plants',true));
+  vegBtn.addEventListener('click',()=>setStoreView('veg',true));
+  setStoreView('plants',false);
 })();
 </script>
 </body>
