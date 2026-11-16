@@ -1139,6 +1139,9 @@ header#mainHeader .hours-pill{color:#14532d !important;background:#f0fdf4 !impor
 /* V15: Mobile admin workspace attached neatly below the nursery header */
 @media screen and (max-width:700px){
   body.admin-panel-open{overflow:hidden !important;}
+  /* सफल Admin Login के बाद Header में केवल ब्रांडिंग रहे; Toggle Menu छिपा रहे */
+  body.admin-authenticated #mainHeader #menuToggleButton{display:none !important;}
+  body.admin-authenticated #mainHeader #mainNavigation{display:none !important;visibility:hidden !important;pointer-events:none !important;}
   body.admin-panel-open #mainHeader{
     position:fixed !important; top:0 !important; left:0 !important; right:0 !important;
     width:100% !important; z-index:20010 !important;
@@ -3014,6 +3017,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   const { data, error } = await db.auth.signInWithPassword({ email, password });
   if (error || data.user.id !== OWNER_UID) { stat.textContent = 'गलत लॉगिन!'; return; }
   // सफल लॉगिन के बाद भी नेविगेशन मेनू बंद ही रहे।
+  document.body.classList.add('admin-authenticated');
   if (window.closeNurseryMenu) window.closeNurseryMenu();
   const navMenuAfterLogin = document.getElementById('mainNavigation');
   const navButtonAfterLogin = document.getElementById('menuToggleButton');
