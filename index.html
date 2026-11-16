@@ -1781,7 +1781,7 @@ body > main::after{
   <!-- 🛒 शॉपिंग कार्ट व ऑर्डर मॉडल -->
   <section id="order" hidden>
     <div class="order-modal-card">
-      <button id="closeOrderModal" type="button" style="float:right;background:#edf5e9;color:#174b2b">✕ बंद करें</button>
+      <button id="closeOrderModal" type="button" aria-label="कार्ट बंद करें" title="बंद करें">×</button>
       <h2 id="orderModalTitle">🛒 आपकी शॉपिंग कार्ट व ऑर्डर</h2>
       
       <!-- कार्ट आइटम्स लिस्ट -->
@@ -1852,7 +1852,7 @@ body > main::after{
 
   <!-- ट्रैकिंग मॉडल -->
   <section class="card" id="customerTracking">
-    <button id="closeTrackingModal" type="button" style="float:right;background:#edf5e9;color:#174b2b">✕</button>
+    <button id="closeTrackingModal" type="button" aria-label="ऑर्डर ट्रैकिंग बंद करें" title="बंद करें">×</button>
     <h2>📦 अपना ऑर्डर ट्रैक करें</h2>
     <p style="font-size:13px;color:var(--muted)">ऑर्डर में दर्ज 10 अंकों का मोबाइल नंबर डालें:</p>
     <form id="customerTrackingForm">
@@ -1877,7 +1877,7 @@ body > main::after{
   <!-- एडमिन पैनल -->
   <section id="owner">
     <div style="max-width:1000px;margin:0 auto;display:flex;justify-content:flex-end">
-      <button id="ownerCloseButton" type="button" style="background:#fff;color:#000;margin-bottom:8px">✕ बंद करें</button>
+      <button id="ownerCloseButton" type="button" aria-label="एडमिन पैनल बंद करें" title="बंद करें">×</button>
     </div>
 
     <form id="loginForm">
@@ -3075,6 +3075,25 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
 
 
 
+
+
+<style id="v29-popup-close-icons">
+/* सभी मुख्य पॉपअप में एक जैसा, ऊपर-दाएँ गोल X बटन */
+#closeOrderModal, #closeTrackingModal, #ownerCloseButton{
+  display:inline-flex !important; align-items:center !important; justify-content:center !important;
+  width:38px !important; height:38px !important; min-width:38px !important; min-height:38px !important;
+  padding:0 !important; margin:0 !important; border:1px solid #d5e5d9 !important;
+  border-radius:50% !important; background:#fff !important; color:#14532d !important;
+  font-family:Arial,sans-serif !important; font-size:27px !important; font-weight:500 !important;
+  line-height:1 !important; box-shadow:0 2px 8px rgba(6,78,59,.12) !important;
+  cursor:pointer !important; z-index:20 !important;
+}
+#closeOrderModal{position:sticky !important; top:0 !important; float:right !important; margin:0 0 8px 8px !important;}
+#customerTracking #closeTrackingModal{position:sticky !important; top:0 !important; float:right !important; margin:-3px -3px 5px 8px !important;}
+#owner.login-visible > div:first-child{justify-content:flex-end !important;}
+body.admin-panel-open #ownerCloseButton{width:40px !important;height:40px !important;font-size:28px !important;}
+#closeOrderModal:hover, #closeTrackingModal:hover, #ownerCloseButton:hover{background:#fee2e2 !important;color:#b91c1c !important;border-color:#fecaca !important;}
+</style>
 
 </body>
     </html>
@@ -5119,6 +5138,25 @@ loadPlants();
 </style>
 
 
+
+
+<style id="v29-popup-close-icons">
+/* सभी मुख्य पॉपअप में एक जैसा, ऊपर-दाएँ गोल X बटन */
+#closeOrderModal, #closeTrackingModal, #ownerCloseButton{
+  display:inline-flex !important; align-items:center !important; justify-content:center !important;
+  width:38px !important; height:38px !important; min-width:38px !important; min-height:38px !important;
+  padding:0 !important; margin:0 !important; border:1px solid #d5e5d9 !important;
+  border-radius:50% !important; background:#fff !important; color:#14532d !important;
+  font-family:Arial,sans-serif !important; font-size:27px !important; font-weight:500 !important;
+  line-height:1 !important; box-shadow:0 2px 8px rgba(6,78,59,.12) !important;
+  cursor:pointer !important; z-index:20 !important;
+}
+#closeOrderModal{position:sticky !important; top:0 !important; float:right !important; margin:0 0 8px 8px !important;}
+#customerTracking #closeTrackingModal{position:sticky !important; top:0 !important; float:right !important; margin:-3px -3px 5px 8px !important;}
+#owner.login-visible > div:first-child{justify-content:flex-end !important;}
+body.admin-panel-open #ownerCloseButton{width:40px !important;height:40px !important;font-size:28px !important;}
+#closeOrderModal:hover, #closeTrackingModal:hover, #ownerCloseButton:hover{background:#fee2e2 !important;color:#b91c1c !important;border-color:#fecaca !important;}
+</style>
 
 </body>
 </html>
