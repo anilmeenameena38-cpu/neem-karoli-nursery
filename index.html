@@ -1564,19 +1564,17 @@ body > main::after{
   }
   #customerTracking.tracking-modal-open {
     position:fixed !important;
-    inset:0 !important;
+    top:var(--tracking-header-bottom, 64px) !important;
     left:0 !important;
-    top:0 !important;
     right:0 !important;
     bottom:0 !important;
     transform:none !important;
     width:100% !important;
     max-width:none !important;
-    height:100vh !important;
-    height:100dvh !important;
+    height:auto !important;
     max-height:none !important;
     margin:0 !important;
-    padding:calc(12px + env(safe-area-inset-top)) 14px calc(12px + env(safe-area-inset-bottom)) !important;
+    padding:12px 14px calc(12px + env(safe-area-inset-bottom)) !important;
     border:0 !important;
     border-radius:0 !important;
     box-shadow:none !important;
@@ -1668,7 +1666,7 @@ body > main::after{
     </div>
     <p style="margin:8px 0 14px;font-size:12.5px;color:#d1fae5">नर्सरी आपकी जानकारी और भुगतान की जाँच करके आपसे संपर्क करेगी। ऑर्डर की स्थिति देखने के लिए नीचे विकल्प चुनें।</p>
     <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:14px">
-      <button type="button" class="success-action-button" onclick="document.getElementById('globalSuccessBanner').style.display='none';document.getElementById('globalSuccessBanner').setAttribute('aria-hidden','true');document.getElementById('customerTracking').classList.add('tracking-modal-open'); document.body.classList.add('tracking-open');document.getElementById('trackingPhone').value=document.getElementById('phone').value.replace(/\D/g,'').slice(-10);" style="background:#fef3c7;color:#14532d">📦 मेरा ऑर्डर देखें</button>
+      <button type="button" class="success-action-button" onclick="document.getElementById('globalSuccessBanner').style.display='none';document.getElementById('globalSuccessBanner').setAttribute('aria-hidden','true');openCustomerTracking();document.getElementById('trackingPhone').value=document.getElementById('phone').value.replace(/\D/g,'').slice(-10);" style="background:#fef3c7;color:#14532d">📦 मेरा ऑर्डर देखें</button>
       <button type="button" class="success-action-button" onclick="document.getElementById('globalSuccessBanner').style.display='none';document.getElementById('globalSuccessBanner').setAttribute('aria-hidden','true');window.scrollTo({top:0,behavior:'smooth'});" style="background:#fff;color:#14532d">⌂ होम पर जाएँ</button>
     </div>
   </div>
@@ -4464,12 +4462,51 @@ async function renderAdminList() {
   document.getElementById('adminPlantSimpleListVeg').innerHTML = make(items.filter(x => isVeg(x)));
 }
 
+// मोबाइल ट्रैकिंग पैनल: हेडर के ठीक नीचे खुले और केवल ऑर्डर सूची स्क्रॉल हो।
+let trackingSavedScrollY = 0;
+function openCustomerTracking() {
+  const panel = document.getElementById('customerTracking');
+  if (!panel) return;
+  if (window.matchMedia('(max-width:700px)').matches) {
+    const header = document.getElementById('mainHeader');
+    const headerBottom = header ? Math.max(0, Math.round(header.getBoundingClientRect().bottom)) : 64;
+    panel.style.setProperty('--tracking-header-bottom', headerBottom + 'px');
+    if (!document.body.classList.contains('tracking-open')) {
+      trackingSavedScrollY = window.scrollY || window.pageYOffset || 0;
+      document.body.dataset.trackingScrollY = String(trackingSavedScrollY);
+      document.body.style.position = 'fixed';
+      document.body.style.top = '-' + trackingSavedScrollY + 'px';
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+    }
+  }
+  panel.classList.add('tracking-modal-open');
+  document.body.classList.add('tracking-open');
+}
+function closeCustomerTracking() {
+  const panel = document.getElementById('customerTracking');
+  if (panel) panel.classList.remove('tracking-modal-open');
+  const wasOpen = document.body.classList.contains('tracking-open');
+  document.body.classList.remove('tracking-open');
+  if (wasOpen && window.matchMedia('(max-width:700px)').matches) {
+    const y = Number(document.body.dataset.trackingScrollY || trackingSavedScrollY || 0);
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    delete document.body.dataset.trackingScrollY;
+    window.scrollTo(0, y);
+  }
+}
+
 document.getElementById('customerTrackingNav')?.addEventListener('click', (e) => {
   e.preventDefault();
-  document.getElementById('customerTracking').classList.add('tracking-modal-open'); document.body.classList.add('tracking-open');
+  openCustomerTracking();
 });
 document.getElementById('closeTrackingModal')?.addEventListener('click', () => {
-  document.getElementById('customerTracking').classList.remove('tracking-modal-open'); document.body.classList.remove('tracking-open');
+  closeCustomerTracking();
 });
 
 document.getElementById('customerTrackingForm')?.addEventListener('submit', async (e) => {
@@ -4697,7 +4734,7 @@ loadPlants();
     if(action==='home') {
       // किसी भी खुले ग्राहक मेनू/पॉपअप/जानकारी पेज को बंद करके साफ Homepage दिखाएँ।
       if (typeof window.closeNurseryMenu === 'function') window.closeNurseryMenu();
-      document.getElementById('customerTracking')?.classList.remove('tracking-modal-open'); document.body.classList.remove('tracking-open');
+      closeCustomerTracking();
       ['about','plantCare','plantTypes','contact'].forEach(id=>{
         const section=document.getElementById(id);
         if(section){
