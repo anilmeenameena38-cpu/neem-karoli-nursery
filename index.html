@@ -2977,48 +2977,6 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
 
 
 
-<style id="v23-header-modal-layer-fix">
-/* Header ko modal/login overlays ke peeche rakhein; menu normal page par hi upar rahe. */
-header#mainHeader {
-  z-index: 1 !important;
-}
-/* Owner login ko header ke neeche se shuru karne ke bajay poori viewport par dikhayein. */
-#owner.login-visible {
-  position: fixed !important;
-  inset: 0 !important;
-  top: 0 !important;
-  z-index: 30000 !important;
-  width: 100% !important;
-  max-width: none !important;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  box-sizing: border-box !important;
-}
-/* Login ke dauran mobile admin-header ka fixed offset hata dein. */
-@media screen and (max-width:700px) {
-  body.admin-panel-open:not(.admin-authenticated) header#mainHeader {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    z-index: 1 !important;
-  }
-  body.admin-panel-open:not(.admin-authenticated) #owner.login-visible {
-    inset: 0 !important;
-    top: 0 !important;
-    z-index: 30000 !important;
-    padding: max(12px, env(safe-area-inset-top)) 10px
-      max(16px, env(safe-area-inset-bottom)) !important;
-  }
-}
-/* Tracking/order popups should always cover the header, not sit below it. */
-#customerTracking.tracking-modal-open {
-  z-index: 30000 !important;
-}
-#order:not([hidden]) {
-  z-index: 30000 !important;
-}
-</style>
 
 </body>
     </html>
@@ -5063,86 +5021,6 @@ loadPlants();
 </style>
 
 
-<style id="v23-header-modal-layer-fix">
-/* Header ko modal/login overlays ke peeche rakhein; menu normal page par hi upar rahe. */
-header#mainHeader {
-  z-index: 1 !important;
-}
-/* Owner login ko header ke neeche se shuru karne ke bajay poori viewport par dikhayein. */
-#owner.login-visible {
-  position: fixed !important;
-  inset: 0 !important;
-  top: 0 !important;
-  z-index: 30000 !important;
-  width: 100% !important;
-  max-width: none !important;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  box-sizing: border-box !important;
-}
-/* Login ke dauran mobile admin-header ka fixed offset hata dein. */
-@media screen and (max-width:700px) {
-  body.admin-panel-open:not(.admin-authenticated) header#mainHeader {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    z-index: 1 !important;
-  }
-  body.admin-panel-open:not(.admin-authenticated) #owner.login-visible {
-    inset: 0 !important;
-    top: 0 !important;
-    z-index: 30000 !important;
-    padding: max(12px, env(safe-area-inset-top)) 10px
-      max(16px, env(safe-area-inset-bottom)) !important;
-  }
-}
-/* Tracking/order popups should always cover the header, not sit below it. */
-#customerTracking.tracking-modal-open {
-  z-index: 30000 !important;
-}
-#order:not([hidden]) {
-  z-index: 30000 !important;
-}
-</style>
 
-
-
-<style id="v26-modal-stacking-context-fix">
-/* FIX: main ka isolation:isolate modal ko header ke neeche stacking context me bandh kar raha tha.
-   Modal khulne par sirf main ka stacking context hatao; normal page design ko na chhedo. */
-@supports selector(body:has(#customerTracking.tracking-modal-open)) {
-  body:has(#owner.login-visible) > main,
-  body:has(#customerTracking.tracking-modal-open) > main {
-    isolation:auto !important;
-  }
-}
-/* iPhone Safari / modern browsers: modal layer header se upar rahe. */
-header#mainHeader { z-index:1 !important; }
-#owner.login-visible,
-#customerTracking.tracking-modal-open,
-#order:not([hidden]) { z-index:30000 !important; }
-@media screen and (max-width:700px) {
-  body.admin-panel-open:not(.admin-authenticated) header#mainHeader {
-    position:relative !important; top:auto !important; left:auto !important; right:auto !important; z-index:1 !important;
-  }
-  body.admin-panel-open:not(.admin-authenticated) #owner.login-visible {
-    position:fixed !important; inset:0 !important; top:0 !important; bottom:0 !important;
-    width:100% !important; max-width:none !important;
-    padding:max(12px,env(safe-area-inset-top)) 10px max(16px,env(safe-area-inset-bottom)) !important;
-    overflow-x:hidden !important; overflow-y:auto !important;
-    -webkit-overflow-scrolling:touch !important; box-sizing:border-box !important;
-  }
-  #customerTracking.tracking-modal-open {
-    position:fixed !important; left:50% !important; top:50% !important; right:auto !important; bottom:auto !important;
-    transform:translate(-50%,-50%) !important;
-    width:calc(100vw - 28px) !important; max-width:380px !important;
-    max-height:calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
-    overflow-x:hidden !important; overflow-y:auto !important;
-    margin:0 !important; box-sizing:border-box !important; z-index:30001 !important;
-    box-shadow:0 0 0 100vmax rgba(8,25,13,.62), 0 22px 70px rgba(0,0,0,.28) !important;
-  }
-}
-</style>
 </body>
 </html>
