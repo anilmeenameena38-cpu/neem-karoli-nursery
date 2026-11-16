@@ -6,6 +6,12 @@
 <title id="pageTitle">श्री नीम करोली महाराज ग्रीन नर्सरी</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+// मोबाइल नेटवर्क पर jsDelivr उपलब्ध न हो तो Supabase SDK को unpkg से लोड करें।
+if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+  document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\/script>');
+}
+</script>
+<script>
 document.addEventListener('DOMContentLoaded', function () {
 const paymentProofInput = document.getElementById('paymentProofFile');
 if (!paymentProofInput) return;
@@ -1792,7 +1798,28 @@ async function loadPlants() {
       target.appendChild(card);
     });
   } catch (err) {
-    pList.textContent = 'लोड करने में समस्या हुई।';
+    const message = (err && err.message) ? err.message : 'Supabase से संपर्क नहीं हो पाया।';
+    const showError = (list, kind) => {
+      if (!list) return;
+      list.innerHTML = '';
+      const box = document.createElement('div');
+      box.style.cssText = 'grid-column:1/-1;padding:14px;border:1px solid #fecaca;border-radius:12px;background:#fff7f7;color:#991b1b;font-size:13px;';
+      const title = document.createElement('strong');
+      title.textContent = kind + ' लोड नहीं हो पाए।';
+      const detail = document.createElement('p');
+      detail.style.margin = '6px 0';
+      detail.textContent = 'कारण: ' + message;
+      const retry = document.createElement('button');
+      retry.type = 'button';
+      retry.textContent = '↻ दोबारा कोशिश करें';
+      retry.style.marginTop = '6px';
+      retry.addEventListener('click', loadPlants);
+      box.append(title, detail, retry);
+      list.appendChild(box);
+    };
+    showError(pList, 'पौधे');
+    showError(vList, 'सब्जियाँ');
+    console.error('Nursery products could not be loaded:', err);
   }
 }
 
