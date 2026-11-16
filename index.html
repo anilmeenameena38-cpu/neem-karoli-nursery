@@ -2788,6 +2788,54 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
       <\/script>
 
 
+
+<style id="desktop-header-left-cleanup-v18">
+/* Desktop only: remove stray decorative items from the left header column.
+   Keep the menu, logo and nursery text aligned; mobile header is untouched. */
+@media screen and (min-width:701px) {
+  header#mainHeader {
+    grid-template-columns: max-content 82px minmax(240px,1fr) !important;
+    grid-template-rows: auto auto auto auto !important;
+    align-items: center !important;
+    column-gap: 14px !important;
+    row-gap: 4px !important;
+  }
+  header#mainHeader > #menuToggleButton {
+    grid-column: 1 !important;
+    grid-row: 1 / span 4 !important;
+    justify-self: start !important;
+    align-self: center !important;
+    width: auto !important;
+    min-width: 120px !important;
+    margin: 0 !important;
+  }
+  header#mainHeader > #headerBrandLogo {
+    grid-column: 2 !important;
+    grid-row: 1 / span 4 !important;
+    align-self: center !important;
+  }
+  header#mainHeader > #headerNurseryName {
+    grid-column: 3 !important; grid-row: 1 !important;
+  }
+  header#mainHeader > #headerNurseryTagline {
+    grid-column: 3 !important; grid-row: 2 !important;
+  }
+  header#mainHeader > #headerNurseryAddress {
+    grid-column: 3 !important; grid-row: 3 !important;
+  }
+  header#mainHeader > div:not(.header-badge-box) {
+    grid-column: 3 !important; grid-row: 4 !important;
+    justify-self: start !important;
+    margin: 0 !important;
+  }
+  header#mainHeader > .header-badge-box,
+  header#mainHeader::after {
+    display: none !important;
+    content: none !important;
+  }
+}
+</style>
+
 </body>
     </html>
   `);
@@ -4463,5 +4511,53 @@ loadPlants();
   });
 })();
 </script>
+
+<style id="desktop-header-left-cleanup-v18">
+/* Desktop only: remove stray decorative items from the left header column.
+   Keep the menu, logo and nursery text aligned; mobile header is untouched. */
+@media screen and (min-width:701px) {
+  header#mainHeader {
+    grid-template-columns: max-content 82px minmax(240px,1fr) !important;
+    grid-template-rows: auto auto auto auto !important;
+    align-items: center !important;
+    column-gap: 14px !important;
+    row-gap: 4px !important;
+  }
+  header#mainHeader > #menuToggleButton {
+    grid-column: 1 !important;
+    grid-row: 1 / span 4 !important;
+    justify-self: start !important;
+    align-self: center !important;
+    width: auto !important;
+    min-width: 120px !important;
+    margin: 0 !important;
+  }
+  header#mainHeader > #headerBrandLogo {
+    grid-column: 2 !important;
+    grid-row: 1 / span 4 !important;
+    align-self: center !important;
+  }
+  header#mainHeader > #headerNurseryName {
+    grid-column: 3 !important; grid-row: 1 !important;
+  }
+  header#mainHeader > #headerNurseryTagline {
+    grid-column: 3 !important; grid-row: 2 !important;
+  }
+  header#mainHeader > #headerNurseryAddress {
+    grid-column: 3 !important; grid-row: 3 !important;
+  }
+  header#mainHeader > div:not(.header-badge-box) {
+    grid-column: 3 !important; grid-row: 4 !important;
+    justify-self: start !important;
+    margin: 0 !important;
+  }
+  header#mainHeader > .header-badge-box,
+  header#mainHeader::after {
+    display: none !important;
+    content: none !important;
+  }
+}
+</style>
+
 </body>
 </html>
