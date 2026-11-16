@@ -1447,6 +1447,46 @@ body > main::after{
   #order.checkout-active #startCheckoutButton,
   #order.checkout-active .cart-before-checkout #startCheckoutButton { display:none !important; }
 </style>
+
+<style id="anil-navigation-tracking-fix">
+/* मोबाइल ऑर्डर ट्रैकिंग: छोटा, केंद्र में और आसानी से बंद होने वाला कार्ड */
+#customerTracking{
+  position:fixed !important;
+  left:50% !important;
+  top:50% !important;
+  right:auto !important;
+  bottom:auto !important;
+  transform:translate(-50%,-50%) !important;
+  width:min( calc(100vw - 32px), 380px ) !important;
+  max-width:380px !important;
+  max-height: min( calc(100dvh - 40px), 520px ) !important;
+  overflow-y:auto !important;
+  margin:0 !important;
+  padding:18px !important;
+  box-sizing:border-box !important;
+  z-index:30000 !important;
+}
+#customerTracking #closeTrackingModal{
+  position:sticky !important;
+  float:right !important;
+  top:0 !important;
+  z-index:2 !important;
+  width:36px !important;
+  height:36px !important;
+  min-width:36px !important;
+  padding:0 !important;
+  margin:-4px -4px 4px 8px !important;
+  border-radius:50% !important;
+}
+@media(max-width:700px){
+  #customerTracking{
+    width:min(calc(100vw - 28px),360px) !important;
+    max-height:calc(100dvh - 32px) !important;
+    padding:15px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -4287,12 +4327,25 @@ loadPlants();
     btn.classList.add('active');
     const action=btn.dataset.storeAction;
     if(action==='home') {
-      // सभी खुले हुए ग्राहक पॉपअप/पेज बंद करके मुख्य होमपेज पर लौटें।
+      // किसी भी खुले ग्राहक मेनू/पॉपअप/जानकारी पेज को बंद करके साफ Homepage दिखाएँ।
       if (typeof window.closeNurseryMenu === 'function') window.closeNurseryMenu();
       document.getElementById('customerTracking')?.classList.remove('tracking-modal-open');
-      document.getElementById('about')?.classList.remove('about-page-open');
-      const orderModal = document.getElementById('order');
-      if (orderModal && !orderModal.hidden && typeof closeOrderPopup === 'function') closeOrderPopup();
+      ['about','plantCare','plantTypes','contact'].forEach(id=>{
+        const section=document.getElementById(id);
+        if(section){
+          section.classList.remove('about-page-open','nav-page-open');
+          section.style.removeProperty('display');
+        }
+      });
+      const submenu=document.getElementById('aboutNavSubmenu');
+      if(submenu){submenu.hidden=true;submenu.style.display='none';}
+      document.getElementById('aboutNavToggle')?.setAttribute('aria-expanded','false');
+      const orderModal=document.getElementById('order');
+      if(orderModal && !orderModal.hidden && typeof closeOrderPopup==='function') closeOrderPopup();
+      const success=document.getElementById('globalSuccessBanner');
+      if(success){success.style.display='none';success.setAttribute('aria-hidden','true');}
+      // Homepage पर लौटते समय पौधों वाला डिफॉल्ट टैब चुनें।
+      document.getElementById('showPlantsTab')?.click();
       document.querySelectorAll('.mobile-store-link').forEach(x=>x.classList.remove('active'));
       btn.classList.add('active');
       window.scrollTo({top:0,behavior:'smooth'});
