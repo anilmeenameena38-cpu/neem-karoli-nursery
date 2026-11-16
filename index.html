@@ -1358,6 +1358,22 @@ body > main::after{
 @media(min-width:701px){#v28CategoryChooser{padding:22px}.v28-choice{min-height:170px}.v28-choice:hover{border-color:#16834c;box-shadow:0 5px 16px rgba(22,131,76,.13);transform:translateY(-1px)}}
 </style>
 
+
+<style id="v31-remove-category-ui">
+/* V31: हटाएँ सभी category chooser/tabs/filter controls; दिखाएँ पूरी product lists */
+html body #shopCategoriesContainer #v28CategoryChooser,
+html body #shopCategoriesContainer #storeViewTabs,
+html body #shopCategoriesContainer .v28-back,
+html body #shopCategoriesContainer .v25-category-filters { display:none !important; }
+html body #shopCategoriesContainer.v29-home #viewPlantCategory,
+html body #shopCategoriesContainer.v29-home #viewVegCategory,
+html body #shopCategoriesContainer.v29-plants #viewPlantCategory,
+html body #shopCategoriesContainer.v29-plants #viewVegCategory,
+html body #shopCategoriesContainer.v29-veg #viewPlantCategory,
+html body #shopCategoriesContainer.v29-veg #viewVegCategory,
+html body #shopCategoriesContainer #viewPlantCategory,
+html body #shopCategoriesContainer #viewVegCategory { display:block !important; }
+</style>
 </head>
 <body>
 
