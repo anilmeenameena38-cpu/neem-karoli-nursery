@@ -1361,6 +1361,10 @@ body > main::after{
   #cartItemsContainer{clear:both !important;}
 }
 </style>
+<style id="v22-empty-cart-visibility-fix">
+  /* Empty cart must never expose checkout fields, even if other CSS overrides hidden. */
+  #order #orderForm[hidden] { display: none !important; }
+</style>
 
 </head>
 <body>
@@ -2889,7 +2893,12 @@ function renderCartModal() {
 
   if (shoppingCart.length === 0) {
     // खाली कार्ट में कुल राशि, डिलीवरी और ग्राहक विवरण बिल्कुल न दिखाएँ।
-    if (orderForm) orderForm.hidden = true;
+    if (orderForm) {
+      orderForm.hidden = true;
+      // Force-hide the checkout form even if a mobile/browser stylesheet overrides [hidden].
+      orderForm.style.setProperty('display', 'none', 'important');
+      orderForm.setAttribute('aria-hidden', 'true');
+    }
     if (orderStatus) orderStatus.style.display = 'none';
     container.innerHTML = `
       <div style="text-align:center;padding:24px 14px;background:#f8faf6;border:1px dashed #b9d8c2;border-radius:12px">
@@ -2902,7 +2911,11 @@ function renderCartModal() {
     return;
   }
 
-  if (orderForm) orderForm.hidden = false;
+  if (orderForm) {
+    orderForm.hidden = false;
+    orderForm.style.removeProperty('display');
+    orderForm.removeAttribute('aria-hidden');
+  }
 
   let html = '<h4 style="margin:0 0 8px;color:var(--green)">🛍️ आपके चुने हुए सामान:</h4>';
   let subtotal = 0;
