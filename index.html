@@ -292,28 +292,43 @@ button:disabled{opacity:.55;cursor:wait}
   border-top:2px solid #34d399;
 }
 
-/* ✅ आर्डर सफलता व रसीद का ग्लोबल बैनर (60 सेकंड तक रुकने वाला) */
+/* ✅ ऑर्डर सफल होने के बाद केंद्र में पूरा कन्फर्मेशन पेज */
 #globalSuccessBanner{
   display:none;
   position:fixed;
-  top:70px;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:10500;
-  width:min(94%, 580px);
-  background:linear-gradient(135deg,#064e3b,#15803d);
+  inset:0;
+  z-index:50000;
+  width:100%;
+  height:100%;
+  box-sizing:border-box;
+  overflow-y:auto;
+  margin:0;
+  padding: max(18px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom));
+  background:rgba(5,35,24,.78);
   color:#fff;
-  padding:20px;
-  border-radius:18px;
-  box-shadow:0 12px 40px rgba(0,0,0,0.35);
-  border:2px solid #34d399;
+  align-items:center;
+  justify-content:center;
   text-align:center;
-  animation: fadeInDown 0.4s ease-out;
+  backdrop-filter:blur(5px);
 }
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translate(-50%, -20px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
+#globalSuccessBanner .success-page-card{
+  width:min(100%,520px);
+  max-height:100%;
+  overflow-y:auto;
+  box-sizing:border-box;
+  margin:auto;
+  padding:22px 18px;
+  border-radius:20px;
+  background:linear-gradient(145deg,#064e3b,#15803d);
+  border:2px solid #34d399;
+  box-shadow:0 18px 55px rgba(0,0,0,.38);
 }
+#globalSuccessBanner .success-action-button{
+  min-height:44px;padding:10px 15px;border:0;border-radius:10px;
+  font-weight:800;font-size:14px;cursor:pointer;flex:1 1 145px;
+}
+@media(max-width:480px){#globalSuccessBanner .success-page-card{padding:20px 14px;border-radius:17px}#globalSuccessBanner h3{font-size:18px!important}}
+
 
 /* 💬 फ़्लोटिंग WhatsApp बटन */
 #floatingWaWidget{display:none;position:fixed;bottom:75px;left:20px;z-index:9970;background:#25D366;color:#fff;width:48px;height:48px;border-radius:50%;align-items:center;justify-content:center;font-size:26px;box-shadow:0 6px 20px rgba(37,211,102,0.4);text-decoration:none}
@@ -1420,6 +1435,12 @@ body > main::after{
     #order .order-modal-card.empty-cart-state { transform:none !important; }
   }
 </style>
+
+<style id="v22-checkout-explicit-state-guard">
+  /* Only reveal delivery/checkout details after the customer presses अब खरीदें. */
+  #order:not(.checkout-active) #orderForm { display:none !important; visibility:hidden !important; }
+  #order.checkout-active #orderForm { display:block !important; visibility:visible !important; }
+</style>
 </head>
 <body>
 
@@ -1430,20 +1451,21 @@ body > main::after{
 <div id="siteOfferBanner">🎉 विशेष ऑफर: आज सभी आर्डर्स पर <span id="bannerDiscountText">10%</span> की सीधी छूट!</div>
 <div id="siteClosedBanner">⚠️ सूचना: आज नर्सरी बंद है। नए ऑर्डर कल से स्वीकार किए जाएँगे।</div>
 
-<!-- ✅ आर्डर सफलता और पक्की रसीद का ग्लोबल बैनर (60 सेकंड तक रुकने वाला) -->
-<div id="globalSuccessBanner">
-  <div style="font-size:32px;margin-bottom:4px">🎉✅</div>
-  <h3 style="margin:0 0 6px;color:#fef08a;font-size:18px">आपका ऑर्डर सफलतापूर्वक दर्ज हो गया है!</h3>
-  <div id="successReceiptDetails" style="background:rgba(255,255,255,0.12);padding:10px;border-radius:10px;margin:8px 0;text-align:left;font-size:13.5px;line-height:1.5;color:#f0fdf4">
-    <!-- यहाँ आर्डर विवरण भरेगा -->
-  </div>
-  <p style="margin:4px 0;font-size:12.5px;color:#d1fae5">
-    हमें आपका आर्डर मिल गया है। हम आपके भुगतान और UTR की जाँच करके बहुत जल्द आपसे संपर्क करेंगे।
-  </p>
-  <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap">
-    <button type="button" onclick="document.getElementById('globalSuccessBanner').style.display='none'" style="background:#fff;color:#064e3b;border:0;padding:7px 16px;border-radius:8px;font-weight:800;cursor:pointer;font-size:13px">
-      ✕ ठीक है (बंद करें)
-    </button>
+<!-- ✅ ऑर्डर सफल होने पर ही दिखने वाला कन्फर्मेशन पेज -->
+<div id="globalSuccessBanner" role="dialog" aria-modal="true" aria-labelledby="successPageTitle" aria-hidden="true">
+  <div class="success-page-card">
+    <div style="width:72px;height:72px;margin:0 auto 12px;border-radius:50%;background:#dcfce7;color:#166534;display:flex;align-items:center;justify-content:center;font-size:42px;box-shadow:0 5px 18px #0003">✓</div>
+    <div style="font-size:14px;color:#bbf7d0;font-weight:700;margin-bottom:5px">श्री नीम करोली महाराज ग्रीन नर्सरी</div>
+    <h3 id="successPageTitle" style="margin:0 0 8px;color:#fef08a;font-size:21px">आपका ऑर्डर सफलतापूर्वक दर्ज हो गया है!</h3>
+    <p style="margin:0 0 14px;font-size:13px;color:#dcfce7">धन्यवाद! आपका ऑर्डर हमें मिल गया है।</p>
+    <div id="successReceiptDetails" style="background:#ffffff;color:#164e35;padding:13px;border-radius:12px;margin:12px 0;text-align:left;font-size:13.5px;line-height:1.65">
+      <!-- सफलतापूर्वक सेव हुए ऑर्डर का विवरण यहाँ दिखेगा -->
+    </div>
+    <p style="margin:8px 0 14px;font-size:12.5px;color:#d1fae5">नर्सरी आपकी जानकारी और भुगतान की जाँच करके आपसे संपर्क करेगी। ऑर्डर की स्थिति देखने के लिए नीचे विकल्प चुनें।</p>
+    <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="success-action-button" onclick="document.getElementById('globalSuccessBanner').style.display='none';document.getElementById('globalSuccessBanner').setAttribute('aria-hidden','true');document.getElementById('customerTracking').classList.add('tracking-modal-open');document.getElementById('trackingPhone').value=document.getElementById('phone').value.replace(/\D/g,'').slice(-10);" style="background:#fef3c7;color:#14532d">📦 मेरा ऑर्डर देखें</button>
+      <button type="button" class="success-action-button" onclick="document.getElementById('globalSuccessBanner').style.display='none';document.getElementById('globalSuccessBanner').setAttribute('aria-hidden','true');window.scrollTo({top:0,behavior:'smooth'});" style="background:#fff;color:#14532d">⌂ होम पर जाएँ</button>
+    </div>
   </div>
 </div>
 
@@ -2932,8 +2954,17 @@ function updateCartBadge() {
 // कार्ट मॉडल खोलना — खाली कार्ट में भी खाली स्थिति दिखाएँ।
 function openCartModal(e) {
   if (e) e.preventDefault();
-  const card = document.querySelector('#order .order-modal-card');
+  const orderRoot = document.getElementById('order');
+  const card = orderRoot?.querySelector('.order-modal-card');
+  const form = document.getElementById('orderForm');
+  // Every fresh cart opening starts in review mode, never in checkout mode.
+  orderRoot?.classList.remove('checkout-active');
   if (card) card.dataset.checkoutStarted = 'false';
+  if (form) {
+    form.hidden = true;
+    form.style.setProperty('display', 'none', 'important');
+    form.setAttribute('aria-hidden', 'true');
+  }
   renderCartModal();
   const orderModal = document.getElementById('order');
   document.body.classList.add('cart-modal-open');
@@ -2955,6 +2986,7 @@ function renderCartModal() {
   const modalCard = document.querySelector('#order .order-modal-card');
 
   if (shoppingCart.length === 0) {
+    document.getElementById('order')?.classList.remove('checkout-active');
     if (modalCard) modalCard.dataset.checkoutStarted = 'false';
     modalCard?.classList.add('empty-cart-state');
     // खाली कार्ट में कुल राशि, डिलीवरी और ग्राहक विवरण बिल्कुल न दिखाएँ।
@@ -2979,6 +3011,7 @@ function renderCartModal() {
   modalCard?.classList.remove('empty-cart-state');
   // चेकआउट केवल ग्राहक के "अब खरीदें" दबाने पर खुलेगा।
   const checkoutStarted = modalCard?.dataset.checkoutStarted === 'true';
+  document.getElementById('order')?.classList.toggle('checkout-active', checkoutStarted);
   if (orderForm) {
     orderForm.hidden = !checkoutStarted;
     if (checkoutStarted) {
@@ -3041,6 +3074,7 @@ function renderCartModal() {
   container.innerHTML = html;
   document.getElementById('startCheckoutButton')?.addEventListener('click', () => {
     if (modalCard) modalCard.dataset.checkoutStarted = 'true';
+    document.getElementById('order')?.classList.add('checkout-active');
     renderCartModal();
     const formTop = document.getElementById('orderForm');
     formTop?.scrollIntoView({behavior:'smooth', block:'start'});
@@ -3102,6 +3136,15 @@ function removeFromCart(index) {
 
 function closeOrderPopup() {
   const orderModal = document.getElementById('order');
+  orderModal.classList.remove('checkout-active');
+  const checkoutForm = document.getElementById('orderForm');
+  if (checkoutForm) {
+    checkoutForm.hidden = true;
+    checkoutForm.style.setProperty('display', 'none', 'important');
+    checkoutForm.setAttribute('aria-hidden', 'true');
+  }
+  const modalCard = orderModal.querySelector('.order-modal-card');
+  if (modalCard) modalCard.dataset.checkoutStarted = 'false';
   orderModal.hidden = true;
   orderModal.style.display = 'none';
   document.body.classList.remove('cart-modal-open');
@@ -3302,12 +3345,11 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
     }
 
     if (successBanner) {
-      successBanner.style.display = 'block';
-      setTimeout(() => {
-        successBanner.style.display = 'none';
-      }, 60000);
+      successBanner.style.display = 'flex';
+      successBanner.setAttribute('aria-hidden', 'false');
     }
 
+    // WhatsApp order summary opens after the database confirms the order insert.
     window.open(waUrl, '_blank');
 
   } catch (err) {
