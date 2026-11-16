@@ -1487,6 +1487,44 @@ body > main::after{
 }
 </style>
 
+
+<style id="desktop-product-card-improvements-v15">
+/* V15: Desktop-only product card sizing. Mobile rules remain untouched. */
+@media screen and (min-width: 1000px) {
+  body main { max-width: 1400px !important; padding-left: 24px !important; padding-right: 24px !important; }
+  #viewPlantCategory, #viewVegCategory { padding: 18px !important; }
+  #viewPlantCategory h2, #viewVegCategory h2 { font-size: 22px !important; margin-bottom: 14px !important; }
+  #plantOnlyList.plants, #vegOnlyList.plants {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 18px !important;
+    width: 100% !important;
+  }
+  #plantOnlyList .plant, #vegOnlyList .plant {
+    min-width: 0 !important; width: 100% !important; padding: 13px !important;
+    border-radius: 16px !important;
+  }
+  #plantOnlyList .plant img, #vegOnlyList .plant img {
+    width: 100% !important; height: 190px !important; object-fit: cover !important;
+    border-radius: 12px !important;
+  }
+  #plantOnlyList .plant h3, #vegOnlyList .plant h3 {
+    font-size: 17px !important; line-height: 1.4 !important;
+  }
+  #plantOnlyList .price-tag, #vegOnlyList .price-tag { font-size: 14px !important; padding: 4px 10px !important; }
+  #plantOnlyList .stock-text, #vegOnlyList .stock-text { font-size: 12px !important; }
+  #plantOnlyList .stepper-btn, #vegOnlyList .stepper-btn { width: 32px !important; min-width: 32px !important; height: 34px !important; }
+  #plantOnlyList .card-qty-input, #vegOnlyList .card-qty-input { font-size: 14px !important; padding: 6px !important; }
+  #plantOnlyList .plant-buy-button, #vegOnlyList .plant-buy-button { font-size: 13px !important; padding: 9px 10px !important; }
+}
+@media screen and (min-width: 701px) and (max-width: 999px) {
+  #plantOnlyList.plants, #vegOnlyList.plants {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+  #plantOnlyList .plant img, #vegOnlyList .plant img { height: 145px !important; }
+}
+</style>
 </head>
 <body>
 
