@@ -1729,7 +1729,6 @@ body > main::after{
 <!-- मोबाइल फ्रेंडली चौड़े नेविगेशन टैब -->
 <nav id="mainNavigation" aria-label="मुख्य नेविगेशन">
   <a href="#contact">📞 संपर्क</a>
-  <a href="#customerTracking" id="customerTrackingNav">📦 ऑर्डर ट्रैकिंग</a>
   <button id="adminPanelNav" type="button">🔐 एडमिन लॉगिन</button>
 </nav>
 
@@ -2380,7 +2379,7 @@ body > main::after{
 <!-- मोबाइल ऐप जैसा नीचे का नेविगेशन -->
 <div class="mobile-store-nav" aria-label="मुख्य नेविगेशन">
   <button type="button" class="mobile-store-link active" data-store-action="home"><span>⌂</span><small>होम</small></button>
-  <button type="button" class="mobile-store-link" data-store-action="account"><span>♙</span><small>खाता</small></button>
+  <button type="button" class="mobile-store-link" data-store-action="account" aria-label="ऑर्डर ट्रैक करें"><span>📦</span><small>ट्रैक ऑर्डर</small></button>
   <button type="button" class="mobile-store-link" data-store-action="cart"><span>🛒</span><small>कार्ट</small><b id="mobileCartCount" aria-label="कार्ट में कुल मात्रा">0</b></button>
 </div>
 
@@ -3129,6 +3128,101 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
 #owner.login-visible > div:first-child{justify-content:flex-end !important;}
 body.admin-panel-open #ownerCloseButton{width:40px !important;height:40px !important;font-size:28px !important;}
 #closeOrderModal:hover, #closeTrackingModal:hover, #ownerCloseButton:hover{background:#fee2e2 !important;color:#b91c1c !important;border-color:#fecaca !important;}
+</style>
+
+
+<style id="v33-single-entry-centered-order-tracking">
+/* V33: tracking is opened only from the bottom navigation's Track Order button. */
+#customerTracking.tracking-modal-open {
+  position:fixed !important;
+  left:50% !important; top:50% !important; right:auto !important; bottom:auto !important;
+  transform:translate(-50%,-50%) !important;
+  width:min( min(92vw, 560px), calc(100vw - 24px) ) !important;
+  max-width:560px !important;
+  height:auto !important;
+  max-height:min(82dvh, 760px) !important;
+  margin:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:stretch !important;
+  gap:8px !important;
+  overflow:hidden !important;
+  padding:18px !important;
+  border:1px solid #d8e9dc !important;
+  border-radius:18px !important;
+  background:#fff !important;
+  box-shadow:0 0 0 100vmax rgba(4,24,14,.48), 0 18px 55px rgba(0,0,0,.24) !important;
+  z-index:50000 !important;
+  box-sizing:border-box !important;
+}
+#customerTracking.tracking-modal-open h2,
+#customerTracking.tracking-modal-open > p,
+#customerTracking.tracking-modal-open #customerTrackingForm,
+#customerTracking.tracking-modal-open #customerTrackingStatus {
+  flex:0 0 auto !important;
+}
+#customerTracking.tracking-modal-open #customerTrackingResults {
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  overflow-y:auto !important;
+  overscroll-behavior:contain !important;
+  -webkit-overflow-scrolling:touch !important;
+  padding:4px 3px 10px !important;
+}
+#customerTracking .customer-order-card {
+  display:block !important;
+  width:100% !important;
+  box-sizing:border-box !important;
+  margin:0 0 12px !important;
+  padding:12px !important;
+  border:1px solid #d7e8d8 !important;
+  border-left:4px solid #15803d !important;
+  border-radius:12px !important;
+  background:#fff !important;
+  box-shadow:0 3px 10px rgba(6,78,59,.07) !important;
+}
+#customerTracking #closeTrackingModal {
+  position:absolute !important;
+  top:10px !important; right:10px !important;
+  float:none !important;
+  margin:0 !important;
+  z-index:10 !important;
+}
+#customerTracking.tracking-modal-open h2 { padding-right:46px !important; }
+@media (max-width:700px) {
+  body.tracking-open {
+    overflow:hidden !important;
+    height:100dvh !important;
+    touch-action:none !important;
+  }
+  body.tracking-open #mainHeader {
+    position:fixed !important;
+    top:0 !important; left:0 !important; right:0 !important;
+    width:100% !important;
+    z-index:50001 !important;
+  }
+  body.tracking-open .mobile-store-nav,
+  body.tracking-open #floatingBottomCartBar,
+  body.tracking-open #floatingWaWidget { display:none !important; }
+  body > #customerTracking.tracking-modal-open {
+    left:50% !important;
+    top:calc(var(--tracking-header-bottom, 64px) + (100dvh - var(--tracking-header-bottom, 64px)) / 2) !important;
+    right:auto !important; bottom:auto !important;
+    transform:translate(-50%,-50%) !important;
+    width:calc(100vw - 24px) !important;
+    max-width:520px !important;
+    max-height:calc(100dvh - var(--tracking-header-bottom, 64px) - 28px - env(safe-area-inset-bottom)) !important;
+    padding:16px 14px calc(14px + env(safe-area-inset-bottom)) !important;
+    border-radius:17px !important;
+    overflow:hidden !important;
+    box-shadow:0 0 0 100vmax rgba(4,24,14,.48), 0 14px 42px rgba(0,0,0,.22) !important;
+  }
+  #customerTracking.tracking-modal-open #customerTrackingResults {
+    min-height:80px !important;
+    max-height:none !important;
+  }
+  #customerTracking .customer-order-card { padding:10px !important; margin-bottom:10px !important; }
+}
 </style>
 
 </body>
@@ -4574,10 +4668,6 @@ function closeCustomerTracking() {
   }
 }
 
-document.getElementById('customerTrackingNav')?.addEventListener('click', (e) => {
-  e.preventDefault();
-  openCustomerTracking();
-});
 document.getElementById('closeTrackingModal')?.addEventListener('click', () => {
   closeCustomerTracking();
 });
@@ -4630,7 +4720,7 @@ document.getElementById('customerTrackingForm')?.addEventListener('submit', asyn
       }
 
       return `
-        <div class="status" style="border:1px solid #dcebd7; margin-bottom:10px; background:#fff">
+        <div class="status customer-order-card" style="border:1px solid #dcebd7; margin-bottom:10px; background:#fff">
           <h4 style="margin:0 0 6px; color:var(--green)">ऑर्डर #${o.id} - ${safe(o.plant_name)}</h4>
           <p style="margin:4px 0; font-size:14px">
             💰 <b>कुल राशि:</b> ₹${total}<br>
@@ -4828,7 +4918,7 @@ loadPlants();
       btn.classList.add('active');
       window.scrollTo({top:0,behavior:'smooth'});
     }
-    if(action==='account') document.getElementById('customerTrackingNav')?.click();
+    if(action==='account') { closeCustomerTracking(); openCustomerTracking(); }
     if(action==='cart') { if(typeof openCartModal==='function') openCartModal(); else document.getElementById('floatingBottomCartBar')?.querySelector('button')?.click(); }
   }));
   // कार्ट बैज updateCartBadge() से सीधे अपडेट होता है, ताकि मात्रा और बैज हमेशा समान रहें।
@@ -5266,6 +5356,101 @@ loadPlants();
 #owner.login-visible > div:first-child{justify-content:flex-end !important;}
 body.admin-panel-open #ownerCloseButton{width:40px !important;height:40px !important;font-size:28px !important;}
 #closeOrderModal:hover, #closeTrackingModal:hover, #ownerCloseButton:hover{background:#fee2e2 !important;color:#b91c1c !important;border-color:#fecaca !important;}
+</style>
+
+
+<style id="v33-single-entry-centered-order-tracking">
+/* V33: tracking is opened only from the bottom navigation's Track Order button. */
+#customerTracking.tracking-modal-open {
+  position:fixed !important;
+  left:50% !important; top:50% !important; right:auto !important; bottom:auto !important;
+  transform:translate(-50%,-50%) !important;
+  width:min( min(92vw, 560px), calc(100vw - 24px) ) !important;
+  max-width:560px !important;
+  height:auto !important;
+  max-height:min(82dvh, 760px) !important;
+  margin:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:stretch !important;
+  gap:8px !important;
+  overflow:hidden !important;
+  padding:18px !important;
+  border:1px solid #d8e9dc !important;
+  border-radius:18px !important;
+  background:#fff !important;
+  box-shadow:0 0 0 100vmax rgba(4,24,14,.48), 0 18px 55px rgba(0,0,0,.24) !important;
+  z-index:50000 !important;
+  box-sizing:border-box !important;
+}
+#customerTracking.tracking-modal-open h2,
+#customerTracking.tracking-modal-open > p,
+#customerTracking.tracking-modal-open #customerTrackingForm,
+#customerTracking.tracking-modal-open #customerTrackingStatus {
+  flex:0 0 auto !important;
+}
+#customerTracking.tracking-modal-open #customerTrackingResults {
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  overflow-y:auto !important;
+  overscroll-behavior:contain !important;
+  -webkit-overflow-scrolling:touch !important;
+  padding:4px 3px 10px !important;
+}
+#customerTracking .customer-order-card {
+  display:block !important;
+  width:100% !important;
+  box-sizing:border-box !important;
+  margin:0 0 12px !important;
+  padding:12px !important;
+  border:1px solid #d7e8d8 !important;
+  border-left:4px solid #15803d !important;
+  border-radius:12px !important;
+  background:#fff !important;
+  box-shadow:0 3px 10px rgba(6,78,59,.07) !important;
+}
+#customerTracking #closeTrackingModal {
+  position:absolute !important;
+  top:10px !important; right:10px !important;
+  float:none !important;
+  margin:0 !important;
+  z-index:10 !important;
+}
+#customerTracking.tracking-modal-open h2 { padding-right:46px !important; }
+@media (max-width:700px) {
+  body.tracking-open {
+    overflow:hidden !important;
+    height:100dvh !important;
+    touch-action:none !important;
+  }
+  body.tracking-open #mainHeader {
+    position:fixed !important;
+    top:0 !important; left:0 !important; right:0 !important;
+    width:100% !important;
+    z-index:50001 !important;
+  }
+  body.tracking-open .mobile-store-nav,
+  body.tracking-open #floatingBottomCartBar,
+  body.tracking-open #floatingWaWidget { display:none !important; }
+  body > #customerTracking.tracking-modal-open {
+    left:50% !important;
+    top:calc(var(--tracking-header-bottom, 64px) + (100dvh - var(--tracking-header-bottom, 64px)) / 2) !important;
+    right:auto !important; bottom:auto !important;
+    transform:translate(-50%,-50%) !important;
+    width:calc(100vw - 24px) !important;
+    max-width:520px !important;
+    max-height:calc(100dvh - var(--tracking-header-bottom, 64px) - 28px - env(safe-area-inset-bottom)) !important;
+    padding:16px 14px calc(14px + env(safe-area-inset-bottom)) !important;
+    border-radius:17px !important;
+    overflow:hidden !important;
+    box-shadow:0 0 0 100vmax rgba(4,24,14,.48), 0 14px 42px rgba(0,0,0,.22) !important;
+  }
+  #customerTracking.tracking-modal-open #customerTrackingResults {
+    min-height:80px !important;
+    max-height:none !important;
+  }
+  #customerTracking .customer-order-card { padding:10px !important; margin-bottom:10px !important; }
+}
 </style>
 
 </body>
