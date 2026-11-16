@@ -431,6 +431,25 @@ footer a:hover{text-decoration:underline}
  main{padding:8px 10px}
 }
 
+
+/* मोबाइल पर एक पंक्ति में 3 उत्पाद: कम स्क्रॉल, डेटा/ऑर्डर लॉजिक अपरिवर्तित */
+@media(max-width:700px){
+  .plants{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+  .plant{min-width:0;padding:5px!important;border-radius:10px!important}
+  .plant img{height:88px!important;width:100%;object-fit:contain!important}
+  .plant h3{font-size:11px!important;line-height:1.25!important;margin:3px 0!important;overflow-wrap:anywhere}
+  .price-tag{font-size:10px!important;padding:2px 5px!important;margin:2px 0!important}
+  .stock-text{font-size:9px!important;line-height:1.2}
+  .card-stepper-box{padding:4px!important;gap:4px!important}
+  .stepper-label{font-size:9px!important;line-height:1.2}
+  .stepper-row{gap:2px!important}
+  .stepper-btn{width:22px!important;min-width:22px!important;height:25px!important;font-size:14px!important}
+  .card-qty-input{font-size:11px!important;padding:3px 1px!important;min-width:0!important;width:100%!important}
+  .plant-buy-button{font-size:9px!important;padding:6px 2px!important;white-space:normal;line-height:1.2}
+  #viewPlantCategory,#viewVegCategory{padding:9px!important}
+  #viewPlantCategory h2,#viewVegCategory h2{font-size:15px!important}
+}
+
 </style>
 </head>
 <body>
@@ -481,10 +500,7 @@ footer a:hover{text-decoration:underline}
 <div class="store-category-strip" aria-label="शॉपिंग कैटेगरी">
   <a href="#shopCategoriesContainer">सभी</a><a href="#viewPlantCategory">पौधों के पौधे</a><a href="#viewVegCategory">ताज़ी सब्ज़ियाँ</a><a href="#plantCare">देखभाल</a><a href="#contact">संपर्क</a>
 </div>
-<section class="store-promo-card" aria-label="नर्सरी विशेष">
-  <div class="store-promo-copy"><small>🌿 आपके घर और बगीचे के लिए</small><h2>स्वस्थ पौधे, हरियाली भरा घर!</h2><p>टमाटर • हरी मिर्च • बैंगन और मौसमी सब्ज़ियाँ</p><a href="#viewPlantCategory">अभी पौधे देखें →</a></div>
-  <div class="store-promo-art" aria-hidden="true">🪴🍅🌶️</div>
-</section>
+
 <div class="store-section-heading"><strong>आपके लिए सुझाव</strong><a href="#shopCategoriesContainer">सभी देखें →</a></div>
 
 <!-- मोबाइल फ्रेंडली चौड़े नेविगेशन टैब -->
@@ -559,24 +575,6 @@ footer a:hover{text-decoration:underline}
     </div>
     <p style="margin-top:14px">किसी खास पौधे या सब्ज़ी की उपलब्धता पूछने के लिए <a href="#contact">हमसे संपर्क करें</a>।</p>
   </section>
-
-  <!-- 🌟 बड़े विजुअल बैनर कार्ड्स -->
-  <div class="category-hero-grid" id="shopCategoriesContainer">
-    <div class="cat-hero-card plant-theme" onclick="document.getElementById('viewPlantCategory').scrollIntoView({behavior: 'smooth'});">
-      <div>
-        <h3>🌱 नर्सरी के पौधे</h3>
-        <p>उच्च गुणवत्ता वाले स्वस्थ फलदार व फूलदार पौधे</p>
-      </div>
-      <div class="cat-hero-action">पौधे देखें ➔</div>
-    </div>
-    <div class="cat-hero-card veg-theme" onclick="document.getElementById('viewVegCategory').scrollIntoView({behavior: 'smooth'});">
-      <div>
-        <h3>🥬 ताज़ी हरी सब्जियाँ</h3>
-        <p>खेत से सीधी ताज़ी और ऑर्गेनिक सब्जियाँ</p>
-      </div>
-      <div class="cat-hero-action">सब्ज़ियाँ देखें ➔</div>
-    </div>
-  </div>
 
   <!-- पौधे श्रेणी व्यू -->
   <section class="card" id="viewPlantCategory">
