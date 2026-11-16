@@ -1338,7 +1338,7 @@ body > main::after{
   body.cart-modal-open #floatingBottomCartBar,
   body.cart-modal-open #floatingWaWidget{z-index:1 !important;}
   #order:not([hidden]){
-    align-items:flex-start !important;
+    align-items:center !important;
     justify-content:center !important;
     padding:calc(env(safe-area-inset-top, 0px) + 12px) 10px calc(env(safe-area-inset-bottom, 0px) + 12px) !important;
     overflow-y:auto !important;
@@ -1364,8 +1364,41 @@ body > main::after{
 <style id="v22-empty-cart-visibility-fix">
   /* Empty cart must never expose checkout fields, even if other CSS overrides hidden. */
   #order #orderForm[hidden] { display: none !important; }
+  #order .order-modal-card.empty-cart-state {
+    align-self:center !important;
+    width:min(100%, 440px) !important;
+    max-height:calc(100dvh - 36px) !important;
+    margin:auto !important;
+    padding:18px !important;
+  }
+  #cartItemsContainer .cart-empty-panel {
+    min-height:190px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+    padding:24px 16px; box-sizing:border-box;
+  }
+  #cartItemsContainer .cart-line-item {
+    display:grid; grid-template-columns:68px minmax(0,1fr) auto;
+    gap:10px; align-items:center; background:#fff; padding:9px;
+    border-radius:11px; margin-bottom:8px; border:1px solid #e0ede0;
+  }
+  #cartItemsContainer .cart-line-item img,
+  #cartItemsContainer .cart-line-item .cart-item-placeholder {
+    width:68px; height:68px; object-fit:cover; border-radius:9px;
+    background:#ecfdf5; display:flex; align-items:center; justify-content:center;
+    font-size:27px;
+  }
+  #cartItemsContainer .cart-line-item .cart-item-info { min-width:0; overflow-wrap:anywhere; }
+  @media(max-width:420px){
+    #cartItemsContainer .cart-line-item{grid-template-columns:58px minmax(0,1fr) auto;gap:7px;padding:7px}
+    #cartItemsContainer .cart-line-item img,#cartItemsContainer .cart-line-item .cart-item-placeholder{width:58px;height:58px}
+  }
 </style>
 
+
+<style id="v22-cart-review-before-checkout">
+  #cartItemsContainer .cart-before-checkout button:focus-visible{outline:3px solid #86efac;outline-offset:2px}
+  #order #orderForm[hidden]{display:none !important}
+</style>
 </head>
 <body>
 
@@ -2826,6 +2859,7 @@ function addToCart(plant, qty, veg, isGram) {
   const existingIndex = shoppingCart.findIndex(item => item.id === plant.id && Boolean(item.veg) === Boolean(veg));
   if (existingIndex > -1) {
     shoppingCart[existingIndex].qty += qty;
+    if (!shoppingCart[existingIndex].image_url && plant.image_url) shoppingCart[existingIndex].image_url = plant.image_url;
   } else {
     shoppingCart.push({
       id: plant.id,
@@ -2833,7 +2867,8 @@ function addToCart(plant, qty, veg, isGram) {
       price: Number(plant.selling_price),
       qty: qty,
       veg: veg,
-      isGram: isGram
+      isGram: isGram,
+      image_url: plant.image_url || ''
     });
   }
   updateCartBadge();
@@ -2890,8 +2925,11 @@ function renderCartModal() {
 
   const orderForm = document.getElementById('orderForm');
   const orderStatus = document.getElementById('orderStatus');
+  const modalCard = document.querySelector('#order .order-modal-card');
 
   if (shoppingCart.length === 0) {
+    if (modalCard) modalCard.dataset.checkoutStarted = 'false';
+    modalCard?.classList.add('empty-cart-state');
     // खाली कार्ट में कुल राशि, डिलीवरी और ग्राहक विवरण बिल्कुल न दिखाएँ।
     if (orderForm) {
       orderForm.hidden = true;
@@ -2901,7 +2939,7 @@ function renderCartModal() {
     }
     if (orderStatus) orderStatus.style.display = 'none';
     container.innerHTML = `
-      <div style="text-align:center;padding:24px 14px;background:#f8faf6;border:1px dashed #b9d8c2;border-radius:12px">
+      <div class="cart-empty-panel" style="background:#f8faf6;border:1px dashed #b9d8c2;border-radius:12px">
         <div style="font-size:38px;margin-bottom:8px">🛒</div>
         <h3 style="margin:0 0 6px;color:#174b2b">आपका कार्ट अभी खाली है।</h3>
         <p style="margin:0 0 14px;font-size:13px;color:#64748b">अभी आपने कोई सामान नहीं चुना है।</p>
@@ -2911,10 +2949,18 @@ function renderCartModal() {
     return;
   }
 
+  modalCard?.classList.remove('empty-cart-state');
+  // चेकआउट केवल ग्राहक के "अब खरीदें" दबाने पर खुलेगा।
+  const checkoutStarted = modalCard?.dataset.checkoutStarted === 'true';
   if (orderForm) {
-    orderForm.hidden = false;
-    orderForm.style.removeProperty('display');
-    orderForm.removeAttribute('aria-hidden');
+    orderForm.hidden = !checkoutStarted;
+    if (checkoutStarted) {
+      orderForm.style.removeProperty('display');
+      orderForm.removeAttribute('aria-hidden');
+    } else {
+      orderForm.style.setProperty('display', 'none', 'important');
+      orderForm.setAttribute('aria-hidden', 'true');
+    }
   }
 
   let html = '<h4 style="margin:0 0 8px;color:var(--green)">🛍️ आपके चुने हुए सामान:</h4>';
@@ -2939,17 +2985,39 @@ function renderCartModal() {
       qtyText = item.qty + (item.veg ? ' किलो' : ' पौधे');
     }
 
+    const cartImage = item.image_url
+      ? `<img src="${safe(item.image_url)}" alt="${safe(item.name)}" loading="lazy">`
+      : `<div class="cart-item-placeholder">${item.veg ? '🥬' : '🌱'}</div>`;
     html += `
-      <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;padding:8px;border-radius:8px;margin-bottom:6px;border:1px solid #e0ede0">
-        <div>
+      <div class="cart-line-item">
+        ${cartImage}
+        <div class="cart-item-info">
           <strong>${safe(item.name)}</strong> (${qtyText})
-          <div style="font-size:12px;color:var(--muted)">₹${item.price} × ${item.veg && item.isGram && item.qty < 1 ? item.qty + 'kg' : item.qty} = ₹${itemTotal.toFixed(2)}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:3px">₹${item.price} × ${item.veg && item.isGram && item.qty < 1 ? item.qty + 'kg' : item.qty} = ₹${itemTotal.toFixed(2)}</div>
         </div>
-        <button type="button" onclick="removeFromCart(${idx})" style="background:#fee2e2;color:#b91c1c;border:0;padding:4px 8px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">✕ हटाएँ</button>
+        <button type="button" onclick="removeFromCart(${idx})" style="background:#fee2e2;color:#b91c1c;border:0;padding:6px 8px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">✕ हटाएँ</button>
       </div>`;
   });
 
+  // सामान की सूची के नीचे कुल रकम और स्पष्ट "अब खरीदें" बटन दिखाएँ।
+  const previewDiscount = cfg.discountPercent > 0 ? (subtotal * cfg.discountPercent) / 100 : 0;
+  const previewTotal = subtotal - previewDiscount;
+  html += `
+    <div class="cart-before-checkout" style="margin-top:12px;padding:12px;border:1px solid #d8e9dc;border-radius:12px;background:#f4fbf5">
+      <div style="display:flex;justify-content:space-between;gap:10px;font-weight:700;color:#174b2b">
+        <span>सामान का कुल मूल्य</span><span>₹${subtotal.toFixed(2)}</span>
+      </div>
+      ${previewDiscount > 0 ? `<div style="display:flex;justify-content:space-between;gap:10px;color:#a16207;font-size:13px;margin-top:5px"><span>छूट (${cfg.discountPercent}%)</span><span>-₹${previewDiscount.toFixed(2)}</span></div>` : ''}
+      <button type="button" id="startCheckoutButton" style="width:100%;margin-top:12px;background:#167443;color:#fff;border:0;border-radius:10px;padding:12px 16px;font-size:15px;font-weight:800;cursor:pointer">अब खरीदें →</button>
+      <p style="margin:7px 0 0;text-align:center;color:#64748b;font-size:12px">अगले चरण में डिलीवरी का विवरण भरें</p>
+    </div>`;
   container.innerHTML = html;
+  document.getElementById('startCheckoutButton')?.addEventListener('click', () => {
+    if (modalCard) modalCard.dataset.checkoutStarted = 'true';
+    renderCartModal();
+    const formTop = document.getElementById('orderForm');
+    formTop?.scrollIntoView({behavior:'smooth', block:'start'});
+  });
 
   let discountAmt = 0;
   if (cfg.discountPercent > 0) {
@@ -3179,6 +3247,8 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
     closeOrderPopup();
     shoppingCart = [];
+    const cartModalCard = document.querySelector('#order .order-modal-card');
+    if (cartModalCard) cartModalCard.dataset.checkoutStarted = 'false';
     updateCartBadge();
     const bottomBar = document.getElementById('floatingBottomCartBar');
     if (bottomBar) bottomBar.style.display = 'none';
