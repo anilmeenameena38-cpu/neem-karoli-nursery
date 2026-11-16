@@ -3448,6 +3448,74 @@ nav a[href="#customerTracking"],
 }
 </style>
 
+
+
+<style id="v37-final-scroll-fix">
+/* V37: allow the order-results area to scroll on both touch devices and desktop.
+   The page behind remains locked; touch scrolling is enabled only inside results. */
+@media (max-width:700px) {
+  html:has(body.tracking-open), body.tracking-open {
+    overscroll-behavior:none !important;
+    touch-action:auto !important;
+  }
+  body.tracking-open {
+    position:fixed !important;
+    overflow:hidden !important;
+    height:100dvh !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open {
+    display:flex !important;
+    flex-direction:column !important;
+    height:auto !important;
+    min-height:0 !important;
+    top:calc(var(--tracking-header-bottom, 70px) + 10px) !important;
+    bottom:calc(10px + env(safe-area-inset-bottom)) !important;
+    overflow:hidden !important;
+    touch-action:auto !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open #customerTrackingResults {
+    display:block !important;
+    flex:1 1 0px !important;
+    width:100% !important;
+    min-height:0 !important;
+    height:0 !important;
+    max-height:none !important;
+    overflow-y:scroll !important;
+    overflow-x:hidden !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior-y:contain !important;
+    touch-action:pan-y !important;
+    pointer-events:auto !important;
+    scrollbar-width:thin !important;
+  }
+}
+@media (min-width:701px) {
+  #customerTracking.tracking-modal-open {
+    display:flex !important;
+    flex-direction:column !important;
+    height:min(82vh,760px) !important;
+    max-height:82vh !important;
+    min-height:260px !important;
+    overflow:hidden !important;
+    touch-action:auto !important;
+  }
+  #customerTracking.tracking-modal-open #customerTrackingResults {
+    display:block !important;
+    flex:1 1 0px !important;
+    min-height:0 !important;
+    height:0 !important;
+    max-height:none !important;
+    overflow-y:scroll !important;
+    overflow-x:hidden !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior:contain !important;
+    touch-action:pan-y !important;
+    pointer-events:auto !important;
+    scrollbar-width:thin !important;
+  }
+}
+</style>
+
 </body>
     </html>
   `);
@@ -5821,6 +5889,74 @@ nav a[href="#customerTracking"],
     min-height:0 !important;
     overflow-y:auto !important;
     overscroll-behavior:contain !important;
+  }
+}
+</style>
+
+
+
+<style id="v37-final-scroll-fix">
+/* V37: allow the order-results area to scroll on both touch devices and desktop.
+   The page behind remains locked; touch scrolling is enabled only inside results. */
+@media (max-width:700px) {
+  html:has(body.tracking-open), body.tracking-open {
+    overscroll-behavior:none !important;
+    touch-action:auto !important;
+  }
+  body.tracking-open {
+    position:fixed !important;
+    overflow:hidden !important;
+    height:100dvh !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open {
+    display:flex !important;
+    flex-direction:column !important;
+    height:auto !important;
+    min-height:0 !important;
+    top:calc(var(--tracking-header-bottom, 70px) + 10px) !important;
+    bottom:calc(10px + env(safe-area-inset-bottom)) !important;
+    overflow:hidden !important;
+    touch-action:auto !important;
+  }
+  body.tracking-open > #customerTracking.tracking-modal-open #customerTrackingResults {
+    display:block !important;
+    flex:1 1 0px !important;
+    width:100% !important;
+    min-height:0 !important;
+    height:0 !important;
+    max-height:none !important;
+    overflow-y:scroll !important;
+    overflow-x:hidden !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior-y:contain !important;
+    touch-action:pan-y !important;
+    pointer-events:auto !important;
+    scrollbar-width:thin !important;
+  }
+}
+@media (min-width:701px) {
+  #customerTracking.tracking-modal-open {
+    display:flex !important;
+    flex-direction:column !important;
+    height:min(82vh,760px) !important;
+    max-height:82vh !important;
+    min-height:260px !important;
+    overflow:hidden !important;
+    touch-action:auto !important;
+  }
+  #customerTracking.tracking-modal-open #customerTrackingResults {
+    display:block !important;
+    flex:1 1 0px !important;
+    min-height:0 !important;
+    height:0 !important;
+    max-height:none !important;
+    overflow-y:scroll !important;
+    overflow-x:hidden !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior:contain !important;
+    touch-action:pan-y !important;
+    pointer-events:auto !important;
+    scrollbar-width:thin !important;
   }
 }
 </style>
