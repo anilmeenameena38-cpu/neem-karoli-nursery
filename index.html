@@ -1564,17 +1564,19 @@ body > main::after{
   }
   #customerTracking.tracking-modal-open {
     position:fixed !important;
-    top:var(--tracking-header-bottom, 64px) !important;
+    inset:0 !important;
     left:0 !important;
+    top:0 !important;
     right:0 !important;
     bottom:0 !important;
     transform:none !important;
     width:100% !important;
     max-width:none !important;
-    height:auto !important;
+    height:100vh !important;
+    height:100dvh !important;
     max-height:none !important;
     margin:0 !important;
-    padding:12px 14px calc(12px + env(safe-area-inset-bottom)) !important;
+    padding:calc(12px + env(safe-area-inset-top)) 14px calc(12px + env(safe-area-inset-bottom)) !important;
     border:0 !important;
     border-radius:0 !important;
     box-shadow:none !important;
@@ -1644,82 +1646,6 @@ body > main::after{
 }
 </style>
 
-<style id="v31-tracking-header-anchored-layout">
-@media (max-width:700px) {
-  body.tracking-open { overflow:hidden !important; height:100dvh !important; }
-  body.tracking-open #mainHeader { position:fixed !important; top:0 !important; left:0 !important; right:0 !important; width:100% !important; z-index:50001 !important; }
-  body.tracking-open .mobile-store-nav,
-  body.tracking-open #floatingBottomCartBar,
-  body.tracking-open #floatingWaWidget { display:none !important; }
-  #customerTracking.tracking-modal-open {
-    position:fixed !important; top:var(--tracking-header-bottom, 64px) !important;
-    left:0 !important; right:0 !important; bottom:0 !important;
-    width:100% !important; max-width:none !important; height:auto !important;
-    max-height:none !important; margin:0 !important; transform:none !important;
-    display:flex !important; flex-direction:column !important; align-items:stretch !important;
-    overflow:hidden !important; border:0 !important; border-radius:0 !important;
-    padding:12px 14px calc(12px + env(safe-area-inset-bottom)) !important;
-    background:#f7faf7 !important; z-index:50000 !important; box-sizing:border-box !important;
-  }
-  #customerTracking.tracking-modal-open #customerTrackingResults {
-    flex:1 1 0% !important; min-height:0 !important; overflow-y:auto !important;
-    overscroll-behavior:contain !important; -webkit-overflow-scrolling:touch !important;
-  }
-}
-</style>
-
-<style id="v32-tracking-body-portal-layer">
-@media (max-width:700px) {
-  body.tracking-open { overflow:hidden !important; }
-  body > #customerTracking.tracking-modal-open {
-    position:fixed !important;
-    top:var(--tracking-header-bottom, 64px) !important;
-    left:0 !important; right:0 !important; bottom:0 !important;
-    width:100vw !important; max-width:none !important;
-    height:auto !important; max-height:none !important;
-    margin:0 !important; transform:none !important;
-    z-index:50000 !important;
-  }
-}
-</style>
-
-<style id="v35-customer-order-dashboard-polish">
-#customerTracking h2 { text-align:center !important; width:100%; }
-#trackingFilters { flex:0 0 auto; display:flex; flex-direction:column; gap:7px; }
-#trackingFilters[hidden] { display:none !important; }
-#trackingOrderSearch { width:100%; min-height:40px; margin:0; padding:8px 11px; border:1px solid #cfe3d1; border-radius:11px; background:#fff; font-size:14px; }
-.tracking-filter-chips { display:flex; gap:6px; overflow-x:auto; padding:1px 0 5px; scrollbar-width:thin; -webkit-overflow-scrolling:touch; }
-.tracking-filter { flex:0 0 auto; min-height:34px; padding:6px 10px; border:1px solid #d8e8d9; border-radius:999px; background:#fff; color:#31533a; font-size:12px; font-weight:800; white-space:nowrap; }
-.tracking-filter.active { background:#116b3b; border-color:#116b3b; color:#fff; }
-#customerTrackingResults { flex:1 1 0% !important; min-height:0 !important; height:0 !important; max-height:none !important; overflow-y:scroll !important; overflow-x:hidden !important; overscroll-behavior-y:contain !important; -webkit-overflow-scrolling:touch !important; touch-action:pan-y !important; }
-#customerTrackingResults .customer-order-card { border:1px solid #dcebdc !important; border-left:4px solid #d97706 !important; border-radius:14px !important; padding:12px !important; margin:0 0 10px !important; background:#fff !important; box-shadow:0 3px 10px rgba(20,70,35,.06) !important; }
-#customerTrackingResults .customer-order-card[data-status="confirmed"] { border-left-color:#15803d !important; }
-#customerTrackingResults .customer-order-card[data-status="delivered"] { border-left-color:#2563eb !important; }
-#customerTrackingResults .customer-order-card[data-status="cancelled"] { border-left-color:#dc2626 !important; }
-.customer-order-card-head { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
-.customer-order-card-head h4 { flex:1; min-width:0; margin:0 0 7px !important; color:#116b3b; font-size:14px; line-height:1.4; overflow-wrap:anywhere; }
-.customer-order-badge { flex:0 0 auto; display:inline-block; padding:4px 7px; border-radius:999px; background:#fff7e6; color:#a16207; font-size:10px; font-weight:800; white-space:nowrap; }
-.customer-order-card[data-status="confirmed"] .customer-order-badge { background:#eaf7ed; color:#166534; }
-.customer-order-card[data-status="delivered"] .customer-order-badge { background:#eaf2ff; color:#1d4ed8; }
-.customer-order-card[data-status="cancelled"] .customer-order-badge { background:#fff0f0; color:#b91c1c; }
-.customer-order-total { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:4px 0 8px; padding:8px 10px; border-radius:10px; background:#f1f8f1; }
-.customer-order-total strong { color:#116b3b; font-size:17px; }
-.customer-order-meta { font-size:12px !important; line-height:1.65 !important; overflow-wrap:anywhere; }
-.customer-order-progress { display:flex; gap:4px; margin:9px 0 7px; }
-.customer-order-progress span { flex:1; height:5px; border-radius:9px; background:#e5e7eb; }
-.customer-order-progress[data-step="1"] span:nth-child(-n+1),
-.customer-order-progress[data-step="2"] span:nth-child(-n+2),
-.customer-order-progress[data-step="3"] span:nth-child(-n+3) { background:#16a34a; }
-.customer-order-progress[data-step="cancelled"] span { background:#fecaca; }
-@media(max-width:700px) {
-  body.tracking-open { touch-action:auto !important; }
-  #customerTracking.tracking-modal-open { touch-action:auto !important; }
-  #customerTracking.tracking-modal-open #customerTrackingResults { flex:1 1 0% !important; min-height:0 !important; height:0 !important; overflow-y:scroll !important; touch-action:pan-y !important; }
-  #customerTracking.tracking-modal-open h2 { text-align:center !important; margin-left:42px !important; margin-right:42px !important; }
-  #trackingOrderSearch { font-size:14px !important; }
-}
-</style>
-
 </head>
 <body>
 
@@ -1742,7 +1668,7 @@ body > main::after{
     </div>
     <p style="margin:8px 0 14px;font-size:12.5px;color:#d1fae5">नर्सरी आपकी जानकारी और भुगतान की जाँच करके आपसे संपर्क करेगी। ऑर्डर की स्थिति देखने के लिए नीचे विकल्प चुनें।</p>
     <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:14px">
-      <button type="button" class="success-action-button" onclick="document.getElementById('globalSuccessBanner').style.display='none';document.getElementById('globalSuccessBanner').setAttribute('aria-hidden','true');openCustomerTracking();document.getElementById('trackingPhone').value=document.getElementById('phone').value.replace(/\D/g,'').slice(-10);" style="background:#fef3c7;color:#14532d">📦 मेरा ऑर्डर देखें</button>
+      <button type="button" class="success-action-button" onclick="document.getElementById('globalSuccessBanner').style.display='none';document.getElementById('globalSuccessBanner').setAttribute('aria-hidden','true');document.getElementById('customerTracking').classList.add('tracking-modal-open'); document.body.classList.add('tracking-open');document.getElementById('trackingPhone').value=document.getElementById('phone').value.replace(/\D/g,'').slice(-10);" style="background:#fef3c7;color:#14532d">📦 मेरा ऑर्डर देखें</button>
       <button type="button" class="success-action-button" onclick="document.getElementById('globalSuccessBanner').style.display='none';document.getElementById('globalSuccessBanner').setAttribute('aria-hidden','true');window.scrollTo({top:0,behavior:'smooth'});" style="background:#fff;color:#14532d">⌂ होम पर जाएँ</button>
     </div>
   </div>
@@ -1767,6 +1693,7 @@ body > main::after{
 <!-- मोबाइल फ्रेंडली चौड़े नेविगेशन टैब -->
 <nav id="mainNavigation" aria-label="मुख्य नेविगेशन">
   <a href="#contact">📞 संपर्क</a>
+  <a href="#customerTracking" id="customerTrackingNav">📦 ऑर्डर ट्रैकिंग</a>
   <button id="adminPanelNav" type="button">🔐 एडमिन लॉगिन</button>
 </nav>
 
@@ -1854,7 +1781,7 @@ body > main::after{
   <!-- 🛒 शॉपिंग कार्ट व ऑर्डर मॉडल -->
   <section id="order" hidden>
     <div class="order-modal-card">
-      <button id="closeOrderModal" type="button" aria-label="कार्ट बंद करें" title="बंद करें">×</button>
+      <button id="closeOrderModal" type="button" style="float:right;background:#edf5e9;color:#174b2b">✕ बंद करें</button>
       <h2 id="orderModalTitle">🛒 आपकी शॉपिंग कार्ट व ऑर्डर</h2>
       
       <!-- कार्ट आइटम्स लिस्ट -->
@@ -1925,7 +1852,7 @@ body > main::after{
 
   <!-- ट्रैकिंग मॉडल -->
   <section class="card" id="customerTracking">
-    <button id="closeTrackingModal" type="button" aria-label="ऑर्डर ट्रैकिंग बंद करें" title="बंद करें">×</button>
+    <button id="closeTrackingModal" type="button" style="float:right;background:#edf5e9;color:#174b2b">✕</button>
     <h2>📦 अपना ऑर्डर ट्रैक करें</h2>
     <p style="font-size:13px;color:var(--muted)">ऑर्डर में दर्ज 10 अंकों का मोबाइल नंबर डालें:</p>
     <form id="customerTrackingForm">
@@ -1934,15 +1861,6 @@ body > main::after{
       <button type="submit" class="btn">मेरे ऑर्डर देखें</button>
     </form>
     <div id="customerTrackingStatus" class="status" style="display:none"></div>
-    <div id="trackingFilters" class="tracking-filters" hidden aria-label="ऑर्डर फ़िल्टर">
-      <div class="tracking-filter-chips" role="group" aria-label="ऑर्डर की स्थिति">
-        <button type="button" class="tracking-filter active" data-filter="all">सभी</button>
-        <button type="button" class="tracking-filter" data-filter="pending">⏳ लंबित</button>
-        <button type="button" class="tracking-filter" data-filter="confirmed">🌱 तैयार</button>
-        <button type="button" class="tracking-filter" data-filter="delivered">🚚 डिलीवर</button>
-        <button type="button" class="tracking-filter" data-filter="cancelled">❌ रद्द</button>
-      </div>
-    </div>
     <div id="customerTrackingResults" style="margin-top:12px"></div>
   </section>
 
@@ -1959,7 +1877,7 @@ body > main::after{
   <!-- एडमिन पैनल -->
   <section id="owner">
     <div style="max-width:1000px;margin:0 auto;display:flex;justify-content:flex-end">
-      <button id="ownerCloseButton" type="button" aria-label="एडमिन पैनल बंद करें" title="बंद करें">×</button>
+      <button id="ownerCloseButton" type="button" style="background:#fff;color:#000;margin-bottom:8px">✕ बंद करें</button>
     </div>
 
     <form id="loginForm">
@@ -2426,7 +2344,7 @@ body > main::after{
 <!-- मोबाइल ऐप जैसा नीचे का नेविगेशन -->
 <div class="mobile-store-nav" aria-label="मुख्य नेविगेशन">
   <button type="button" class="mobile-store-link active" data-store-action="home"><span>⌂</span><small>होम</small></button>
-  <button type="button" class="mobile-store-link" data-store-action="track-order" aria-label="ट्रैक ऑर्डर"><span>📦</span><small>ट्रैक ऑर्डर</small></button>
+  <button type="button" class="mobile-store-link" data-store-action="account"><span>♙</span><small>खाता</small></button>
   <button type="button" class="mobile-store-link" data-store-action="cart"><span>🛒</span><small>कार्ट</small><b id="mobileCartCount" aria-label="कार्ट में कुल मात्रा">0</b></button>
 </div>
 
@@ -3157,817 +3075,6 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
 
 
 
-
-
-<style id="v29-popup-close-icons">
-/* सभी मुख्य पॉपअप में एक जैसा, ऊपर-दाएँ गोल X बटन */
-#closeOrderModal, #closeTrackingModal, #ownerCloseButton{
-  display:inline-flex !important; align-items:center !important; justify-content:center !important;
-  width:38px !important; height:38px !important; min-width:38px !important; min-height:38px !important;
-  padding:0 !important; margin:0 !important; border:1px solid #d5e5d9 !important;
-  border-radius:50% !important; background:#fff !important; color:#14532d !important;
-  font-family:Arial,sans-serif !important; font-size:27px !important; font-weight:500 !important;
-  line-height:1 !important; box-shadow:0 2px 8px rgba(6,78,59,.12) !important;
-  cursor:pointer !important; z-index:20 !important;
-}
-#closeOrderModal{position:sticky !important; top:0 !important; float:right !important; margin:0 0 8px 8px !important;}
-#customerTracking #closeTrackingModal{position:sticky !important; top:0 !important; float:right !important; margin:-3px -3px 5px 8px !important;}
-#owner.login-visible > div:first-child{justify-content:flex-end !important;}
-body.admin-panel-open #ownerCloseButton{width:40px !important;height:40px !important;font-size:28px !important;}
-#closeOrderModal:hover, #closeTrackingModal:hover, #ownerCloseButton:hover{background:#fee2e2 !important;color:#b91c1c !important;border-color:#fecaca !important;}
-</style>
-
-
-<style id="v33-single-entry-centered-order-tracking">
-/* V33: tracking is opened only from the bottom navigation's Track Order button. */
-#customerTracking.tracking-modal-open {
-  position:fixed !important;
-  left:50% !important; top:50% !important; right:auto !important; bottom:auto !important;
-  transform:translate(-50%,-50%) !important;
-  width:min( min(92vw, 560px), calc(100vw - 24px) ) !important;
-  max-width:560px !important;
-  height:auto !important;
-  max-height:min(82dvh, 760px) !important;
-  margin:0 !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:stretch !important;
-  gap:8px !important;
-  overflow:hidden !important;
-  padding:18px !important;
-  border:1px solid #d8e9dc !important;
-  border-radius:18px !important;
-  background:#fff !important;
-  box-shadow:0 0 0 100vmax rgba(4,24,14,.48), 0 18px 55px rgba(0,0,0,.24) !important;
-  z-index:50000 !important;
-  box-sizing:border-box !important;
-}
-#customerTracking.tracking-modal-open h2,
-#customerTracking.tracking-modal-open > p,
-#customerTracking.tracking-modal-open #customerTrackingForm,
-#customerTracking.tracking-modal-open #customerTrackingStatus {
-  flex:0 0 auto !important;
-}
-#customerTracking.tracking-modal-open #customerTrackingResults {
-  flex:1 1 auto !important;
-  min-height:0 !important;
-  overflow-y:auto !important;
-  overscroll-behavior:contain !important;
-  -webkit-overflow-scrolling:touch !important;
-  padding:4px 3px 10px !important;
-}
-#customerTracking .customer-order-card {
-  display:block !important;
-  width:100% !important;
-  box-sizing:border-box !important;
-  margin:0 0 12px !important;
-  padding:12px !important;
-  border:1px solid #d7e8d8 !important;
-  border-left:4px solid #15803d !important;
-  border-radius:12px !important;
-  background:#fff !important;
-  box-shadow:0 3px 10px rgba(6,78,59,.07) !important;
-}
-#customerTracking #closeTrackingModal {
-  position:absolute !important;
-  top:10px !important; right:10px !important;
-  float:none !important;
-  margin:0 !important;
-  z-index:10 !important;
-}
-#customerTracking.tracking-modal-open h2 { padding-right:46px !important; }
-@media (max-width:700px) {
-  body.tracking-open {
-    overflow:hidden !important;
-    height:100dvh !important;
-    touch-action:none !important;
-  }
-  body.tracking-open #mainHeader {
-    position:fixed !important;
-    top:0 !important; left:0 !important; right:0 !important;
-    width:100% !important;
-    z-index:50001 !important;
-  }
-  body.tracking-open .mobile-store-nav,
-  body.tracking-open #floatingBottomCartBar,
-  body.tracking-open #floatingWaWidget { display:none !important; }
-  body > #customerTracking.tracking-modal-open {
-    left:50% !important;
-    top:calc(var(--tracking-header-bottom, 64px) + (100dvh - var(--tracking-header-bottom, 64px)) / 2) !important;
-    right:auto !important; bottom:auto !important;
-    transform:translate(-50%,-50%) !important;
-    width:calc(100vw - 24px) !important;
-    max-width:520px !important;
-    max-height:calc(100dvh - var(--tracking-header-bottom, 64px) - 28px - env(safe-area-inset-bottom)) !important;
-    padding:16px 14px calc(14px + env(safe-area-inset-bottom)) !important;
-    border-radius:17px !important;
-    overflow:hidden !important;
-    box-shadow:0 0 0 100vmax rgba(4,24,14,.48), 0 14px 42px rgba(0,0,0,.22) !important;
-  }
-  #customerTracking.tracking-modal-open #customerTrackingResults {
-    min-height:80px !important;
-    max-height:none !important;
-  }
-  #customerTracking .customer-order-card { padding:10px !important; margin-bottom:10px !important; }
-}
-</style>
-
-
-<style id="final-track-order-panel-layout">
-/* ट्रैक ऑर्डर केवल नीचे के नेविगेशन बटन से खुलेगा; पुराना अलग नेविगेशन लिंक छिपा रहेगा। */
-#mainNavigation a[href="#customerTracking"],
-nav a[href="#customerTracking"],
-#mainNavigation [data-store-action="track-order"] { display:none !important; }
-
-@media (max-width:700px) {
-  body.tracking-open {
-    position:fixed !important;
-    overflow:hidden !important;
-    width:100% !important;
-    height:100dvh !important;
-    touch-action:none !important;
-  }
-  body.tracking-open #mainHeader {
-    position:fixed !important;
-    top:0 !important; left:0 !important; right:0 !important;
-    width:100% !important;
-    z-index:50002 !important;
-  }
-  body.tracking-open .mobile-store-nav,
-  body.tracking-open #floatingBottomCartBar,
-  body.tracking-open #floatingWaWidget {
-    display:none !important;
-  }
-  body > #customerTracking.tracking-modal-open {
-    position:fixed !important;
-    top:calc(var(--tracking-header-bottom, 70px) + 10px) !important;
-    bottom:calc(10px + env(safe-area-inset-bottom)) !important;
-    left:50% !important;
-    right:auto !important;
-    transform:translateX(-50%) !important;
-    width:calc(100vw - 24px) !important;
-    max-width:560px !important;
-    max-height:none !important;
-    height:auto !important;
-    margin:0 !important;
-    padding:16px 14px 12px !important;
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:stretch !important;
-    gap:8px !important;
-    overflow:hidden !important;
-    box-sizing:border-box !important;
-    border:1px solid #d7e8d8 !important;
-    border-radius:17px !important;
-    background:#fff !important;
-    box-shadow:0 0 0 100vmax rgba(4,24,14,.48),0 14px 42px rgba(0,0,0,.22) !important;
-    z-index:50001 !important;
-  }
-  body > #customerTracking.tracking-modal-open h2,
-  body > #customerTracking.tracking-modal-open > p,
-  body > #customerTracking.tracking-modal-open #customerTrackingForm,
-  body > #customerTracking.tracking-modal-open #customerTrackingStatus {
-    flex:0 0 auto !important;
-  }
-  body > #customerTracking.tracking-modal-open #customerTrackingResults {
-    flex:1 1 0% !important;
-    min-height:0 !important;
-    max-height:none !important;
-    overflow-y:auto !important;
-    overflow-x:hidden !important;
-    overscroll-behavior:contain !important;
-    -webkit-overflow-scrolling:touch !important;
-    padding:4px 2px 12px !important;
-  }
-  body > #customerTracking.tracking-modal-open #closeTrackingModal {
-    position:absolute !important;
-    top:9px !important;
-    right:9px !important;
-    width:36px !important;
-    height:36px !important;
-    min-width:36px !important;
-    padding:0 !important;
-    margin:0 !important;
-    z-index:10 !important;
-    border-radius:50% !important;
-  }
-  body > #customerTracking.tracking-modal-open h2 { padding-right:48px !important; }
-  body > #customerTracking.tracking-modal-open .customer-order-card {
-    width:100% !important;
-    box-sizing:border-box !important;
-    margin:0 0 10px !important;
-  }
-}
-@media (min-width:701px) {
-  #customerTracking.tracking-modal-open {
-    position:fixed !important;
-    left:50% !important; top:50% !important;
-    transform:translate(-50%,-50%) !important;
-    width:min(92vw,560px) !important;
-    max-height:82vh !important;
-    display:flex !important;
-    flex-direction:column !important;
-    overflow:hidden !important;
-  }
-  #customerTracking.tracking-modal-open #customerTrackingResults {
-    min-height:0 !important;
-    overflow-y:auto !important;
-    overscroll-behavior:contain !important;
-  }
-}
-</style>
-
-
-
-<style id="v35-tracking-scroll-and-centered-heading">
-/* V35: allow the results pane to receive vertical touch scrolling while the page behind stays locked. */
-@media (max-width:700px) {
-  body.tracking-open {
-    touch-action:auto !important;
-  }
-  body > #customerTracking.tracking-modal-open {
-    display:flex !important;
-    flex-direction:column !important;
-    min-height:0 !important;
-    overflow:hidden !important;
-  }
-  body > #customerTracking.tracking-modal-open h2 {
-    flex:0 0 auto !important;
-    display:block !important;
-    width:100% !important;
-    box-sizing:border-box !important;
-    text-align:center !important;
-    margin:2px 0 4px !important;
-    padding:7px 48px 10px !important;
-    line-height:1.35 !important;
-    border-bottom:1px solid #e2eee4 !important;
-  }
-  body > #customerTracking.tracking-modal-open > p,
-  body > #customerTracking.tracking-modal-open #customerTrackingForm,
-  body > #customerTracking.tracking-modal-open #customerTrackingStatus {
-    flex:0 0 auto !important;
-  }
-  body > #customerTracking.tracking-modal-open #customerTrackingResults {
-    display:block !important;
-    flex:1 1 0px !important;
-    width:100% !important;
-    min-width:0 !important;
-    min-height:0 !important;
-    height:0 !important;
-    max-height:none !important;
-    overflow-y:scroll !important;
-    overflow-x:hidden !important;
-    touch-action:pan-y !important;
-    overscroll-behavior-y:contain !important;
-    -webkit-overflow-scrolling:touch !important;
-    scrollbar-gutter:stable;
-    padding:5px 3px calc(18px + env(safe-area-inset-bottom)) !important;
-    margin:0 !important;
-  }
-  body > #customerTracking.tracking-modal-open .customer-order-card {
-    display:block !important;
-    width:100% !important;
-    margin:0 0 10px !important;
-    padding:11px !important;
-    box-sizing:border-box !important;
-  }
-}
-@media (min-width:701px) {
-  #customerTracking.tracking-modal-open h2 {
-    text-align:center !important;
-    padding-left:48px !important;
-    padding-right:48px !important;
-  }
-  #customerTracking.tracking-modal-open #customerTrackingResults {
-    min-height:0 !important;
-    overflow-y:auto !important;
-    overscroll-behavior:contain !important;
-    -webkit-overflow-scrolling:touch !important;
-  }
-}
-</style>
-
-
-
-<style id="v37-final-scroll-fix">
-/* V37: allow the order-results area to scroll on both touch devices and desktop.
-   The page behind remains locked; touch scrolling is enabled only inside results. */
-@media (max-width:700px) {
-  html:has(body.tracking-open), body.tracking-open {
-    overscroll-behavior:none !important;
-    touch-action:auto !important;
-  }
-  body.tracking-open {
-    position:fixed !important;
-    overflow:hidden !important;
-    height:100dvh !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open {
-    display:flex !important;
-    flex-direction:column !important;
-    height:auto !important;
-    min-height:0 !important;
-    top:calc(var(--tracking-header-bottom, 70px) + 10px) !important;
-    bottom:calc(10px + env(safe-area-inset-bottom)) !important;
-    overflow:hidden !important;
-    touch-action:auto !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open #customerTrackingResults {
-    display:block !important;
-    flex:1 1 0px !important;
-    width:100% !important;
-    min-height:0 !important;
-    height:0 !important;
-    max-height:none !important;
-    overflow-y:scroll !important;
-    overflow-x:hidden !important;
-    -webkit-overflow-scrolling:touch !important;
-    overscroll-behavior-y:contain !important;
-    touch-action:pan-y !important;
-    pointer-events:auto !important;
-    scrollbar-width:thin !important;
-  }
-}
-@media (min-width:701px) {
-  #customerTracking.tracking-modal-open {
-    display:flex !important;
-    flex-direction:column !important;
-    height:min(82vh,760px) !important;
-    max-height:82vh !important;
-    min-height:260px !important;
-    overflow:hidden !important;
-    touch-action:auto !important;
-  }
-  #customerTracking.tracking-modal-open #customerTrackingResults {
-    display:block !important;
-    flex:1 1 0px !important;
-    min-height:0 !important;
-    height:0 !important;
-    max-height:none !important;
-    overflow-y:scroll !important;
-    overflow-x:hidden !important;
-    -webkit-overflow-scrolling:touch !important;
-    overscroll-behavior:contain !important;
-    touch-action:pan-y !important;
-    pointer-events:auto !important;
-    scrollbar-width:thin !important;
-  }
-}
-</style>
-
-
-<style id="v38-order-results-space-allocation">
-/* V38: give the order list a genuinely useful share of the panel on phones and desktop. */
-#customerTracking.tracking-modal-open {
-  display:flex !important;
-  flex-direction:column !important;
-  min-height:0 !important;
-  overflow:hidden !important;
-}
-#customerTracking.tracking-modal-open #customerTrackingResults {
-  display:block !important;
-  flex:1 1 0px !important;
-  min-height:120px !important;
-  height:0 !important;
-  max-height:none !important;
-  overflow-y:auto !important;
-  overflow-x:hidden !important;
-  overscroll-behavior:contain !important;
-  -webkit-overflow-scrolling:touch !important;
-  touch-action:pan-y !important;
-  scrollbar-width:thin !important;
-  margin:3px 0 0 !important;
-  padding:4px 4px 16px !important;
-}
-#customerTracking.tracking-modal-open h2 {
-  flex:0 0 auto !important;
-  margin-top:0 !important;
-  margin-bottom:0 !important;
-  padding-top:5px !important;
-  padding-bottom:6px !important;
-}
-#customerTracking.tracking-modal-open > p {
-  flex:0 0 auto !important;
-  margin:0 !important;
-  line-height:1.35 !important;
-}
-#customerTracking.tracking-modal-open #customerTrackingForm {
-  flex:0 0 auto !important;
-  margin:0 !important;
-}
-#customerTracking.tracking-modal-open #customerTrackingForm label {
-  margin:2px 0 !important;
-  line-height:1.25 !important;
-}
-#customerTracking.tracking-modal-open #customerTrackingForm input {
-  min-height:38px !important;
-  margin:3px 0 5px !important;
-  padding:7px 10px !important;
-}
-#customerTracking.tracking-modal-open #customerTrackingForm button {
-  min-height:38px !important;
-  padding:7px 14px !important;
-}
-#customerTracking.tracking-modal-open #customerTrackingStatus {
-  flex:0 0 auto !important;
-  margin:0 !important;
-  line-height:1.3 !important;
-}
-#customerTracking.tracking-modal-open #trackingFilters {
-  flex:0 0 auto !important;
-  display:flex !important;
-  gap:5px !important;
-  margin:0 !important;
-}
-#customerTracking.tracking-modal-open #trackingOrderSearch {
-  min-height:35px !important;
-  margin:0 !important;
-  padding:6px 10px !important;
-}
-#customerTracking.tracking-modal-open .tracking-filter-chips {
-  display:flex !important;
-  flex-wrap:nowrap !important;
-  overflow-x:auto !important;
-  gap:5px !important;
-  padding:0 0 3px !important;
-}
-#customerTracking.tracking-modal-open .tracking-filter {
-  min-height:30px !important;
-  padding:4px 9px !important;
-  font-size:11px !important;
-}
-@media (max-width:700px) {
-  body.tracking-open { height:100dvh !important; overflow:hidden !important; }
-  body > #customerTracking.tracking-modal-open {
-    top:calc(var(--tracking-header-bottom, 70px) + 4px) !important;
-    bottom:calc(4px + env(safe-area-inset-bottom)) !important;
-    width:calc(100vw - 16px) !important;
-    max-width:560px !important;
-    padding:9px 10px 8px !important;
-    gap:5px !important;
-    border-radius:15px !important;
-  }
-  body > #customerTracking.tracking-modal-open #customerTrackingResults {
-    flex:1 1 0px !important;
-    min-height:110px !important;
-    height:0 !important;
-    overflow-y:auto !important;
-    touch-action:pan-y !important;
-  }
-  body > #customerTracking.tracking-modal-open h2 {
-    font-size:18px !important;
-    line-height:1.25 !important;
-    padding:4px 44px 5px !important;
-  }
-  body > #customerTracking.tracking-modal-open > p { font-size:11px !important; }
-  body > #customerTracking.tracking-modal-open #customerTrackingForm label { font-size:13px !important; }
-  body > #customerTracking.tracking-modal-open #customerTrackingForm input { min-height:36px !important; font-size:14px !important; }
-  body > #customerTracking.tracking-modal-open #customerTrackingForm button { min-height:36px !important; font-size:14px !important; }
-}
-@media (min-width:701px) {
-  #customerTracking.tracking-modal-open {
-    width:min(94vw,760px) !important;
-    height:min(90vh,850px) !important;
-    max-height:90vh !important;
-    padding:20px 22px !important;
-  }
-  #customerTracking.tracking-modal-open #customerTrackingResults { min-height:180px !important; }
-}
-</style>
-
-
-
-<style id="v39-mobile-tracking-viewport-final">
-/* V39: reserve the full usable phone viewport for tracking; keep only the results region scrollable. */
-@media screen and (max-width:700px) {
-  html:has(body.tracking-open) {
-    overflow:hidden !important;
-    overscroll-behavior:none !important;
-  }
-  body.tracking-open {
-    position:fixed !important;
-    overflow:hidden !important;
-    width:100% !important;
-    height:100% !important;
-    min-height:100% !important;
-    touch-action:auto !important;
-    overscroll-behavior:none !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open {
-    position:fixed !important;
-    top:calc(var(--tracking-header-bottom, 64px) + 6px) !important;
-    bottom:calc(env(safe-area-inset-bottom, 0px) + 6px) !important;
-    left:8px !important;
-    right:8px !important;
-    width:auto !important;
-    max-width:none !important;
-    height:auto !important;
-    min-height:0 !important;
-    max-height:none !important;
-    margin:0 !important;
-    padding:10px 10px 8px !important;
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:stretch !important;
-    gap:5px !important;
-    overflow:hidden !important;
-    box-sizing:border-box !important;
-    transform:none !important;
-    touch-action:auto !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open > #closeTrackingModal {
-    position:absolute !important;
-    top:7px !important;
-    right:7px !important;
-    flex:0 0 36px !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open > h2,
-  body.tracking-open > #customerTracking.tracking-modal-open > p,
-  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm,
-  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingStatus,
-  body.tracking-open > #customerTracking.tracking-modal-open > #trackingFilters {
-    flex:0 0 auto !important;
-    min-height:0 !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open > h2 {
-    text-align:center !important;
-    padding:3px 44px 5px !important;
-    margin:0 !important;
-    line-height:1.25 !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open > p {
-    margin:0 !important;
-    line-height:1.3 !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm {
-    margin:0 !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm label {
-    margin:2px 0 !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm input {
-    min-height:36px !important;
-    margin:3px 0 5px !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm button {
-    min-height:36px !important;
-    padding:6px 13px !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingStatus {
-    margin:0 !important;
-    line-height:1.25 !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open > #trackingFilters {
-    display:block !important;
-    margin:0 !important;
-    padding:0 !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open > #trackingFilters[hidden] {
-    display:none !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingResults {
-    display:block !important;
-    flex:1 1 0% !important;
-    min-height:0 !important;
-    height:1px !important;
-    max-height:none !important;
-    width:100% !important;
-    margin:0 !important;
-    padding:4px 3px 12px !important;
-    overflow-y:scroll !important;
-    overflow-x:hidden !important;
-    -webkit-overflow-scrolling:touch !important;
-    overscroll-behavior-y:contain !important;
-    touch-action:pan-y !important;
-    pointer-events:auto !important;
-    scrollbar-width:thin !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open .customer-order-card {
-    flex:none !important;
-    margin:0 0 9px !important;
-  }
-  body.tracking-open .mobile-store-nav,
-  body.tracking-open #floatingBottomCartBar,
-  body.tracking-open #floatingWaWidget { display:none !important; }
-}
-@media screen and (min-width:701px) {
-  #customerTracking.tracking-modal-open {
-    display:flex !important;
-    flex-direction:column !important;
-    height:min(86vh,820px) !important;
-    max-height:86vh !important;
-    min-height:300px !important;
-    overflow:hidden !important;
-  }
-  #customerTracking.tracking-modal-open #customerTrackingResults {
-    flex:1 1 0% !important;
-    min-height:0 !important;
-    height:1px !important;
-    overflow-y:scroll !important;
-    overflow-x:hidden !important;
-    overscroll-behavior:contain !important;
-    touch-action:pan-y !important;
-  }
-}
-</style>
-
-
-<style id="customer-tracking-final-reliable-layout">
-#customerTracking.tracking-modal-open{display:flex!important;flex-direction:column!important;gap:9px!important;box-sizing:border-box!important;overflow:hidden!important}
-#customerTracking.tracking-modal-open>h2,#customerTracking.tracking-modal-open>p,#customerTracking.tracking-modal-open>#customerTrackingForm,#customerTracking.tracking-modal-open>#customerTrackingStatus,#customerTracking.tracking-modal-open>#trackingFilters{flex:0 0 auto!important}
-#trackingFilters{display:flex!important;flex-direction:column!important;gap:7px!important}
-#trackingFilters[hidden]{display:none!important}
-#customerTrackingResults{display:block!important;flex:1 1 0%!important;min-height:0!important;height:1px!important;max-height:none!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-y!important;scrollbar-width:thin!important;padding:4px 4px 18px!important}
-#customerTrackingResults .customer-order-card{display:block!important;width:100%!important;box-sizing:border-box!important;margin:0 0 11px!important;flex:none!important}
-.customer-order-item-name{font-size:13px;font-weight:800;color:#334155;margin:2px 0 8px;overflow-wrap:anywhere}
-.customer-order-details-toggle{width:100%;min-height:40px;margin-top:8px;background:#eaf7ed;color:#116b3b;border:1px solid #b9dfc2;border-radius:10px;font-weight:800}
-.customer-order-details{margin-top:9px;padding:9px;background:#f7fbf7;border:1px solid #dcebdc;border-radius:10px}
-.customer-order-details[hidden]{display:none!important}
-.customer-detail-row{display:grid;grid-template-columns:minmax(105px,.8fr) minmax(0,1.2fr);gap:8px;padding:6px 0;border-bottom:1px solid #e4eee5;font-size:12px;line-height:1.5}
-.customer-detail-row:last-child{border-bottom:0}
-.customer-detail-row b{color:#31533a}.customer-detail-row span{overflow-wrap:anywhere;text-align:right}
-.customer-proof-link{display:inline-block;margin-top:9px;padding:8px 11px;background:#eaf7ed;color:#116b3b;border-radius:9px;text-decoration:none;font-size:12px;font-weight:800}
-@media(max-width:700px){
- body.tracking-open{overflow:hidden!important;touch-action:auto!important}
- body.tracking-open>#customerTracking.tracking-modal-open{position:fixed!important;top:var(--tracking-header-bottom,64px)!important;left:0!important;right:0!important;bottom:0!important;width:100vw!important;max-width:none!important;height:auto!important;max-height:none!important;margin:0!important;transform:none!important;padding:12px 12px calc(12px + env(safe-area-inset-bottom))!important;border:0!important;border-radius:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;background:#f7faf7!important;z-index:50000!important}
- body.tracking-open>#customerTracking.tracking-modal-open #customerTrackingResults{flex:1 1 0%!important;min-height:0!important;height:1px!important;overflow-y:scroll!important;touch-action:pan-y!important;-webkit-overflow-scrolling:touch!important}
- body.tracking-open>#customerTracking.tracking-modal-open>#closeTrackingModal{position:absolute!important;top:8px!important;right:10px!important}
- body.tracking-open>#customerTracking.tracking-modal-open>h2{margin:3px 45px 0!important;text-align:center!important;font-size:18px!important}
- body.tracking-open>#customerTracking.tracking-modal-open>p{font-size:12px!important}
- body.tracking-open>#customerTracking.tracking-modal-open .customer-detail-row{grid-template-columns:1fr;gap:2px}
- body.tracking-open>#customerTracking.tracking-modal-open .customer-detail-row span{text-align:left}
-}
-@media(min-width:701px){
- #customerTracking.tracking-modal-open{position:fixed!important;left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;transform:translate(-50%,-50%)!important;width:min(92vw,620px)!important;max-width:620px!important;height:min(84vh,760px)!important;max-height:84vh!important;padding:20px!important;border-radius:18px!important;z-index:50000!important;box-shadow:0 22px 70px #0006!important}
-}
-</style>
-
-<style id="mobile-order-tracking-scroll-final-fix">
-/* अंतिम मोबाइल सुधार: body को fixed न करें; केवल ऑर्डर सूची अपना scroll संभाले। */
-@media (max-width:700px) {
-  html:has(body.tracking-open) { overflow:hidden !important; height:100% !important; }
-  body.tracking-open {
-    position:static !important; top:auto !important; left:auto !important; right:auto !important;
-    width:100% !important; height:auto !important; min-height:0 !important;
-    overflow:hidden !important; touch-action:auto !important;
-  }
-  body.tracking-open > #mainHeader {
-    position:relative !important; top:auto !important; left:auto !important; right:auto !important;
-    width:100% !important; z-index:6000 !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open {
-    position:fixed !important;
-    top:calc(var(--tracking-header-bottom, 64px) + 4px) !important;
-    left:8px !important; right:8px !important;
-    bottom:calc(env(safe-area-inset-bottom, 0px) + 6px) !important;
-    width:auto !important; height:auto !important; min-height:0 !important;
-    max-height:none !important; max-width:none !important;
-    margin:0 !important; padding:10px !important;
-    display:flex !important; flex-direction:column !important; align-items:stretch !important;
-    gap:6px !important; overflow:hidden !important; transform:none !important;
-    box-sizing:border-box !important; z-index:50000 !important;
-    overscroll-behavior:none !important; touch-action:auto !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open > #closeTrackingModal { flex:0 0 34px !important; }
-  body.tracking-open > #customerTracking.tracking-modal-open > h2,
-  body.tracking-open > #customerTracking.tracking-modal-open > p,
-  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm,
-  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingStatus,
-  body.tracking-open > #customerTracking.tracking-modal-open > #trackingFilters { flex:0 0 auto !important; }
-  body.tracking-open > #customerTracking.tracking-modal-open > h2 { margin:0 40px 0 !important; padding:2px 0 !important; text-align:center !important; }
-  body.tracking-open > #customerTracking.tracking-modal-open > p { margin:0 !important; }
-  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm { margin:0 !important; }
-  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm label { margin:2px 0 !important; }
-  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingForm input { margin:3px 0 5px !important; min-height:38px !important; }
-  body.tracking-open > #customerTracking.tracking-modal-open > #trackingFilters { min-height:0 !important; }
-  body.tracking-open > #customerTracking.tracking-modal-open > #trackingFilters .tracking-filter-chips {
-    display:flex !important; flex-wrap:nowrap !important; gap:5px !important;
-    max-width:100% !important; overflow-x:auto !important; overflow-y:hidden !important;
-    -webkit-overflow-scrolling:touch !important; touch-action:pan-x !important;
-    padding:2px 1px 5px !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open > #trackingFilters .tracking-filter { flex:0 0 auto !important; }
-  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingResults {
-    display:block !important; flex:1 1 0px !important; flex-shrink:1 !important;
-    min-height:0 !important; height:0 !important; max-height:none !important;
-    width:100% !important; margin:0 !important; padding:4px 4px 18px !important;
-    overflow-y:scroll !important; overflow-x:hidden !important;
-    -webkit-overflow-scrolling:touch !important; overscroll-behavior-y:contain !important;
-    touch-action:pan-y !important; pointer-events:auto !important;
-    scrollbar-width:thin !important; contain:strict !important;
-  }
-  body.tracking-open > #customerTracking.tracking-modal-open > #customerTrackingResults .customer-order-card {
-    display:block !important; width:100% !important; flex:none !important; margin:0 0 10px !important;
-  }
-  body.tracking-open .mobile-store-nav, body.tracking-open #floatingBottomCartBar,
-  body.tracking-open #floatingWaWidget { display:none !important; }
-}
-</style>
-
-<style id="tracking-full-screen-scroll-final">
-/* Tracking panel: full usable screen; only the order list scrolls. */
-@media screen and (max-width:700px) {
-  html:has(body.tracking-open) { overflow:hidden !important; }
-  body.tracking-open {
-    position:static !important;
-    width:auto !important;
-    height:auto !important;
-    min-height:0 !important;
-    overflow:hidden !important;
-    touch-action:auto !important;
-  }
-  body > #customerTracking.tracking-modal-open {
-    position:fixed !important;
-    top:var(--tracking-header-bottom, 64px) !important;
-    right:0 !important;
-    bottom:0 !important;
-    left:0 !important;
-    width:100vw !important;
-    max-width:none !important;
-    height:auto !important;
-    max-height:none !important;
-    min-height:0 !important;
-    margin:0 !important;
-    padding:10px 12px calc(12px + env(safe-area-inset-bottom)) !important;
-    transform:none !important;
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:stretch !important;
-    gap:7px !important;
-    overflow:hidden !important;
-    border:0 !important;
-    border-radius:0 !important;
-    box-sizing:border-box !important;
-    background:#f7faf7 !important;
-    z-index:50003 !important;
-  }
-  body > #customerTracking.tracking-modal-open h2,
-  body > #customerTracking.tracking-modal-open > p,
-  body > #customerTracking.tracking-modal-open #customerTrackingForm,
-  body > #customerTracking.tracking-modal-open #customerTrackingStatus,
-  body > #customerTracking.tracking-modal-open #trackingFilters {
-    flex:0 0 auto !important;
-    min-height:0 !important;
-  }
-  body > #customerTracking.tracking-modal-open #customerTrackingResults {
-    display:block !important;
-    flex:1 1 0px !important;
-    width:100% !important;
-    min-width:0 !important;
-    min-height:0 !important;
-    height:0 !important;
-    max-height:none !important;
-    overflow-y:auto !important;
-    overflow-x:hidden !important;
-    -webkit-overflow-scrolling:touch !important;
-    overscroll-behavior-y:contain !important;
-    touch-action:pan-y !important;
-    pointer-events:auto !important;
-    padding:4px 3px calc(18px + env(safe-area-inset-bottom)) !important;
-    margin:0 !important;
-  }
-  body > #customerTracking.tracking-modal-open #closeTrackingModal {
-    position:absolute !important;
-    top:8px !important;
-    right:10px !important;
-    z-index:10 !important;
-  }
-  body > #customerTracking.tracking-modal-open h2 {
-    text-align:center !important;
-    padding-left:45px !important;
-    padding-right:45px !important;
-  }
-}
-@media screen and (min-width:701px) {
-  #customerTracking.tracking-modal-open {
-    position:fixed !important;
-    left:50% !important;
-    top:50% !important;
-    right:auto !important;
-    bottom:auto !important;
-    transform:translate(-50%,-50%) !important;
-    width:min(94vw,900px) !important;
-    height:min(92vh,900px) !important;
-    max-height:92vh !important;
-    min-height:300px !important;
-    display:flex !important;
-    flex-direction:column !important;
-    overflow:hidden !important;
-    box-sizing:border-box !important;
-  }
-  #customerTracking.tracking-modal-open #customerTrackingResults {
-    display:block !important;
-    flex:1 1 0px !important;
-    min-height:0 !important;
-    height:0 !important;
-    max-height:none !important;
-    overflow-y:auto !important;
-    overflow-x:hidden !important;
-    -webkit-overflow-scrolling:touch !important;
-    overscroll-behavior:contain !important;
-  }
-}
-</style>
 
 </body>
     </html>
@@ -5338,98 +4445,12 @@ async function renderAdminList() {
   document.getElementById('adminPlantSimpleListVeg').innerHTML = make(items.filter(x => isVeg(x)));
 }
 
-// मोबाइल ट्रैकिंग: पैनल को अस्थायी रूप से body के सीधे अंदर ले जाएँ,
-// ताकि main/section के layout या stacking context से उसकी position प्रभावित न हो।
-let trackingSavedScrollY = 0;
-let trackingPanelPlaceholder = null;
-let trackingHtmlOverflowOriginal = null;
-let trackingBodyOverflowOriginal = null;
-function openCustomerTracking() {
-  const panel = document.getElementById('customerTracking');
-  const header = document.getElementById('mainHeader');
-  if (!panel) return;
-  const isMobile = window.matchMedia('(max-width:700px)').matches;
-
-  if (isMobile && !document.body.classList.contains('tracking-open')) {
-    trackingSavedScrollY = window.scrollY || window.pageYOffset || 0;
-    trackingHtmlOverflowOriginal = document.documentElement.style.overflow;
-    trackingBodyOverflowOriginal = document.body.style.overflow;
-
-    // मोबाइल पर body को position:fixed करने से अंदर की scroll-list कई फोन में अटकती है।
-    // पेज की जगह सुरक्षित रखते हुए केवल document scrolling लॉक करें।
-    if (panel.parentElement !== document.body) {
-      trackingPanelPlaceholder = document.createComment('customerTracking original position');
-      panel.parentNode.insertBefore(trackingPanelPlaceholder, panel);
-      document.body.appendChild(panel);
-    }
-    document.documentElement.style.setProperty('overflow', 'hidden', 'important');
-    document.body.style.setProperty('overflow', 'hidden', 'important');
-    document.body.classList.add('tracking-open');
-  }
-
-  const headerHeight = isMobile && header ? Math.ceil(header.getBoundingClientRect().height) : 0;
-  panel.style.setProperty('--tracking-header-bottom', headerHeight + 'px');
-  panel.classList.add('tracking-modal-open');
-  const results = document.getElementById('customerTrackingResults');
-  if (results) { results.scrollTop = 0; results.style.webkitOverflowScrolling = 'touch'; }
-}
-
-function closeCustomerTracking() {
-  const panel = document.getElementById('customerTracking');
-  if (panel) panel.classList.remove('tracking-modal-open');
-  const wasOpen = document.body.classList.contains('tracking-open');
-
-  if (panel && trackingPanelPlaceholder && trackingPanelPlaceholder.parentNode) {
-    trackingPanelPlaceholder.parentNode.insertBefore(panel, trackingPanelPlaceholder);
-    trackingPanelPlaceholder.remove();
-    trackingPanelPlaceholder = null;
-  }
-
-  document.body.classList.remove('tracking-open');
-  if (wasOpen && window.matchMedia('(max-width:700px)').matches) {
-    document.documentElement.style.overflow = trackingHtmlOverflowOriginal || '';
-    document.body.style.overflow = trackingBodyOverflowOriginal || '';
-    trackingHtmlOverflowOriginal = null;
-    trackingBodyOverflowOriginal = null;
-    window.scrollTo(0, trackingSavedScrollY);
-  }
-}
-
+document.getElementById('customerTrackingNav')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('customerTracking').classList.add('tracking-modal-open'); document.body.classList.add('tracking-open');
+});
 document.getElementById('closeTrackingModal')?.addEventListener('click', () => {
-  closeCustomerTracking();
-});
-
-function filterCustomerOrders(statusFilter = 'all', searchText = '') {
-  const cards = document.querySelectorAll('#customerTrackingResults .customer-order-card');
-  const term = String(searchText || '').trim().toLowerCase();
-  let visible = 0;
-  cards.forEach(card => {
-    const statusMatch = statusFilter === 'all' || card.dataset.status === statusFilter;
-    const textMatch = !term || (card.dataset.search || '').includes(term) || card.textContent.toLowerCase().includes(term);
-    const show = statusMatch && textMatch;
-    card.hidden = !show;
-    if (show) visible++;
-  });
-  const stat = document.getElementById('customerTrackingStatus');
-  if (stat && cards.length) stat.textContent = `${visible} ऑर्डर दिख रहे हैं`;
-}
-
-document.getElementById('trackingFilters')?.addEventListener('click', (event) => {
-  const button = event.target.closest('.tracking-filter');
-  if (!button) return;
-  document.querySelectorAll('#trackingFilters .tracking-filter').forEach(b => b.classList.toggle('active', b === button));
-  filterCustomerOrders(button.dataset.filter || 'all', '');
-});
-document.getElementById('customerTrackingResults')?.addEventListener('click', (event) => {
-  const button = event.target.closest('[data-order-details-toggle]');
-  if (!button) return;
-  const card = button.closest('.customer-order-card');
-  const details = card?.querySelector('.customer-order-details');
-  if (!details) return;
-  const opening = details.hidden;
-  details.hidden = !opening;
-  button.setAttribute('aria-expanded', String(opening));
-  button.textContent = opening ? 'कम जानकारी दिखाएँ ▲' : 'पूरी जानकारी देखें ▼';
+  document.getElementById('customerTracking').classList.remove('tracking-modal-open'); document.body.classList.remove('tracking-open');
 });
 
 document.getElementById('customerTrackingForm')?.addEventListener('submit', async (e) => {
@@ -5469,63 +4490,35 @@ document.getElementById('customerTrackingForm')?.addEventListener('submit', asyn
       const formattedTime = dateObj ? dateObj.toLocaleTimeString('hi-IN', { timeZone:'Asia/Kolkata', hour: '2-digit', minute: '2-digit' }) : '—';
 
       let custStatusText = '';
-      let statusKey = 'pending', statusLabel = '⏳ लंबित';
-      let progressStep = '1';
       if (isOrderDelivered(o)) {
-        statusKey = 'delivered'; statusLabel = '🚚 डिलीवर'; progressStep = '3';
         custStatusText = '<b style="color:#2563eb">🚚 ऑर्डर डिलीवर कर दिया गया है!</b>';
       } else if (o.status === 'confirmed') {
-        statusKey = 'confirmed'; statusLabel = '🌱 तैयार'; progressStep = '2';
         custStatusText = '<b style="color:#16a34a">✅ ऑर्डर कन्फर्म है (तैयारी जारी)</b>';
       } else if (o.status === 'cancelled') {
-        statusKey = 'cancelled'; statusLabel = '❌ रद्द'; progressStep = 'cancelled';
         custStatusText = `<b style="color:#dc2626">❌ ऑर्डर रद्द कर दिया गया</b><br><span style="color:#b91c1c;font-size:13px">कारण: ${safe(cancelReasonMatch ? cancelReasonMatch[1] : 'भुगतान/पेमेंट सत्यापित नहीं')}</span>`;
       } else {
         custStatusText = '<b style="color:#d97706">⏳ लंबित (जाँच जारी)</b>';
       }
 
-      const noteText = String(o.notes || '');
-      const deliveryFeeMatch = noteText.match(/DELIVERY_FEE:([^|]+)/);
-      const discountMatch = noteText.match(/DISCOUNT:([^|]+)/);
-      const detailRows = [
-        ['ग्राहक का नाम', o.customer_name || '—'],
-        ['मोबाइल नंबर', o.customer_phone || '—'],
-        ['ऑर्डर में शामिल सामान', o.plant_name || '—'],
-        ['कुल मात्रा', (o.quantity ?? '—')],
-        ['डिलीवरी पता', o.customer_address || '—'],
-        ['डिलीवरी शुल्क', deliveryFeeMatch ? '₹' + deliveryFeeMatch[1].trim() : '—'],
-        ['छूट', discountMatch ? '₹' + discountMatch[1].trim() : '—'],
-        ['भुगतान UTR', utrMatch ? utrMatch[1] : '—'],
-        ['ऑर्डर स्थिति', statusLabel]
-      ];
-      const detailHtml = detailRows.map(([label, value]) =>
-        `<div class="customer-detail-row"><b>${safe(label)}</b><span>${safe(String(value))}</span></div>`
-      ).join('');
       return `
-        <article class="status customer-order-card" data-status="${statusKey}">
-          <div class="customer-order-card-head">
-            <h4>ऑर्डर #${safe(String(o.id))}</h4>
-            <span class="customer-order-badge">${statusLabel}</span>
-          </div>
-          <div class="customer-order-item-name">${safe(o.plant_name || 'ऑर्डर विवरण उपलब्ध नहीं')}</div>
-          <div class="customer-order-total"><span>कुल ऑर्डर राशि</span><strong>₹${total}</strong></div>
-          <p class="customer-order-meta" style="margin:4px 0">
+        <div class="status" style="border:1px solid #dcebd7; margin-bottom:10px; background:#fff">
+          <h4 style="margin:0 0 6px; color:var(--green)">ऑर्डर #${o.id} - ${safe(o.plant_name)}</h4>
+          <p style="margin:4px 0; font-size:14px">
+            💰 <b>कुल राशि:</b> ₹${total}<br>
+            💳 <b>UTR नंबर:</b> ${safe(utrMatch ? utrMatch[1] : '—')}<br>
             📅 <b>तारीख:</b> ${formattedDate} (${formattedTime})<br>
             📍 <b>स्थिति:</b> ${custStatusText}
           </p>
-          <div class="customer-order-progress" data-step="${progressStep}" aria-label="ऑर्डर प्रगति"><span></span><span></span><span></span></div>
-          <button type="button" class="customer-order-details-toggle" data-order-details-toggle aria-expanded="false">पूरी जानकारी देखें ▼</button>
-          <div class="customer-order-details" hidden>
-            ${detailHtml}
-            ${proofMatch ? `<a class="customer-proof-link" href="${safe(proofMatch[1])}" target="_blank" rel="noopener">📸 भुगतान स्क्रीनशॉट देखें</a>` : ''}
-          </div>
-        </article>
+          ${proofMatch ? `
+            <div style="margin-top:8px">
+              <a href="${safe(proofMatch[1])}" target="_blank" rel="noopener" style="display:inline-block; padding:6px 10px; background:#edf5e9; color:var(--green); border-radius:8px; text-decoration:none; font-size:13px; font-weight:700">
+                📸 स्क्रीनशॉट देखें
+              </a>
+            </div>
+          ` : ''}
+        </div>
       `;
     }).join('');
-    const filters = document.getElementById('trackingFilters');
-    if (filters) filters.hidden = false;
-    document.querySelectorAll('.tracking-filter').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
-    filterCustomerOrders('all', '');
   } catch (err) {
     stat.textContent = 'त्रुटि: ' + err.message;
   }
@@ -5685,7 +4678,7 @@ loadPlants();
     if(action==='home') {
       // किसी भी खुले ग्राहक मेनू/पॉपअप/जानकारी पेज को बंद करके साफ Homepage दिखाएँ।
       if (typeof window.closeNurseryMenu === 'function') window.closeNurseryMenu();
-      closeCustomerTracking();
+      document.getElementById('customerTracking')?.classList.remove('tracking-modal-open'); document.body.classList.remove('tracking-open');
       ['about','plantCare','plantTypes','contact'].forEach(id=>{
         const section=document.getElementById(id);
         if(section){
@@ -5706,7 +4699,7 @@ loadPlants();
       btn.classList.add('active');
       window.scrollTo({top:0,behavior:'smooth'});
     }
-    if(action==='track-order') { closeCustomerTracking(); openCustomerTracking(); }
+    if(action==='account') document.getElementById('customerTrackingNav')?.click();
     if(action==='cart') { if(typeof openCartModal==='function') openCartModal(); else document.getElementById('floatingBottomCartBar')?.querySelector('button')?.click(); }
   }));
   // कार्ट बैज updateCartBadge() से सीधे अपडेट होता है, ताकि मात्रा और बैज हमेशा समान रहें।
@@ -5759,7 +4752,52 @@ loadPlants();
 })();
 </script>
 
-
+<style id="desktop-header-left-cleanup-v18">
+/* Desktop only: remove stray decorative items from the left header column.
+   Keep the menu, logo and nursery text aligned; mobile header is untouched. */
+@media screen and (min-width:701px) {
+  header#mainHeader {
+    grid-template-columns: max-content 82px minmax(240px,1fr) !important;
+    grid-template-rows: auto auto auto auto !important;
+    align-items: center !important;
+    column-gap: 14px !important;
+    row-gap: 4px !important;
+  }
+  header#mainHeader > #menuToggleButton {
+    grid-column: 1 !important;
+    grid-row: 1 / span 4 !important;
+    justify-self: start !important;
+    align-self: center !important;
+    width: auto !important;
+    min-width: 120px !important;
+    margin: 0 !important;
+  }
+  header#mainHeader > #headerBrandLogo {
+    grid-column: 2 !important;
+    grid-row: 1 / span 4 !important;
+    align-self: center !important;
+  }
+  header#mainHeader > #headerNurseryName {
+    grid-column: 3 !important; grid-row: 1 !important;
+  }
+  header#mainHeader > #headerNurseryTagline {
+    grid-column: 3 !important; grid-row: 2 !important;
+  }
+  header#mainHeader > #headerNurseryAddress {
+    grid-column: 3 !important; grid-row: 3 !important;
+  }
+  header#mainHeader > div:not(.header-badge-box) {
+    grid-column: 3 !important; grid-row: 4 !important;
+    justify-self: start !important;
+    margin: 0 !important;
+  }
+  header#mainHeader > .header-badge-box,
+  header#mainHeader::after {
+    display: none !important;
+    content: none !important;
+  }
+}
+</style>
 
 
 <style id="desktop-centered-header-store-menu-v19">
@@ -6079,5 +5117,8 @@ loadPlants();
 }
 
 </style>
+
+
+
 </body>
 </html>
