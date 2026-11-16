@@ -477,23 +477,25 @@ footer a:hover{text-decoration:underline}
 @media(min-width:701px){#menuToggleButton{margin:0 0 10px}#mainNavigation{left:16px;right:auto;width:250px}}
 @media(max-width:700px){header#mainHeader{padding:10px 14px 12px!important}#menuToggleButton{margin:0 0 8px;padding:7px 11px}#mainNavigation{top:100%;left:10px;right:10px}}
 
-.plant-buy-button.in-cart-remove {
-  background: linear-gradient(135deg,#dc2626,#991b1b) !important;
-  color: #fff !important;
+/* सुरक्षित रिकवरी: हेडर और टॉगल मेनू को क्लिक के लिए ऊपर रखें */
+#mainHeader {
+  position: relative !important;
+  z-index: 6001 !important;
 }
-
-
-/* Toggle menu click reliability fix */
-#mainHeader { position: relative !important; z-index: 6000 !important; }
 #menuToggleButton {
   position: relative !important;
-  z-index: 10001 !important;
+  z-index: 6003 !important;
   pointer-events: auto !important;
   touch-action: manipulation;
   cursor: pointer !important;
 }
-#mainNavigation { z-index: 10000 !important; pointer-events: auto !important; }
-#mainNavigation.menu-open { display: flex !important; }
+#mainNavigation {
+  z-index: 6002 !important;
+  pointer-events: auto !important;
+}
+#mainNavigation.menu-open {
+  display: flex !important;
+}
 
 </style>
 </head>
@@ -528,7 +530,7 @@ footer a:hover{text-decoration:underline}
   <div class="header-badge-box">
     <div class="header-logo-glow">🪴</div>
   </div>
-  <button id="menuToggleButton" type="button" onclick="toggleNurseryMenu(event)" aria-label="मेनू खोलें" aria-expanded="false" aria-controls="mainNavigation">☰ मेनू</button>
+  <button id="menuToggleButton" type="button" aria-label="मेनू खोलें" aria-expanded="false" aria-controls="mainNavigation">☰ मेनू</button>
   <h1 id="headerNurseryName">श्री नीम करोली महाराज ग्रीन नर्सरी</h1>
   <p id="headerNurseryTagline">हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए</p>
   <p id="headerNurseryAddress">📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान</p>
@@ -1621,53 +1623,6 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
       <script>
         window.onload = function() { window.print(); }
       <\/script>
-
-<script>
-/* Robust menu controller: inline click + delegated listener fallback */
-window.toggleNurseryMenu = function(event) {
-  if (event) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-  const button = document.getElementById('menuToggleButton');
-  const menu = document.getElementById('mainNavigation');
-  if (!button || !menu) return;
-  const willOpen = !menu.classList.contains('menu-open');
-  menu.classList.toggle('menu-open', willOpen);
-  menu.style.display = willOpen ? 'flex' : 'none';
-  button.setAttribute('aria-expanded', String(willOpen));
-  button.setAttribute('aria-label', willOpen ? 'मेनू बंद करें' : 'मेनू खोलें');
-};
-document.addEventListener('click', function(event) {
-  const button = event.target.closest && event.target.closest('#menuToggleButton');
-  if (button) {
-    // Inline handler handles the primary toggle.
-    return;
-  }
-  const menu = document.getElementById('mainNavigation');
-  const toggle = document.getElementById('menuToggleButton');
-  if (menu && toggle && menu.classList.contains('menu-open') &&
-      !menu.contains(event.target)) {
-    menu.classList.remove('menu-open');
-    menu.style.display = 'none';
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-label', 'मेनू खोलें');
-  }
-});
-document.addEventListener('keydown', function(event) {
-  if (event.key === 'Escape') {
-    const menu = document.getElementById('mainNavigation');
-    const toggle = document.getElementById('menuToggleButton');
-    if (menu && toggle) {
-      menu.classList.remove('menu-open');
-      menu.style.display = 'none';
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.setAttribute('aria-label', 'मेनू खोलें');
-    }
-  }
-});
-</script>
-
 </body>
     </html>
   `);
@@ -1802,26 +1757,7 @@ async function loadPlants() {
       });
 
       if (!isSoldOut) {
-        const buyButton = card.querySelector('.plant-buy-button');
-        card.dataset.cartKey = `${veg ? 'veg' : 'plant'}-${p.id}`;
-        const syncButton = () => {
-          const inCart = shoppingCart.some(item => item.id === p.id && Boolean(item.veg) === Boolean(veg));
-          buyButton.textContent = inCart ? '✕ कार्ट से हटाएँ' : '🛒 कार्ट में जोड़ें';
-          buyButton.classList.toggle('in-cart-remove', inCart);
-        };
-        syncButton();
-
-        buyButton.addEventListener('click', () => {
-          const existingIndex = shoppingCart.findIndex(item => item.id === p.id && Boolean(item.veg) === Boolean(veg));
-          if (existingIndex !== -1) {
-            shoppingCart.splice(existingIndex, 1);
-            updateCartBadge();
-            updateProductCartButtons();
-            if (!shoppingCart.length && !document.getElementById('order').hidden) closeOrderPopup();
-            else if (!document.getElementById('order').hidden) renderCartModal();
-            return;
-          }
-
+        card.querySelector('.plant-buy-button').addEventListener('click', () => {
           const q = Number(qtyInput.value);
           const limit = veg ? (isGram ? 0.25 : 1) : minPlantLimit;
           if (q < limit) {
@@ -1829,8 +1765,8 @@ async function loadPlants() {
             qtyInput.value = limit;
             return;
           }
+
           addToCart(p, q, veg, isGram);
-          syncButton();
         });
       }
 
@@ -1857,20 +1793,6 @@ function addToCart(plant, qty, veg, isGram) {
     });
   }
   updateCartBadge();
-  updateProductCartButtons();
-}
-
-function updateProductCartButtons() {
-  document.querySelectorAll('.plant[data-cart-key]').forEach(card => {
-    const button = card.querySelector('.plant-buy-button');
-    if (!button) return;
-    const key = card.dataset.cartKey;
-    const inCart = shoppingCart.some(item =>
-      `${item.veg ? 'veg' : 'plant'}-${item.id}` === key
-    );
-    button.textContent = inCart ? '✕ कार्ट से हटाएँ' : '🛒 कार्ट में जोड़ें';
-    button.classList.toggle('in-cart-remove', inCart);
-  });
 }
 
 function updateCartBadge() {
@@ -1992,7 +1914,6 @@ function renderCartModal() {
 function removeFromCart(index) {
   shoppingCart.splice(index, 1);
   updateCartBadge();
-  updateProductCartButtons();
   if (shoppingCart.length === 0) {
     closeOrderPopup();
     const bottomBar = document.getElementById('floatingBottomCartBar');
@@ -2953,17 +2874,38 @@ loadPlants();
 </script>
 
 <script>
-// टॉगल मेनू खोलना/बंद करना और मेनू लिंक पर जाने के बाद बंद करना
-(function(){
-  const btn=document.getElementById('menuToggleButton');
-  const menu=document.getElementById('mainNavigation');
-  if(!btn||!menu) return;
-  const close=()=>{menu.classList.remove('menu-open');btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-label','मेनू खोलें');};
-  btn.addEventListener('click',()=>{const open=!menu.classList.contains('menu-open');menu.classList.toggle('menu-open',open);btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'मेनू बंद करें':'मेनू खोलें');});
-  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
-  document.addEventListener('click',e=>{if(!menu.contains(e.target)&&!btn.contains(e.target)) close();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
-})();
+// सुरक्षित और सरल Toggle Menu कंट्रोलर
+document.addEventListener('DOMContentLoaded', function () {
+  const btn = document.getElementById('menuToggleButton');
+  const menu = document.getElementById('mainNavigation');
+  if (!btn || !menu || btn.dataset.menuReady === 'yes') return;
+  btn.dataset.menuReady = 'yes';
+
+  function setMenu(open) {
+    menu.classList.toggle('menu-open', open);
+    menu.style.display = open ? 'flex' : 'none';
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'मेनू बंद करें' : 'मेनू खोलें');
+  }
+
+  btn.addEventListener('click', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    setMenu(!menu.classList.contains('menu-open'));
+  });
+
+  menu.querySelectorAll('a').forEach(function (link) {
+    link.addEventListener('click', function () { setMenu(false); });
+  });
+
+  document.addEventListener('click', function (event) {
+    if (!menu.contains(event.target) && !btn.contains(event.target)) setMenu(false);
+  });
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') setMenu(false);
+  });
+});
 </script>
 <script>
 // जानकारी वाले सेक्शन और हमारे बारे में ड्रॉपडाउन
