@@ -477,64 +477,23 @@ footer a:hover{text-decoration:underline}
 @media(min-width:701px){#menuToggleButton{margin:0 0 10px}#mainNavigation{left:16px;right:auto;width:250px}}
 @media(max-width:700px){header#mainHeader{padding:10px 14px 12px!important}#menuToggleButton{margin:0 0 8px;padding:7px 11px}#mainNavigation{top:100%;left:10px;right:10px}}
 
-/* सुरक्षित रिकवरी: हेडर और टॉगल मेनू को क्लिक के लिए ऊपर रखें */
-#mainHeader {
-  position: relative !important;
-  z-index: 6001 !important;
+.plant-buy-button.in-cart-remove {
+  background: linear-gradient(135deg,#dc2626,#991b1b) !important;
+  color: #fff !important;
 }
+
+
+/* Toggle menu click reliability fix */
+#mainHeader { position: relative !important; z-index: 6000 !important; }
 #menuToggleButton {
   position: relative !important;
-  z-index: 6003 !important;
+  z-index: 10001 !important;
   pointer-events: auto !important;
   touch-action: manipulation;
   cursor: pointer !important;
 }
-#mainNavigation {
-  z-index: 6002 !important;
-  pointer-events: auto !important;
-}
-#mainNavigation.menu-open {
-  display: flex !important;
-}
-
-
-/* मोबाइल/डेस्कटॉप: मेनू बटन के ठीक नीचे खुले, viewport से बाहर न जाए */
-#mainNavigation {
-  position: fixed !important;
-  top: 0;
-  left: 0;
-  right: auto !important;
-  width: min(290px, calc(100vw - 24px)) !important;
-  max-height: min(70vh, 520px);
-  overflow-y: auto;
-  z-index: 99999 !important;
-  box-sizing: border-box;
-}
+#mainNavigation { z-index: 10000 !important; pointer-events: auto !important; }
 #mainNavigation.menu-open { display: flex !important; }
-#mainNavigation a, #mainNavigation button {
-  min-height: 44px;
-  box-sizing: border-box;
-}
-@media (max-width: 700px) {
-  #mainHeader { padding: 10px 12px 12px !important; }
-  #headerNurseryName { font-size: clamp(19px, 5vw, 25px) !important; line-height: 1.2 !important; }
-  #headerNurseryTagline, #headerNurseryAddress { font-size: 12px !important; margin: 5px 0 !important; }
-  main { padding: 8px !important; }
-  main > .card, main > section.card { margin: 8px 0 !important; padding: 12px !important; border-radius: 12px !important; }
-  main h2 { font-size: 17px !important; line-height: 1.3 !important; }
-  main p, main li { font-size: 13px; line-height: 1.5; }
-  #plantOnlyList .plant, #vegOnlyList .plant { gap: 5px !important; }
-  #plantOnlyList .plant img, #vegOnlyList .plant img { height: 94px !important; }
-  #plantOnlyList .plant h3, #vegOnlyList .plant h3 { font-size: 11px !important; min-height: 28px; }
-  #plantOnlyList .plant-buy-button, #vegOnlyList .plant-buy-button {
-    min-height: 34px !important; font-size: 9px !important; font-weight: 800 !important;
-    border-radius: 7px !important; overflow-wrap: anywhere;
-  }
-  #plantOnlyList .plant-buy-button.in-cart-remove, #vegOnlyList .plant-buy-button.in-cart-remove {
-    background: #fee2e2 !important; color: #991b1b !important; border: 1px solid #fecaca !important;
-  }
-  .card-stepper-box { margin-top: 4px !important; }
-}
 
 </style>
 </head>
@@ -569,7 +528,7 @@ footer a:hover{text-decoration:underline}
   <div class="header-badge-box">
     <div class="header-logo-glow">🪴</div>
   </div>
-  <button id="menuToggleButton" type="button" aria-label="मेनू खोलें" aria-expanded="false" aria-controls="mainNavigation">☰ मेनू</button>
+  <button id="menuToggleButton" type="button" onclick="toggleNurseryMenu(event)" aria-label="मेनू खोलें" aria-expanded="false" aria-controls="mainNavigation">☰ मेनू</button>
   <h1 id="headerNurseryName">श्री नीम करोली महाराज ग्रीन नर्सरी</h1>
   <p id="headerNurseryTagline">हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए</p>
   <p id="headerNurseryAddress">📍 मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान</p>
@@ -1662,6 +1621,53 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
       <script>
         window.onload = function() { window.print(); }
       <\/script>
+
+<script>
+/* Robust menu controller: inline click + delegated listener fallback */
+window.toggleNurseryMenu = function(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  const button = document.getElementById('menuToggleButton');
+  const menu = document.getElementById('mainNavigation');
+  if (!button || !menu) return;
+  const willOpen = !menu.classList.contains('menu-open');
+  menu.classList.toggle('menu-open', willOpen);
+  menu.style.display = willOpen ? 'flex' : 'none';
+  button.setAttribute('aria-expanded', String(willOpen));
+  button.setAttribute('aria-label', willOpen ? 'मेनू बंद करें' : 'मेनू खोलें');
+};
+document.addEventListener('click', function(event) {
+  const button = event.target.closest && event.target.closest('#menuToggleButton');
+  if (button) {
+    // Inline handler handles the primary toggle.
+    return;
+  }
+  const menu = document.getElementById('mainNavigation');
+  const toggle = document.getElementById('menuToggleButton');
+  if (menu && toggle && menu.classList.contains('menu-open') &&
+      !menu.contains(event.target)) {
+    menu.classList.remove('menu-open');
+    menu.style.display = 'none';
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'मेनू खोलें');
+  }
+});
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    const menu = document.getElementById('mainNavigation');
+    const toggle = document.getElementById('menuToggleButton');
+    if (menu && toggle) {
+      menu.classList.remove('menu-open');
+      menu.style.display = 'none';
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'मेनू खोलें');
+    }
+  }
+});
+</script>
+
 </body>
     </html>
   `);
@@ -1731,7 +1737,6 @@ async function loadPlants() {
       const isSoldOut = (!p.is_active || Number(p.stock_quantity) <= 0 || cfg.shopStatus === 'closed');
       const card = document.createElement('div'); 
       card.className = 'plant' + (isSoldOut ? ' sold-out' : '');
-      card.dataset.productId = String(p.id);
       
       const imgHtml = p.image_url 
         ? `<img src="${safe(p.image_url)}" alt="${safe(p.name)}" loading="lazy">`
@@ -1774,17 +1779,40 @@ async function loadPlants() {
       const minusBtn = card.querySelector('.minus-btn');
       const plusBtn = card.querySelector('.plus-btn');
 
-      minusBtn?.addEventListener('click', () => {
-        let val = Number(qtyInput.value) || initialVal;
+      // यदि उत्पाद पहले से कार्ट में है, तो कार्ड में वही मात्रा दिखाएँ।
+      const cartItemForCard = shoppingCart.find(item =>
+        item.id === p.id && Boolean(item.veg) === Boolean(veg)
+      );
+      if (cartItemForCard) {
+        qtyInput.value = isGram ? Number(cartItemForCard.qty).toFixed(2) :
+          (veg ? Number(cartItemForCard.qty).toFixed(1) : Math.round(cartItemForCard.qty));
+      }
+
+      const updateSelectedQuantity = (nextValue) => {
         const limit = veg ? (isGram ? 0.25 : 1) : minPlantLimit;
-        val = Math.max(limit, val - stepVal);
-        qtyInput.value = isGram ? val.toFixed(2) : (veg ? val.toFixed(1) : Math.round(val));
+        const safeValue = Math.max(limit, Math.min(Number(p.stock_quantity) || 9999, nextValue));
+        qtyInput.value = isGram ? safeValue.toFixed(2) :
+          (veg ? safeValue.toFixed(1) : Math.round(safeValue));
+
+        // कार्ट में मौजूद उत्पाद की मात्रा बदलते ही नीचे कुल रकम अपडेट करें।
+        const cartIndex = shoppingCart.findIndex(item =>
+          item.id === p.id && Boolean(item.veg) === Boolean(veg)
+        );
+        if (cartIndex !== -1) {
+          shoppingCart[cartIndex].qty = safeValue;
+          updateCartBadge();
+          if (!document.getElementById('order').hidden) renderCartModal();
+        }
+      };
+
+      minusBtn?.addEventListener('click', () => {
+        const val = Number(qtyInput.value) || initialVal;
+        updateSelectedQuantity(val - stepVal);
       });
 
       plusBtn?.addEventListener('click', () => {
-        let val = Number(qtyInput.value) || initialVal;
-        val = Math.min(Number(p.stock_quantity) || 9999, val + stepVal);
-        qtyInput.value = isGram ? val.toFixed(2) : (veg ? val.toFixed(1) : Math.round(val));
+        const val = Number(qtyInput.value) || initialVal;
+        updateSelectedQuantity(val + stepVal);
       });
 
       qtyInput?.addEventListener('change', () => {
@@ -1798,11 +1826,22 @@ async function loadPlants() {
 
       if (!isSoldOut) {
         const buyButton = card.querySelector('.plant-buy-button');
+        card.dataset.cartKey = `${veg ? 'veg' : 'plant'}-${p.id}`;
+        const syncButton = () => {
+          const inCart = shoppingCart.some(item => item.id === p.id && Boolean(item.veg) === Boolean(veg));
+          buyButton.textContent = inCart ? '✕ कार्ट से हटाएँ' : '🛒 कार्ट में जोड़ें';
+          buyButton.classList.toggle('in-cart-remove', inCart);
+        };
+        syncButton();
+
         buyButton.addEventListener('click', () => {
-          const inCart = shoppingCart.some(item => String(item.id) === String(p.id));
-          if (inCart) {
-            const index = shoppingCart.findIndex(item => String(item.id) === String(p.id));
-            if (index > -1) removeFromCart(index);
+          const existingIndex = shoppingCart.findIndex(item => item.id === p.id && Boolean(item.veg) === Boolean(veg));
+          if (existingIndex !== -1) {
+            shoppingCart.splice(existingIndex, 1);
+            updateCartBadge();
+            updateProductCartButtons();
+            if (!shoppingCart.length && !document.getElementById('order').hidden) closeOrderPopup();
+            else if (!document.getElementById('order').hidden) renderCartModal();
             return;
           }
 
@@ -1814,9 +1853,9 @@ async function loadPlants() {
             return;
           }
           addToCart(p, q, veg, isGram);
+          syncButton();
         });
       }
-      syncProductCardCartButtons();
 
       target.appendChild(card);
     });
@@ -1827,7 +1866,7 @@ async function loadPlants() {
 
 // 🛒 कार्ट में उत्पाद जोड़ना
 function addToCart(plant, qty, veg, isGram) {
-  const existingIndex = shoppingCart.findIndex(item => item.id === plant.id);
+  const existingIndex = shoppingCart.findIndex(item => item.id === plant.id && Boolean(item.veg) === Boolean(veg));
   if (existingIndex > -1) {
     shoppingCart[existingIndex].qty += qty;
   } else {
@@ -1841,35 +1880,38 @@ function addToCart(plant, qty, veg, isGram) {
     });
   }
   updateCartBadge();
-  syncProductCardCartButtons();
+  updateProductCartButtons();
 }
 
-function syncProductCardCartButtons() {
-  document.querySelectorAll('.plant[data-product-id]').forEach(card => {
+function updateProductCartButtons() {
+  document.querySelectorAll('.plant[data-cart-key]').forEach(card => {
     const button = card.querySelector('.plant-buy-button');
     if (!button) return;
-    const inCart = shoppingCart.some(item => String(item.id) === String(card.dataset.productId));
+    const key = card.dataset.cartKey;
+    const inCart = shoppingCart.some(item =>
+      `${item.veg ? 'veg' : 'plant'}-${item.id}` === key
+    );
     button.textContent = inCart ? '✕ कार्ट से हटाएँ' : '🛒 कार्ट में जोड़ें';
     button.classList.toggle('in-cart-remove', inCart);
-    button.setAttribute('aria-label', inCart ? 'कार्ट से हटाएँ' : 'कार्ट में जोड़ें');
   });
 }
 
 function updateCartBadge() {
-  const totalCount = shoppingCart.reduce((sum, item) => sum + 1, 0);
-  const totalPrice = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  // कुल आइटम = कार्ट में सभी उत्पादों की वास्तविक मात्रा का जोड़।
+  const totalCount = shoppingCart.reduce((sum, item) => sum + (Number(item.qty) || 0), 0);
+  const totalPrice = shoppingCart.reduce((sum, item) =>
+    sum + ((Number(item.price) || 0) * (Number(item.qty) || 0)), 0);
 
   const bottomBar = document.getElementById('floatingBottomCartBar');
   const barCount = document.getElementById('barItemCount');
   const barPrice = document.getElementById('barTotalPrice');
+  const mobileCount = document.getElementById('mobileCartCount');
 
-  if (shoppingCart.length > 0) {
-    if (barCount) barCount.textContent = shoppingCart.length;
-    if (barPrice) barPrice.textContent = '₹' + totalPrice.toFixed(2);
-    if (bottomBar) bottomBar.style.display = 'flex';
-  } else {
-    if (bottomBar) bottomBar.style.display = 'none';
-  }
+  if (barCount) barCount.textContent = Number.isInteger(totalCount) ? totalCount : totalCount.toFixed(2);
+  if (barPrice) barPrice.textContent = '₹' + totalPrice.toFixed(2);
+  if (mobileCount) mobileCount.textContent = Number.isInteger(totalCount) ? totalCount : totalCount.toFixed(2);
+
+  if (bottomBar) bottomBar.style.display = shoppingCart.length > 0 ? 'flex' : 'none';
 }
 
 // कार्ट मॉडल खोलना
@@ -1974,7 +2016,7 @@ function renderCartModal() {
 function removeFromCart(index) {
   shoppingCart.splice(index, 1);
   updateCartBadge();
-  syncProductCardCartButtons();
+  updateProductCartButtons();
   if (shoppingCart.length === 0) {
     closeOrderPopup();
     const bottomBar = document.getElementById('floatingBottomCartBar');
@@ -2935,50 +2977,17 @@ loadPlants();
 </script>
 
 <script>
-// सुरक्षित और सरल Toggle Menu कंट्रोलर
-document.addEventListener('DOMContentLoaded', function () {
-  const btn = document.getElementById('menuToggleButton');
-  const menu = document.getElementById('mainNavigation');
-  if (!btn || !menu || btn.dataset.menuReady === 'yes') return;
-  btn.dataset.menuReady = 'yes';
-
-  function setMenu(open) {
-    menu.classList.toggle('menu-open', open);
-    menu.style.display = open ? 'flex' : 'none';
-    if (open) {
-      const rect = btn.getBoundingClientRect();
-      const menuWidth = Math.min(290, window.innerWidth - 24);
-      const left = Math.max(12, Math.min(rect.left, window.innerWidth - menuWidth - 12));
-      menu.style.left = left + 'px';
-      menu.style.top = Math.min(rect.bottom + 8, window.innerHeight - 120) + 'px';
-      menu.style.right = 'auto';
-      menu.style.width = menuWidth + 'px';
-    }
-    btn.setAttribute('aria-expanded', String(open));
-    btn.setAttribute('aria-label', open ? 'मेनू बंद करें' : 'मेनू खोलें');
-  }
-
-  btn.addEventListener('click', function (event) {
-    event.preventDefault();
-    event.stopPropagation();
-    setMenu(!menu.classList.contains('menu-open'));
-  });
-
-  menu.querySelectorAll('a').forEach(function (link) {
-    link.addEventListener('click', function () { setMenu(false); });
-  });
-
-  document.addEventListener('click', function (event) {
-    if (!menu.contains(event.target) && !btn.contains(event.target)) setMenu(false);
-  });
-
-  document.addEventListener('keydown', function (event) {
-    if (event.key === 'Escape') setMenu(false);
-  });
-  window.addEventListener('resize', function () {
-    if (menu.classList.contains('menu-open')) setMenu(true);
-  });
-});
+// टॉगल मेनू खोलना/बंद करना और मेनू लिंक पर जाने के बाद बंद करना
+(function(){
+  const btn=document.getElementById('menuToggleButton');
+  const menu=document.getElementById('mainNavigation');
+  if(!btn||!menu) return;
+  const close=()=>{menu.classList.remove('menu-open');btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-label','मेनू खोलें');};
+  btn.addEventListener('click',()=>{const open=!menu.classList.contains('menu-open');menu.classList.toggle('menu-open',open);btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'मेनू बंद करें':'मेनू खोलें');});
+  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
+  document.addEventListener('click',e=>{if(!menu.contains(e.target)&&!btn.contains(e.target)) close();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
+})();
 </script>
 <script>
 // जानकारी वाले सेक्शन और हमारे बारे में ड्रॉपडाउन
