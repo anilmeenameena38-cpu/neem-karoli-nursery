@@ -497,6 +497,45 @@ footer a:hover{text-decoration:underline}
   display: flex !important;
 }
 
+
+/* मोबाइल/डेस्कटॉप: मेनू बटन के ठीक नीचे खुले, viewport से बाहर न जाए */
+#mainNavigation {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: auto !important;
+  width: min(290px, calc(100vw - 24px)) !important;
+  max-height: min(70vh, 520px);
+  overflow-y: auto;
+  z-index: 99999 !important;
+  box-sizing: border-box;
+}
+#mainNavigation.menu-open { display: flex !important; }
+#mainNavigation a, #mainNavigation button {
+  min-height: 44px;
+  box-sizing: border-box;
+}
+@media (max-width: 700px) {
+  #mainHeader { padding: 10px 12px 12px !important; }
+  #headerNurseryName { font-size: clamp(19px, 5vw, 25px) !important; line-height: 1.2 !important; }
+  #headerNurseryTagline, #headerNurseryAddress { font-size: 12px !important; margin: 5px 0 !important; }
+  main { padding: 8px !important; }
+  main > .card, main > section.card { margin: 8px 0 !important; padding: 12px !important; border-radius: 12px !important; }
+  main h2 { font-size: 17px !important; line-height: 1.3 !important; }
+  main p, main li { font-size: 13px; line-height: 1.5; }
+  #plantOnlyList .plant, #vegOnlyList .plant { gap: 5px !important; }
+  #plantOnlyList .plant img, #vegOnlyList .plant img { height: 94px !important; }
+  #plantOnlyList .plant h3, #vegOnlyList .plant h3 { font-size: 11px !important; min-height: 28px; }
+  #plantOnlyList .plant-buy-button, #vegOnlyList .plant-buy-button {
+    min-height: 34px !important; font-size: 9px !important; font-weight: 800 !important;
+    border-radius: 7px !important; overflow-wrap: anywhere;
+  }
+  #plantOnlyList .plant-buy-button.in-cart-remove, #vegOnlyList .plant-buy-button.in-cart-remove {
+    background: #fee2e2 !important; color: #991b1b !important; border: 1px solid #fecaca !important;
+  }
+  .card-stepper-box { margin-top: 4px !important; }
+}
+
 </style>
 </head>
 <body>
@@ -1692,6 +1731,7 @@ async function loadPlants() {
       const isSoldOut = (!p.is_active || Number(p.stock_quantity) <= 0 || cfg.shopStatus === 'closed');
       const card = document.createElement('div'); 
       card.className = 'plant' + (isSoldOut ? ' sold-out' : '');
+      card.dataset.productId = String(p.id);
       
       const imgHtml = p.image_url 
         ? `<img src="${safe(p.image_url)}" alt="${safe(p.name)}" loading="lazy">`
@@ -1757,7 +1797,15 @@ async function loadPlants() {
       });
 
       if (!isSoldOut) {
-        card.querySelector('.plant-buy-button').addEventListener('click', () => {
+        const buyButton = card.querySelector('.plant-buy-button');
+        buyButton.addEventListener('click', () => {
+          const inCart = shoppingCart.some(item => String(item.id) === String(p.id));
+          if (inCart) {
+            const index = shoppingCart.findIndex(item => String(item.id) === String(p.id));
+            if (index > -1) removeFromCart(index);
+            return;
+          }
+
           const q = Number(qtyInput.value);
           const limit = veg ? (isGram ? 0.25 : 1) : minPlantLimit;
           if (q < limit) {
@@ -1765,10 +1813,10 @@ async function loadPlants() {
             qtyInput.value = limit;
             return;
           }
-
           addToCart(p, q, veg, isGram);
         });
       }
+      syncProductCardCartButtons();
 
       target.appendChild(card);
     });
@@ -1793,6 +1841,18 @@ function addToCart(plant, qty, veg, isGram) {
     });
   }
   updateCartBadge();
+  syncProductCardCartButtons();
+}
+
+function syncProductCardCartButtons() {
+  document.querySelectorAll('.plant[data-product-id]').forEach(card => {
+    const button = card.querySelector('.plant-buy-button');
+    if (!button) return;
+    const inCart = shoppingCart.some(item => String(item.id) === String(card.dataset.productId));
+    button.textContent = inCart ? '✕ कार्ट से हटाएँ' : '🛒 कार्ट में जोड़ें';
+    button.classList.toggle('in-cart-remove', inCart);
+    button.setAttribute('aria-label', inCart ? 'कार्ट से हटाएँ' : 'कार्ट में जोड़ें');
+  });
 }
 
 function updateCartBadge() {
@@ -1914,6 +1974,7 @@ function renderCartModal() {
 function removeFromCart(index) {
   shoppingCart.splice(index, 1);
   updateCartBadge();
+  syncProductCardCartButtons();
   if (shoppingCart.length === 0) {
     closeOrderPopup();
     const bottomBar = document.getElementById('floatingBottomCartBar');
@@ -2884,6 +2945,15 @@ document.addEventListener('DOMContentLoaded', function () {
   function setMenu(open) {
     menu.classList.toggle('menu-open', open);
     menu.style.display = open ? 'flex' : 'none';
+    if (open) {
+      const rect = btn.getBoundingClientRect();
+      const menuWidth = Math.min(290, window.innerWidth - 24);
+      const left = Math.max(12, Math.min(rect.left, window.innerWidth - menuWidth - 12));
+      menu.style.left = left + 'px';
+      menu.style.top = Math.min(rect.bottom + 8, window.innerHeight - 120) + 'px';
+      menu.style.right = 'auto';
+      menu.style.width = menuWidth + 'px';
+    }
     btn.setAttribute('aria-expanded', String(open));
     btn.setAttribute('aria-label', open ? 'मेनू बंद करें' : 'मेनू खोलें');
   }
@@ -2904,6 +2974,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') setMenu(false);
+  });
+  window.addEventListener('resize', function () {
+    if (menu.classList.contains('menu-open')) setMenu(true);
   });
 });
 </script>
