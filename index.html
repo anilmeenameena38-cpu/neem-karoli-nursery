@@ -1740,26 +1740,34 @@ async function loadPlants() {
       const minusBtn = card.querySelector('.minus-btn');
       const plusBtn = card.querySelector('.plus-btn');
 
+      // मात्रा बदलते ही, यदि उत्पाद पहले से कार्ट में है तो कार्ट और कीमत भी अपडेट करें।
+      const syncQuantityWithCart = () => syncCartQuantityFromCard(p, veg, qtyInput);
+
       minusBtn?.addEventListener('click', () => {
         let val = Number(qtyInput.value) || initialVal;
         const limit = veg ? (isGram ? 0.25 : 1) : minPlantLimit;
         val = Math.max(limit, val - stepVal);
         qtyInput.value = isGram ? val.toFixed(2) : (veg ? val.toFixed(1) : Math.round(val));
+        syncQuantityWithCart();
       });
 
       plusBtn?.addEventListener('click', () => {
         let val = Number(qtyInput.value) || initialVal;
         val = Math.min(Number(p.stock_quantity) || 9999, val + stepVal);
         qtyInput.value = isGram ? val.toFixed(2) : (veg ? val.toFixed(1) : Math.round(val));
+        syncQuantityWithCart();
       });
 
       qtyInput?.addEventListener('change', () => {
         let val = Number(qtyInput.value) || initialVal;
         const limit = veg ? (isGram ? 0.25 : 1) : minPlantLimit;
-        if (val < limit) {
+        const max = Number(p.stock_quantity) || 9999;
+        val = Math.min(max, Math.max(limit, val));
+        if (Number(qtyInput.value) < limit) {
           alert(`⚠️ न्यूनतम मात्रा ${isGram ? '250 ग्राम (0.25 किलो)' : limit + (veg ? ' किलो' : ' पौधे')} होना अनिवार्य है!`);
-          qtyInput.value = limit;
         }
+        qtyInput.value = isGram ? val.toFixed(2) : (veg ? val.toFixed(1) : Math.round(val));
+        syncQuantityWithCart();
       });
 
       if (!isSoldOut) {
@@ -1823,9 +1831,25 @@ async function loadPlants() {
   }
 }
 
+
+// उत्पाद कार्ड के + / − से मात्रा बदलने पर पहले से कार्ट में मौजूद आइटम की मात्रा और कीमत同步 करें।
+function syncCartQuantityFromCard(plant, veg, qtyInput) {
+  const cartItem = shoppingCart.find(item => item.id === plant.id && Boolean(item.veg) === Boolean(veg));
+  if (!cartItem) return; // कार्ट में नहीं है तो केवल चयनित मात्रा बदलेगी।
+
+  const nextQty = Number(qtyInput && qtyInput.value);
+  if (!Number.isFinite(nextQty) || nextQty <= 0) return;
+
+  cartItem.qty = nextQty;
+  updateCartBadge();
+
+  const orderModal = document.getElementById('order');
+  if (orderModal && !orderModal.hidden) renderCartModal();
+}
+
 // 🛒 कार्ट में उत्पाद जोड़ना
 function addToCart(plant, qty, veg, isGram) {
-  const existingIndex = shoppingCart.findIndex(item => item.id === plant.id);
+  const existingIndex = shoppingCart.findIndex(item => item.id === plant.id && Boolean(item.veg) === Boolean(veg));
   if (existingIndex > -1) {
     shoppingCart[existingIndex].qty += qty;
   } else {
