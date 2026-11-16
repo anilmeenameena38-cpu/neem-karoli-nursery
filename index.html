@@ -1441,6 +1441,11 @@ body > main::after{
   #order:not(.checkout-active) #orderForm { display:none !important; visibility:hidden !important; }
   #order.checkout-active #orderForm { display:block !important; visibility:visible !important; }
 </style>
+
+<style id="v22-hide-review-cta-during-checkout">
+  #order.checkout-active #startCheckoutButton,
+  #order.checkout-active .cart-before-checkout #startCheckoutButton { display:none !important; }
+</style>
 </head>
 <body>
 
@@ -3009,9 +3014,15 @@ function renderCartModal() {
   }
 
   modalCard?.classList.remove('empty-cart-state');
-  // चेकआउट केवल ग्राहक के "अब खरीदें" दबाने पर खुलेगा।
-  const checkoutStarted = modalCard?.dataset.checkoutStarted === 'true';
-  document.getElementById('order')?.classList.toggle('checkout-active', checkoutStarted);
+  // Checkout state is authoritative if either the explicit flag OR the form
+  // has already been opened by the existing checkout flow. This prevents the
+  // review button from reappearing above delivery details on mobile.
+  const orderRoot = document.getElementById('order');
+  const formAlreadyOpen = Boolean(orderForm && (!orderForm.hidden || orderForm.getAttribute('aria-hidden') === 'false'));
+  const checkoutStarted = modalCard?.dataset.checkoutStarted === 'true' ||
+    Boolean(orderRoot?.classList.contains('checkout-active')) || formAlreadyOpen;
+  if (modalCard) modalCard.dataset.checkoutStarted = checkoutStarted ? 'true' : 'false';
+  orderRoot?.classList.toggle('checkout-active', checkoutStarted);
   if (orderForm) {
     orderForm.hidden = !checkoutStarted;
     if (checkoutStarted) {
@@ -3071,13 +3082,24 @@ function renderCartModal() {
       ${checkoutStarted ? '<p style="margin:7px 0 0;text-align:center;color:#64748b;font-size:12px">कृपया डिलीवरी विवरण भरकर ऑर्डर कन्फर्म करें।</p>' : '<button type="button" id="startCheckoutButton" style="width:100%;margin-top:12px;background:#167443;color:#fff;border:0;border-radius:10px;padding:12px 16px;font-size:15px;font-weight:800;cursor:pointer">अब खरीदें →</button><p style="margin:7px 0 0;text-align:center;color:#64748b;font-size:12px">अगले चरण में डिलीवरी का विवरण भरें</p>'}
     </div>`;
   container.innerHTML = html;
-  document.getElementById('startCheckoutButton')?.addEventListener('click', () => {
-    if (modalCard) modalCard.dataset.checkoutStarted = 'true';
-    document.getElementById('order')?.classList.add('checkout-active');
-    renderCartModal();
-    const formTop = document.getElementById('orderForm');
-    formTop?.scrollIntoView({behavior:'smooth', block:'start'});
-  });
+  const startCheckoutButton = document.getElementById('startCheckoutButton');
+  if (checkoutStarted) {
+    // Delivery stage: remove the review-stage CTA completely (not just hide it).
+    startCheckoutButton?.remove();
+  } else {
+    startCheckoutButton?.addEventListener('click', () => {
+      if (modalCard) modalCard.dataset.checkoutStarted = 'true';
+      document.getElementById('order')?.classList.add('checkout-active');
+      if (orderForm) {
+        orderForm.hidden = false;
+        orderForm.removeAttribute('aria-hidden');
+        orderForm.style.removeProperty('display');
+      }
+      renderCartModal();
+      const formTop = document.getElementById('orderForm');
+      formTop?.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  }
 
   let discountAmt = 0;
   if (cfg.discountPercent > 0) {
