@@ -1340,6 +1340,397 @@ body > main::after{
   #viewPlantCategory,#viewVegCategory{background:rgba(255,255,255,.96) !important;}
 }
 
+
+
+/* ================================================================
+   ADMIN DASHBOARD DESIGN SYSTEM — visual-only layer
+   Existing HTML IDs, event handlers, database queries and data remain.
+   ================================================================ */
+#owner.login-visible {
+  background: rgba(5, 28, 18, .76) !important;
+  backdrop-filter: blur(3px);
+  padding: 20px 14px 28px !important;
+}
+#owner.login-visible > #ownerPanelHeader,
+#owner.login-visible > #adminTabs,
+#owner.login-visible > .admin-pane,
+#owner.login-visible > #adminCustomerSearch {
+  width: min(100%, 1160px) !important;
+  max-width: 1160px !important;
+  margin: 0 auto 14px !important;
+  border: 1px solid #d8eadc !important;
+  border-radius: 18px !important;
+  background: #fff !important;
+  box-shadow: 0 8px 26px rgba(4, 55, 27, .10) !important;
+}
+#owner.login-visible > #ownerPanelHeader {
+  padding: 16px 18px !important;
+  border-top: 4px solid #15803d !important;
+}
+#ownerPanelHeader h3 { color: #064e3b !important; letter-spacing: .1px; }
+#owner.login-visible > #adminTabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+  gap: 9px !important;
+  padding: 12px !important;
+}
+#owner.login-visible #adminTabs .admin-tab {
+  min-width: 0;
+  min-height: 48px;
+  padding: 10px 9px !important;
+  border: 1px solid #d7e9db !important;
+  border-radius: 12px !important;
+  background: linear-gradient(180deg, #fbfefb, #eff8f1) !important;
+  color: #14532d !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  line-height: 1.3;
+  box-shadow: 0 2px 7px rgba(6, 78, 59, .05) !important;
+  transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+#owner.login-visible #adminTabs .admin-tab.active {
+  border-color: #08783c !important;
+  background: linear-gradient(135deg, #08783c, #064e2b) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(8, 120, 60, .22) !important;
+}
+#owner.login-visible #adminTabs .admin-tab:hover { transform: translateY(-1px); }
+#owner.login-visible .admin-pane {
+  padding: clamp(14px, 2vw, 22px) !important;
+  min-width: 0;
+  color: #173b27;
+  background: linear-gradient(180deg, #fff 0%, #fcfefc 100%) !important;
+}
+#owner.login-visible .admin-pane h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 16px !important;
+  padding: 0 0 12px !important;
+  border-bottom: 2px solid #e2f0e5;
+  color: #064e3b !important;
+  font-size: clamp(18px, 2vw, 22px) !important;
+  font-weight: 900 !important;
+  line-height: 1.35 !important;
+}
+#owner.login-visible .admin-pane h3 {
+  color: #14532d;
+  font-weight: 850;
+  line-height: 1.4;
+}
+
+/* Main dashboard summary and today's orders */
+#owner.login-visible .metric-grid {
+  grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+  gap: 12px !important;
+  margin: 12px 0 16px !important;
+}
+#owner.login-visible .metric {
+  min-width: 0;
+  padding: 16px !important;
+  border: 1px solid #dcebe0 !important;
+  border-radius: 15px !important;
+  background: linear-gradient(145deg, #f5fbf6, #fff) !important;
+  box-shadow: 0 3px 12px rgba(6, 78, 59, .06) !important;
+}
+#owner.login-visible .metric-value {
+  font-size: clamp(21px, 2.5vw, 27px) !important;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+#owner.login-visible .dashboard-table-card {
+  margin-top: 16px !important;
+  padding: 16px !important;
+  border: 1px solid #dcebe0 !important;
+  border-radius: 16px !important;
+  background: #fbfefb !important;
+  box-shadow: 0 3px 12px rgba(6, 78, 59, .05) !important;
+}
+#owner.login-visible .dashboard-table-card h3 {
+  gap: 10px;
+  flex-wrap: wrap;
+  color: #064e3b !important;
+}
+
+/* Customer orders — clearer cards and action area */
+#adminOrdersPane #ownerOrders {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 11px;
+}
+#owner.login-visible .order-item-card {
+  min-width: 0;
+  margin: 0 !important;
+  padding: 15px !important;
+  border: 1px solid #dce9df !important;
+  border-left: 5px solid #94a3b8 !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  box-shadow: 0 3px 12px rgba(15, 50, 28, .055) !important;
+}
+#owner.login-visible .order-item-card.is-pending { border-left-color: #e9a008 !important; background: #fffdf6 !important; }
+#owner.login-visible .order-item-card.is-confirmed { border-left-color: #16a34a !important; background: #f8fdf9 !important; }
+#owner.login-visible .order-item-card.is-delivered { border-left-color: #2563eb !important; background: #f7faff !important; }
+#owner.login-visible .order-item-card.is-cancelled { border-left-color: #dc2626 !important; background: #fffafa !important; }
+#owner.login-visible .order-item-card > div:first-child { gap: 8px !important; }
+#owner.login-visible .order-item-card > div:first-child > strong {
+  color: #183b27;
+  font-size: 14px;
+  line-height: 1.45;
+}
+#owner.login-visible .order-item-card p {
+  font-size: 13px !important;
+  line-height: 1.7 !important;
+  overflow-wrap: anywhere;
+}
+#owner.login-visible .order-item-card .order-actions { gap: 7px !important; }
+#owner.login-visible .order-item-card .order-actions .btn,
+#owner.login-visible .order-item-card .order-actions button {
+  min-height: 34px;
+  border-radius: 9px !important;
+  font-weight: 800;
+}
+
+/* Stock dashboard — preserve its existing two clear category cards */
+#owner.login-visible .stock-category-columns,
+#owner.login-visible .manage-category-columns,
+#owner.login-visible .sales-category-columns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px !important;
+  align-items: start;
+}
+#owner.login-visible .stock-category-card,
+#owner.login-visible .manage-category-card,
+#owner.login-visible .sales-category-card {
+  min-width: 0;
+  padding: 15px !important;
+  border: 1px solid #d9eade !important;
+  border-radius: 15px !important;
+  background: linear-gradient(180deg, #fbfefb, #f5faf6) !important;
+  box-shadow: 0 3px 11px rgba(6, 78, 59, .045) !important;
+}
+#owner.login-visible .stock-category-card h3,
+#owner.login-visible .manage-category-card h3,
+#owner.login-visible .sales-category-card h3 {
+  margin: 0 0 12px !important;
+  padding-bottom: 9px;
+  border-bottom: 1px solid #dfede2;
+  font-size: 16px !important;
+}
+#owner.login-visible .stock-row,
+#owner.login-visible .sale-row {
+  gap: 10px;
+  padding: 11px 8px !important;
+  border-bottom: 1px solid #e7efe9 !important;
+  border-radius: 8px;
+}
+
+/* New product: consistent sub-tabs, forms, edit/list panels */
+#owner.login-visible .plant-manage-buttons {
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 9px !important;
+  padding: 10px;
+  margin: 0 0 16px !important;
+  border: 1px solid #dfede2;
+  border-radius: 14px;
+  background: #f6fbf7;
+}
+#owner.login-visible .plant-manage-button {
+  min-height: 43px;
+  border: 1px solid #d8e9dc !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  color: #14532d !important;
+  font-size: 12px !important;
+  font-weight: 850 !important;
+}
+#owner.login-visible .plant-manage-button.active {
+  border-color: #08783c !important;
+  background: linear-gradient(135deg, #08783c, #064e2b) !important;
+  color: #fff !important;
+}
+#owner.login-visible .manage-view.active {
+  padding: 16px;
+  border: 1px solid #dcebe0;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(6, 78, 59, .045);
+}
+#owner.login-visible .manage-view > h3 {
+  margin: 0 0 13px !important;
+  padding-bottom: 9px;
+  border-bottom: 1px solid #e0eee3;
+}
+#owner.login-visible #newPlantOnlyForm,
+#owner.login-visible #newVegOnlyForm {
+  padding: 14px;
+  border: 1px solid #e0ece3;
+  border-radius: 13px;
+  background: #fbfefb;
+}
+#owner.login-visible .admin-plant-edit-row {
+  padding: 14px !important;
+  border-color: #dcebe0 !important;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(6,78,59,.04);
+}
+
+/* Sales dashboard */
+#owner.login-visible .admin-section-card {
+  min-width: 0;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+#owner.login-visible #adminSalesPane .sales-category-columns { margin-top: 15px !important; }
+#owner.login-visible #ownerSalesList {
+  padding: 8px;
+  border: 1px solid #e0ece3;
+  border-radius: 13px;
+  background: #fbfefb;
+}
+
+/* Mandi dashboard */
+#owner.login-visible .mandi-grid {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px !important;
+}
+#owner.login-visible .mandi-profit-box {
+  padding: 16px !important;
+  border: 1px solid #cfe5d4 !important;
+  border-radius: 15px !important;
+  background: linear-gradient(145deg, #f5fbf6, #fff) !important;
+  box-shadow: 0 3px 11px rgba(6,78,59,.05);
+}
+#owner.login-visible .mandi-result { gap: 10px !important; }
+#owner.login-visible .mandi-result > div {
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(6,78,59,.05);
+}
+
+/* Website controls — clearly separated setting cards */
+#owner.login-visible .settings-subtabs {
+  gap: 8px !important;
+  padding: 10px !important;
+  border: 1px solid #dcebe0 !important;
+  border-radius: 14px !important;
+  background: #f6fbf7;
+}
+#owner.login-visible .settings-subtab {
+  min-height: 40px;
+  padding: 9px 12px !important;
+  border: 1px solid #d8e9dc !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  color: #14532d !important;
+  font-weight: 800 !important;
+}
+#owner.login-visible .settings-subtab.active {
+  border-color: #08783c !important;
+  background: linear-gradient(135deg, #08783c, #064e2b) !important;
+  color: #fff !important;
+}
+#owner.login-visible .settings-subpane.active {
+  display: block;
+  margin: 0 0 12px;
+  padding: 17px !important;
+  border: 1px solid #dcebe0 !important;
+  border-radius: 15px !important;
+  background: #fff !important;
+  box-shadow: 0 3px 12px rgba(6,78,59,.045) !important;
+}
+#owner.login-visible #adminSettingsPane > div:first-child { margin-bottom: 14px !important; }
+#owner.login-visible #siteSettingsForm > button[type="submit"] { min-height: 48px; border-radius: 12px; }
+
+/* Dues and ChatGPT panels */
+#owner.login-visible #adminDuesPane #dueForm,
+#owner.login-visible #adminChatgptPane {
+  padding: 16px;
+  border: 1px solid #dcebe0;
+  border-radius: 15px;
+  background: linear-gradient(180deg, #fbfefb, #f5faf6);
+}
+#owner.login-visible #dueList { margin-top: 14px !important; }
+#owner.login-visible #nurseryChatQuestion {
+  min-height: 150px;
+  border: 1px solid #cfe3d4;
+  border-radius: 12px;
+  background: #fff;
+}
+#owner.login-visible .status {
+  border-radius: 11px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+#owner.login-visible .admin-pane input,
+#owner.login-visible .admin-pane select,
+#owner.login-visible .admin-pane textarea {
+  border-color: #cfe1d3;
+  border-radius: 10px;
+}
+#owner.login-visible .admin-pane button { border-radius: 10px; }
+
+@media (max-width: 700px) {
+  #owner.login-visible {
+    padding: 8px 9px calc(16px + env(safe-area-inset-bottom)) !important;
+  }
+  #owner.login-visible > #ownerPanelHeader,
+  #owner.login-visible > #adminTabs,
+  #owner.login-visible > .admin-pane,
+  #owner.login-visible > #adminCustomerSearch {
+    width: 100% !important;
+    margin: 0 0 10px !important;
+    border-radius: 14px !important;
+  }
+  #owner.login-visible > #ownerPanelHeader { padding: 12px !important; }
+  #owner.login-visible > #adminTabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+    padding: 9px !important;
+  }
+  #owner.login-visible #adminTabs .admin-tab {
+    min-height: 44px;
+    padding: 7px 4px !important;
+    font-size: 10.5px !important;
+    overflow-wrap: anywhere;
+  }
+  #owner.login-visible .admin-pane { padding: 13px !important; }
+  #owner.login-visible .admin-pane h2 { font-size: 17px !important; margin-bottom: 13px !important; }
+  #owner.login-visible .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; }
+  #owner.login-visible .metric { padding: 11px !important; border-radius: 12px !important; }
+  #owner.login-visible .metric-label { font-size: 11px !important; line-height: 1.35; }
+  #owner.login-visible .metric-value { font-size: 20px !important; }
+  #owner.login-visible .stock-category-columns,
+  #owner.login-visible .manage-category-columns,
+  #owner.login-visible .sales-category-columns { grid-template-columns: 1fr !important; gap: 10px !important; }
+  #owner.login-visible .stock-category-card,
+  #owner.login-visible .manage-category-card,
+  #owner.login-visible .sales-category-card { padding: 12px !important; }
+  #owner.login-visible .plant-manage-buttons { grid-template-columns: repeat(2, minmax(0,1fr)) !important; padding: 8px; }
+  #owner.login-visible .plant-manage-button { min-height: 42px; font-size: 10.5px !important; padding: 7px 4px !important; }
+  #owner.login-visible .manage-view.active { padding: 11px; }
+  #owner.login-visible #newPlantOnlyForm,
+  #owner.login-visible #newVegOnlyForm { padding: 10px; }
+  #owner.login-visible .settings-subtabs { display: grid !important; grid-template-columns: repeat(2, minmax(0,1fr)); }
+  #owner.login-visible .settings-subtab { min-width: 0; padding: 8px 5px !important; font-size: 11px !important; }
+  #owner.login-visible .settings-subpane.active { padding: 12px !important; }
+  #owner.login-visible .mandi-result { grid-template-columns: 1fr !important; }
+  #owner.login-visible .order-item-card { padding: 12px !important; }
+  #owner.login-visible .order-item-card > div:first-child { align-items: flex-start !important; }
+  #owner.login-visible .order-item-card p { font-size: 12px !important; }
+  #owner.login-visible .order-item-card .order-actions .btn,
+  #owner.login-visible .order-item-card .order-actions button { font-size: 11px !important; padding: 7px 9px !important; }
+  #owner.login-visible .dashboard-table-card { padding: 11px !important; }
+}
+@media (min-width: 701px) {
+  #owner.login-visible > #ownerPanelHeader,
+  #owner.login-visible > #adminTabs,
+  #owner.login-visible > .admin-pane,
+  #owner.login-visible > #adminCustomerSearch { padding: 18px !important; }
+}
+
 </style>
 
 <style id="v22-cart-mobile-fix">
