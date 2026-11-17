@@ -1666,13 +1666,20 @@ body > main::after{
 </style>
 
 
-<style id="v35-info-fullscreen-mode">
-/* V35: Dedicated Full-Screen View for About, Plant Care & Plant Types */
-body.info-fullscreen-open > main > *:not(.nav-page-open) {
+
+<style id="v36-info-fullscreen-mode-strict">
+/* V36: Strict Full-Screen View for About, Plant Care & Plant Types — Zero Background/Product Leakage */
+body.info-fullscreen-open > main > section:not(.nav-page-open),
+body.info-fullscreen-open > main > div:not(.nav-page-open),
+body.info-fullscreen-open > main > article:not(.nav-page-open) {
   display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 body.info-fullscreen-open > main > .nav-page-open {
   display: block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
   width: 100% !important;
   max-width: 1000px !important;
   margin: 20px auto !important;
@@ -1681,6 +1688,7 @@ body.info-fullscreen-open > main > .nav-page-open {
   border-radius: 20px !important;
   box-shadow: 0 10px 35px rgba(6, 78, 59, 0.15) !important;
   position: relative !important;
+  z-index: 50 !important;
 }
 .back-to-home-btn {
   display: inline-flex !important;
@@ -1703,6 +1711,7 @@ body.info-fullscreen-open > main > .nav-page-open {
   box-shadow: 0 6px 18px rgba(6, 78, 59, 0.35) !important;
 }
 </style>
+
 
 </head>
 <body>
