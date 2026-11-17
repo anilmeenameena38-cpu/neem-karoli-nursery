@@ -2754,6 +2754,25 @@ body.info-fullscreen-open > main > .nav-page-open {
               <label class="cmsx-check"><input id="cmsxShowTypes" type="checkbox"> पौधों के प्रकार पेज दिखाएँ</label>
               <label class="cmsx-check"><input id="cmsxShowContact" type="checkbox"> संपर्क सेक्शन दिखाएँ</label>
             </section>
+            <section class="cmsx-card cmsx-wide">
+              <h3>🎨 होमपेज डिजाइन और कॉलम कंट्रोल</h3>
+              <p class="cmsx-help">डेस्कटॉप और मोबाइल के लिए अलग कॉलम चुनें। बदलाव सेव करने के बाद ग्राहक वाले होमपेज पर लागू होंगे।</p>
+              <div class="cmsx-design-grid">
+                <label>कंप्यूटर पर पौधे कॉलम<select id="cmsxDesktopPlantCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</option></select></label>
+                <label>कंप्यूटर पर सब्ज़ी कॉलम<select id="cmsxDesktopVegCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</select></label>
+                <label>कंप्यूटर पर किराना कॉलम<select id="cmsxDesktopGroceryCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</option></select></label>
+                <label>मोबाइल पर पौधे कॉलम<select id="cmsxMobilePlantCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</option></select></label>
+                <label>मोबाइल पर सब्ज़ी कॉलम<select id="cmsxMobileVegCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</select></label>
+                <label>मोबाइल पर किराना कॉलम<select id="cmsxMobileGroceryCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</select></label>
+                <label>प्रोडक्ट फोटो की ऊँचाई<select id="cmsxProductImageHeight"><option value="90">छोटी - 90px</option><option value="120">मध्यम - 120px</option><option value="160">बड़ी - 160px</option><option value="200">बहुत बड़ी - 200px</option></select></label>
+                <label>कार्ड का डिजाइन<select id="cmsxCardStyle"><option value="soft">सॉफ्ट गोल कार्ड</option><option value="square">कम गोल कार्ड</option><option value="shadow">शैडो कार्ड</option></select></label>
+                <label>मुख्य थीम रंग<input id="cmsxThemeColor" type="color" value="#087a4b"></label>
+              </div>
+              <label>होमपेज बैनर फोटो का URL<input id="cmsxHeroImageUrl" type="url" placeholder="https://... फोटो का लिंक"></label>
+              <label>बैनर बटन का नाम<input id="cmsxHeroButtonText" type="text" maxlength="35" placeholder="अभी खरीदें"></label>
+              <label>बैनर बटन का लिंक<input id="cmsxHeroButtonUrl" type="text" maxlength="180" placeholder="#viewPlantCategory या https://..."></label>
+              <div class="cmsx-preview" id="cmsxDesignPreview">होमपेज डिजाइन का Preview यहाँ दिखेगा</div>
+            </section>
             <section class="cmsx-card">
               <h3>🛍️ कैटेगरी और अलग-अलग ऑर्डर</h3>
               <p class="cmsx-help">दिखाने और ऑर्डर लेने के स्विच अलग रखे गए हैं। किसी कैटेगरी को छिपाए बिना भी उसका ऑर्डर बंद कर सकते हैं।</p>
@@ -2773,9 +2792,6 @@ body.info-fullscreen-open > main > .nav-page-open {
             </section>
             <section class="cmsx-card">
               <h3>📱 मोबाइल और SEO कंट्रोल</h3>
-              <label>मोबाइल पर पौधे कॉलम<select id="cmsxMobilePlantCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option></select></label>
-              <label>मोबाइल पर सब्ज़ी कॉलम<select id="cmsxMobileVegCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option></select></label>
-              <label>मोबाइल पर किराना कॉलम<select id="cmsxMobileGroceryCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option></select></label>
               <label>Google खोज के लिए विवरण<textarea id="cmsxMetaDescription" rows="3" maxlength="300"></textarea></label>
               <label class="cmsx-check"><input id="cmsxMobileCompact" type="checkbox"> मोबाइल पर कॉम्पैक्ट प्रोडक्ट कार्ड</label>
             </section>
@@ -7217,17 +7233,27 @@ body.admin-panel-open #ownerCloseButton {
 #subpane-complete .cmsx-import input{display:none}
 #subpane-complete .cmsx-sql{margin-top:12px;padding:10px;background:#f3f6f4;border-radius:10px;font-size:12px}
 #subpane-complete .cmsx-sql pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:260px;overflow:auto;font-size:10px}
+
+#subpane-complete .cmsx-design-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#subpane-complete .cmsx-design-grid label{display:grid;gap:5px;font-size:12px;font-weight:800;color:#315443}
+#subpane-complete .cmsx-design-grid select,#subpane-complete .cmsx-card input[type=url],#subpane-complete .cmsx-card input[type=text]{width:100%;min-width:0;padding:10px;border:1px solid #cbded0;border-radius:9px;background:#fff}
+#subpane-complete .cmsx-card input[type=color]{width:100%;height:42px;border:1px solid #cbded0;border-radius:9px;background:#fff}
+#subpane-complete .cmsx-preview{margin-top:12px;min-height:105px;padding:18px;border-radius:14px;background:#087a4b;color:#fff;display:grid;align-content:center;gap:6px;background-position:center;background-size:cover}
+#subpane-complete .cmsx-preview p{margin:0;font-size:12px}
+#cmsxHomeHero .cmsx-hero-cta{display:inline-flex;margin-top:12px;padding:9px 15px;border-radius:999px;background:#fff;color:#065f46;font-weight:900;text-decoration:none;width:max-content}
+body.cmsx-card-square #plantOnlyList .plant,body.cmsx-card-square #vegOnlyList .plant,body.cmsx-card-square #groceryOnlyList .plant{border-radius:5px!important}
+body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .plant,body.cmsx-card-shadow #groceryOnlyList .plant{box-shadow:0 5px 18px rgba(0,0,0,.12)!important;border:0!important}
 @media(max-width:650px){#subpane-complete .cmsx-grid{grid-template-columns:1fr}#subpane-complete .cmsx-wide{grid-column:auto}#subpane-complete .cmsx-actions>*{flex:1 1 45%;justify-content:center}}
 </style>
 <script id="complete-cms-extension-runtime">
 (function(){
  'use strict';
- const KEY='nursery_site_config', DEFAULTS={cmsxHomeTitle:'',cmsxHomeSubtitle:'',cmsxShowHome:true,cmsxShowAbout:true,cmsxShowCare:true,cmsxShowTypes:true,cmsxShowContact:true,cmsxPlantsVisible:true,cmsxPlantsOrder:true,cmsxVegVisible:true,cmsxVegOrder:true,cmsxGroceryVisible:true,cmsxGroceryOrder:true,cmsxAllOrders:true,cmsxAboutText:'',cmsxFeaturesText:'',cmsxPromiseText:'',cmsxMobilePlantCols:'2',cmsxMobileVegCols:'2',cmsxMobileGroceryCols:'2',cmsxMetaDescription:'',cmsxMobileCompact:false};
+ const KEY='nursery_site_config', DEFAULTS={cmsxHomeTitle:'',cmsxHomeSubtitle:'',cmsxShowHome:true,cmsxShowAbout:true,cmsxShowCare:true,cmsxShowTypes:true,cmsxShowContact:true,cmsxPlantsVisible:true,cmsxPlantsOrder:true,cmsxVegVisible:true,cmsxVegOrder:true,cmsxGroceryVisible:true,cmsxGroceryOrder:true,cmsxAllOrders:true,cmsxAboutText:'',cmsxFeaturesText:'',cmsxPromiseText:'',cmsxDesktopPlantCols:'3',cmsxDesktopVegCols:'3',cmsxDesktopGroceryCols:'3',cmsxMobilePlantCols:'2',cmsxMobileVegCols:'2',cmsxMobileGroceryCols:'2',cmsxProductImageHeight:'120',cmsxCardStyle:'soft',cmsxThemeColor:'#087a4b',cmsxHeroImageUrl:'',cmsxHeroButtonText:'',cmsxHeroButtonUrl:'',cmsxMetaDescription:'',cmsxMobileCompact:false};
  const $=id=>document.getElementById(id); const status=(msg,kind)=>{const el=$('cmsxDbStatus');if(el){el.textContent=msg;el.style.background=kind==='ok'?'#ecfdf5':kind==='err'?'#fff1f2':'#eff6ff';el.style.color=kind==='ok'?'#166534':kind==='err'?'#991b1b':'#1e40af';}};
  function cfg(){try{return Object.assign({},DEFAULTS,JSON.parse(localStorage.getItem(KEY)||'{}'));}catch(_){return {...DEFAULTS};}}
  function setCfg(c){localStorage.setItem(KEY,JSON.stringify(c));}
  function val(id){const e=$(id);return e?e.value:'';} function checked(id){return !!$(id)?.checked;}
- function readForm(){return {cmsxHomeTitle:val('cmsxHomeTitle').trim(),cmsxHomeSubtitle:val('cmsxHomeSubtitle').trim(),cmsxShowHome:checked('cmsxShowHome'),cmsxShowAbout:checked('cmsxShowAbout'),cmsxShowCare:checked('cmsxShowCare'),cmsxShowTypes:checked('cmsxShowTypes'),cmsxShowContact:checked('cmsxShowContact'),cmsxPlantsVisible:checked('cmsxPlantsVisible'),cmsxPlantsOrder:checked('cmsxPlantsOrder'),cmsxVegVisible:checked('cmsxVegVisible'),cmsxVegOrder:checked('cmsxVegOrder'),cmsxGroceryVisible:checked('cmsxGroceryVisible'),cmsxGroceryOrder:checked('cmsxGroceryOrder'),cmsxAllOrders:checked('cmsxAllOrders'),cmsxAboutText:val('cmsxAboutText').trim(),cmsxFeaturesText:val('cmsxFeaturesText').trim(),cmsxPromiseText:val('cmsxPromiseText').trim(),cmsxMobilePlantCols:val('cmsxMobilePlantCols')||'2',cmsxMobileVegCols:val('cmsxMobileVegCols')||'2',cmsxMobileGroceryCols:val('cmsxMobileGroceryCols')||'2',cmsxMetaDescription:val('cmsxMetaDescription').trim(),cmsxMobileCompact:checked('cmsxMobileCompact')};}
+ function readForm(){return {cmsxHomeTitle:val('cmsxHomeTitle').trim(),cmsxHomeSubtitle:val('cmsxHomeSubtitle').trim(),cmsxShowHome:checked('cmsxShowHome'),cmsxShowAbout:checked('cmsxShowAbout'),cmsxShowCare:checked('cmsxShowCare'),cmsxShowTypes:checked('cmsxShowTypes'),cmsxShowContact:checked('cmsxShowContact'),cmsxPlantsVisible:checked('cmsxPlantsVisible'),cmsxPlantsOrder:checked('cmsxPlantsOrder'),cmsxVegVisible:checked('cmsxVegVisible'),cmsxVegOrder:checked('cmsxVegOrder'),cmsxGroceryVisible:checked('cmsxGroceryVisible'),cmsxGroceryOrder:checked('cmsxGroceryOrder'),cmsxAllOrders:checked('cmsxAllOrders'),cmsxAboutText:val('cmsxAboutText').trim(),cmsxFeaturesText:val('cmsxFeaturesText').trim(),cmsxPromiseText:val('cmsxPromiseText').trim(),cmsxDesktopPlantCols:val('cmsxDesktopPlantCols')||'3',cmsxDesktopVegCols:val('cmsxDesktopVegCols')||'3',cmsxDesktopGroceryCols:val('cmsxDesktopGroceryCols')||'3',cmsxMobilePlantCols:val('cmsxMobilePlantCols')||'2',cmsxMobileVegCols:val('cmsxMobileVegCols')||'2',cmsxMobileGroceryCols:val('cmsxMobileGroceryCols')||'2',cmsxProductImageHeight:val('cmsxProductImageHeight')||'120',cmsxCardStyle:val('cmsxCardStyle')||'soft',cmsxThemeColor:val('cmsxThemeColor')||'#087a4b',cmsxHeroImageUrl:val('cmsxHeroImageUrl').trim(),cmsxHeroButtonText:val('cmsxHeroButtonText').trim(),cmsxHeroButtonUrl:val('cmsxHeroButtonUrl').trim(),cmsxMetaDescription:val('cmsxMetaDescription').trim(),cmsxMobileCompact:checked('cmsxMobileCompact')};}
  function fill(c){Object.keys(DEFAULTS).forEach(k=>{const e=$(k);if(!e)return;if(e.type==='checkbox')e.checked=c[k]!==undefined?!!c[k]:!!DEFAULTS[k];else e.value=c[k]??DEFAULTS[k];});}
  function toggle(id,on){const e=$(id);if(e){if(on)e.style.removeProperty('display');else e.style.setProperty('display','none','important');}}
  function apply(c){
@@ -7269,6 +7295,11 @@ body.admin-panel-open #ownerCloseButton {
      hero.replaceChildren();
      if(title){const h=document.createElement('h2');h.textContent=title;hero.appendChild(h);}
      if(sub){const p=document.createElement('p');p.textContent=sub;hero.appendChild(p);}
+     const imageUrl=String(c.cmsxHeroImageUrl||'').trim();
+     if(imageUrl){hero.style.backgroundImage='linear-gradient(90deg,rgba(4,55,35,.82),rgba(4,55,35,.25)),url("'+imageUrl.replace(/[\"\\]/g,'')+'")';hero.style.backgroundSize='cover';hero.style.backgroundPosition='center';hero.style.color='#fff';}
+     else {hero.style.removeProperty('background-image');hero.style.color='';}
+     if(c.cmsxHeroButtonText && c.cmsxHeroButtonUrl){let a=hero.querySelector('a.cmsx-hero-cta');if(!a){a=document.createElement('a');a.className='cmsx-hero-cta';hero.appendChild(a);}a.textContent=c.cmsxHeroButtonText;a.href=c.cmsxHeroButtonUrl;}
+     else hero.querySelector('a.cmsx-hero-cta')?.remove();
      const tabs=document.querySelector('.store-view-tabs');
      const first=$('viewPlantCategory');
      if(tabs && tabs.parentNode) tabs.parentNode.insertBefore(hero,tabs);
@@ -7316,12 +7347,14 @@ body.admin-panel-open #ownerCloseButton {
    // Mobile columns apply immediately and also on viewport resize.
    const mobile=window.matchMedia('(max-width:700px)').matches;
    const p=$('plantOnlyList'),v=$('vegOnlyList'),g=$('groceryOnlyList');
-   if(mobile){
-     if(p)p.style.gridTemplateColumns='repeat('+c.cmsxMobilePlantCols+',minmax(0,1fr))';
-     if(v)v.style.gridTemplateColumns='repeat('+c.cmsxMobileVegCols+',minmax(0,1fr))';
-     if(g)g.style.gridTemplateColumns='repeat('+c.cmsxMobileGroceryCols+',minmax(0,1fr))';
-   }
+   const gridCols=mobile?['cmsxMobilePlantCols','cmsxMobileVegCols','cmsxMobileGroceryCols']:['cmsxDesktopPlantCols','cmsxDesktopVegCols','cmsxDesktopGroceryCols'];
+   [p,v,g].forEach((root,i)=>{if(root){root.style.setProperty('display','grid','important');root.style.setProperty('grid-template-columns','repeat('+Math.max(1,Math.min(4,Number(c[gridCols[i]]|| (mobile?2:3))))+',minmax(0,1fr))','important');root.querySelectorAll('.plant img').forEach(img=>img.style.setProperty('height',(Number(c.cmsxProductImageHeight)||120)+'px','important'));}});
+   document.body.classList.toggle('cmsx-card-square',c.cmsxCardStyle==='square');
+   document.body.classList.toggle('cmsx-card-shadow',c.cmsxCardStyle==='shadow');
+   if(c.cmsxThemeColor){document.documentElement.style.setProperty('--green',c.cmsxThemeColor);document.documentElement.style.setProperty('--primary',c.cmsxThemeColor);}
    document.body.classList.toggle('cmsx-compact-mobile',!!c.cmsxMobileCompact);
+   const preview=$('cmsxDesignPreview');if(preview){preview.innerHTML='';preview.style.background=c.cmsxThemeColor||'#087a4b';preview.style.color='#fff';preview.style.backgroundImage=c.cmsxHeroImageUrl?'linear-gradient(90deg,rgba(4,55,35,.82),rgba(4,55,35,.25)),url("'+String(c.cmsxHeroImageUrl).replace(/[\"\\]/g,'')+'")':'';preview.style.backgroundSize='cover';preview.innerHTML='<strong>'+escapeHtml(c.cmsxHomeTitle||'आपकी नर्सरी का होमपेज')+'</strong><p>'+escapeHtml(c.cmsxHomeSubtitle||'यहाँ आपके होमपेज का छोटा परिचय दिखेगा')+'</p><small>उत्पाद कार्ड: '+(mobile?c.cmsxMobilePlantCols:c.cmsxDesktopPlantCols)+' कॉलम</small>';}
+
  }
  function escapeHtml(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
  async function loadRemote(){try{if(typeof db==='undefined'||!db.from)throw new Error('Supabase क्लाइंट उपलब्ध नहीं');const {data,error}=await db.from('site_settings').select('config').eq('id','public').maybeSingle();if(error)throw error;if(data&&data.config){const merged=Object.assign({},cfg(),data.config);setCfg(merged);fill(merged);if(typeof window.applySiteConfigToUI==='function')window.applySiteConfigToUI();apply(merged);status('☁️ डेटाबेस से सेटिंग सफलतापूर्वक लोड हुई।','ok');}else status('डेटाबेस टेबल में public सेटिंग नहीं मिली। SQL चलाकर सेव करें।','err');}catch(e){status('डेटाबेस सिंक उपलब्ध नहीं: '+(e.message||e)+' | अभी इस डिवाइस की सेव सेटिंग लागू है।','err');}}
