@@ -2102,7 +2102,7 @@ body.info-fullscreen-open > main > .nav-page-open {
           <input id="adminStockSearchInput" type="search" placeholder="🔍 पौधा या सब्ज़ी खोजें…">
         </div>
       </div>
-      <div class="stock-category-columns">
+      <div class="stock-category-columns" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))!important">
         <section class="stock-category-card">
           <div class="admin-col-header">
             <h3>🌱 नर्सरी के पौधे</h3>
@@ -2116,6 +2116,13 @@ body.info-fullscreen-open > main > .nav-page-open {
             <span class="admin-count-pill" id="vegStockCountBadge">0 किस्में</span>
           </div>
           <div id="ownerVegStockList">लोड हो रहा है…</div>
+        </section>
+        <section class="stock-category-card">
+          <div class="admin-col-header">
+            <h3>🛒 किराना व केक</h3>
+            <span class="admin-count-pill" id="groceryStockCountBadge">0 किस्में</span>
+          </div>
+          <div id="ownerGroceryStockList">लोड हो रहा है…</div>
         </section>
       </div>
     </div>
@@ -2274,7 +2281,7 @@ body.info-fullscreen-open > main > .nav-page-open {
       </div>
 
       <div id="manageViewEdit" class="manage-view">
-        <div class="manage-category-columns">
+        <div class="manage-category-columns" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))!important">
           <div class="manage-category-card">
             <div class="admin-col-header"><h3>🌱 पौधे (कीमत / फोटो बदलें)</h3></div>
             <div id="adminPlantEditorPlant">लोड हो रहा है…</div>
@@ -2283,11 +2290,15 @@ body.info-fullscreen-open > main > .nav-page-open {
             <div class="admin-col-header"><h3>🥬 सब्जियाँ (कीमत / फोटो बदलें)</h3></div>
             <div id="adminPlantEditorVeg">लोड हो रहा है…</div>
           </div>
+          <div class="manage-category-card">
+            <div class="admin-col-header"><h3>🛒 किराना व केक (कीमत / फोटो बदलें)</h3></div>
+            <div id="adminPlantEditorGrocery">लोड हो रहा है…</div>
+          </div>
         </div>
       </div>
 
       <div id="manageViewList" class="manage-view">
-        <div class="manage-category-columns">
+        <div class="manage-category-columns" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))!important">
           <div class="manage-category-card">
             <div class="admin-col-header"><h3>🌱 सभी पौधे सूची</h3></div>
             <div id="adminPlantSimpleListPlant">लोड हो रहा है…</div>
@@ -2295,6 +2306,10 @@ body.info-fullscreen-open > main > .nav-page-open {
           <div class="manage-category-card">
             <div class="admin-col-header"><h3>🥬 सभी सब्जियाँ सूची</h3></div>
             <div id="adminPlantSimpleListVeg">लोड हो रहा है…</div>
+          </div>
+          <div class="manage-category-card">
+            <div class="admin-col-header"><h3>🛒 सभी किराना व केक सूची</h3></div>
+            <div id="adminPlantSimpleListGrocery">लोड हो रहा है…</div>
           </div>
         </div>
       </div>
@@ -3322,7 +3337,9 @@ async function loadPlants() {
         : `<div style="height:148px;display:flex;align-items:center;justify-content:center;background:#ecfdf5;font-size:42px;border-radius:12px">${veg?'🥬':'🌱'}</div>`;
 
       let stockDisplay = '';
-      if (veg && isGram) {
+      if (grocery) {
+        stockDisplay = `${p.stock_quantity} पीस`;
+      } else if (veg && isGram) {
         const stockKg = Number(p.stock_quantity) || 0;
         const stockGrams = Math.round(stockKg * 1000);
         stockDisplay = stockGrams >= 1000 ? `${stockKg} किलो (${stockGrams}g)` : `${stockGrams} ग्राम`;
@@ -4213,11 +4230,13 @@ async function loadAdminAll() {
     const orders = ordersRes.data || [];
     cachedAdminOrders = orders;
 
-    const pList = items.filter(x => !isVeg(x));
-    const vList = items.filter(x => isVeg(x));
+    const gListItems = items.filter(x => isGrocery(x));
+    const vListItems = items.filter(x => isVeg(x) && !isGrocery(x));
+    const pList = items.filter(x => !isVeg(x) && !isGrocery(x));
 
     const totalPlantStock = pList.reduce((sum, x) => sum + (Number(x.stock_quantity) || 0), 0);
-    const totalVegStock = vList.reduce((sum, x) => sum + (Number(x.stock_quantity) || 0), 0);
+    const totalVegStock = vListItems.reduce((sum, x) => sum + (Number(x.stock_quantity) || 0), 0);
+    const totalGroceryStock = gListItems.reduce((sum, x) => sum + (Number(x.stock_quantity) || 0), 0);
 
     const todayOrders = orders.filter(o => getISTDate(o.created_at) === todayStr);
     const pendingOrders = orders.filter(o => o.status === 'pending');
@@ -4236,8 +4255,10 @@ async function loadAdminAll() {
 
     const pBadge = document.getElementById('plantStockCountBadge');
     const vBadge = document.getElementById('vegStockCountBadge');
+    const gBadge = document.getElementById('groceryStockCountBadge');
     if (pBadge) pBadge.textContent = `${pList.length} किस्में (${totalPlantStock} पौधे)`;
-    if (vBadge) vBadge.textContent = `${vList.length} किस्में (${totalVegStock} किलो)`;
+    if (vBadge) vBadge.textContent = `${vListItems.length} किस्में (${totalVegStock} किलो)`;
+    if (gBadge) gBadge.textContent = `${gListItems.length} किस्में (${totalGroceryStock} पीस)`;
 
     statsBox.innerHTML = `
       <div class="metric-grid">
@@ -4300,7 +4321,9 @@ async function loadAdminAll() {
 
     const makeStockRow = x => {
       const isAvailable = x.is_active === true;
-      const unit = isVeg(x) ? 'किलो/ग्राम' : 'पौधा';
+      const grocery = isGrocery(x);
+      const veg = isVeg(x);
+      const unit = grocery ? 'पीस' : (veg ? 'किलो/ग्राम' : 'पौधा');
       const inputId = 'stock-input-' + x.id;
       const imgThumb = x.image_url 
         ? `<img src="${safe(x.image_url)}" alt="" style="width:52px;height:52px;object-fit:cover;border-radius:10px;background:#f1f7ed;border:1px solid #dcebe0;flex-shrink:0">`
@@ -4332,7 +4355,9 @@ async function loadAdminAll() {
     };
 
     document.getElementById('ownerPlantStockList').innerHTML = pList.map(makeStockRow).join('');
-    document.getElementById('ownerVegStockList').innerHTML = vList.map(makeStockRow).join('');
+    document.getElementById('ownerVegStockList').innerHTML = vListItems.map(makeStockRow).join('');
+    const gStockEl = document.getElementById('ownerGroceryStockList');
+    if (gStockEl) gStockEl.innerHTML = gListItems.map(makeStockRow).join('');
 
   } catch (err) {
     statsBox.innerHTML = '<div class="status">डेटा लोड नहीं हुआ: ' + err.message + '</div>';
@@ -4669,11 +4694,16 @@ async function renderAdminEdit() {
   const { data } = await db.from('plants').select('*').order('name');
   const pBox = document.getElementById('adminPlantEditorPlant');
   const vBox = document.getElementById('adminPlantEditorVeg');
-  pBox.innerHTML = ''; vBox.innerHTML = '';
+  const gBox = document.getElementById('adminPlantEditorGrocery');
+  if (pBox) pBox.innerHTML = '';
+  if (vBox) vBox.innerHTML = '';
+  if (gBox) gBox.innerHTML = '';
 
   (data || []).forEach(p => {
+    const grocery = isGrocery(p);
     const veg = isVeg(p);
-    const target = veg ? vBox : pBox;
+    const target = grocery ? gBox : (veg ? vBox : pBox);
+    const stockUnitLabel = grocery ? 'पीस' : (veg ? 'किलो' : 'पौधे');
     const row = document.createElement('div');
     row.className = 'admin-pro-row admin-edit-pro-card';
     const imgHtml = p.image_url
@@ -4698,7 +4728,7 @@ async function renderAdminEdit() {
           <input class="ep" type="number" step="0.5" value="${p.selling_price}" style="margin:0;padding:7px 9px;font-weight:800">
         </div>
         <div>
-          <label style="font-size:11px;margin:0 0 3px;color:var(--muted)">📦 नया स्टॉक (${veg?'किलो':'पौधे'})</label>
+          <label style="font-size:11px;margin:0 0 3px;color:var(--muted)">📦 नया स्टॉक (${stockUnitLabel})</label>
           <input class="es" type="number" step="${veg?'0.5':'1'}" value="${p.stock_quantity}" style="margin:0;padding:7px 9px;font-weight:800">
         </div>
         <div style="grid-column:1/-1">
@@ -4752,29 +4782,33 @@ async function renderAdminList() {
   const { data } = await db.from('plants').select('*').order('name');
   const items = data || [];
   const make = arr => arr.length ? arr.map(x => {
+    const grocery = isGrocery(x);
     const veg = isVeg(x);
+    const unitText = grocery ? 'पीस' : (veg ? 'किलो' : 'पौधे');
     const isAvailable = x.is_active && Number(x.stock_quantity) > 0;
     const thumb = x.image_url
       ? `<img src="${safe(x.image_url)}" alt="" style="width:46px;height:46px;object-fit:cover;border-radius:10px;border:1px solid #dcebe0;flex-shrink:0">`
-      : `<div style="width:46px;height:46px;border-radius:10px;background:#ecfdf5;border:1px solid #d1fae5;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${veg?'🥬':'🌱'}</div>`;
+      : `<div style="width:46px;height:46px;border-radius:10px;background:#ecfdf5;border:1px solid #d1fae5;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${grocery?'🛒':(veg?'🥬':'🌱')}</div>`;
     return `
       <div class="stock-row admin-pro-row">
         <div style="display:flex;align-items:center;gap:10px;min-width:0">
           ${thumb}
           <div style="min-width:0">
             <strong style="font-size:14.5px;color:#123b27;display:block">${safe(x.name)}</strong>
-            <small style="color:var(--muted);font-weight:700">${safe(x.variety || (veg ? 'सब्ज़ी' : 'पौधा'))}</small>
+            <small style="color:var(--muted);font-weight:700">${safe(x.variety || (grocery ? 'किराना/केक' : (veg ? 'सब्ज़ी' : 'पौधा')))}</small>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
           <span class="admin-price-chip">₹${Number(x.selling_price).toFixed(2)}</span>
-          <span class="stock-count">${x.stock_quantity} ${veg?'किलो':'पौधे'}</span>
+          <span class="stock-count">${x.stock_quantity} ${unitText}</span>
           <span class="admin-status-dot ${isAvailable ? 'online' : 'offline'}">${isAvailable ? 'उपलब्ध' : 'Sold Out'}</span>
         </div>
       </div>`;
   }).join('') : '<div class="admin-empty-state"><p>कोई उत्पाद नहीं मिला।</p></div>';
-  document.getElementById('adminPlantSimpleListPlant').innerHTML = make(items.filter(x => !isVeg(x)));
-  document.getElementById('adminPlantSimpleListVeg').innerHTML = make(items.filter(x => isVeg(x)));
+  document.getElementById('adminPlantSimpleListPlant').innerHTML = make(items.filter(x => !isVeg(x) && !isGrocery(x)));
+  document.getElementById('adminPlantSimpleListVeg').innerHTML = make(items.filter(x => isVeg(x) && !isGrocery(x)));
+  const gListEl = document.getElementById('adminPlantSimpleListGrocery');
+  if (gListEl) gListEl.innerHTML = make(items.filter(x => isGrocery(x)));
 }
 
 document.getElementById('customerTrackingNav')?.addEventListener('click', (e) => {
