@@ -3352,7 +3352,7 @@ async function loadPlants() {
           ${isSoldOut ? '<span class="plant-badge-soldout">' + (cfg.shopStatus === 'closed' ? '🔒 बंद है' : '❌ समाप्त') + '</span>' : ''}
           ${imgHtml}
           <h3>${safe(p.name)}</h3>
-          <div><span class="price-tag">₹${Number(p.selling_price).toFixed(2)} / ${veg ? (isGram ? 'किलो (ग्राम चुनें)' : 'किलो') : 'पौधा'}</span></div>
+          <div><span class="price-tag">₹${Number(p.selling_price).toFixed(2)} / ${grocery ? 'पीस/पैक' : (veg ? (isGram ? 'किलो (ग्राम चुनें)' : 'किलो') : 'पौधा')}</span></div>
           <p class="stock-text">स्टॉक: ${isSoldOut ? '<b style="color:#dc2626">0 उपलब्ध</b>' : stockDisplay}</p>
         </div>
 
