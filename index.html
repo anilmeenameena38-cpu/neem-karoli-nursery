@@ -1517,7 +1517,8 @@ body > main::after{
     margin-right:0 !important;
   }
   body > main > #viewPlantCategory,
-  body > main > #viewVegCategory{padding:20px !important;}
+  body > main > #viewVegCategory,
+  body > main > #viewGroceryCategory{padding:20px !important;}
   body > main #plantOnlyList.plants,
   body > main #vegOnlyList.plants{
     display:grid !important;
@@ -1844,9 +1845,10 @@ body.info-fullscreen-open > main > .nav-page-open {
   </section>
 
   <!-- मोबाइल पर पौधे और ताजी सब्जियाँ अलग टैब में -->
-  <div class="store-view-tabs" id="storeViewTabs" role="tablist" aria-label="खरीदारी का प्रकार">
-    <button type="button" class="store-view-tab active" id="showPlantsTab" role="tab" aria-selected="true" aria-controls="viewPlantCategory">🌱 नर्सरी के पौधे</button>
-    <button type="button" class="store-view-tab" id="showVegTab" role="tab" aria-selected="false" aria-controls="viewVegCategory">🧺 ताजी सब्जियाँ</button>
+  <div class="store-view-tabs" id="storeViewTabs" role="tablist" aria-label="खरीदारी का प्रकार" style="grid-template-columns:repeat(3,minmax(0,1fr))!important">
+    <button type="button" class="store-view-tab active" id="showPlantsTab" role="tab" aria-selected="true" aria-controls="viewPlantCategory">🌱 पौधे</button>
+    <button type="button" class="store-view-tab" id="showVegTab" role="tab" aria-selected="false" aria-controls="viewVegCategory">🧺 सब्ज़ियाँ</button>
+    <button type="button" class="store-view-tab" id="showGroceryTab" role="tab" aria-selected="false" aria-controls="viewGroceryCategory">🛒 किराना व केक</button>
   </div>
 
   <!-- पौधे श्रेणी व्यू -->
@@ -1856,6 +1858,15 @@ body.info-fullscreen-open > main > .nav-page-open {
       <small style="color:var(--muted);font-weight:700">कीमत प्रति पौधा</small>
     </div>
     <div id="plantOnlyList" class="plants">पौधों की सूची लोड हो रही है…</div>
+  </section>
+
+  <!-- किराना व बेकरी श्रेणी व्यू -->
+  <section class="card" id="viewGroceryCategory">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin:12px 0 8px">
+      <h2 style="margin:0">🛒 किराना स्टोर, केक व कोल्ड ड्रिंक्स</h2>
+      <small style="color:var(--muted);font-weight:700">प्रति पीस / किलो / पैक</small>
+    </div>
+    <div id="groceryOnlyList" class="plants">किराना आइटम लोड हो रहे हैं…</div>
   </section>
 
   <!-- सब्जियाँ श्रेणी व्यू -->
@@ -2121,6 +2132,7 @@ body.info-fullscreen-open > main > .nav-page-open {
       <div class="plant-manage-buttons">
         <button type="button" class="plant-manage-button active" data-manage-view="add-plant">🌱 नया पौधा जोड़ें</button>
         <button type="button" class="plant-manage-button" data-manage-view="add-veg">🥬 नई सब्ज़ी जोड़ें</button>
+        <button type="button" class="plant-manage-button" data-manage-view="add-grocery">🛒 किराना/केक जोड़ें</button>
         <button type="button" class="plant-manage-button" data-manage-view="edit">✏️ कीमत / फोटो बदलें</button>
         <button type="button" class="plant-manage-button" data-manage-view="list">📋 सभी उत्पाद सूची</button>
       </div>
@@ -2215,6 +2227,49 @@ body.info-fullscreen-open > main > .nav-page-open {
             <button type="submit" class="admin-primary-submit">💾 नई सब्ज़ी सेव व पब्लिश करें</button>
           </form>
           <div id="newVegOnlyStatus" class="status" style="display:none;margin-top:10px"></div>
+        </div>
+      </div>
+
+      <div id="manageViewAddGrocery" class="manage-view">
+        <div class="admin-subcard">
+          <div class="admin-col-header">
+            <h3>🛒 किराना, केक व कोल्ड ड्रिंक वेबसाइट में जोड़ें</h3>
+            <span class="admin-count-pill">पीस / पैक बिक्री</span>
+          </div>
+          <form id="newGroceryOnlyForm">
+            <div class="admin-form-grid">
+              <div>
+                <label>🛒 आइटम का नाम *</label>
+                <input id="gName" required placeholder="जैसे बर्थडे केक, कोका-कोला 2L, स्प्राइट">
+              </div>
+              <div>
+                <label>🏷️ कैटेगरी / प्रकार</label>
+                <select id="gCategory"><option value="किराना स्टोर">किराना स्टोर (Grocery)</option><option value="केक & बेकरी">बर्थडे केक & बेकरी (Cakes & Bakery)</option><option value="कोल्ड ड्रिंक्स">कोल्ड ड्रिंक (Cold Drinks)</option></select>
+              </div>
+              <div>
+                <label>✨ ब्रांड / विवरण (वैकल्पिक)</label>
+                <input id="gVariety" placeholder="जैसे 1kg Chocolate Cake / Coca-Cola">
+              </div>
+              <div>
+                <label>💰 कीमत प्रति पीस/पैक (₹) *</label>
+                <input id="gPrice" type="number" min="0" step="0.01" required placeholder="जैसे 450">
+              </div>
+              <div>
+                <label>📦 उपलब्ध स्टॉक (पीस) *</label>
+                <input id="gStock" type="number" min="0" step="1" required value="50">
+              </div>
+              <div class="full-span">
+                <label>📷 आइटम की साफ फोटो</label>
+                <input id="gImage" type="file" accept="image/*">
+              </div>
+              <div class="full-span">
+                <label>📝 संक्षिप्त विवरण (वैकल्पिक)</label>
+                <textarea id="gDesc" rows="2" placeholder="स्वाद, मात्रा या विशेषता…"></textarea>
+              </div>
+            </div>
+            <button type="submit" class="admin-primary-submit">💾 नया किराना/केक आइटम सेव व पब्लिश करें</button>
+          </form>
+          <div id="newGroceryOnlyStatus" class="status" style="display:none;margin-top:10px"></div>
         </div>
       </div>
 
@@ -3178,7 +3233,19 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
 }
 
 function safe(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function isVeg(p) { return /सब्जी|सब्ज़ी|veg|vegetable/i.test(String(p && p.category || '')); }
+function isGrocery(p) {
+  const cat = String(p && p.category || '').toLowerCase();
+  const name = String(p && p.name || '').toLowerCase();
+  return cat.includes('किराना') || cat.includes('grocery') || cat.includes('cake') || cat.includes('drink') || cat.includes('बेकरी') ||
+         /केक|कोल्ड ड्रिंक|coca-cola|sprite|pepsi|thumbs up|fanta|cake|pastry|grocery|किराना|मसाला|तेल|चाय|चीनी/i.test(name + ' ' + cat);
+}
+function isVeg(p) {
+  if (isGrocery(p)) return false;
+  return /सब्जी|सब्ज़ी|veg|vegetable/i.test(String(p && p.category || ''));
+}
+function isPlant(p) {
+  return !isVeg(p) && !isGrocery(p);
+}
 
 // 🟢 चेक करने के लिए कि क्या यह ग्राम (जैसे धनिया, पुदीना) वाली सब्जी है
 function isGramVeg(p) {
@@ -3213,7 +3280,11 @@ async function loadPlants() {
     if (error) throw error;
     plants = data || [];
     pList.innerHTML = ''; vList.innerHTML = '';
+    const gList = document.getElementById('groceryOnlyList');
+    if (gList) gList.innerHTML = '';
+
     plants.forEach(p => {
+      const grocery = isGrocery(p);
       const veg = isVeg(p);
       const isGram = veg && isGramVeg(p);
       
@@ -3222,21 +3293,26 @@ async function loadPlants() {
       let initialVal = minPlantLimit;
       let unitLabelText = 'पौधे';
 
-      if (veg) {
+      if (grocery) {
+        unit = 'पीस/पैक';
+        stepVal = 1;
+        initialVal = 1;
+        unitLabelText = 'न्यूनतम 1 पीस';
+      } else if (veg) {
         if (isGram) {
           unit = 'किलो (ग्राम में)';
-          stepVal = 0.25; // 250 ग्राम (0.25 kg)
-          initialVal = 0.25; // डिफ़ॉल्ट 250 ग्राम
-          unitLabelText = 'किलो (जैसे 0.25=250g, 0.5=500g, 1=1kg)';
+          stepVal = 0.25;
+          initialVal = 0.25;
+          unitLabelText = 'किलो (जैसे 0.25=250g, 1=1kg)';
         } else {
           unit = 'किलो';
-          stepVal = 1; // 1 किलो
-          initialVal = 1; // डिफ़ॉल्ट 1 किलो
+          stepVal = 1;
+          initialVal = 1;
           unitLabelText = 'न्यूनतम 1 किलो';
         }
       }
 
-      const target = veg ? vList : pList;
+      const target = grocery ? gList : (veg ? vList : pList);
       const isSoldOut = (!p.is_active || Number(p.stock_quantity) <= 0 || cfg.shopStatus === 'closed');
       const card = document.createElement('div'); 
       card.className = 'plant' + (isSoldOut ? ' sold-out' : '');
@@ -3965,7 +4041,7 @@ document.querySelectorAll('.admin-tab').forEach(b => b.addEventListener('click',
 function showManageView(view) {
   document.querySelectorAll('.plant-manage-button').forEach(b => b.classList.toggle('active', b.dataset.manageView === view));
   document.querySelectorAll('.manage-view').forEach(v => v.classList.remove('active'));
-  const map = {'add-plant':'manageViewAddPlant','add-veg':'manageViewAddVeg','edit':'manageViewEdit','list':'manageViewList'};
+  const map = {'add-plant':'manageViewAddPlant','add-veg':'manageViewAddVeg','add-grocery':'manageViewAddGrocery','edit':'manageViewEdit','list':'manageViewList'};
   if (map[view]) document.getElementById(map[view]).classList.add('active');
   if (view === 'edit') renderAdminEdit();
   if (view === 'list') renderAdminList();
@@ -4003,6 +4079,35 @@ document.getElementById('newPlantOnlyForm').addEventListener('submit', async (e)
       await db.from('plants').update({image_url: url}).eq('id', data.id);
     }
     stat.textContent = '✅ पौधा सेव हो गया!';
+    e.target.reset();
+    loadPlants(); loadAdminAll();
+  } catch (err) { stat.textContent = 'त्रुटि: ' + err.message; }
+});
+
+
+document.getElementById('newGroceryOnlyForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const stat = document.getElementById('newGroceryOnlyStatus');
+  stat.style.display = 'block'; stat.textContent = 'किराना/केक आइटम सेव हो रहा है…';
+  try {
+    const file = document.getElementById('gImage').files?.[0];
+    const payload = {
+      name: document.getElementById('gName').value.trim(),
+      variety: document.getElementById('gVariety').value.trim() || 'स्टैंडर्ड पैक',
+      category: document.getElementById('gCategory').value,
+      selling_price: Number(document.getElementById('gPrice').value),
+      stock_quantity: Number(document.getElementById('gStock').value),
+      unit_type: 'pcs',
+      description: document.getElementById('gDesc').value.trim() || null,
+      is_active: true
+    };
+    const { data, error } = await db.from('plants').insert(payload).select('id').single();
+    if (error) throw error;
+    if (file) {
+      const url = await uploadPhoto(file, data.id);
+      await db.from('plants').update({image_url: url}).eq('id', data.id);
+    }
+    stat.textContent = '✅ किराना/केक आइटम सफलतापूर्वक सेव हो गया!';
     e.target.reset();
     loadPlants(); loadAdminAll();
   } catch (err) { stat.textContent = 'त्रुटि: ' + err.message; }
@@ -5362,31 +5467,43 @@ loadPlants();
   const vegSection = document.getElementById('viewVegCategory');
   if (!plantBtn || !vegBtn || !tabs || !plantSection || !vegSection) return;
 
+  const groceryBtn = document.getElementById('showGroceryTab');
+  const grocerySection = document.getElementById('viewGroceryCategory');
+
   function setStoreView(view) {
+    const isPlants = view === 'plants';
     const isVeg = view === 'veg';
+    const isGrocery = view === 'grocery';
     const isMobile = window.matchMedia('(max-width:700px)').matches;
 
+    document.body.classList.toggle('store-view-plants', isPlants);
     document.body.classList.toggle('store-view-veg', isVeg);
-    document.body.classList.toggle('store-view-plants', !isVeg);
-    plantBtn.classList.toggle('active', !isVeg);
-    vegBtn.classList.toggle('active', isVeg);
-    plantBtn.setAttribute('aria-selected', String(!isVeg));
-    vegBtn.setAttribute('aria-selected', String(isVeg));
+    document.body.classList.toggle('store-view-grocery', isGrocery);
 
-    // On phones show one category at a time; on desktop retain the existing two-section layout.
+    plantBtn.classList.toggle('active', isPlants);
+    vegBtn.classList.toggle('active', isVeg);
+    if (groceryBtn) groceryBtn.classList.toggle('active', isGrocery);
+
+    plantBtn.setAttribute('aria-selected', String(isPlants));
+    vegBtn.setAttribute('aria-selected', String(isVeg));
+    if (groceryBtn) groceryBtn.setAttribute('aria-selected', String(isGrocery));
+
     if (isMobile) {
-      plantSection.style.setProperty('display', isVeg ? 'none' : 'block', 'important');
+      plantSection.style.setProperty('display', isPlants ? 'block' : 'none', 'important');
       vegSection.style.setProperty('display', isVeg ? 'block' : 'none', 'important');
+      if (grocerySection) grocerySection.style.setProperty('display', isGrocery ? 'block' : 'none', 'important');
       tabs.style.setProperty('display', 'grid', 'important');
     } else {
       plantSection.style.removeProperty('display');
       vegSection.style.removeProperty('display');
+      if (grocerySection) grocerySection.style.removeProperty('display');
       tabs.style.setProperty('display', 'none', 'important');
     }
   }
 
   plantBtn.addEventListener('click', function(){ setStoreView('plants'); });
   vegBtn.addEventListener('click', function(){ setStoreView('veg'); });
+  if (groceryBtn) groceryBtn.addEventListener('click', function(){ setStoreView('grocery'); });
   setStoreView('plants');
 
   // Keep the appropriate layout if the device is rotated or resized.
