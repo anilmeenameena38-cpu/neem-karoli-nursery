@@ -3470,20 +3470,24 @@ async function loadPlants() {
 
         
         <!-- Per-Product Add-ons (Disposables, Snacks, etc.) -->
-        ${(p.addons_text && p.addons_text.trim()) ? `
-        <div class="product-addon-selector" style="margin:6px 0;padding:6px 8px;background:#fefce8;border:1px dashed #fde047;border-radius:10px;text-align:left;font-size:12px">
-          <div style="font-weight:800;color:#854d0e;margin-bottom:3px">🥤 साथ में जोड़ें (Add-ons):</div>
-          ${p.addons_text.split(',').map(part => {
-            const [name, price] = part.split(':').map(s => s.trim());
-            if (!name) return '';
-            const pVal = Number(price) || 0;
-            return `
-              <label style="margin:2px 0;font-weight:700;color:#854d0e;display:flex;align-items:center;gap:5px">
-                <input type="checkbox" class="card-addon-chk" data-addon-name="${safe(name)}" data-addon-price="${pVal}" style="margin:0;width:15px;height:15px"> ${safe(name)} [+₹${pVal}]
-              </label>
-            `;
-          }).join('')}
-        </div>` : ''}
+        ${(() => {
+          const addText = localStorage.getItem('nursery_addons_' + p.id) || '';
+          if (!addText.trim()) return '';
+          return `
+          <div class="product-addon-selector" style="margin:6px 0;padding:6px 8px;background:#fefce8;border:1px dashed #fde047;border-radius:10px;text-align:left;font-size:12px">
+            <div style="font-weight:800;color:#854d0e;margin-bottom:3px">🥤 साथ में जोड़ें (Add-ons):</div>
+            ${addText.split(',').map(part => {
+              const [name, price] = part.split(':').map(s => s.trim());
+              if (!name) return '';
+              const pVal = Number(price) || 0;
+              return `
+                <label style="margin:2px 0;font-weight:700;color:#854d0e;display:flex;align-items:center;gap:5px">
+                  <input type="checkbox" class="card-addon-chk" data-addon-name="${safe(name)}" data-addon-price="${pVal}" style="margin:0;width:15px;height:15px"> ${safe(name)} [+₹${pVal}]
+                </label>
+              `;
+            }).join('')}
+          </div>`;
+        })()}
 
         <div class="card-stepper-box">
           <div class="stepper-label">
@@ -4866,7 +4870,7 @@ async function renderAdminEdit() {
         </div>
         <div style="grid-column:1/-1">
           <label style="font-size:11px;margin:0 0 3px;color:var(--muted)">🥤 साथ के एड-ऑन्स (जैसे: डिस्पोजल ग्लास:10, कुरकुरा:15)</label>
-          <input class="ea" type="text" value="${safe(p.addons_text || '')}" placeholder="डिस्पोजल ग्लास:10, कुरकुरा:15" style="margin:0;padding:7px 9px;font-weight:700">
+          <input class="ea" type="text" value="${safe(localStorage.getItem('nursery_addons_' + p.id) || '')}" placeholder="डिस्पोजल ग्लास:10, कुरकुरा:15" style="margin:0;padding:7px 9px;font-weight:700">
         </div>
         <div style="grid-column:1/-1">
           <label style="font-size:11px;margin:0 0 3px;color:var(--muted)">📷 नई फोटो अपलोड करें (वैकल्पिक)</label>
