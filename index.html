@@ -2761,104 +2761,6 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
         .footer{text-align:center;margin-top:24px;font-size:12px;border-top:1px solid #ddd;padding-top:10px}
       
 
-/* V7 FINAL OVERRIDE: keep admin login above the header/menu and align mobile header in one row */
-#owner.login-visible{
-  z-index:20000 !important;
-}
-@media (max-width:700px){
-  header#mainHeader{
-    display:flex !important;
-    flex-direction:row !important;
-    flex-wrap:nowrap !important;
-    align-items:center !important;
-    justify-content:flex-start !important;
-    gap:9px !important;
-    min-height:64px !important;
-    padding:10px 12px !important;
-    text-align:left !important;
-  }
-  header#mainHeader > #menuToggleButton{
-    display:inline-flex !important;
-    flex:0 0 auto !important;
-    order:0 !important;
-    margin:0 !important;
-    white-space:nowrap !important;
-  }
-  header#mainHeader > #headerNurseryName{
-    display:block !important;
-    flex:1 1 auto !important;
-    order:1 !important;
-    min-width:0 !important;
-    width:auto !important;
-    max-width:none !important;
-    margin:0 !important;
-    padding:0 !important;
-    text-align:left !important;
-    font-size:13px !important;
-    line-height:1.25 !important;
-    overflow-wrap:anywhere !important;
-    word-break:normal !important;
-  }
-  header#mainHeader > .header-badge-box,
-  header#mainHeader > #headerNurseryTagline,
-  header#mainHeader > #headerNurseryAddress,
-  header#mainHeader > div:not(.header-badge-box){
-    display:none !important;
-  }
-  header#mainHeader > #mainNavigation{
-    position:absolute !important;
-    display:none;
-    top:100% !important;
-    left:10px !important;
-    right:10px !important;
-    width:auto !important;
-    z-index:10000 !important;
-  }
-  header#mainHeader > #mainNavigation.menu-open{display:flex !important;}
-}
-
-/* V17: Admin workspace open रहते मोबाइल header से toggle menu पूरी तरह हटाएँ */
-@media screen and (max-width:700px){
-  body.admin-panel-open header#mainHeader #menuToggleButton,
-  body.admin-authenticated header#mainHeader #menuToggleButton{
-    display:none !important;
-    visibility:hidden !important;
-    pointer-events:none !important;
-    width:0 !important;
-    min-width:0 !important;
-    padding:0 !important;
-    margin:0 !important;
-    border:0 !important;
-  }
-  body.admin-panel-open header#mainHeader #mainNavigation,
-  body.admin-authenticated header#mainHeader #mainNavigation{
-    display:none !important;
-    visibility:hidden !important;
-    pointer-events:none !important;
-  }
-  /* मेनू हटने के बाद लोगो और नाम को बाईं ओर संतुलित रखें */
-  body.admin-panel-open header#mainHeader,
-  body.admin-authenticated header#mainHeader{
-    grid-template-columns:56px minmax(0,1fr) !important;
-    column-gap:10px !important;
-  }
-  body.admin-panel-open header#mainHeader #headerBrandLogo,
-  body.admin-authenticated header#mainHeader #headerBrandLogo{
-    grid-column:1 !important;
-    grid-row:1 / span 2 !important;
-    justify-self:start !important;
-  }
-  body.admin-panel-open header#mainHeader #headerNurseryName,
-  body.admin-authenticated header#mainHeader #headerNurseryName{
-    grid-column:2 !important;
-    grid-row:1 !important;
-  }
-  body.admin-panel-open header#mainHeader #headerNurseryTagline,
-  body.admin-authenticated header#mainHeader #headerNurseryTagline{
-    grid-column:2 !important;
-    grid-row:2 !important;
-  }
-}
 
 </style>
     </head>
@@ -3629,10 +3531,7 @@ document.getElementById('adminPanelNav').addEventListener('click', () => {
   ownerModal.classList.add('login-visible');
   // मोबाइल पर एडमिन वर्कस्पेस को नर्सरी हेडर के ठीक नीचे खोलें।
   document.body.classList.add('admin-panel-open');
-  const adminHeader = document.getElementById('mainHeader');
-  if (adminHeader && window.matchMedia('(max-width:700px)').matches) {
-    ownerModal.style.setProperty('--admin-header-height', Math.ceil(adminHeader.getBoundingClientRect().height) + 'px');
-  }
+  if (typeof window.syncAdminHeaderHeight === 'function') window.syncAdminHeaderHeight();
   initAudioContext();
   const sel = document.getElementById('ringtoneSelector');
   if (sel) sel.value = selectedRingtone;
@@ -3655,6 +3554,9 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   if (error || data.user.id !== OWNER_UID) { stat.textContent = 'गलत लॉगिन!'; return; }
   // सफल लॉगिन के बाद भी नेविगेशन मेनू बंद ही रहे।
   document.body.classList.add('admin-authenticated');
+  const adminNavBtn = document.getElementById('adminPanelNav');
+  if (adminNavBtn) adminNavBtn.textContent = '⚙️ एडमिन पैनल खोलें';
+  if (typeof window.syncAdminHeaderHeight === 'function') setTimeout(window.syncAdminHeaderHeight, 30);
   if (window.closeNurseryMenu) window.closeNurseryMenu();
   const navMenuAfterLogin = document.getElementById('mainNavigation');
   const navButtonAfterLogin = document.getElementById('menuToggleButton');
@@ -4951,371 +4853,554 @@ loadPlants();
 })();
 </script>
 
-<style id="desktop-header-left-cleanup-v18">
-/* Desktop only: remove stray decorative items from the left header column.
-   Keep the menu, logo and nursery text aligned; mobile header is untouched. */
-@media screen and (min-width:701px) {
+<style id="unified-responsive-header-v32">
+/* V32: Unified Responsive Header & Modal/Admin Workspace Fix for Mobile, Tablet & PC */
+header#mainHeader {
+  position: relative !important;
+  z-index: 1000 !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-bottom: 4px solid #facc15 !important;
+  border-radius: 0 0 18px 18px !important;
+  box-shadow: 0 5px 16px rgba(5, 70, 35, 0.22) !important;
+  overflow: visible !important;
+}
+header#mainHeader, header#mainHeader * {
+  box-sizing: border-box;
+}
+header#mainHeader > .header-badge-box,
+header#mainHeader::after {
+  display: none !important;
+  content: none !important;
+}
+header#mainHeader > #menuToggleButton {
+  position: relative !important;
+  z-index: 1002 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  margin: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+  border-radius: 11px !important;
+  background: linear-gradient(135deg, #ffffff, #ecfdf5) !important;
+  color: #075b35 !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16) !important;
+  touch-action: manipulation;
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+header#mainHeader > #menuToggleButton:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2) !important;
+}
+header#mainHeader > #headerBrandLogo {
+  display: block !important;
+  object-fit: contain !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  border: 2.5px solid #facc15 !important;
+  padding: 2px !important;
+  margin: 0 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25) !important;
+}
+header#mainHeader > #headerNurseryName,
+header#mainHeader > #headerNurseryTagline,
+header#mainHeader > #headerNurseryAddress,
+header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+  overflow-wrap: anywhere !important;
+}
+header#mainHeader > #headerNurseryName {
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.28) !important;
+}
+header#mainHeader > #headerNurseryTagline {
+  display: block !important;
+  color: #ecfdf5 !important;
+  font-weight: 700 !important;
+}
+header#mainHeader > #headerNurseryAddress {
+  color: #d1fae5 !important;
+}
+
+/* Navigation Dropdown */
+#mainNavigation {
+  position: absolute !important;
+  z-index: 12000 !important;
+  box-sizing: border-box !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 7px !important;
+  padding: 10px !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  border: 1px solid #b7e4c7 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 16px 38px rgba(4, 44, 22, 0.24) !important;
+  backdrop-filter: blur(12px) !important;
+  max-height: min(70vh, 500px) !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+}
+#mainNavigation:not(.menu-open) {
+  display: none !important;
+  pointer-events: none !important;
+}
+#mainNavigation.menu-open {
+  display: flex !important;
+  pointer-events: auto !important;
+}
+#mainNavigation a,
+#mainNavigation button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: 100% !important;
+  min-height: 42px !important;
+  padding: 10px 14px !important;
+  border: 1px solid #dcfce7 !important;
+  border-radius: 10px !important;
+  background: #f3fbf5 !important;
+  color: #075b35 !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  text-align: left !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+}
+#mainNavigation a:hover,
+#mainNavigation button:hover {
+  background: #10b981 !important;
+  color: #ffffff !important;
+}
+
+/* 1. Compact Mobile (<=380px) */
+@media screen and (max-width: 380px) {
   header#mainHeader {
-    grid-template-columns: max-content 82px minmax(240px,1fr) !important;
+    display: grid !important;
+    grid-template-columns: max-content 42px minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    align-items: center !important;
+    gap: 2px 7px !important;
+    min-height: 0 !important;
+    padding: 8px 9px !important;
+  }
+  header#mainHeader > #menuToggleButton {
+    grid-column: 1 !important;
+    grid-row: 1 / span 2 !important;
+    min-width: 0 !important;
+    min-height: 36px !important;
+    padding: 6px 8px !important;
+    font-size: 11px !important;
+    gap: 5px !important;
+  }
+  header#mainHeader > #headerBrandLogo {
+    grid-column: 2 !important;
+    grid-row: 1 / span 2 !important;
+    width: 40px !important;
+    height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
+    justify-self: center !important;
+  }
+  header#mainHeader > #headerNurseryName {
+    grid-column: 3 !important;
+    grid-row: 1 !important;
+    font-size: clamp(12px, 3.6vw, 14px) !important;
+    line-height: 1.2 !important;
+    align-self: end !important;
+  }
+  header#mainHeader > #headerNurseryTagline {
+    grid-column: 3 !important;
+    grid-row: 2 !important;
+    font-size: 9.5px !important;
+    line-height: 1.2 !important;
+    align-self: start !important;
+  }
+  header#mainHeader > #headerNurseryAddress,
+  header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) {
+    display: none !important;
+  }
+  #mainNavigation {
+    top: calc(100% + 5px) !important;
+    left: 8px !important;
+    right: 8px !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+}
+
+/* 2. Regular Mobile (381px - 700px) */
+@media screen and (min-width: 381px) and (max-width: 700px) {
+  header#mainHeader {
+    display: grid !important;
+    grid-template-columns: max-content 50px minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    align-items: center !important;
+    gap: 3px 9px !important;
+    min-height: 0 !important;
+    padding: 9px 11px !important;
+  }
+  header#mainHeader > #menuToggleButton {
+    grid-column: 1 !important;
+    grid-row: 1 / span 2 !important;
+    min-width: 0 !important;
+    min-height: 38px !important;
+    padding: 7px 10px !important;
+    font-size: 12px !important;
+  }
+  header#mainHeader > #headerBrandLogo {
+    grid-column: 2 !important;
+    grid-row: 1 / span 2 !important;
+    width: 48px !important;
+    height: 48px !important;
+    max-width: 48px !important;
+    max-height: 48px !important;
+    justify-self: center !important;
+  }
+  header#mainHeader > #headerNurseryName {
+    grid-column: 3 !important;
+    grid-row: 1 !important;
+    font-size: clamp(13.5px, 3.8vw, 16px) !important;
+    line-height: 1.22 !important;
+    align-self: end !important;
+  }
+  header#mainHeader > #headerNurseryTagline {
+    grid-column: 3 !important;
+    grid-row: 2 !important;
+    font-size: 10.5px !important;
+    line-height: 1.25 !important;
+    align-self: start !important;
+  }
+  header#mainHeader > #headerNurseryAddress,
+  header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) {
+    display: none !important;
+  }
+  #mainNavigation {
+    top: calc(100% + 5px) !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+}
+
+/* 3. Tablet (701px - 960px) */
+@media screen and (min-width: 701px) and (max-width: 960px) {
+  header#mainHeader {
+    display: grid !important;
+    grid-template-columns: max-content 62px minmax(0, 1fr) !important;
     grid-template-rows: auto auto auto auto !important;
     align-items: center !important;
-    column-gap: 14px !important;
-    row-gap: 4px !important;
+    gap: 3px 14px !important;
+    min-height: 108px !important;
+    padding: 12px 18px !important;
   }
   header#mainHeader > #menuToggleButton {
     grid-column: 1 !important;
     grid-row: 1 / span 4 !important;
-    justify-self: start !important;
-    align-self: center !important;
     width: auto !important;
-    min-width: 120px !important;
-    margin: 0 !important;
+    min-width: 122px !important;
+    min-height: 42px !important;
+    padding: 9px 13px !important;
+    font-size: 13.5px !important;
+    justify-self: start !important;
   }
   header#mainHeader > #headerBrandLogo {
     grid-column: 2 !important;
     grid-row: 1 / span 4 !important;
-    align-self: center !important;
+    width: 58px !important;
+    height: 58px !important;
+    max-width: 58px !important;
+    max-height: 58px !important;
+    justify-self: center !important;
   }
   header#mainHeader > #headerNurseryName {
-    grid-column: 3 !important; grid-row: 1 !important;
+    grid-column: 3 !important;
+    grid-row: 1 !important;
+    font-size: clamp(18px, 2.4vw, 23px) !important;
+    line-height: 1.22 !important;
   }
   header#mainHeader > #headerNurseryTagline {
-    grid-column: 3 !important; grid-row: 2 !important;
+    grid-column: 3 !important;
+    grid-row: 2 !important;
+    font-size: 12.5px !important;
   }
   header#mainHeader > #headerNurseryAddress {
-    grid-column: 3 !important; grid-row: 3 !important;
-  }
-  header#mainHeader > div:not(.header-badge-box) {
-    grid-column: 3 !important; grid-row: 4 !important;
-    justify-self: start !important;
-    margin: 0 !important;
-  }
-  header#mainHeader > .header-badge-box,
-  header#mainHeader::after {
-    display: none !important;
-    content: none !important;
-  }
-}
-</style>
-
-
-<style id="desktop-centered-header-store-menu-v19">
-/* Desktop-only visual refinement. Phone/tablet rules (<=700px) are untouched. */
-@media screen and (min-width:701px) {
-  /* Center the complete header group without changing its green branding. */
-  header#mainHeader {
-    display:grid !important;
-    grid-template-columns: 1fr max-content 76px minmax(320px, max-content) 1fr !important;
-    grid-template-rows:auto auto auto auto !important;
-    justify-content:center !important;
-    align-content:center !important;
-    align-items:center !important;
-    column-gap:14px !important;
-    row-gap:3px !important;
-    min-height:116px !important;
-    padding:14px 24px !important;
-    text-align:left !important;
-    position:relative !important;
-    overflow:visible !important;
-  }
-  header#mainHeader > #menuToggleButton {
-    grid-column:2 !important; grid-row:1 / span 4 !important;
-    justify-self:end !important; align-self:center !important;
-    width:132px !important; min-height:42px !important;
-    margin:0 !important; padding:10px 14px !important;
-    border:1px solid rgba(255,255,255,.75) !important;
-    border-radius:12px !important;
-    background:linear-gradient(135deg,#ffffff,#ecfdf5) !important;
-    color:#075b35 !important;
-    box-shadow:0 4px 12px rgba(0,0,0,.16) !important;
-    font-size:14px !important; font-weight:900 !important;
-    letter-spacing:.2px !important;
-    transition:transform .18s ease,box-shadow .18s ease !important;
-  }
-  header#mainHeader > #menuToggleButton:hover {
-    transform:translateY(-2px) !important;
-    box-shadow:0 7px 16px rgba(0,0,0,.2) !important;
-  }
-  header#mainHeader > #headerBrandLogo {
-    grid-column:3 !important; grid-row:1 / span 4 !important;
-    justify-self:center !important; align-self:center !important;
-    width:70px !important; height:70px !important;
-    margin:0 !important;
-  }
-  header#mainHeader > #headerNurseryName {
-    grid-column:4 !important; grid-row:1 !important;
-    justify-self:start !important; align-self:end !important;
-    margin:0 !important; text-align:left !important;
-    font-size:clamp(21px,2vw,28px) !important;
-    line-height:1.25 !important;
-  }
-  header#mainHeader > #headerNurseryTagline {
-    grid-column:4 !important; grid-row:2 !important;
-    justify-self:start !important; align-self:start !important;
-    margin:0 !important; text-align:left !important;
-    font-size:14px !important; line-height:1.35 !important;
-  }
-  header#mainHeader > #headerNurseryAddress {
-    grid-column:4 !important; grid-row:3 !important;
-    justify-self:start !important; align-self:start !important;
-    margin:0 !important; text-align:left !important;
+    grid-column: 3 !important;
+    grid-row: 3 !important;
+    font-size: 11.5px !important;
   }
   header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) {
-    grid-column:4 !important; grid-row:4 !important;
-    justify-self:start !important; align-self:start !important;
-    margin:0 !important;
+    grid-column: 3 !important;
+    grid-row: 4 !important;
+    display: block !important;
   }
-  header#mainHeader > .header-badge-box,
-  header#mainHeader::after { display:none !important; content:none !important; }
-
-  /* A tidy dropdown anchored to the menu button, with clear click targets. */
   #mainNavigation {
-    position:absolute !important;
-    top:calc(100% + 8px) !important;
-    left:calc(50% - 310px) !important;
-    right:auto !important;
-    width:290px !important;
-    max-width:calc(100vw - 32px) !important;
-    padding:12px !important;
-    gap:7px !important;
-    border:1px solid #b7e4c7 !important;
-    border-radius:16px !important;
-    background:rgba(255,255,255,.98) !important;
-    box-shadow:0 16px 38px rgba(4,44,22,.22) !important;
-    backdrop-filter:blur(12px) !important;
+    top: calc(100% + 7px) !important;
+    left: 18px !important;
+    right: auto !important;
+    width: 270px !important;
+    max-width: calc(100vw - 36px) !important;
   }
-  #mainNavigation a, #mainNavigation button {
-    min-height:43px !important;
-    padding:11px 14px !important;
-    border:1px solid #e0f2e5 !important;
-    border-radius:10px !important;
-    background:#f3fbf5 !important;
-    color:#075b35 !important;
-    font-size:14px !important;
-    font-weight:800 !important;
-    transition:background .15s ease, transform .15s ease !important;
-  }
-  #mainNavigation a:hover, #mainNavigation button:hover {
-    background:#d9f5e2 !important;
-    transform:translateX(2px) !important;
-  }
+}
 
-  /* Center the product panels and let the four-card row use a wide layout. */
+/* 4. Desktop / PC (>=961px) */
+@media screen and (min-width: 961px) {
+  header#mainHeader {
+    display: grid !important;
+    grid-template-columns: minmax(12px, 1fr) max-content 74px minmax(320px, 560px) minmax(12px, 1fr) !important;
+    grid-template-rows: auto auto auto auto !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px 16px !important;
+    min-height: 118px !important;
+    padding: 14px 24px !important;
+  }
+  header#mainHeader > #menuToggleButton {
+    grid-column: 2 !important;
+    grid-row: 1 / span 4 !important;
+    width: 138px !important;
+    min-height: 44px !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    justify-self: end !important;
+  }
+  header#mainHeader > #headerBrandLogo {
+    grid-column: 3 !important;
+    grid-row: 1 / span 4 !important;
+    width: 70px !important;
+    height: 70px !important;
+    max-width: 70px !important;
+    max-height: 70px !important;
+    justify-self: center !important;
+  }
+  header#mainHeader > #headerNurseryName {
+    grid-column: 4 !important;
+    grid-row: 1 !important;
+    font-size: clamp(21px, 2vw, 27px) !important;
+    line-height: 1.22 !important;
+  }
+  header#mainHeader > #headerNurseryTagline {
+    grid-column: 4 !important;
+    grid-row: 2 !important;
+    font-size: 14px !important;
+  }
+  header#mainHeader > #headerNurseryAddress {
+    grid-column: 4 !important;
+    grid-row: 3 !important;
+    font-size: 12px !important;
+  }
+  header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) {
+    grid-column: 4 !important;
+    grid-row: 4 !important;
+    display: block !important;
+  }
+  #mainNavigation {
+    top: calc(100% + 8px) !important;
+    width: 280px !important;
+    max-width: calc(100vw - 32px) !important;
+  }
+}
+
+/* 5. Desktop Product Grid & Main Container (>=701px) */
+@media screen and (min-width: 701px) {
   body > main {
-    width:calc(100% - 48px) !important;
-    max-width:1240px !important;
-    margin-left:auto !important;
-    margin-right:auto !important;
-    padding-left:20px !important;
-    padding-right:20px !important;
+    width: calc(100% - 48px) !important;
+    max-width: 1240px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
   }
   body > main #viewPlantCategory,
   body > main #viewVegCategory {
-    display:block !important;
-    width:100% !important;
-    max-width:none !important;
-    margin-left:auto !important;
-    margin-right:auto !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
   #plantOnlyList.plants, #vegOnlyList.plants {
-    display:grid !important;
-    width:100% !important;
-    max-width:none !important;
-    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-    gap:16px !important;
-    justify-content:center !important;
-    align-items:stretch !important;
+    display: grid !important;
+    width: 100% !important;
+    max-width: none !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 16px !important;
   }
   #plantOnlyList .plant, #vegOnlyList .plant {
-    width:100% !important; min-width:0 !important;
-    padding:12px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 12px !important;
   }
   #plantOnlyList .plant img, #vegOnlyList .plant img {
-    width:100% !important; height:180px !important;
-    object-fit:cover !important;
+    width: 100% !important;
+    height: 180px !important;
+    object-fit: cover !important;
   }
+}
+
+/* 6. Admin Panel Open State (Mobile + Tablet + PC) — Never overlaps Admin Panel! */
+/* Importantly, when Admin Panel is CLOSED (even if admin-authenticated is true), the menu button stays visible! */
+body.admin-authenticated:not(.admin-panel-open) header#mainHeader > #menuToggleButton {
+  display: inline-flex !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+body.admin-panel-open {
+  overflow: hidden !important;
+}
+body.admin-panel-open header#mainHeader {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 20010 !important;
+  display: grid !important;
+  grid-template-columns: minmax(8px, 1fr) 50px minmax(0, max-content) minmax(8px, 1fr) !important;
+  grid-template-rows: auto auto !important;
+  align-items: center !important;
+  column-gap: 10px !important;
+  row-gap: 2px !important;
+  min-height: 0 !important;
+  padding: 8px 14px !important;
+  border-radius: 0 0 14px 14px !important;
+}
+body.admin-panel-open header#mainHeader > #menuToggleButton,
+body.admin-panel-open header#mainHeader > #mainNavigation,
+body.admin-panel-open header#mainHeader > #headerNurseryAddress,
+body.admin-panel-open header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+body.admin-panel-open header#mainHeader > #headerBrandLogo {
+  grid-column: 2 !important;
+  grid-row: 1 / span 2 !important;
+  width: 46px !important;
+  height: 46px !important;
+  max-width: 46px !important;
+  max-height: 46px !important;
+}
+body.admin-panel-open header#mainHeader > #headerNurseryName {
+  grid-column: 3 !important;
+  grid-row: 1 !important;
+  font-size: clamp(14px, 2.2vw, 19px) !important;
+  line-height: 1.22 !important;
+}
+body.admin-panel-open header#mainHeader > #headerNurseryTagline {
+  grid-column: 3 !important;
+  grid-row: 2 !important;
+  font-size: clamp(10px, 1.4vw, 12.5px) !important;
+  line-height: 1.25 !important;
+}
+body.admin-panel-open #owner.login-visible {
+  display: block !important;
+  position: fixed !important;
+  top: var(--admin-header-height, 66px) !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  z-index: 20005 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding: 12px 12px calc(20px + env(safe-area-inset-bottom)) !important;
+  margin: 0 !important;
+  background: linear-gradient(180deg, #eaf5ed 0%, #f5f8f5 100%) !important;
+  box-sizing: border-box !important;
+}
+body.admin-panel-open #owner.login-visible > div:first-child {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 15 !important;
+  max-width: 1000px !important;
+  margin: 0 auto 8px !important;
+  padding: 4px 0 8px !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  background: linear-gradient(180deg, #eaf5ed 78%, rgba(234, 245, 237, 0)) !important;
+}
+body.admin-panel-open #ownerCloseButton {
+  min-height: 36px !important;
+  padding: 7px 14px !important;
+  margin: 0 !important;
+  border: 1.5px solid #86efac !important;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+  color: #14532d !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  box-shadow: 0 3px 10px rgba(6, 78, 59, 0.12) !important;
 }
 </style>
+<script id="v32-header-position-controller">
+(function () {
+  const header = document.getElementById('mainHeader');
+  const btn = document.getElementById('menuToggleButton');
+  const menu = document.getElementById('mainNavigation');
+  const owner = document.getElementById('owner');
 
-<style id="unified-responsive-header-v22">
+  function syncMenuPosition() {
+    if (!header || !btn || !menu) return;
+    if (window.matchMedia('(min-width: 701px)').matches) {
+      const leftPx = Math.max(12, btn.offsetLeft);
+      menu.style.setProperty('left', leftPx + 'px', 'important');
+      menu.style.setProperty('right', 'auto', 'important');
+    } else {
+      menu.style.removeProperty('left');
+      menu.style.removeProperty('right');
+    }
+  }
 
-/* V22: Unified responsive header rules for phone, tablet and desktop.
-   Visual/layout only: existing menu controller, store logic and data flows remain unchanged. */
-#mainHeader {
-  box-sizing:border-box !important;
-  width:100% !important;
-  max-width:100% !important;
-  min-width:0 !important;
-  z-index:6000 !important;
-  overflow:visible !important;
-}
-#mainHeader, #mainHeader * { box-sizing:border-box; }
-#mainHeader #menuToggleButton {
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  gap:7px !important;
-  max-width:100% !important;
-  white-space:nowrap !important;
-  touch-action:manipulation;
-}
-#mainHeader #headerBrandLogo {
-  display:block !important;
-  object-fit:contain !important;
-  max-width:100% !important;
-  height:auto;
-}
-#mainHeader #headerNurseryName,
-#mainHeader #headerNurseryTagline,
-#mainHeader #headerNurseryAddress,
-#mainHeader > div:not(.header-badge-box):not(#mainNavigation) {
-  min-width:0 !important;
-  max-width:100% !important;
-  overflow-wrap:anywhere !important;
-}
-#mainNavigation {
-  box-sizing:border-box !important;
-  z-index:12000 !important;
-  max-height: min(70vh, 520px) !important;
-  overflow-y:auto !important;
-  overscroll-behavior:contain !important;
-}
-#mainNavigation:not(.menu-open) {
-  display:none !important;
-  pointer-events:none !important;
-}
-#mainNavigation.menu-open {
-  display:flex !important;
-  pointer-events:auto !important;
-}
+  function syncAdminHeaderHeight() {
+    if (!header || !owner) return;
+    if (document.body.classList.contains('admin-panel-open')) {
+      const h = Math.ceil(header.getBoundingClientRect().height) || 66;
+      owner.style.setProperty('--admin-header-height', h + 'px');
+      document.documentElement.style.setProperty('--admin-header-height', h + 'px');
+    } else {
+      owner.style.removeProperty('--admin-header-height');
+      document.documentElement.style.removeProperty('--admin-header-height');
+    }
+  }
 
-/* Compact phones */
-@media screen and (max-width:380px) {
-  header#mainHeader {
-    display:grid !important;
-    grid-template-columns:max-content 44px minmax(0,1fr) !important;
-    grid-template-rows:auto auto !important;
-    align-items:center !important;
-    justify-content:stretch !important;
-    gap:3px 7px !important;
-    width:100% !important;
-    min-height:0 !important;
-    padding:8px 9px !important;
-    text-align:left !important;
-  }
-  header#mainHeader > #menuToggleButton {
-    grid-column:1 !important; grid-row:1 / span 2 !important;
-    justify-self:start !important; align-self:center !important;
-    min-width:0 !important; min-height:36px !important;
-    padding:7px 8px !important; margin:0 !important;
-    gap:5px !important; font-size:11px !important;
-  }
-  header#mainHeader > #headerBrandLogo {
-    grid-column:2 !important; grid-row:1 / span 2 !important;
-    width:42px !important; height:42px !important;
-    justify-self:center !important; align-self:center !important;
-  }
-  header#mainHeader > #headerNurseryName {
-    grid-column:3 !important; grid-row:1 !important;
-    width:100% !important; margin:0 !important;
-    font-size:clamp(11px,3.5vw,13px) !important;
-    line-height:1.2 !important; text-align:left !important;
-  }
-  header#mainHeader > #headerNurseryTagline {
-    grid-column:3 !important; grid-row:2 !important;
-    width:100% !important; margin:0 !important;
-    font-size:9px !important; line-height:1.2 !important;
-    text-align:left !important;
-  }
-  header#mainHeader > #headerNurseryAddress,
-  header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) { display:none !important; }
-  #mainNavigation { position:absolute !important; top:calc(100% + 5px) !important; left:8px !important; right:8px !important; width:auto !important; max-width:none !important; }
-}
+  window.syncAdminHeaderHeight = syncAdminHeaderHeight;
 
-/* Regular phones */
-@media screen and (min-width:381px) and (max-width:700px) {
-  header#mainHeader {
-    display:grid !important;
-    grid-template-columns:max-content 52px minmax(0,1fr) !important;
-    grid-template-rows:auto auto !important;
-    align-items:center !important;
-    justify-content:stretch !important;
-    gap:4px 9px !important;
-    width:100% !important; min-height:0 !important;
-    padding:9px 11px !important; text-align:left !important;
+  if (btn) {
+    btn.addEventListener('click', function () {
+      syncMenuPosition();
+    });
   }
-  header#mainHeader > #menuToggleButton {
-    grid-column:1 !important; grid-row:1 / span 2 !important;
-    justify-self:start !important; align-self:center !important;
-    min-width:0 !important; min-height:38px !important;
-    padding:8px 9px !important; margin:0 !important;
-    font-size:12px !important;
+  window.addEventListener('resize', function () {
+    syncMenuPosition();
+    syncAdminHeaderHeight();
+  });
+  if (window.ResizeObserver && header) {
+    const ro = new ResizeObserver(function () {
+      syncMenuPosition();
+      syncAdminHeaderHeight();
+    });
+    ro.observe(header);
   }
-  header#mainHeader > #headerBrandLogo {
-    grid-column:2 !important; grid-row:1 / span 2 !important;
-    width:50px !important; height:50px !important;
-    justify-self:center !important; align-self:center !important;
-  }
-  header#mainHeader > #headerNurseryName {
-    grid-column:3 !important; grid-row:1 !important;
-    width:100% !important; margin:0 !important;
-    font-size:clamp(13px,3.6vw,16px) !important;
-    line-height:1.2 !important; text-align:left !important;
-  }
-  header#mainHeader > #headerNurseryTagline {
-    grid-column:3 !important; grid-row:2 !important;
-    width:100% !important; margin:0 !important;
-    font-size:10px !important; line-height:1.25 !important;
-    text-align:left !important;
-  }
-  header#mainHeader > #headerNurseryAddress,
-  header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) { display:none !important; }
-  #mainNavigation { position:absolute !important; top:calc(100% + 5px) !important; left:10px !important; right:10px !important; width:auto !important; max-width:none !important; }
-}
-
-/* Small tablets and narrow desktop windows */
-@media screen and (min-width:701px) and (max-width:900px) {
-  header#mainHeader {
-    display:grid !important;
-    grid-template-columns:max-content 60px minmax(0,1fr) !important;
-    grid-template-rows:auto auto auto !important;
-    align-items:center !important;
-    gap:4px 12px !important;
-    min-height:112px !important;
-    padding:14px 16px !important;
-    text-align:left !important;
-  }
-  header#mainHeader > #menuToggleButton { grid-column:1 !important; grid-row:1 / span 3 !important; width:auto !important; min-width:118px !important; margin:0 !important; justify-self:start !important; }
-  header#mainHeader > #headerBrandLogo { grid-column:2 !important; grid-row:1 / span 3 !important; width:58px !important; height:58px !important; justify-self:center !important; }
-  header#mainHeader > #headerNurseryName { grid-column:3 !important; grid-row:1 !important; font-size:clamp(18px,2.4vw,23px) !important; line-height:1.2 !important; margin:0 !important; }
-  header#mainHeader > #headerNurseryTagline { grid-column:3 !important; grid-row:2 !important; font-size:12px !important; margin:0 !important; }
-  header#mainHeader > #headerNurseryAddress { grid-column:3 !important; grid-row:3 !important; font-size:11px !important; margin:0 !important; }
-  header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) { display:none !important; }
-  #mainNavigation { position:absolute !important; top:calc(100% + 7px) !important; left:16px !important; right:auto !important; width:270px !important; max-width:calc(100vw - 32px) !important; }
-}
-
-/* Full desktop */
-@media screen and (min-width:901px) {
-  header#mainHeader {
-    display:grid !important;
-    grid-template-columns:minmax(12px,1fr) max-content 76px minmax(0, min(560px, 52vw)) minmax(12px,1fr) !important;
-    grid-template-rows:auto auto auto auto !important;
-    align-items:center !important; justify-content:center !important;
-    gap:4px 14px !important;
-    min-height:126px !important;
-    padding:16px 24px !important;
-    text-align:left !important;
-  }
-  header#mainHeader > #menuToggleButton { grid-column:2 !important; grid-row:1 / span 4 !important; width:140px !important; min-height:44px !important; margin:0 !important; justify-self:end !important; }
-  header#mainHeader > #headerBrandLogo { grid-column:3 !important; grid-row:1 / span 4 !important; width:72px !important; height:72px !important; justify-self:center !important; }
-  header#mainHeader > #headerNurseryName { grid-column:4 !important; grid-row:1 !important; font-size:clamp(21px,2vw,28px) !important; line-height:1.2 !important; margin:0 !important; }
-  header#mainHeader > #headerNurseryTagline { grid-column:4 !important; grid-row:2 !important; font-size:14px !important; margin:0 !important; }
-  header#mainHeader > #headerNurseryAddress { grid-column:4 !important; grid-row:3 !important; font-size:12px !important; margin:0 !important; }
-  header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) { grid-column:4 !important; grid-row:4 !important; margin:0 !important; }
-  #mainNavigation { position:absolute !important; top:calc(100% + 8px) !important; left:auto !important; right:calc(50% + 210px) !important; width:290px !important; max-width:calc(100vw - 32px) !important; }
-}
-
-</style>
+  syncMenuPosition();
+  syncAdminHeaderHeight();
+})();
+</script>
 
 
 
