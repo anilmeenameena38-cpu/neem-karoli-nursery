@@ -1340,397 +1340,6 @@ body > main::after{
   #viewPlantCategory,#viewVegCategory{background:rgba(255,255,255,.96) !important;}
 }
 
-
-
-/* ================================================================
-   ADMIN DASHBOARD DESIGN SYSTEM — visual-only layer
-   Existing HTML IDs, event handlers, database queries and data remain.
-   ================================================================ */
-#owner.login-visible {
-  background: rgba(5, 28, 18, .76) !important;
-  backdrop-filter: blur(3px);
-  padding: 20px 14px 28px !important;
-}
-#owner.login-visible > #ownerPanelHeader,
-#owner.login-visible > #adminTabs,
-#owner.login-visible > .admin-pane,
-#owner.login-visible > #adminCustomerSearch {
-  width: min(100%, 1160px) !important;
-  max-width: 1160px !important;
-  margin: 0 auto 14px !important;
-  border: 1px solid #d8eadc !important;
-  border-radius: 18px !important;
-  background: #fff !important;
-  box-shadow: 0 8px 26px rgba(4, 55, 27, .10) !important;
-}
-#owner.login-visible > #ownerPanelHeader {
-  padding: 16px 18px !important;
-  border-top: 4px solid #15803d !important;
-}
-#ownerPanelHeader h3 { color: #064e3b !important; letter-spacing: .1px; }
-#owner.login-visible > #adminTabs {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
-  gap: 9px !important;
-  padding: 12px !important;
-}
-#owner.login-visible #adminTabs .admin-tab {
-  min-width: 0;
-  min-height: 48px;
-  padding: 10px 9px !important;
-  border: 1px solid #d7e9db !important;
-  border-radius: 12px !important;
-  background: linear-gradient(180deg, #fbfefb, #eff8f1) !important;
-  color: #14532d !important;
-  font-size: 13px !important;
-  font-weight: 800 !important;
-  line-height: 1.3;
-  box-shadow: 0 2px 7px rgba(6, 78, 59, .05) !important;
-  transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
-}
-#owner.login-visible #adminTabs .admin-tab.active {
-  border-color: #08783c !important;
-  background: linear-gradient(135deg, #08783c, #064e2b) !important;
-  color: #fff !important;
-  box-shadow: 0 4px 12px rgba(8, 120, 60, .22) !important;
-}
-#owner.login-visible #adminTabs .admin-tab:hover { transform: translateY(-1px); }
-#owner.login-visible .admin-pane {
-  padding: clamp(14px, 2vw, 22px) !important;
-  min-width: 0;
-  color: #173b27;
-  background: linear-gradient(180deg, #fff 0%, #fcfefc 100%) !important;
-}
-#owner.login-visible .admin-pane h2 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 0 16px !important;
-  padding: 0 0 12px !important;
-  border-bottom: 2px solid #e2f0e5;
-  color: #064e3b !important;
-  font-size: clamp(18px, 2vw, 22px) !important;
-  font-weight: 900 !important;
-  line-height: 1.35 !important;
-}
-#owner.login-visible .admin-pane h3 {
-  color: #14532d;
-  font-weight: 850;
-  line-height: 1.4;
-}
-
-/* Main dashboard summary and today's orders */
-#owner.login-visible .metric-grid {
-  grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
-  gap: 12px !important;
-  margin: 12px 0 16px !important;
-}
-#owner.login-visible .metric {
-  min-width: 0;
-  padding: 16px !important;
-  border: 1px solid #dcebe0 !important;
-  border-radius: 15px !important;
-  background: linear-gradient(145deg, #f5fbf6, #fff) !important;
-  box-shadow: 0 3px 12px rgba(6, 78, 59, .06) !important;
-}
-#owner.login-visible .metric-value {
-  font-size: clamp(21px, 2.5vw, 27px) !important;
-  line-height: 1.25;
-  overflow-wrap: anywhere;
-}
-#owner.login-visible .dashboard-table-card {
-  margin-top: 16px !important;
-  padding: 16px !important;
-  border: 1px solid #dcebe0 !important;
-  border-radius: 16px !important;
-  background: #fbfefb !important;
-  box-shadow: 0 3px 12px rgba(6, 78, 59, .05) !important;
-}
-#owner.login-visible .dashboard-table-card h3 {
-  gap: 10px;
-  flex-wrap: wrap;
-  color: #064e3b !important;
-}
-
-/* Customer orders — clearer cards and action area */
-#adminOrdersPane #ownerOrders {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 11px;
-}
-#owner.login-visible .order-item-card {
-  min-width: 0;
-  margin: 0 !important;
-  padding: 15px !important;
-  border: 1px solid #dce9df !important;
-  border-left: 5px solid #94a3b8 !important;
-  border-radius: 14px !important;
-  background: #fff !important;
-  box-shadow: 0 3px 12px rgba(15, 50, 28, .055) !important;
-}
-#owner.login-visible .order-item-card.is-pending { border-left-color: #e9a008 !important; background: #fffdf6 !important; }
-#owner.login-visible .order-item-card.is-confirmed { border-left-color: #16a34a !important; background: #f8fdf9 !important; }
-#owner.login-visible .order-item-card.is-delivered { border-left-color: #2563eb !important; background: #f7faff !important; }
-#owner.login-visible .order-item-card.is-cancelled { border-left-color: #dc2626 !important; background: #fffafa !important; }
-#owner.login-visible .order-item-card > div:first-child { gap: 8px !important; }
-#owner.login-visible .order-item-card > div:first-child > strong {
-  color: #183b27;
-  font-size: 14px;
-  line-height: 1.45;
-}
-#owner.login-visible .order-item-card p {
-  font-size: 13px !important;
-  line-height: 1.7 !important;
-  overflow-wrap: anywhere;
-}
-#owner.login-visible .order-item-card .order-actions { gap: 7px !important; }
-#owner.login-visible .order-item-card .order-actions .btn,
-#owner.login-visible .order-item-card .order-actions button {
-  min-height: 34px;
-  border-radius: 9px !important;
-  font-weight: 800;
-}
-
-/* Stock dashboard — preserve its existing two clear category cards */
-#owner.login-visible .stock-category-columns,
-#owner.login-visible .manage-category-columns,
-#owner.login-visible .sales-category-columns {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px !important;
-  align-items: start;
-}
-#owner.login-visible .stock-category-card,
-#owner.login-visible .manage-category-card,
-#owner.login-visible .sales-category-card {
-  min-width: 0;
-  padding: 15px !important;
-  border: 1px solid #d9eade !important;
-  border-radius: 15px !important;
-  background: linear-gradient(180deg, #fbfefb, #f5faf6) !important;
-  box-shadow: 0 3px 11px rgba(6, 78, 59, .045) !important;
-}
-#owner.login-visible .stock-category-card h3,
-#owner.login-visible .manage-category-card h3,
-#owner.login-visible .sales-category-card h3 {
-  margin: 0 0 12px !important;
-  padding-bottom: 9px;
-  border-bottom: 1px solid #dfede2;
-  font-size: 16px !important;
-}
-#owner.login-visible .stock-row,
-#owner.login-visible .sale-row {
-  gap: 10px;
-  padding: 11px 8px !important;
-  border-bottom: 1px solid #e7efe9 !important;
-  border-radius: 8px;
-}
-
-/* New product: consistent sub-tabs, forms, edit/list panels */
-#owner.login-visible .plant-manage-buttons {
-  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-  gap: 9px !important;
-  padding: 10px;
-  margin: 0 0 16px !important;
-  border: 1px solid #dfede2;
-  border-radius: 14px;
-  background: #f6fbf7;
-}
-#owner.login-visible .plant-manage-button {
-  min-height: 43px;
-  border: 1px solid #d8e9dc !important;
-  border-radius: 10px !important;
-  background: #fff !important;
-  color: #14532d !important;
-  font-size: 12px !important;
-  font-weight: 850 !important;
-}
-#owner.login-visible .plant-manage-button.active {
-  border-color: #08783c !important;
-  background: linear-gradient(135deg, #08783c, #064e2b) !important;
-  color: #fff !important;
-}
-#owner.login-visible .manage-view.active {
-  padding: 16px;
-  border: 1px solid #dcebe0;
-  border-radius: 15px;
-  background: #fff;
-  box-shadow: 0 3px 12px rgba(6, 78, 59, .045);
-}
-#owner.login-visible .manage-view > h3 {
-  margin: 0 0 13px !important;
-  padding-bottom: 9px;
-  border-bottom: 1px solid #e0eee3;
-}
-#owner.login-visible #newPlantOnlyForm,
-#owner.login-visible #newVegOnlyForm {
-  padding: 14px;
-  border: 1px solid #e0ece3;
-  border-radius: 13px;
-  background: #fbfefb;
-}
-#owner.login-visible .admin-plant-edit-row {
-  padding: 14px !important;
-  border-color: #dcebe0 !important;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(6,78,59,.04);
-}
-
-/* Sales dashboard */
-#owner.login-visible .admin-section-card {
-  min-width: 0;
-  padding: 0 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-#owner.login-visible #adminSalesPane .sales-category-columns { margin-top: 15px !important; }
-#owner.login-visible #ownerSalesList {
-  padding: 8px;
-  border: 1px solid #e0ece3;
-  border-radius: 13px;
-  background: #fbfefb;
-}
-
-/* Mandi dashboard */
-#owner.login-visible .mandi-grid {
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  gap: 12px !important;
-}
-#owner.login-visible .mandi-profit-box {
-  padding: 16px !important;
-  border: 1px solid #cfe5d4 !important;
-  border-radius: 15px !important;
-  background: linear-gradient(145deg, #f5fbf6, #fff) !important;
-  box-shadow: 0 3px 11px rgba(6,78,59,.05);
-}
-#owner.login-visible .mandi-result { gap: 10px !important; }
-#owner.login-visible .mandi-result > div {
-  border-radius: 12px !important;
-  box-shadow: 0 2px 8px rgba(6,78,59,.05);
-}
-
-/* Website controls — clearly separated setting cards */
-#owner.login-visible .settings-subtabs {
-  gap: 8px !important;
-  padding: 10px !important;
-  border: 1px solid #dcebe0 !important;
-  border-radius: 14px !important;
-  background: #f6fbf7;
-}
-#owner.login-visible .settings-subtab {
-  min-height: 40px;
-  padding: 9px 12px !important;
-  border: 1px solid #d8e9dc !important;
-  border-radius: 10px !important;
-  background: #fff !important;
-  color: #14532d !important;
-  font-weight: 800 !important;
-}
-#owner.login-visible .settings-subtab.active {
-  border-color: #08783c !important;
-  background: linear-gradient(135deg, #08783c, #064e2b) !important;
-  color: #fff !important;
-}
-#owner.login-visible .settings-subpane.active {
-  display: block;
-  margin: 0 0 12px;
-  padding: 17px !important;
-  border: 1px solid #dcebe0 !important;
-  border-radius: 15px !important;
-  background: #fff !important;
-  box-shadow: 0 3px 12px rgba(6,78,59,.045) !important;
-}
-#owner.login-visible #adminSettingsPane > div:first-child { margin-bottom: 14px !important; }
-#owner.login-visible #siteSettingsForm > button[type="submit"] { min-height: 48px; border-radius: 12px; }
-
-/* Dues and ChatGPT panels */
-#owner.login-visible #adminDuesPane #dueForm,
-#owner.login-visible #adminChatgptPane {
-  padding: 16px;
-  border: 1px solid #dcebe0;
-  border-radius: 15px;
-  background: linear-gradient(180deg, #fbfefb, #f5faf6);
-}
-#owner.login-visible #dueList { margin-top: 14px !important; }
-#owner.login-visible #nurseryChatQuestion {
-  min-height: 150px;
-  border: 1px solid #cfe3d4;
-  border-radius: 12px;
-  background: #fff;
-}
-#owner.login-visible .status {
-  border-radius: 11px;
-  line-height: 1.55;
-  overflow-wrap: anywhere;
-}
-#owner.login-visible .admin-pane input,
-#owner.login-visible .admin-pane select,
-#owner.login-visible .admin-pane textarea {
-  border-color: #cfe1d3;
-  border-radius: 10px;
-}
-#owner.login-visible .admin-pane button { border-radius: 10px; }
-
-@media (max-width: 700px) {
-  #owner.login-visible {
-    padding: 8px 9px calc(16px + env(safe-area-inset-bottom)) !important;
-  }
-  #owner.login-visible > #ownerPanelHeader,
-  #owner.login-visible > #adminTabs,
-  #owner.login-visible > .admin-pane,
-  #owner.login-visible > #adminCustomerSearch {
-    width: 100% !important;
-    margin: 0 0 10px !important;
-    border-radius: 14px !important;
-  }
-  #owner.login-visible > #ownerPanelHeader { padding: 12px !important; }
-  #owner.login-visible > #adminTabs {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 7px !important;
-    padding: 9px !important;
-  }
-  #owner.login-visible #adminTabs .admin-tab {
-    min-height: 44px;
-    padding: 7px 4px !important;
-    font-size: 10.5px !important;
-    overflow-wrap: anywhere;
-  }
-  #owner.login-visible .admin-pane { padding: 13px !important; }
-  #owner.login-visible .admin-pane h2 { font-size: 17px !important; margin-bottom: 13px !important; }
-  #owner.login-visible .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; }
-  #owner.login-visible .metric { padding: 11px !important; border-radius: 12px !important; }
-  #owner.login-visible .metric-label { font-size: 11px !important; line-height: 1.35; }
-  #owner.login-visible .metric-value { font-size: 20px !important; }
-  #owner.login-visible .stock-category-columns,
-  #owner.login-visible .manage-category-columns,
-  #owner.login-visible .sales-category-columns { grid-template-columns: 1fr !important; gap: 10px !important; }
-  #owner.login-visible .stock-category-card,
-  #owner.login-visible .manage-category-card,
-  #owner.login-visible .sales-category-card { padding: 12px !important; }
-  #owner.login-visible .plant-manage-buttons { grid-template-columns: repeat(2, minmax(0,1fr)) !important; padding: 8px; }
-  #owner.login-visible .plant-manage-button { min-height: 42px; font-size: 10.5px !important; padding: 7px 4px !important; }
-  #owner.login-visible .manage-view.active { padding: 11px; }
-  #owner.login-visible #newPlantOnlyForm,
-  #owner.login-visible #newVegOnlyForm { padding: 10px; }
-  #owner.login-visible .settings-subtabs { display: grid !important; grid-template-columns: repeat(2, minmax(0,1fr)); }
-  #owner.login-visible .settings-subtab { min-width: 0; padding: 8px 5px !important; font-size: 11px !important; }
-  #owner.login-visible .settings-subpane.active { padding: 12px !important; }
-  #owner.login-visible .mandi-result { grid-template-columns: 1fr !important; }
-  #owner.login-visible .order-item-card { padding: 12px !important; }
-  #owner.login-visible .order-item-card > div:first-child { align-items: flex-start !important; }
-  #owner.login-visible .order-item-card p { font-size: 12px !important; }
-  #owner.login-visible .order-item-card .order-actions .btn,
-  #owner.login-visible .order-item-card .order-actions button { font-size: 11px !important; padding: 7px 9px !important; }
-  #owner.login-visible .dashboard-table-card { padding: 11px !important; }
-}
-@media (min-width: 701px) {
-  #owner.login-visible > #ownerPanelHeader,
-  #owner.login-visible > #adminTabs,
-  #owner.login-visible > .admin-pane,
-  #owner.login-visible > #adminCustomerSearch { padding: 18px !important; }
-}
-
 </style>
 
 <style id="v22-cart-mobile-fix">
@@ -3299,16 +2908,541 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
 
 
 
+<style id="desktop-header-left-cleanup-v18">
+/* Desktop only: remove stray decorative items from the left header column.
+   Keep the menu, logo and nursery text aligned; mobile header is untouched. */
+@media screen and (min-width:701px) {
+  header#mainHeader {
+    grid-template-columns: max-content 82px minmax(240px,1fr) !important;
+    grid-template-rows: auto auto auto auto !important;
+    align-items: center !important;
+    column-gap: 14px !important;
+    row-gap: 4px !important;
+  }
+  header#mainHeader > #menuToggleButton {
+    grid-column: 1 !important;
+    grid-row: 1 / span 4 !important;
+    justify-self: start !important;
+    align-self: center !important;
+    width: auto !important;
+    min-width: 120px !important;
+    margin: 0 !important;
+  }
+  header#mainHeader > #headerBrandLogo {
+    grid-column: 2 !important;
+    grid-row: 1 / span 4 !important;
+    align-self: center !important;
+  }
+  header#mainHeader > #headerNurseryName {
+    grid-column: 3 !important; grid-row: 1 !important;
+  }
+  header#mainHeader > #headerNurseryTagline {
+    grid-column: 3 !important; grid-row: 2 !important;
+  }
+  header#mainHeader > #headerNurseryAddress {
+    grid-column: 3 !important; grid-row: 3 !important;
+  }
+  header#mainHeader > div:not(.header-badge-box) {
+    grid-column: 3 !important; grid-row: 4 !important;
+    justify-self: start !important;
+    margin: 0 !important;
+  }
+  header#mainHeader > .header-badge-box,
+  header#mainHeader::after {
+    display: none !important;
+    content: none !important;
+  }
+}
+</style>
+
+
+<style id="desktop-centered-header-store-menu-v19">
+/* Desktop-only visual refinement. Phone/tablet rules (<=700px) are untouched. */
+@media screen and (min-width:701px) {
+  /* Center the complete header group without changing its green branding. */
+  header#mainHeader {
+    display:grid !important;
+    grid-template-columns: 1fr max-content 92px minmax(420px, max-content) 1fr !important;
+    grid-template-rows:auto auto auto auto !important;
+    justify-content:center !important;
+    align-content:center !important;
+    align-items:center !important;
+    column-gap:14px !important;
+    row-gap:3px !important;
+    min-height:190px !important;
+    padding:24px 32px !important;
+    text-align:left !important;
+    position:relative !important;
+    overflow:visible !important;
+  }
+  header#mainHeader > #menuToggleButton {
+    grid-column:2 !important; grid-row:1 / span 4 !important;
+    justify-self:end !important; align-self:center !important;
+    width:150px !important; min-height:48px !important;
+    margin:0 !important; padding:10px 14px !important;
+    border:1px solid rgba(255,255,255,.75) !important;
+    border-radius:12px !important;
+    background:linear-gradient(135deg,#ffffff,#ecfdf5) !important;
+    color:#075b35 !important;
+    box-shadow:0 4px 12px rgba(0,0,0,.16) !important;
+    font-size:14px !important; font-weight:900 !important;
+    letter-spacing:.2px !important;
+    transition:transform .18s ease,box-shadow .18s ease !important;
+  }
+  header#mainHeader > #menuToggleButton:hover {
+    transform:translateY(-2px) !important;
+    box-shadow:0 7px 16px rgba(0,0,0,.2) !important;
+  }
+  header#mainHeader > #headerBrandLogo {
+    grid-column:3 !important; grid-row:1 / span 4 !important;
+    justify-self:center !important; align-self:center !important;
+    width:88px !important; height:88px !important;
+    margin:0 !important;
+  }
+  header#mainHeader > #headerNurseryName {
+    grid-column:4 !important; grid-row:1 !important;
+    justify-self:start !important; align-self:end !important;
+    margin:0 !important; text-align:left !important;
+    font-size:clamp(24px,2.2vw,32px) !important;
+    line-height:1.25 !important;
+  }
+  header#mainHeader > #headerNurseryTagline {
+    grid-column:4 !important; grid-row:2 !important;
+    justify-self:start !important; align-self:start !important;
+    margin:0 !important; text-align:left !important;
+    font-size:14px !important; line-height:1.35 !important;
+  }
+  header#mainHeader > #headerNurseryAddress {
+    grid-column:4 !important; grid-row:3 !important;
+    justify-self:start !important; align-self:start !important;
+    margin:0 !important; text-align:left !important;
+  }
+  header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) {
+    grid-column:4 !important; grid-row:4 !important;
+    justify-self:start !important; align-self:start !important;
+    margin:0 !important;
+  }
+  header#mainHeader > .header-badge-box,
+  header#mainHeader::after { display:none !important; content:none !important; }
+
+  /* A tidy dropdown anchored to the menu button, with clear click targets. */
+  #mainNavigation {
+    position:absolute !important;
+    top:calc(100% + 8px) !important;
+    left:calc(50% - 310px) !important;
+    right:auto !important;
+    width:290px !important;
+    max-width:calc(100vw - 32px) !important;
+    padding:12px !important;
+    gap:7px !important;
+    border:1px solid #b7e4c7 !important;
+    border-radius:16px !important;
+    background:rgba(255,255,255,.98) !important;
+    box-shadow:0 16px 38px rgba(4,44,22,.22) !important;
+    backdrop-filter:blur(12px) !important;
+  }
+  #mainNavigation a, #mainNavigation button {
+    min-height:43px !important;
+    padding:11px 14px !important;
+    border:1px solid #e0f2e5 !important;
+    border-radius:10px !important;
+    background:#f3fbf5 !important;
+    color:#075b35 !important;
+    font-size:14px !important;
+    font-weight:800 !important;
+    transition:background .15s ease, transform .15s ease !important;
+  }
+  #mainNavigation a:hover, #mainNavigation button:hover {
+    background:#d9f5e2 !important;
+    transform:translateX(2px) !important;
+  }
+
+  /* Center the product panels and let the four-card row use a wide layout. */
+  body > main {
+    width:calc(100% - 48px) !important;
+    max-width:1240px !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+    padding-left:20px !important;
+    padding-right:20px !important;
+  }
+  body > main #viewPlantCategory,
+  body > main #viewVegCategory {
+    display:block !important;
+    width:100% !important;
+    max-width:none !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+  #plantOnlyList.plants, #vegOnlyList.plants {
+    display:grid !important;
+    width:100% !important;
+    max-width:none !important;
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    gap:16px !important;
+    justify-content:center !important;
+    align-items:stretch !important;
+  }
+  #plantOnlyList .plant, #vegOnlyList .plant {
+    width:100% !important; min-width:0 !important;
+    padding:12px !important;
+  }
+  #plantOnlyList .plant img, #vegOnlyList .plant img {
+    width:100% !important; height:180px !important;
+    object-fit:cover !important;
+  }
+}
+</style>
 
 
 
 
 
+<script id="v30-auto-stock-sync">
+// V30: ऑर्डर होने, कन्फर्म होने और रद्द होने पर कस्टमर पैनल व एडमिन पैनल दोनों में ऑटोमैटिक स्टॉक सिंक
+(function () {
+  function parseOrderItemsFromText(order, allPlants) {
+    const rawText = String((order && order.plant_name) || '');
+    const parts = rawText.split(',').map(s => s.trim()).filter(Boolean);
+    const pattern = /^(.+?)\s*\(([0-9.]+)\s*(pcs|kg|g|पौधे|किलो|ग्राम)?\)$/i;
+    const result = [];
 
+    parts.forEach(part => {
+      const m = part.match(pattern);
+      if (!m) return;
+      const name = m[1].trim();
+      const rawQty = Number(m[2]) || 0;
+      const unit = String(m[3] || '').toLowerCase();
+      if (rawQty <= 0) return;
 
+      const veg = (unit === 'kg' || unit === 'g' || unit === 'किलो' || unit === 'ग्राम');
+      const qtyInStockUnit = (unit === 'g' || unit === 'ग्राम') ? (rawQty / 1000) : rawQty;
 
+      let matched = (allPlants || []).find(p =>
+        String(p.name || '').trim() === name && Boolean(isVeg(p)) === veg
+      );
+      if (!matched) {
+        matched = (allPlants || []).find(p => String(p.name || '').trim() === name);
+      }
+      result.push({
+        id: matched ? matched.id : null,
+        name: name,
+        qty: qtyInStockUnit,
+        veg: matched ? Boolean(isVeg(matched)) : veg
+      });
+    });
+    return result;
+  }
 
+  async function adjustDatabaseStockForOrder(order, direction) {
+    const { data: currentPlants, error: pErr } = await db.from('plants').select('*');
+    if (pErr || !currentPlants) return false;
 
+    const parsedItems = parseOrderItemsFromText(order, currentPlants);
+    if (!parsedItems.length) return false;
+
+    let allUpdated = true;
+    for (const item of parsedItems) {
+      if (!item.id) continue;
+      const plantRow = currentPlants.find(p => Number(p.id) === Number(item.id));
+      if (!plantRow) continue;
+
+      const currentStock = Number(plantRow.stock_quantity) || 0;
+      const nextStock = Math.max(0, Number((currentStock + (direction * item.qty)).toFixed(3)));
+      plantRow.stock_quantity = nextStock;
+
+      const { data: updatedRows, error: upErr } = await db
+        .from('plants')
+        .update({ stock_quantity: nextStock })
+        .eq('id', plantRow.id)
+        .select('id, stock_quantity');
+
+      if (upErr || !updatedRows || !updatedRows.length) {
+        allUpdated = false;
+      }
+    }
+    return allUpdated;
+  }
+
+  function computePendingDeductionsMap(orders, allPlants) {
+    const map = {};
+    (orders || []).forEach(o => {
+      if (!o || o.status === 'cancelled') return;
+      const notes = String(o.notes || '');
+      if (!notes.includes('STOCK_SYNC:pending') || notes.includes('STOCK_DEDUCTED:1')) return;
+      const items = parseOrderItemsFromText(o, allPlants);
+      items.forEach(it => {
+        if (!it.id) return;
+        map[it.id] = Number(((map[it.id] || 0) + it.qty).toFixed(3));
+      });
+    });
+    return map;
+  }
+
+  // जब ग्राहक नया ऑर्डर सबमिट करे, तो तुरंत स्टॉक घटाएँ या STOCK_SYNC:pending मार्क करें
+  const orderFormEl = document.getElementById('orderForm');
+  if (orderFormEl) {
+    orderFormEl.addEventListener('submit', function () {
+      setTimeout(async () => {
+        try {
+          const { data: recentOrders } = await db
+            .from('order_requests')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(3);
+
+          if (recentOrders && recentOrders.length) {
+            const latest = recentOrders[0];
+            const notes = String(latest.notes || '');
+            if (!notes.includes('STOCK_DEDUCTED:1') && !notes.includes('STOCK_SYNC:')) {
+              const updatedInDb = await adjustDatabaseStockForOrder(latest, -1);
+              const newNotes = notes + (updatedInDb ? ' | STOCK_DEDUCTED:1' : ' | STOCK_SYNC:pending');
+              await db.from('order_requests').update({ notes: newNotes }).eq('id', latest.id);
+            }
+          }
+          await window.loadPlants();
+          if (document.body.classList.contains('admin-authenticated')) {
+            await window.loadAdminAll();
+          }
+        } catch (err) {
+          console.error('Auto stock deduct after order error:', err);
+        }
+      }, 1500);
+    });
+  }
+
+  // कस्टमर पैनल (loadPlants) में भी पेंडिंग सिंक वाले ऑर्डर्स का स्टॉक घटाकर दिखाएँ
+  const originalLoadPlants = window.loadPlants;
+  window.loadPlants = async function () {
+    await originalLoadPlants();
+    try {
+      const { data: pendingSyncOrders } = await db
+        .from('order_requests')
+        .select('id, plant_name, status, notes')
+        .ilike('notes', '%STOCK_SYNC:pending%');
+
+      if (!pendingSyncOrders || !pendingSyncOrders.length) return;
+      const deductMap = computePendingDeductionsMap(pendingSyncOrders, plants);
+      if (!Object.keys(deductMap).length) return;
+
+      const cfg = getSiteConfig();
+      document.querySelectorAll('.plant[data-cart-key]').forEach(card => {
+        const key = card.dataset.cartKey || '';
+        const idPart = Number(key.split('-')[1]);
+        const deductQty = deductMap[idPart] || 0;
+        if (!deductQty) return;
+
+        const p = (plants || []).find(x => Number(x.id) === idPart);
+        if (!p) return;
+        const veg = isVeg(p);
+        const isGram = veg && isGramVeg(p);
+        const effectiveStock = Math.max(0, Number(((Number(p.stock_quantity) || 0) - deductQty).toFixed(3)));
+        p.stock_quantity = effectiveStock;
+
+        const stockEl = card.querySelector('.stock-text');
+        if (stockEl) {
+          if (effectiveStock <= 0) {
+            stockEl.innerHTML = 'स्टॉक: <b style="color:#dc2626">0 उपलब्ध</b>';
+          } else if (veg && isGram) {
+            const grams = Math.round(effectiveStock * 1000);
+            stockEl.textContent = 'स्टॉक: ' + (grams >= 1000 ? `${effectiveStock} किलो (${grams}g)` : `${grams} ग्राम`);
+          } else {
+            stockEl.textContent = `स्टॉक: ${effectiveStock} ${veg ? 'किलो' : 'पौधे'}`;
+          }
+        }
+        const qtyInput = card.querySelector('.card-qty-input');
+        if (qtyInput) qtyInput.max = String(effectiveStock);
+        if (effectiveStock <= 0 && cfg.shopStatus !== 'closed') {
+          card.classList.add('sold-out');
+          const buyBtn = card.querySelector('.plant-buy-button');
+          if (buyBtn) {
+            buyBtn.disabled = true;
+            buyBtn.textContent = '🚫 उपलब्ध नहीं';
+          }
+        }
+      });
+    } catch (_) {}
+  };
+
+  // एडमिन पैनल (loadAdminAll) खुलने पर पेंडिंग स्टॉक सिंक को डेटाबेस में पक्का सेव करें
+  const originalLoadAdminAll = window.loadAdminAll;
+  window.loadAdminAll = async function () {
+    try {
+      const { data: pendingSyncOrders } = await db
+        .from('order_requests')
+        .select('*')
+        .ilike('notes', '%STOCK_SYNC:pending%');
+
+      if (pendingSyncOrders && pendingSyncOrders.length) {
+        for (const ord of pendingSyncOrders) {
+          if (ord.status === 'cancelled') continue;
+          const notes = String(ord.notes || '');
+          if (notes.includes('STOCK_DEDUCTED:1')) continue;
+          const ok = await adjustDatabaseStockForOrder(ord, -1);
+          if (ok) {
+            const updatedNotes = notes.replace('STOCK_SYNC:pending', 'STOCK_DEDUCTED:1');
+            await db.from('order_requests').update({ notes: updatedNotes }).eq('id', ord.id);
+          }
+        }
+      }
+    } catch (_) {}
+    await originalLoadAdminAll();
+  };
+
+  // एडमिन द्वारा "✅ कन्फर्म" दबाने पर यदि उस ऑर्डर का स्टॉक अभी तक नहीं घटा है तो तुरंत घटाएँ
+  window.confirmOrderSimple = async function (event, orderId) {
+    if (event) { event.preventDefault(); event.stopPropagation(); }
+    if (!confirm(`क्या आप ऑर्डर #${orderId} कन्फर्म करना चाहते हैं?`)) return;
+
+    const btn = event ? event.target : null;
+    if (btn) { btn.disabled = true; btn.textContent = 'प्रोसेसिंग…'; }
+
+    try {
+      const { data: ord, error: fetchErr } = await db
+        .from('order_requests')
+        .select('*')
+        .eq('id', orderId)
+        .single();
+      if (fetchErr) throw fetchErr;
+
+      let notes = String(ord.notes || '');
+      if (!notes.includes('STOCK_DEDUCTED:1')) {
+        const deducted = await adjustDatabaseStockForOrder(ord, -1);
+        if (deducted) {
+          notes = notes.replace('STOCK_SYNC:pending', '').trim() + ' | STOCK_DEDUCTED:1';
+        }
+      }
+
+      const { error: ordErr } = await db
+        .from('order_requests')
+        .update({ status: 'confirmed', notes: notes })
+        .eq('id', orderId);
+      if (ordErr) throw ordErr;
+
+      stopLoudAlert();
+      await window.loadAdminAll();
+      await window.loadPlants();
+      alert('✅ ऑर्डर कन्फर्म हो गया और स्टॉक अपडेट कर दिया गया!');
+    } catch (e) {
+      alert('त्रुटि: ' + e.message);
+      if (btn) { btn.disabled = false; btn.textContent = '✅ कन्फर्म'; }
+    }
+  };
+
+  // एडमिन द्वारा "❌ रद्द करें" दबाने पर घटा हुआ स्टॉक वापस जोड़ें
+  window.cancelOrderPrompt = async function (event, orderId, existingNotes) {
+    if (event) { event.preventDefault(); event.stopPropagation(); }
+
+    const reason = prompt(
+      'कृपया ऑर्डर रद्द करने का कारण चुनें या लिखें:\n\n1. फर्जी भुगतान स्क्रीनशॉट / UTR नंबर अमान्य\n2. स्टॉक में माल उपलब्ध नहीं है\n3. गलत पता या संपर्क नंबर\n4. अन्य कारण',
+      'फर्जी भुगतान स्क्रीनशॉट / UTR नंबर अमान्य'
+    );
+    if (reason === null) return;
+    const cleanReason = reason.trim() || 'अन्य कारण';
+
+    try {
+      const { data: ord } = await db.from('order_requests').select('*').eq('id', orderId).single();
+      let notes = String((ord && ord.notes) || existingNotes || '');
+
+      if (notes.includes('STOCK_DEDUCTED:1') && !notes.includes('STOCK_RESTORED:1')) {
+        const restored = await adjustDatabaseStockForOrder(ord, +1);
+        if (restored) {
+          notes += ' | STOCK_RESTORED:1';
+        }
+      }
+      notes = notes.replace('STOCK_SYNC:pending', 'STOCK_SYNC:cancelled') + ' | CANCEL_REASON:' + cleanReason;
+
+      const { error } = await db
+        .from('order_requests')
+        .update({ status: 'cancelled', notes: notes })
+        .eq('id', orderId);
+      if (error) throw error;
+
+      stopLoudAlert();
+      await window.loadAdminAll();
+      await window.loadPlants();
+      alert(`❌ ऑर्डर #${orderId} रद्द कर दिया गया और स्टॉक वापस अपडेट हो गया!`);
+    } catch (e) {
+      alert('रद्द करने में त्रुटि: ' + e.message);
+    }
+  };
+
+  // बिक्री हिसाब (loadSalesLedger) में कुल बिके पौधे और कुल बिकी सब्ज़ी की सही गिनती दिखाएँ
+  window.loadSalesLedger = async function () {
+    const pBox = document.getElementById('salesPlantRecords');
+    const vBox = document.getElementById('salesVegRecords');
+    const allList = document.getElementById('ownerSalesList');
+
+    pBox.innerHTML = 'लोड हो रहा है…';
+    vBox.innerHTML = 'लोड हो रहा है…';
+    allList.innerHTML = 'लोड हो रहा है…';
+
+    try {
+      const [ordersRes, plantsRes] = await Promise.all([
+        db.from('order_requests').select('*').order('created_at', { ascending: false }),
+        db.from('plants').select('*').order('name')
+      ]);
+      if (ordersRes.error) throw ordersRes.error;
+
+      const allPlants = plantsRes.data || plants || [];
+      const confirmedOrDelivered = (ordersRes.data || []).filter(
+        o => o.status === 'confirmed' || isOrderDelivered(o)
+      );
+
+      let totalRevenue = 0;
+      let totalPlantsSold = 0;
+      let totalVegSoldKg = 0;
+      const plantSummary = {};
+      const vegSummary = {};
+
+      confirmedOrDelivered.forEach(o => {
+        totalRevenue += Number(o.unit_price || 0);
+        const items = parseOrderItemsFromText(o, allPlants);
+        items.forEach(it => {
+          if (it.veg) {
+            totalVegSoldKg += it.qty;
+            vegSummary[it.name] = Number(((vegSummary[it.name] || 0) + it.qty).toFixed(3));
+          } else {
+            totalPlantsSold += it.qty;
+            plantSummary[it.name] = Math.round((plantSummary[it.name] || 0) + it.qty);
+          }
+        });
+      });
+
+      document.getElementById('salesTotalRevenue').textContent = '₹' + totalRevenue.toFixed(2);
+      document.getElementById('salesTotalPlants').textContent = String(Math.round(totalPlantsSold)) + ' पौधे';
+      document.getElementById('salesTotalVeg').textContent = totalVegSoldKg.toFixed(2) + ' किलो';
+      document.getElementById('salesTotalOrders').textContent = String(confirmedOrDelivered.length);
+
+      const pEntries = Object.entries(plantSummary);
+      pBox.innerHTML = pEntries.length
+        ? pEntries.map(([name, qty]) => `<div class="sale-row"><span>🌱 ${safe(name)}</span><strong>${qty} पौधे</strong></div>`).join('')
+        : '<p style="color:var(--muted)">अभी कोई पौधा बिक्री रिकॉर्ड नहीं है।</p>';
+
+      const vEntries = Object.entries(vegSummary);
+      vBox.innerHTML = vEntries.length
+        ? vEntries.map(([name, qty]) => `<div class="sale-row"><span>🥬 ${safe(name)}</span><strong>${qty} किलो</strong></div>`).join('')
+        : '<p style="color:var(--muted)">अभी कोई सब्ज़ी बिक्री रिकॉर्ड नहीं है।</p>';
+
+      allList.innerHTML = confirmedOrDelivered.length ? confirmedOrDelivered.map(o => {
+        const total = Number(o.unit_price || 0).toFixed(2);
+        const isDel = isOrderDelivered(o);
+        return `
+          <div class="sale-row" style="padding:10px 4px;border-bottom:1px solid #eef2eb">
+            <div>
+              <strong>#${o.id} - ${safe(o.plant_name)}</strong>
+              <span style="font-size:11px;font-weight:700;padding:2px 6px;border-radius:10px;margin-left:6px;background:${isDel ? '#dbeafe;color:#1e40af' : '#dcfce7;color:#166534'}">${isDel ? '🚚 डिलीवर' : '✅ कन्फर्म'}</span>
+              <div style="font-size:13px;color:var(--muted)">ग्राहक: ${safe(o.customer_name)} | 📞 ${safe(o.customer_phone)}</div>
+            </div>
+            <div style="font-size:16px;font-weight:800;color:var(--green)">₹${total}</div>
+          </div>`;
+      }).join('') : '<p style="color:var(--muted)">कोई रसीद नहीं है।</p>';
+    } catch (err) {
+      allList.innerHTML = '<div class="status">त्रुटि: ' + err.message + '</div>';
+    }
+  };
+})();
+</script>
 
 </body>
     </html>
@@ -4775,352 +4909,6 @@ document.getElementById('nurseryAskChatGPT')?.addEventListener('click', () => {
 
 applySiteConfigToUI();
 loadPlants();
-</script>
-
-<script id="v30-auto-stock-sync">
-// V30: ऑर्डर होने, कन्फर्म होने और रद्द होने पर कस्टमर पैनल व एडमिन पैनल दोनों में ऑटोमैटिक स्टॉक सिंक
-(function () {
-  function parseOrderItemsFromText(order, allPlants) {
-    const rawText = String((order && order.plant_name) || '');
-    const parts = rawText.split(',').map(s => s.trim()).filter(Boolean);
-    const pattern = /^(.+?)\s*\(([0-9.]+)\s*(pcs|kg|g|पौधे|किलो|ग्राम)?\)$/i;
-    const result = [];
-
-    parts.forEach(part => {
-      const m = part.match(pattern);
-      if (!m) return;
-      const name = m[1].trim();
-      const rawQty = Number(m[2]) || 0;
-      const unit = String(m[3] || '').toLowerCase();
-      if (rawQty <= 0) return;
-
-      const veg = (unit === 'kg' || unit === 'g' || unit === 'किलो' || unit === 'ग्राम');
-      const qtyInStockUnit = (unit === 'g' || unit === 'ग्राम') ? (rawQty / 1000) : rawQty;
-
-      let matched = (allPlants || []).find(p =>
-        String(p.name || '').trim() === name && Boolean(isVeg(p)) === veg
-      );
-      if (!matched) {
-        matched = (allPlants || []).find(p => String(p.name || '').trim() === name);
-      }
-      result.push({
-        id: matched ? matched.id : null,
-        name: name,
-        qty: qtyInStockUnit,
-        veg: matched ? Boolean(isVeg(matched)) : veg
-      });
-    });
-    return result;
-  }
-
-  async function adjustDatabaseStockForOrder(order, direction) {
-    const { data: currentPlants, error: pErr } = await db.from('plants').select('*');
-    if (pErr || !currentPlants) return false;
-
-    const parsedItems = parseOrderItemsFromText(order, currentPlants);
-    if (!parsedItems.length) return false;
-
-    let allUpdated = true;
-    for (const item of parsedItems) {
-      if (!item.id) continue;
-      const plantRow = currentPlants.find(p => Number(p.id) === Number(item.id));
-      if (!plantRow) continue;
-
-      const currentStock = Number(plantRow.stock_quantity) || 0;
-      const nextStock = Math.max(0, Number((currentStock + (direction * item.qty)).toFixed(3)));
-      plantRow.stock_quantity = nextStock;
-
-      const { data: updatedRows, error: upErr } = await db
-        .from('plants')
-        .update({ stock_quantity: nextStock })
-        .eq('id', plantRow.id)
-        .select('id, stock_quantity');
-
-      if (upErr || !updatedRows || !updatedRows.length) {
-        allUpdated = false;
-      }
-    }
-    return allUpdated;
-  }
-
-  function computePendingDeductionsMap(orders, allPlants) {
-    const map = {};
-    (orders || []).forEach(o => {
-      if (!o || o.status === 'cancelled') return;
-      const notes = String(o.notes || '');
-      if (!notes.includes('STOCK_SYNC:pending') || notes.includes('STOCK_DEDUCTED:1')) return;
-      const items = parseOrderItemsFromText(o, allPlants);
-      items.forEach(it => {
-        if (!it.id) return;
-        map[it.id] = Number(((map[it.id] || 0) + it.qty).toFixed(3));
-      });
-    });
-    return map;
-  }
-
-  // जब ग्राहक नया ऑर्डर सबमिट करे, तो तुरंत स्टॉक घटाएँ या STOCK_SYNC:pending मार्क करें
-  const orderFormEl = document.getElementById('orderForm');
-  if (orderFormEl) {
-    orderFormEl.addEventListener('submit', function () {
-      setTimeout(async () => {
-        try {
-          const { data: recentOrders } = await db
-            .from('order_requests')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(3);
-
-          if (recentOrders && recentOrders.length) {
-            const latest = recentOrders[0];
-            const notes = String(latest.notes || '');
-            if (!notes.includes('STOCK_DEDUCTED:1') && !notes.includes('STOCK_SYNC:')) {
-              const updatedInDb = await adjustDatabaseStockForOrder(latest, -1);
-              const newNotes = notes + (updatedInDb ? ' | STOCK_DEDUCTED:1' : ' | STOCK_SYNC:pending');
-              await db.from('order_requests').update({ notes: newNotes }).eq('id', latest.id);
-            }
-          }
-          await window.loadPlants();
-          if (document.body.classList.contains('admin-authenticated')) {
-            await window.loadAdminAll();
-          }
-        } catch (err) {
-          console.error('Auto stock deduct after order error:', err);
-        }
-      }, 1500);
-    });
-  }
-
-  // कस्टमर पैनल (loadPlants) में भी पेंडिंग सिंक वाले ऑर्डर्स का स्टॉक घटाकर दिखाएँ
-  const originalLoadPlants = window.loadPlants;
-  window.loadPlants = async function () {
-    await originalLoadPlants();
-    try {
-      const { data: pendingSyncOrders } = await db
-        .from('order_requests')
-        .select('id, plant_name, status, notes')
-        .ilike('notes', '%STOCK_SYNC:pending%');
-
-      if (!pendingSyncOrders || !pendingSyncOrders.length) return;
-      const deductMap = computePendingDeductionsMap(pendingSyncOrders, plants);
-      if (!Object.keys(deductMap).length) return;
-
-      const cfg = getSiteConfig();
-      document.querySelectorAll('.plant[data-cart-key]').forEach(card => {
-        const key = card.dataset.cartKey || '';
-        const idPart = Number(key.split('-')[1]);
-        const deductQty = deductMap[idPart] || 0;
-        if (!deductQty) return;
-
-        const p = (plants || []).find(x => Number(x.id) === idPart);
-        if (!p) return;
-        const veg = isVeg(p);
-        const isGram = veg && isGramVeg(p);
-        const effectiveStock = Math.max(0, Number(((Number(p.stock_quantity) || 0) - deductQty).toFixed(3)));
-        p.stock_quantity = effectiveStock;
-
-        const stockEl = card.querySelector('.stock-text');
-        if (stockEl) {
-          if (effectiveStock <= 0) {
-            stockEl.innerHTML = 'स्टॉक: <b style="color:#dc2626">0 उपलब्ध</b>';
-          } else if (veg && isGram) {
-            const grams = Math.round(effectiveStock * 1000);
-            stockEl.textContent = 'स्टॉक: ' + (grams >= 1000 ? `${effectiveStock} किलो (${grams}g)` : `${grams} ग्राम`);
-          } else {
-            stockEl.textContent = `स्टॉक: ${effectiveStock} ${veg ? 'किलो' : 'पौधे'}`;
-          }
-        }
-        const qtyInput = card.querySelector('.card-qty-input');
-        if (qtyInput) qtyInput.max = String(effectiveStock);
-        if (effectiveStock <= 0 && cfg.shopStatus !== 'closed') {
-          card.classList.add('sold-out');
-          const buyBtn = card.querySelector('.plant-buy-button');
-          if (buyBtn) {
-            buyBtn.disabled = true;
-            buyBtn.textContent = '🚫 उपलब्ध नहीं';
-          }
-        }
-      });
-    } catch (_) {}
-  };
-
-  // एडमिन पैनल (loadAdminAll) खुलने पर पेंडिंग स्टॉक सिंक को डेटाबेस में पक्का सेव करें
-  const originalLoadAdminAll = window.loadAdminAll;
-  window.loadAdminAll = async function () {
-    try {
-      const { data: pendingSyncOrders } = await db
-        .from('order_requests')
-        .select('*')
-        .ilike('notes', '%STOCK_SYNC:pending%');
-
-      if (pendingSyncOrders && pendingSyncOrders.length) {
-        for (const ord of pendingSyncOrders) {
-          if (ord.status === 'cancelled') continue;
-          const notes = String(ord.notes || '');
-          if (notes.includes('STOCK_DEDUCTED:1')) continue;
-          const ok = await adjustDatabaseStockForOrder(ord, -1);
-          if (ok) {
-            const updatedNotes = notes.replace('STOCK_SYNC:pending', 'STOCK_DEDUCTED:1');
-            await db.from('order_requests').update({ notes: updatedNotes }).eq('id', ord.id);
-          }
-        }
-      }
-    } catch (_) {}
-    await originalLoadAdminAll();
-  };
-
-  // एडमिन द्वारा "✅ कन्फर्म" दबाने पर यदि उस ऑर्डर का स्टॉक अभी तक नहीं घटा है तो तुरंत घटाएँ
-  window.confirmOrderSimple = async function (event, orderId) {
-    if (event) { event.preventDefault(); event.stopPropagation(); }
-    if (!confirm(`क्या आप ऑर्डर #${orderId} कन्फर्म करना चाहते हैं?`)) return;
-
-    const btn = event ? event.target : null;
-    if (btn) { btn.disabled = true; btn.textContent = 'प्रोसेसिंग…'; }
-
-    try {
-      const { data: ord, error: fetchErr } = await db
-        .from('order_requests')
-        .select('*')
-        .eq('id', orderId)
-        .single();
-      if (fetchErr) throw fetchErr;
-
-      let notes = String(ord.notes || '');
-      if (!notes.includes('STOCK_DEDUCTED:1')) {
-        const deducted = await adjustDatabaseStockForOrder(ord, -1);
-        if (deducted) {
-          notes = notes.replace('STOCK_SYNC:pending', '').trim() + ' | STOCK_DEDUCTED:1';
-        }
-      }
-
-      const { error: ordErr } = await db
-        .from('order_requests')
-        .update({ status: 'confirmed', notes: notes })
-        .eq('id', orderId);
-      if (ordErr) throw ordErr;
-
-      stopLoudAlert();
-      await window.loadAdminAll();
-      await window.loadPlants();
-      alert('✅ ऑर्डर कन्फर्म हो गया और स्टॉक अपडेट कर दिया गया!');
-    } catch (e) {
-      alert('त्रुटि: ' + e.message);
-      if (btn) { btn.disabled = false; btn.textContent = '✅ कन्फर्म'; }
-    }
-  };
-
-  // एडमिन द्वारा "❌ रद्द करें" दबाने पर घटा हुआ स्टॉक वापस जोड़ें
-  window.cancelOrderPrompt = async function (event, orderId, existingNotes) {
-    if (event) { event.preventDefault(); event.stopPropagation(); }
-
-    const reason = prompt(
-      'कृपया ऑर्डर रद्द करने का कारण चुनें या लिखें:\n\n1. फर्जी भुगतान स्क्रीनशॉट / UTR नंबर अमान्य\n2. स्टॉक में माल उपलब्ध नहीं है\n3. गलत पता या संपर्क नंबर\n4. अन्य कारण',
-      'फर्जी भुगतान स्क्रीनशॉट / UTR नंबर अमान्य'
-    );
-    if (reason === null) return;
-    const cleanReason = reason.trim() || 'अन्य कारण';
-
-    try {
-      const { data: ord } = await db.from('order_requests').select('*').eq('id', orderId).single();
-      let notes = String((ord && ord.notes) || existingNotes || '');
-
-      if (notes.includes('STOCK_DEDUCTED:1') && !notes.includes('STOCK_RESTORED:1')) {
-        const restored = await adjustDatabaseStockForOrder(ord, +1);
-        if (restored) {
-          notes += ' | STOCK_RESTORED:1';
-        }
-      }
-      notes = notes.replace('STOCK_SYNC:pending', 'STOCK_SYNC:cancelled') + ' | CANCEL_REASON:' + cleanReason;
-
-      const { error } = await db
-        .from('order_requests')
-        .update({ status: 'cancelled', notes: notes })
-        .eq('id', orderId);
-      if (error) throw error;
-
-      stopLoudAlert();
-      await window.loadAdminAll();
-      await window.loadPlants();
-      alert(`❌ ऑर्डर #${orderId} रद्द कर दिया गया और स्टॉक वापस अपडेट हो गया!`);
-    } catch (e) {
-      alert('रद्द करने में त्रुटि: ' + e.message);
-    }
-  };
-
-  // बिक्री हिसाब (loadSalesLedger) में कुल बिके पौधे और कुल बिकी सब्ज़ी की सही गिनती दिखाएँ
-  window.loadSalesLedger = async function () {
-    const pBox = document.getElementById('salesPlantRecords');
-    const vBox = document.getElementById('salesVegRecords');
-    const allList = document.getElementById('ownerSalesList');
-
-    pBox.innerHTML = 'लोड हो रहा है…';
-    vBox.innerHTML = 'लोड हो रहा है…';
-    allList.innerHTML = 'लोड हो रहा है…';
-
-    try {
-      const [ordersRes, plantsRes] = await Promise.all([
-        db.from('order_requests').select('*').order('created_at', { ascending: false }),
-        db.from('plants').select('*').order('name')
-      ]);
-      if (ordersRes.error) throw ordersRes.error;
-
-      const allPlants = plantsRes.data || plants || [];
-      const confirmedOrDelivered = (ordersRes.data || []).filter(
-        o => o.status === 'confirmed' || isOrderDelivered(o)
-      );
-
-      let totalRevenue = 0;
-      let totalPlantsSold = 0;
-      let totalVegSoldKg = 0;
-      const plantSummary = {};
-      const vegSummary = {};
-
-      confirmedOrDelivered.forEach(o => {
-        totalRevenue += Number(o.unit_price || 0);
-        const items = parseOrderItemsFromText(o, allPlants);
-        items.forEach(it => {
-          if (it.veg) {
-            totalVegSoldKg += it.qty;
-            vegSummary[it.name] = Number(((vegSummary[it.name] || 0) + it.qty).toFixed(3));
-          } else {
-            totalPlantsSold += it.qty;
-            plantSummary[it.name] = Math.round((plantSummary[it.name] || 0) + it.qty);
-          }
-        });
-      });
-
-      document.getElementById('salesTotalRevenue').textContent = '₹' + totalRevenue.toFixed(2);
-      document.getElementById('salesTotalPlants').textContent = String(Math.round(totalPlantsSold)) + ' पौधे';
-      document.getElementById('salesTotalVeg').textContent = totalVegSoldKg.toFixed(2) + ' किलो';
-      document.getElementById('salesTotalOrders').textContent = String(confirmedOrDelivered.length);
-
-      const pEntries = Object.entries(plantSummary);
-      pBox.innerHTML = pEntries.length
-        ? pEntries.map(([name, qty]) => `<div class="sale-row"><span>🌱 ${safe(name)}</span><strong>${qty} पौधे</strong></div>`).join('')
-        : '<p style="color:var(--muted)">अभी कोई पौधा बिक्री रिकॉर्ड नहीं है।</p>';
-
-      const vEntries = Object.entries(vegSummary);
-      vBox.innerHTML = vEntries.length
-        ? vEntries.map(([name, qty]) => `<div class="sale-row"><span>🥬 ${safe(name)}</span><strong>${qty} किलो</strong></div>`).join('')
-        : '<p style="color:var(--muted)">अभी कोई सब्ज़ी बिक्री रिकॉर्ड नहीं है।</p>';
-
-      allList.innerHTML = confirmedOrDelivered.length ? confirmedOrDelivered.map(o => {
-        const total = Number(o.unit_price || 0).toFixed(2);
-        const isDel = isOrderDelivered(o);
-        return `
-          <div class="sale-row" style="padding:10px 4px;border-bottom:1px solid #eef2eb">
-            <div>
-              <strong>#${o.id} - ${safe(o.plant_name)}</strong>
-              <span style="font-size:11px;font-weight:700;padding:2px 6px;border-radius:10px;margin-left:6px;background:${isDel ? '#dbeafe;color:#1e40af' : '#dcfce7;color:#166534'}">${isDel ? '🚚 डिलीवर' : '✅ कन्फर्म'}</span>
-              <div style="font-size:13px;color:var(--muted)">ग्राहक: ${safe(o.customer_name)} | 📞 ${safe(o.customer_phone)}</div>
-            </div>
-            <div style="font-size:16px;font-weight:800;color:var(--green)">₹${total}</div>
-          </div>`;
-      }).join('') : '<p style="color:var(--muted)">कोई रसीद नहीं है।</p>';
-    } catch (err) {
-      allList.innerHTML = '<div class="status">त्रुटि: ' + err.message + '</div>';
-    }
-  };
-})();
 </script>
 
 <script>
