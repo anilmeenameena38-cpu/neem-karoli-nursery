@@ -3356,6 +3356,18 @@ async function loadPlants() {
           <p class="stock-text">स्टॉक: ${isSoldOut ? '<b style="color:#dc2626">0 उपलब्ध</b>' : stockDisplay}</p>
         </div>
 
+        
+        <!-- Add-on Companion Items (Disposables / Snacks) for Drinks & Cakes -->
+        ${(grocery || isGrocery(p)) ? `
+        <div class="product-addon-selector" style="margin:6px 0;padding:6px 8px;background:#fefce8;border:1px dashed #fde047;border-radius:10px;text-align:left;font-size:12px">
+          <label style="margin:0 0 4px;font-weight:800;color:#854d0e;display:flex;align-items:center;gap:4px">
+            <input type="checkbox" class="card-addon-chk" data-addon-name="डिसपोज़ल ग्लास (10 पीस)" data-addon-price="20" style="margin:0;width:15px;height:15px"> 🥤 डिस्पोजल ग्लास (10 पीस) [+₹20]
+          </label>
+          <label style="margin:0;font-weight:800;color:#854d0e;display:flex;align-items:center;gap:4px">
+            <input type="checkbox" class="card-addon-chk" data-addon-name="कुरकुरा / नमकीन पैक" data-addon-price="15" style="margin:0;width:15px;height:15px"> 🍿 कुरकुरा/नमकीन पैक [+₹15]
+          </label>
+        </div>` : ''}
+
         <div class="card-stepper-box">
           <div class="stepper-label">
             <span>मात्रा चुनें</span>
@@ -3483,7 +3495,7 @@ function syncCartQuantityFromCard(plant, veg, qtyInput) {
 }
 
 // 🛒 कार्ट में उत्पाद जोड़ना
-function addToCart(plant, qty, veg, isGram) {
+function addToCart(plant, qty, veg, isGram, addons = []) {
   const existingIndex = shoppingCart.findIndex(item => item.id === plant.id && Boolean(item.veg) === Boolean(veg));
   if (existingIndex > -1) {
     shoppingCart[existingIndex].qty += qty;
@@ -3496,7 +3508,8 @@ function addToCart(plant, qty, veg, isGram) {
       qty: qty,
       veg: veg,
       isGram: isGram,
-      image_url: plant.image_url || ''
+      image_url: plant.image_url || '',
+      addons: addons || []
     });
   }
   updateCartBadge();
@@ -3614,7 +3627,8 @@ function renderCartModal() {
   let subtotal = 0;
 
   shoppingCart.forEach((item, idx) => {
-    const itemTotal = item.price * item.qty;
+    const addonsTotal = (item.addons || []).reduce((s, a) => s + (Number(a.price) || 0), 0);
+    const itemTotal = (item.price * item.qty) + addonsTotal;
     subtotal += itemTotal;
 
     let qtyText = '';
@@ -3640,7 +3654,8 @@ function renderCartModal() {
         ${cartImage}
         <div class="cart-item-info">
           <strong>${safe(item.name)}</strong> (${qtyText})
-          <div style="font-size:12px;color:var(--muted);margin-top:3px">₹${item.price} × ${item.veg && item.isGram && item.qty < 1 ? item.qty + 'kg' : item.qty} = ₹${itemTotal.toFixed(2)}</div>
+          ${(item.addons && item.addons.length) ? `<div style="font-size:11.5px;color:#b45309;font-weight:700;margin-top:2px">➕ एड-ऑन्स: ${item.addons.map(a => `${a.name} (+₹${a.price})`).join(', ')}</div>` : ''}
+          <div style="font-size:12px;color:var(--muted);margin-top:3px">कुल: ₹${itemTotal.toFixed(2)}</div>
         </div>
         <button type="button" onclick="removeFromCart(${idx})" style="background:#fee2e2;color:#b91c1c;border:0;padding:6px 8px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">✕ हटाएँ</button>
       </div>`;
@@ -3885,7 +3900,8 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
     const itemsSummaryText = shoppingCart.map(i => {
       let qText = i.veg && i.isGram ? (i.qty < 1 ? Math.round(i.qty * 1000) + 'g' : i.qty + 'kg') : (i.qty + (i.veg ? 'kg' : 'pcs'));
-      return `${i.name} (${qText})`;
+      let addonStr = (i.addons && i.addons.length) ? ` [साथ में: ${i.addons.map(a => a.name).join(', ')}]` : '';
+      return `${i.name} (${qText})${addonStr}`;
     }).join(', ');
     
     const totalQtyCount = shoppingCart.reduce((sum, i) => sum + i.qty, 0);
