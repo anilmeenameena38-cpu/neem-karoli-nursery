@@ -4202,7 +4202,7 @@ async function uploadPhoto(file, id) {
   if (!file) return null;
   const ext = file.name.split('.').pop() || 'jpg';
   const path = `${OWNER_UID}/${id}-${Date.now()}.${ext}`;
-  const { error } = await db.storage.from('plant-images').upload(path, file, {upsert:false, contentType:file.type});
+  const { error } = await db.storage.from('plant-images').upload(path, file, {upsert:true, contentType:file.type});
   if (error) throw error;
   return db.storage.from('plant-images').getPublicUrl(path).data.publicUrl;
 }
@@ -4892,7 +4892,9 @@ async function renderAdminEdit() {
         if (file) updates.image_url = await uploadPhoto(file, p.id);
         await db.from('plants').update(updates).eq('id', p.id);
         alert('✅ उत्पाद सफलतापूर्वक अपडेट हो गया!');
-        loadPlants(); loadAdminAll(); renderAdminEdit();
+        await loadPlants();
+        await loadAdminAll();
+        await renderAdminEdit();
       } catch (err) {
         alert('त्रुटि: ' + err.message);
         btn.disabled = false;
