@@ -2490,35 +2490,6 @@ body.info-fullscreen-open > main > .nav-page-open {
       <form id="siteSettingsForm">
         <!-- टैब 1: दुकान & सेल -->
         <div id="subpane-shop" class="settings-subpane active">
-          <div style="background:#f4fbf7;border:1px solid #d1fae5;border-radius:14px;padding:14px;margin-bottom:14px">
-            <h4 style="margin:0 0 10px;color:var(--deep)">📐 होमपेज कॉलम लेआउट कंट्रोल (Product Column Display)</h4>
-            <div class="admin-form-grid" style="margin:0">
-              <div>
-                <label>🌱 पौधों की सूची के कॉलम (Plants Columns)</label>
-                <select id="settingPlantCols">
-                  <option value="2">2 कॉलम (बड़े कार्ड)</option>
-                  <option value="3" selected>3 कॉलम (संतुलित)</option>
-                  <option value="4">4 कॉलम (डेस्कटॉप शैली)</option>
-                </select>
-              </div>
-              <div>
-                <label>🥬 सब्ज़ियों की सूची के कॉलम (Veg Columns)</label>
-                <select id="settingVegCols">
-                  <option value="2">2 कॉलम</option>
-                  <option value="3" selected>3 कॉलम</option>
-                  <option value="4">4 कॉलम</option>
-                </select>
-              </div>
-              <div>
-                <label>🛒 किराना व केक के कॉलम (Grocery Columns)</label>
-                <select id="settingGroceryCols">
-                  <option value="2">2 कॉलम</option>
-                  <option value="3" selected>3 कॉलम</option>
-                  <option value="4">4 कॉलम</option>
-                </select>
-              </div>
-            </div>
-          </div>
           <div class="admin-col-header">
             <h3>🏪 दुकान स्थिति व न्यूनतम पौधे आर्डर सीमा</h3>
             <span class="admin-count-pill">स्टोर कंट्रोल</span>
@@ -3382,66 +3353,7 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
 
 
 
-
-<script id="dynamic-column-controller-final">
-(function(){
-  function applyColumnSettings() {
-    try {
-      const cfg = JSON.parse(localStorage.getItem('nursery_site_config') || '{}');
-      const pCols = cfg.plantCols || '3';
-      const vCols = cfg.vegCols || '3';
-      const gCols = cfg.groceryCols || '3';
-
-      const pList = document.getElementById('plantOnlyList');
-      const vList = document.getElementById('vegOnlyList');
-      const gList = document.getElementById('groceryOnlyList');
-
-      if (pList) pList.style.gridTemplateColumns = `repeat(${pCols}, minmax(0, 1fr))`;
-      if (vList) vList.style.gridTemplateColumns = `repeat(${vCols}, minmax(0, 1fr))`;
-      if (gList) gList.style.gridTemplateColumns = `repeat(${gCols}, minmax(0, 1fr))`;
-    } catch (_) {}
-  }
-
-  // Hook into loadPlants
-  const oldLoad = window.loadPlants;
-  if (typeof oldLoad === 'function') {
-    window.loadPlants = async function() {
-      await oldLoad();
-      applyColumnSettings();
-    };
-  }
-
-  // Hook into siteSettingsForm submit to save column settings
-  document.getElementById('siteSettingsForm')?.addEventListener('submit', function() {
-    try {
-      const cfg = JSON.parse(localStorage.getItem('nursery_site_config') || '{}');
-      cfg.plantCols = document.getElementById('settingPlantCols')?.value || '3';
-      cfg.vegCols = document.getElementById('settingVegCols')?.value || '3';
-      cfg.groceryCols = document.getElementById('settingGroceryCols')?.value || '3';
-      localStorage.setItem('nursery_site_config', JSON.stringify(cfg));
-      applyColumnSettings();
-    } catch (_) {}
-  });
-
-  // Hook into fillSettingsForm to populate selectors
-  const oldFill = window.fillSettingsForm;
-  if (typeof oldFill === 'function') {
-    window.fillSettingsForm = function() {
-      oldFill();
-      try {
-        const cfg = JSON.parse(localStorage.getItem('nursery_site_config') || '{}');
-        if (document.getElementById('settingPlantCols')) document.getElementById('settingPlantCols').value = cfg.plantCols || '3';
-        if (document.getElementById('settingVegCols')) document.getElementById('settingVegCols').value = cfg.vegCols || '3';
-        if (document.getElementById('settingGroceryCols')) document.getElementById('settingGroceryCols').value = cfg.groceryCols || '3';
-      } catch (_) {}
-    };
-  }
-
-  window.addEventListener('DOMContentLoaded', applyColumnSettings);
-})();
-</script>
 </body>
-
     </html>
   `);
   printWindow.document.close();
@@ -7125,64 +7037,5 @@ body.admin-panel-open #ownerCloseButton {
 })();
 </script>
 
-
-<script id="dynamic-column-controller-final">
-(function(){
-  function applyColumnSettings() {
-    try {
-      const cfg = JSON.parse(localStorage.getItem('nursery_site_config') || '{}');
-      const pCols = cfg.plantCols || '3';
-      const vCols = cfg.vegCols || '3';
-      const gCols = cfg.groceryCols || '3';
-
-      const pList = document.getElementById('plantOnlyList');
-      const vList = document.getElementById('vegOnlyList');
-      const gList = document.getElementById('groceryOnlyList');
-
-      if (pList) pList.style.gridTemplateColumns = `repeat(${pCols}, minmax(0, 1fr))`;
-      if (vList) vList.style.gridTemplateColumns = `repeat(${vCols}, minmax(0, 1fr))`;
-      if (gList) gList.style.gridTemplateColumns = `repeat(${gCols}, minmax(0, 1fr))`;
-    } catch (_) {}
-  }
-
-  // Hook into loadPlants
-  const oldLoad = window.loadPlants;
-  if (typeof oldLoad === 'function') {
-    window.loadPlants = async function() {
-      await oldLoad();
-      applyColumnSettings();
-    };
-  }
-
-  // Hook into siteSettingsForm submit to save column settings
-  document.getElementById('siteSettingsForm')?.addEventListener('submit', function() {
-    try {
-      const cfg = JSON.parse(localStorage.getItem('nursery_site_config') || '{}');
-      cfg.plantCols = document.getElementById('settingPlantCols')?.value || '3';
-      cfg.vegCols = document.getElementById('settingVegCols')?.value || '3';
-      cfg.groceryCols = document.getElementById('settingGroceryCols')?.value || '3';
-      localStorage.setItem('nursery_site_config', JSON.stringify(cfg));
-      applyColumnSettings();
-    } catch (_) {}
-  });
-
-  // Hook into fillSettingsForm to populate selectors
-  const oldFill = window.fillSettingsForm;
-  if (typeof oldFill === 'function') {
-    window.fillSettingsForm = function() {
-      oldFill();
-      try {
-        const cfg = JSON.parse(localStorage.getItem('nursery_site_config') || '{}');
-        if (document.getElementById('settingPlantCols')) document.getElementById('settingPlantCols').value = cfg.plantCols || '3';
-        if (document.getElementById('settingVegCols')) document.getElementById('settingVegCols').value = cfg.vegCols || '3';
-        if (document.getElementById('settingGroceryCols')) document.getElementById('settingGroceryCols').value = cfg.groceryCols || '3';
-      } catch (_) {}
-    };
-  }
-
-  window.addEventListener('DOMContentLoaded', applyColumnSettings);
-})();
-</script>
 </body>
-
 </html>
