@@ -7231,14 +7231,96 @@ body.admin-panel-open #ownerCloseButton {
  function fill(c){Object.keys(DEFAULTS).forEach(k=>{const e=$(k);if(!e)return;if(e.type==='checkbox')e.checked=c[k]!==undefined?!!c[k]:!!DEFAULTS[k];else e.value=c[k]??DEFAULTS[k];});}
  function toggle(id,on){const e=$(id);if(e){if(on)e.style.removeProperty('display');else e.style.setProperty('display','none','important');}}
  function apply(c){
-   toggle('viewPlantCategory',c.cmsxShowHome&&c.cmsxPlantsVisible);toggle('viewVegCategory',c.cmsxShowHome&&c.cmsxVegVisible);toggle('viewGroceryCategory',c.cmsxShowHome&&c.cmsxGroceryVisible);
-   toggle('about',c.cmsxShowAbout);toggle('plantCare',c.cmsxShowCare);toggle('plantTypes',c.cmsxShowTypes);toggle('contact',c.cmsxShowContact);
-   const title=c.cmsxHomeTitle||'', sub=c.cmsxHomeSubtitle||'';let hero=$('cmsxHomeHero');if(title||sub){if(!hero){hero=document.createElement('section');hero.id='cmsxHomeHero';hero.className='cmsx-home-hero';const first=$('viewPlantCategory');if(first&&first.parentNode)first.parentNode.insertBefore(hero,first);}hero.innerHTML=(title?'<h2>'+escapeHtml(title)+'</h2>':'')+(sub?'<p>'+escapeHtml(sub)+'</p>':'');}else if(hero)hero.remove();
-   const about=$('about');if(about){const ps=about.querySelectorAll(':scope > p');if(c.cmsxAboutText&&ps[0])ps[0].textContent=c.cmsxAboutText;if(c.cmsxPromiseText&&ps[1])ps[1].textContent=c.cmsxPromiseText;if(c.cmsxFeaturesText){const ul=about.querySelector('ul');if(ul)ul.innerHTML=c.cmsxFeaturesText.split(/\n+/).filter(Boolean).map(x=>'<li>'+escapeHtml(x)+'</li>').join('');}}
-   let meta=document.querySelector('meta[name="description"]');if(!meta&&c.cmsxMetaDescription){meta=document.createElement('meta');meta.name='description';document.head.appendChild(meta);}if(meta&&c.cmsxMetaDescription)meta.setAttribute('content',c.cmsxMetaDescription);
-   const rules=[['plantOnlyList',c.cmsxPlantsOrder&&c.cmsxAllOrders],['vegOnlyList',c.cmsxVegOrder&&c.cmsxAllOrders],['groceryOnlyList',c.cmsxGroceryOrder&&c.cmsxAllOrders]];
-   rules.forEach(([id,enabled])=>{const root=$(id);if(root){root.querySelectorAll('.plant-buy-button').forEach(b=>{b.disabled=!enabled;b.dataset.cmsxDisabled=enabled?'0':'1';if(!enabled)b.textContent='आज ऑर्डर बंद';else if(b.dataset.cmsxDisabled==='0'&&b.textContent==='आज ऑर्डर बंद')b.textContent='कार्ट में जोड़ें';});}});
-   const mobile=window.matchMedia('(max-width:700px)').matches;const p=$('plantOnlyList'),v=$('vegOnlyList'),g=$('groceryOnlyList');if(mobile){if(p)p.style.gridTemplateColumns='repeat('+c.cmsxMobilePlantCols+',minmax(0,1fr))';if(v)v.style.gridTemplateColumns='repeat('+c.cmsxMobileVegCols+',minmax(0,1fr))';if(g)g.style.gridTemplateColumns='repeat('+c.cmsxMobileGroceryCols+',minmax(0,1fr))';}
+   // Keep the category switcher and its matching content in sync.
+   const categoryRules = [
+     ['viewPlantCategory','showPlantsTab',!!c.cmsxShowHome && !!c.cmsxPlantsVisible],
+     ['viewVegCategory','showVegTab',!!c.cmsxShowHome && !!c.cmsxVegVisible],
+     ['viewGroceryCategory','showGroceryTab',!!c.cmsxShowHome && !!c.cmsxGroceryVisible]
+   ];
+   categoryRules.forEach(([sectionId,tabId,visible])=>{
+     toggle(sectionId,visible);
+     toggle(tabId,visible);
+   });
+
+   // Content pages and their navigation links.
+   const pageRules = [
+     ['about','cmsxShowAbout'],['plantCare','cmsxShowCare'],
+     ['plantTypes','cmsxShowTypes'],['contact','cmsxShowContact']
+   ];
+   pageRules.forEach(([id,key])=>toggle(id,!!c[key]));
+   const navTargets = [
+     ['about','cmsxShowAbout'],['plantCare','cmsxShowCare'],
+     ['plantTypes','cmsxShowTypes'],['contact','cmsxShowContact']
+   ];
+   navTargets.forEach(([id,key])=>{
+     document.querySelectorAll('a[href="#'+id+'"]').forEach(a=>toggle(a,!!c[key]));
+   });
+
+   // Put the editable homepage banner before the category switcher, not inside a category.
+   const title=String(c.cmsxHomeTitle||'').trim();
+   const sub=String(c.cmsxHomeSubtitle||'').trim();
+   let hero=$('cmsxHomeHero');
+   if(title || sub){
+     if(!hero){
+       hero=document.createElement('section');
+       hero.id='cmsxHomeHero';
+       hero.className='cmsx-home-hero';
+     }
+     hero.replaceChildren();
+     if(title){const h=document.createElement('h2');h.textContent=title;hero.appendChild(h);}
+     if(sub){const p=document.createElement('p');p.textContent=sub;hero.appendChild(p);}
+     const tabs=document.querySelector('.store-view-tabs');
+     const first=$('viewPlantCategory');
+     if(tabs && tabs.parentNode) tabs.parentNode.insertBefore(hero,tabs);
+     else if(first && first.parentNode) first.parentNode.insertBefore(hero,first);
+   } else if(hero) hero.remove();
+
+   // Update About Us copy without destroying the section labels.
+   const about=$('about');
+   if(about){
+     const directPs=Array.from(about.children).filter(el=>el.tagName==='P');
+     if(directPs[0] && c.cmsxAboutText){
+       directPs[0].innerHTML='<strong>हमारा परिचय:</strong> '+escapeHtml(c.cmsxAboutText);
+     }
+     if(directPs[1] && c.cmsxPromiseText){
+       directPs[1].innerHTML='<strong>हमारा वादा:</strong> '+escapeHtml(c.cmsxPromiseText);
+     }
+     const ul=about.querySelector(':scope > ul');
+     if(ul && c.cmsxFeaturesText){
+       ul.innerHTML=String(c.cmsxFeaturesText).split(String.fromCharCode(10)).filter(Boolean)
+         .map(x=>'<li>'+escapeHtml(x)+'</li>').join('');
+     }
+   }
+
+   let meta=document.querySelector('meta[name="description"]');
+   if(!meta && c.cmsxMetaDescription){
+     meta=document.createElement('meta');meta.name='description';document.head.appendChild(meta);
+   }
+   if(meta && c.cmsxMetaDescription) meta.setAttribute('content',c.cmsxMetaDescription);
+
+   // Enforce category-specific order switches on all currently rendered products.
+   const rules=[
+     ['plantOnlyList',!!c.cmsxPlantsOrder && !!c.cmsxAllOrders],
+     ['vegOnlyList',!!c.cmsxVegOrder && !!c.cmsxAllOrders],
+     ['groceryOnlyList',!!c.cmsxGroceryOrder && !!c.cmsxAllOrders]
+   ];
+   rules.forEach(([id,enabled])=>{
+     const root=$(id); if(!root)return;
+     root.querySelectorAll('.plant-buy-button').forEach(b=>{
+       b.disabled=!enabled;
+       if(!enabled){b.dataset.cmsxWasDisabled=b.disabled?'1':'0';b.textContent='आज ऑर्डर बंद';}
+       else if(b.textContent==='आज ऑर्डर बंद') b.textContent='कार्ट में जोड़ें';
+     });
+   });
+
+   // Mobile columns apply immediately and also on viewport resize.
+   const mobile=window.matchMedia('(max-width:700px)').matches;
+   const p=$('plantOnlyList'),v=$('vegOnlyList'),g=$('groceryOnlyList');
+   if(mobile){
+     if(p)p.style.gridTemplateColumns='repeat('+c.cmsxMobilePlantCols+',minmax(0,1fr))';
+     if(v)v.style.gridTemplateColumns='repeat('+c.cmsxMobileVegCols+',minmax(0,1fr))';
+     if(g)g.style.gridTemplateColumns='repeat('+c.cmsxMobileGroceryCols+',minmax(0,1fr))';
+   }
    document.body.classList.toggle('cmsx-compact-mobile',!!c.cmsxMobileCompact);
  }
  function escapeHtml(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
