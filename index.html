@@ -3739,7 +3739,11 @@ async function loadPlants() {
         };
         syncButton();
 
-        buyButton.addEventListener('click', () => {
+        buyButton.addEventListener('click', (event) => {
+          // Product-card action must not bubble into category/navigation click handlers.
+          // Adding a vegetable keeps the customer on the vegetables tab.
+          event.preventDefault();
+          event.stopPropagation();
           const existingIndex = shoppingCart.findIndex(item => item.id === p.id && Boolean(item.veg) === Boolean(veg));
           if (existingIndex !== -1) {
             shoppingCart.splice(existingIndex, 1);
@@ -5967,9 +5971,9 @@ loadPlants();
     }
   }
 
-  plantBtn.addEventListener('click', function(){ setStoreView('plants'); });
-  vegBtn.addEventListener('click', function(){ setStoreView('veg'); });
-  if (groceryBtn) groceryBtn.addEventListener('click', function(){ setStoreView('grocery'); });
+  plantBtn.addEventListener('click', function(event){ event.preventDefault(); event.stopPropagation(); setStoreView('plants'); });
+  vegBtn.addEventListener('click', function(event){ event.preventDefault(); event.stopPropagation(); setStoreView('veg'); });
+  if (groceryBtn) groceryBtn.addEventListener('click', function(event){ event.preventDefault(); event.stopPropagation(); setStoreView('grocery'); });
   setStoreView('plants');
 
   // Keep the appropriate layout if the device is rotated or resized.
