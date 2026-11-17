@@ -2176,6 +2176,13 @@ body.info-fullscreen-open > main > .nav-page-open {
                 <label>📷 पौधे की साफ फोटो</label>
                 <input id="pImage" type="file" accept="image/*">
               </div>
+              
+              <div class="full-span" style="background:#fefce8;padding:10px;border-radius:10px;border:1px dashed #fde047">
+                <label style="color:#854d0e;margin-bottom:2px">🥤 साथ में मिलने वाले एड-ऑन्स / डिस्पोजल & कुरकुरा (वैकल्पिक)</label>
+                <input id="gAddons" placeholder="जैसे: डिस्पोजल ग्लास:10, कुरकुरा पैक:15, पानी की बोतल:20">
+                <small style="color:#a16207;font-size:11.5px">फॉर्मेट: `आइटम का नाम : कीमत`, कॉमा (,) लगाकर एक से अधिक एड-ऑन लिखें।</small>
+              </div>
+
               <div class="full-span">
                 <label>📝 संक्षिप्त विवरण (वैकल्पिक)</label>
                 <textarea id="pDesc" rows="2" placeholder="पौधे की विशेषता या लगाने का मौसम…"></textarea>
@@ -2477,6 +2484,7 @@ body.info-fullscreen-open > main > .nav-page-open {
         <button type="button" class="settings-subtab" data-subtab="branding">🎨 5. थीम &amp; समय</button>
         <button type="button" class="settings-subtab" data-subtab="widget">💬 6. WhatsApp &amp; कूपन</button>
         <button type="button" class="settings-subtab" data-subtab="preview">👁️ 7. लाइव प्रीव्यू</button>
+        <button type="button" class="settings-subtab" data-subtab="addons">🥤 8. एड-ऑन्स व डिस्पोजल</button>
       </div>
 
       <form id="siteSettingsForm">
@@ -2660,6 +2668,31 @@ body.info-fullscreen-open > main > .nav-page-open {
             </div>
           </div>
         </div>
+
+
+        <!-- टैब 8: एड-ऑन्स व डिस्पोजल मैनेजर -->
+        <div id="subpane-addons" class="settings-subpane">
+          <div class="admin-col-header">
+            <h3>🥤 कोल्ड ड्रिंक्स व केक के साथ दिखने वाले एड-ऑन्स (डिस्पोजल, कुरकुरा आदि)</h3>
+            <span class="admin-count-pill">कस्टम ऐड-ऑन्स</span>
+          </div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:12px">यहाँ आप नए एड-ऑन्स (जैसे डिस्पोजल ग्लास, प्लेट, नमकीन, कुरकुरा) और उनकी कीमत सेट कर सकते हैं, जो ग्राहक को कोल्ड ड्रिंक और केक के नीचे अपने आप दिखाई देंगे।</p>
+          <div class="admin-form-grid" style="margin-bottom:12px">
+            <div>
+              <label>🥤 आइटम का नाम (जैसे डिस्पोजल ग्लास)</label>
+              <input id="newAddonNameInput" placeholder="जैसे डिस्पोजल ग्लास (10 पीस)">
+            </div>
+            <div>
+              <label>💰 कीमत (₹)</label>
+              <input id="newAddonPriceInput" type="number" min="0" step="1" placeholder="जैसे 20">
+            </div>
+            <div style="display:flex;align-items:flex-end">
+              <button type="button" id="addNewAddonBtn" class="admin-primary-submit" style="margin:6px 0 10px">➕ नया एड-ऑन जोड़ें</button>
+            </div>
+          </div>
+          <div id="adminAddonsListContainer" style="margin-top:12px"></div>
+        </div>
+
 
         <!-- टैब 7: लाइव प्रीव्यू -->
         <div id="subpane-preview" class="settings-subpane">
@@ -3001,7 +3034,86 @@ document.getElementById('siteSettingsForm')?.addEventListener('submit', function
   };
 
   localStorage.setItem('nursery_site_config', JSON.stringify(newConfig));
-  applySiteConfigToUI();
+  
+// 🥤 Dynamic Add-ons Manager (Disposables, Snacks, etc.)
+function getCustomAddons() {
+  try {
+    const saved = localStorage.getItem('nursery_custom_addons_v1');
+    return saved ? JSON.parse(saved) : [
+      { name: "डिसपोज़ल ग्लास (10 पीस)", price: 20 },
+      { name: "कुरकुरा / नमकीन पैक", price: 15 }
+    ];
+  } catch (_) {
+    return [
+      { name: "डिसपोज़ल ग्लास (10 पीस)", price: 20 },
+      { name: "कुरकुरा / नमकीन पैक", price: 15 }
+    ];
+  }
+}
+
+function saveCustomAddons(list) {
+  try {
+    localStorage.setItem('nursery_custom_addons_v1', JSON.stringify(list));
+  } catch (_) {}
+}
+
+function renderAdminAddonsManager() {
+  const container = document.getElementById('adminAddonsListContainer');
+  if (!container) return;
+  const list = getCustomAddons();
+  if (!list.length) {
+    container.innerHTML = '<p style="color:var(--muted);font-size:13px">कोई एड-ऑन नहीं जोड़ा गया है।</p>';
+    return;
+  }
+  container.innerHTML = list.map((item, idx) => `
+    <div class="stock-row admin-pro-row" style="margin-bottom:8px">
+      <div>
+        <strong>${safe(item.name)}</strong>
+        <span class="admin-price-chip" style="margin-left:8px">₹${item.price}</span>
+      </div>
+      <button type="button" onclick="window.removeCustomAddon(${idx})" style="background:#fff1f2;color:#b91c1c;border:1px solid #fecaca;padding:6px 10px;border-radius:8px;font-weight:800;cursor:pointer">🗑️ हटाएं</button>
+    </div>
+  `).join('');
+}
+
+window.removeCustomAddon = function(idx) {
+  const list = getCustomAddons();
+  list.splice(idx, 1);
+  saveCustomAddons(list);
+  renderAdminAddonsManager();
+  loadPlants();
+};
+
+document.getElementById('addNewAddonBtn')?.addEventListener('click', () => {
+  const nameInput = document.getElementById('newAddonNameInput');
+  const priceInput = document.getElementById('newAddonPriceInput');
+  const name = nameInput?.value.trim();
+  const price = Number(priceInput?.value);
+  if (!name || isNaN(price) || price < 0) {
+    alert('कृपया सही नाम और कीमत दर्ज करें!');
+    return;
+  }
+  const list = getCustomAddons();
+  list.push({ name, price });
+  saveCustomAddons(list);
+  nameInput.value = '';
+  priceInput.value = '';
+  renderAdminAddonsManager();
+  loadPlants();
+  alert('✅ एड-ऑन सफलतापूर्वक जोड़ दिया गया!');
+});
+
+// Hook into settings tab change to render addons manager when tab 8 is clicked
+document.querySelectorAll('.settings-subtab').forEach(btn => {
+  btn.addEventListener('click', function() {
+    if (this.dataset.subtab === 'addons') {
+      renderAdminAddonsManager();
+    }
+  });
+});
+
+
+applySiteConfigToUI();
   fillSettingsForm();
   loadPlants();
 
@@ -3357,15 +3469,20 @@ async function loadPlants() {
         </div>
 
         
-        <!-- Add-on Companion Items (Disposables / Snacks) for Drinks & Cakes -->
-        ${(grocery || isGrocery(p)) ? `
+        <!-- Per-Product Add-ons (Disposables, Snacks, etc.) -->
+        ${(p.addons_text && p.addons_text.trim()) ? `
         <div class="product-addon-selector" style="margin:6px 0;padding:6px 8px;background:#fefce8;border:1px dashed #fde047;border-radius:10px;text-align:left;font-size:12px">
-          <label style="margin:0 0 4px;font-weight:800;color:#854d0e;display:flex;align-items:center;gap:4px">
-            <input type="checkbox" class="card-addon-chk" data-addon-name="डिसपोज़ल ग्लास (10 पीस)" data-addon-price="20" style="margin:0;width:15px;height:15px"> 🥤 डिस्पोजल ग्लास (10 पीस) [+₹20]
-          </label>
-          <label style="margin:0;font-weight:800;color:#854d0e;display:flex;align-items:center;gap:4px">
-            <input type="checkbox" class="card-addon-chk" data-addon-name="कुरकुरा / नमकीन पैक" data-addon-price="15" style="margin:0;width:15px;height:15px"> 🍿 कुरकुरा/नमकीन पैक [+₹15]
-          </label>
+          <div style="font-weight:800;color:#854d0e;margin-bottom:3px">🥤 साथ में जोड़ें (Add-ons):</div>
+          ${p.addons_text.split(',').map(part => {
+            const [name, price] = part.split(':').map(s => s.trim());
+            if (!name) return '';
+            const pVal = Number(price) || 0;
+            return `
+              <label style="margin:2px 0;font-weight:700;color:#854d0e;display:flex;align-items:center;gap:5px">
+                <input type="checkbox" class="card-addon-chk" data-addon-name="${safe(name)}" data-addon-price="${pVal}" style="margin:0;width:15px;height:15px"> ${safe(name)} [+₹${pVal}]
+              </label>
+            `;
+          }).join('')}
         </div>` : ''}
 
         <div class="card-stepper-box">
@@ -4748,6 +4865,10 @@ async function renderAdminEdit() {
           <input class="es" type="number" step="${veg?'0.5':'1'}" value="${p.stock_quantity}" style="margin:0;padding:7px 9px;font-weight:800">
         </div>
         <div style="grid-column:1/-1">
+          <label style="font-size:11px;margin:0 0 3px;color:var(--muted)">🥤 साथ के एड-ऑन्स (जैसे: डिस्पोजल ग्लास:10, कुरकुरा:15)</label>
+          <input class="ea" type="text" value="${safe(p.addons_text || '')}" placeholder="डिस्पोजल ग्लास:10, कुरकुरा:15" style="margin:0;padding:7px 9px;font-weight:700">
+        </div>
+        <div style="grid-column:1/-1">
           <label style="font-size:11px;margin:0 0 3px;color:var(--muted)">📷 नई फोटो अपलोड करें (वैकल्पिक)</label>
           <input class="ef" type="file" accept="image/*" style="margin:0;padding:6px;font-size:12px">
         </div>
@@ -4766,7 +4887,8 @@ async function renderAdminEdit() {
         const price = Number(row.querySelector('.ep').value);
         const stock = Number(row.querySelector('.es').value);
         const file = row.querySelector('.ef').files?.[0];
-        let updates = {selling_price: price, stock_quantity: stock};
+        const addonsText = row.querySelector('.ea')?.value.trim() || '';
+        let updates = {selling_price: price, stock_quantity: stock, addons_text: addonsText};
         if (file) updates.image_url = await uploadPhoto(file, p.id);
         await db.from('plants').update(updates).eq('id', p.id);
         alert('✅ उत्पाद सफलतापूर्वक अपडेट हो गया!');
@@ -4910,6 +5032,85 @@ document.getElementById('nurseryAskChatGPT')?.addEventListener('click', () => {
   const q = document.getElementById('nurseryChatQuestion').value.trim();
   if (q) window.open('https://chatgpt.com/?q=' + encodeURIComponent(q), '_blank');
 });
+
+
+// 🥤 Dynamic Add-ons Manager (Disposables, Snacks, etc.)
+function getCustomAddons() {
+  try {
+    const saved = localStorage.getItem('nursery_custom_addons_v1');
+    return saved ? JSON.parse(saved) : [
+      { name: "डिसपोज़ल ग्लास (10 पीस)", price: 20 },
+      { name: "कुरकुरा / नमकीन पैक", price: 15 }
+    ];
+  } catch (_) {
+    return [
+      { name: "डिसपोज़ल ग्लास (10 पीस)", price: 20 },
+      { name: "कुरकुरा / नमकीन पैक", price: 15 }
+    ];
+  }
+}
+
+function saveCustomAddons(list) {
+  try {
+    localStorage.setItem('nursery_custom_addons_v1', JSON.stringify(list));
+  } catch (_) {}
+}
+
+function renderAdminAddonsManager() {
+  const container = document.getElementById('adminAddonsListContainer');
+  if (!container) return;
+  const list = getCustomAddons();
+  if (!list.length) {
+    container.innerHTML = '<p style="color:var(--muted);font-size:13px">कोई एड-ऑन नहीं जोड़ा गया है।</p>';
+    return;
+  }
+  container.innerHTML = list.map((item, idx) => `
+    <div class="stock-row admin-pro-row" style="margin-bottom:8px">
+      <div>
+        <strong>${safe(item.name)}</strong>
+        <span class="admin-price-chip" style="margin-left:8px">₹${item.price}</span>
+      </div>
+      <button type="button" onclick="window.removeCustomAddon(${idx})" style="background:#fff1f2;color:#b91c1c;border:1px solid #fecaca;padding:6px 10px;border-radius:8px;font-weight:800;cursor:pointer">🗑️ हटाएं</button>
+    </div>
+  `).join('');
+}
+
+window.removeCustomAddon = function(idx) {
+  const list = getCustomAddons();
+  list.splice(idx, 1);
+  saveCustomAddons(list);
+  renderAdminAddonsManager();
+  loadPlants();
+};
+
+document.getElementById('addNewAddonBtn')?.addEventListener('click', () => {
+  const nameInput = document.getElementById('newAddonNameInput');
+  const priceInput = document.getElementById('newAddonPriceInput');
+  const name = nameInput?.value.trim();
+  const price = Number(priceInput?.value);
+  if (!name || isNaN(price) || price < 0) {
+    alert('कृपया सही नाम और कीमत दर्ज करें!');
+    return;
+  }
+  const list = getCustomAddons();
+  list.push({ name, price });
+  saveCustomAddons(list);
+  nameInput.value = '';
+  priceInput.value = '';
+  renderAdminAddonsManager();
+  loadPlants();
+  alert('✅ एड-ऑन सफलतापूर्वक जोड़ दिया गया!');
+});
+
+// Hook into settings tab change to render addons manager when tab 8 is clicked
+document.querySelectorAll('.settings-subtab').forEach(btn => {
+  btn.addEventListener('click', function() {
+    if (this.dataset.subtab === 'addons') {
+      renderAdminAddonsManager();
+    }
+  });
+});
+
 
 applySiteConfigToUI();
 loadPlants();
