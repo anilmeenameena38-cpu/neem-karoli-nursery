@@ -1711,6 +1711,10 @@ body > main::after{
 <!-- मोबाइल/डेस्कटॉप टॉगल मेनू -->
 <!-- मोबाइल फ्रेंडली चौड़े नेविगेशन टैब -->
 <nav id="mainNavigation" aria-label="मुख्य नेविगेशन">
+  <a href="#mainHeader" id="homeNavLink" class="nav-active">🏠 होम</a>
+  <a href="#about">🌿 हमारे बारे में</a>
+  <a href="#plantCare">🪴 पौधों की देखभाल</a>
+  <a href="#plantTypes">🌱 पौधों के प्रकार</a>
   <a href="#contact">📞 संपर्क</a>
   <a href="#customerTracking" id="customerTrackingNav">📦 ऑर्डर ट्रैकिंग</a>
   <button id="adminPanelNav" type="button">🔐 एडमिन लॉगिन</button>
@@ -1895,36 +1899,53 @@ body > main::after{
 
   <!-- एडमिन पैनल -->
   <section id="owner">
-    <div style="max-width:1000px;margin:0 auto;display:flex;justify-content:flex-end">
+    <div style="max-width:1040px;margin:0 auto;display:flex;justify-content:flex-end">
       <button id="ownerCloseButton" type="button" style="background:#fff;color:#000;margin-bottom:8px">✕ बंद करें</button>
     </div>
 
-    <form id="loginForm">
-      <h2>🔐 Admin Login</h2>
-      <label>ईमेल</label><input id="email" type="email" required placeholder="मालिक का ईमेल">
-      <label>पासवर्ड</label><input id="password" type="password" required placeholder="पासवर्ड">
-      <button type="submit">लॉगिन करें</button>
-      <div id="ownerStatus" class="status" style="display:none"></div>
+    <form id="loginForm" class="admin-login-card">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #dcebe0">
+        <div style="width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,#08783c,#064e2b);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 12px rgba(6,78,59,.2)">🔐</div>
+        <div>
+          <h2 style="margin:0;font-size:20px;color:#123b27">नर्सरी एडमिन लॉगिन</h2>
+          <small style="color:var(--muted);font-weight:700">केवल अधिकृत नर्सरी संचालक के लिए</small>
+        </div>
+      </div>
+      <div class="admin-form-grid">
+        <div>
+          <label>📧 एडमिन ईमेल</label>
+          <input id="email" type="email" required placeholder="मालिक का ईमेल दर्ज करें">
+        </div>
+        <div>
+          <label>🔑 पासवर्ड</label>
+          <input id="password" type="password" required placeholder="पासवर्ड दर्ज करें">
+        </div>
+      </div>
+      <button type="submit" style="width:100%;margin-top:8px;padding:12px;font-size:15px;border-radius:12px;background:linear-gradient(135deg,#16a34a,#065f46);box-shadow:0 4px 14px rgba(22,163,74,.28)">🔓 एडमिन पैनल में प्रवेश करें</button>
+      <div id="ownerStatus" class="status" style="display:none;margin-top:10px"></div>
     </form>
 
     <div id="ownerPanelHeader" style="display:none">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-        <div>
-          <h3 style="margin:0">🌿 नीम करोली नर्सरी एडमिन पैनल</h3>
-          <small id="audioStatusText" style="color:var(--green);font-weight:700">🔔 नए ऑर्डर पर लाउड अलर्ट: तैयार है</small>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#08783c,#064e2b);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 12px rgba(6,78,59,.2);flex-shrink:0">🌿</div>
+          <div>
+            <h3 style="margin:0;font-size:18px;color:#123b27;font-weight:900">नीम करोली नर्सरी — स्मार्ट एडमिन डैशबोर्ड</h3>
+            <small id="audioStatusText" style="color:var(--green);font-weight:800;display:inline-flex;align-items:center;gap:4px;margin-top:2px">🔔 नए ऑर्डर पर लाउड अलर्ट: तैयार है</small>
+          </div>
         </div>
         
-        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:#f5faf2;padding:6px 10px;border-radius:10px;border:1px solid #d8e9dc">
-          <label style="margin:0;font-size:12px;font-weight:700;color:var(--green)">🎵 टोन:</label>
-          <select id="ringtoneSelector" style="width:auto;margin:0;padding:4px 8px;font-size:13px;border-radius:6px">
+        <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;background:#f4fbf6;padding:8px 12px;border-radius:12px;border:1px solid #cde7d4">
+          <label style="margin:0;font-size:12px;font-weight:800;color:#123b27">🎵 अलर्ट टोन:</label>
+          <select id="ringtoneSelector" style="width:auto;margin:0;padding:6px 10px;font-size:12.5px;font-weight:700;border-radius:8px;border:1px solid #b7dec2">
             <option value="zomato">🛵 1. ज़ोमैटो (Triple Chime)</option>
             <option value="swiggy">🍔 2. स्विगी (Double Bell)</option>
             <option value="siren">🚨 3. सायरन (Urgent Siren)</option>
             <option value="melody">🌿 4. नर्सरी (Soft Melody)</option>
           </select>
-          <button id="toggleAlertSoundBtn" type="button" style="background:#16a34a;color:#fff;font-size:12px;padding:5px 10px;border-radius:6px">▶️ टेस्ट</button>
-          <button id="muteToggleBtn" type="button" style="background:#edf5e9;color:var(--green);border:1px solid var(--line);font-size:12px;padding:5px 10px;border-radius:6px">🔊 ऑन</button>
-          <button id="logoutButton" type="button" style="background:#dc2626;padding:5px 10px;font-size:12px;border-radius:6px">लॉग आउट</button>
+          <button id="toggleAlertSoundBtn" type="button" style="background:#16a34a;color:#fff;font-size:12px;padding:6px 11px;border-radius:8px;font-weight:800">▶️ टेस्ट</button>
+          <button id="muteToggleBtn" type="button" style="background:#fff;color:var(--green);border:1px solid #b7dec2;font-size:12px;padding:6px 11px;border-radius:8px;font-weight:800">🔊 ऑन</button>
+          <button id="logoutButton" type="button" style="background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;padding:6px 12px;font-size:12px;border-radius:8px;font-weight:800">🚪 लॉग आउट</button>
         </div>
       </div>
     </div>
@@ -1944,156 +1965,293 @@ body > main::after{
     </div>
 
     <div id="adminTabs" class="admin-tabs">
-      <button class="admin-tab active" type="button" data-tab="dashboard">📊 मुख्य पृष्ठ</button>
-      <button class="admin-tab" type="button" data-tab="orders">🛒 ऑर्डर</button>
-      <button class="admin-tab" type="button" data-tab="stock">🌱 स्टॉक लिस्ट</button>
-      <button class="admin-tab" type="button" data-tab="manageplants">➕ नया उत्पाद</button>
-      <button class="admin-tab" type="button" data-tab="sales">💰 बिक्री हिसाब</button>
-      <button class="admin-tab" type="button" data-tab="mandi">📈 मंडी भाव</button>
-      <button class="admin-tab" type="button" data-tab="settings">⚙️ वेबसाइट कंट्रोल</button>
-      <button class="admin-tab" type="button" data-tab="dues">⏰ उधार रजिस्टर</button>
-      <button class="admin-tab" type="button" data-tab="chatgpt">🤖 ChatGPT</button>
+      <button class="admin-tab active" type="button" data-tab="dashboard"><span class="tab-ico">📊</span><span>मुख्य पृष्ठ</span></button>
+      <button class="admin-tab" type="button" data-tab="orders"><span class="tab-ico">🛒</span><span>ऑर्डर</span></button>
+      <button class="admin-tab" type="button" data-tab="stock"><span class="tab-ico">🌱</span><span>स्टॉक लिस्ट</span></button>
+      <button class="admin-tab" type="button" data-tab="manageplants"><span class="tab-ico">➕</span><span>नया उत्पाद</span></button>
+      <button class="admin-tab" type="button" data-tab="sales"><span class="tab-ico">💰</span><span>बिक्री हिसाब</span></button>
+      <button class="admin-tab" type="button" data-tab="mandi"><span class="tab-ico">📈</span><span>मंडी भाव</span></button>
+      <button class="admin-tab" type="button" data-tab="settings"><span class="tab-ico">⚙️</span><span>वेबसाइट कंट्रोल</span></button>
+      <button class="admin-tab" type="button" data-tab="dues"><span class="tab-ico">⏰</span><span>उधार रजिस्टर</span></button>
+      <button class="admin-tab" type="button" data-tab="chatgpt"><span class="tab-ico">🤖</span><span>ChatGPT</span></button>
     </div>
 
-    <!-- मुख्य पृष्ठ -->
+    <!-- 1. मुख्य पृष्ठ (Dashboard) -->
     <div id="adminDashboardPane" class="admin-pane active">
+      <div class="admin-pane-header">
+        <div>
+          <h2>📊 आज का नर्सरी डैशबोर्ड</h2>
+          <small>आज के ऑर्डर, स्टॉक और व्यापार की लाइव स्थिति</small>
+        </div>
+        <button type="button" onclick="loadAdminAll()" class="admin-soft-btn">🔄 लाइव डेटा रीफ्रेश करें</button>
+      </div>
       <div id="ownerStats">मुख्य पृष्ठ लोड हो रहा है…</div>
     </div>
 
-    <!-- ऑर्डर लिस्ट -->
+    <!-- 2. ऑर्डर लिस्ट (Orders) -->
     <div id="adminOrdersPane" class="admin-pane">
-      <h2>🛒 ग्राहक ऑर्डर</h2>
+      <div class="admin-pane-header">
+        <div>
+          <h2>🛒 ग्राहक ऑर्डर प्रबंधन</h2>
+          <small>भुगतान जाँचें, ऑर्डर कन्फर्म करें, डिलीवर करें या बिल प्रिंट करें</small>
+        </div>
+        <button type="button" onclick="loadAdminAll()" class="admin-soft-btn">🔄 रीफ्रेश</button>
+      </div>
+
+      <div class="admin-toolbar-card">
+        <div class="admin-filter-pills" id="orderStatusFilterGroup">
+          <button type="button" class="admin-filter-pill active" data-order-filter="all">📋 सभी ऑर्डर</button>
+          <button type="button" class="admin-filter-pill" data-order-filter="pending">⏳ लंबित (Pending)</button>
+          <button type="button" class="admin-filter-pill" data-order-filter="confirmed">✅ कन्फर्म</button>
+          <button type="button" class="admin-filter-pill" data-order-filter="delivered">🚚 डिलीवर</button>
+          <button type="button" class="admin-filter-pill" data-order-filter="cancelled">❌ रद्द</button>
+        </div>
+        <div class="admin-search-input-wrap">
+          <input id="adminOrderSearchInput" type="search" placeholder="🔍 नाम, मोबाइल, #ऑर्डर ID या UTR से खोजें…">
+        </div>
+      </div>
+
       <div id="ownerOrders">ऑर्डर लोड हो रहे हैं…</div>
     </div>
 
-    <!-- स्टॉक प्रबंधन -->
+    <!-- 3. स्टॉक प्रबंधन (Stock List) -->
     <div id="adminStockPane" class="admin-pane">
-      <h2>📦 स्टॉक प्रबंधन (Sold Out व स्टॉक बदलाव)</h2>
+      <div class="admin-pane-header">
+        <div>
+          <h2>📦 स्टॉक प्रबंधन (Sold Out व स्टॉक बदलाव)</h2>
+          <small>एक क्लिक में स्टॉक संख्या बदलें या उत्पाद को उपलब्ध / Sold Out करें</small>
+        </div>
+        <div class="admin-search-input-wrap" style="min-width:230px">
+          <input id="adminStockSearchInput" type="search" placeholder="🔍 पौधा या सब्ज़ी खोजें…">
+        </div>
+      </div>
       <div class="stock-category-columns">
         <section class="stock-category-card">
-          <h3>🌱 नर्सरी के पौधे</h3>
+          <div class="admin-col-header">
+            <h3>🌱 नर्सरी के पौधे</h3>
+            <span class="admin-count-pill" id="plantStockCountBadge">0 किस्में</span>
+          </div>
           <div id="ownerPlantStockList">लोड हो रहा है…</div>
         </section>
         <section class="stock-category-card">
-          <h3>🥬 खाने वाली सब्जियाँ</h3>
+          <div class="admin-col-header">
+            <h3>🥬 खाने वाली सब्जियाँ</h3>
+            <span class="admin-count-pill" id="vegStockCountBadge">0 किस्में</span>
+          </div>
           <div id="ownerVegStockList">लोड हो रहा है…</div>
         </section>
       </div>
     </div>
 
-    <!-- नया उत्पाद -->
+    <!-- 4. नया उत्पाद (Product Studio) -->
     <div id="adminManageplantsPane" class="admin-pane">
-      <h2>🌱 उत्पाद प्रबंधन</h2>
+      <div class="admin-pane-header">
+        <div>
+          <h2>🌱 उत्पाद स्टूडियो (नया जोड़ें व रेट/फोटो बदलें)</h2>
+          <small>नर्सरी के नए पौधे व ताज़ी सब्जियाँ जोड़ें या मौजूदा उत्पादों में बदलाव करें</small>
+        </div>
+      </div>
+
       <div class="plant-manage-buttons">
         <button type="button" class="plant-manage-button active" data-manage-view="add-plant">🌱 नया पौधा जोड़ें</button>
         <button type="button" class="plant-manage-button" data-manage-view="add-veg">🥬 नई सब्ज़ी जोड़ें</button>
         <button type="button" class="plant-manage-button" data-manage-view="edit">✏️ कीमत / फोटो बदलें</button>
-        <button type="button" class="plant-manage-button" data-manage-view="list">📋 सभी सूची</button>
+        <button type="button" class="plant-manage-button" data-manage-view="list">📋 सभी उत्पाद सूची</button>
       </div>
 
       <div id="manageViewAddPlant" class="manage-view active">
-        <h3>🌱 नया पौधा जोड़ें</h3>
-        <form id="newPlantOnlyForm">
-          <label>पौधे का नाम</label><input id="pName" required placeholder="जैसे टमाटर, मिर्च, बैंगन">
-          <label>किस्म प्रकार</label>
-          <select id="pType"><option value="देसी">देसी</option><option value="हाइब्रिड">हाइब्रिड</option><option value="अन्य">अन्य</option></select>
-          <label>किस्म का नाम (वैकल्पिक)</label><input id="pVariety">
-          <label>प्रति पौधा कीमत (₹)</label><input id="pPrice" type="number" min="0" step="0.01" required placeholder="5">
-          <label>स्टॉक (पौधे)</label><input id="pStock" type="number" min="0" step="1" required value="0">
-          <label>विवरण</label><textarea id="pDesc" rows="2"></textarea>
-          <label>पौधे की फोटो</label><input id="pImage" type="file" accept="image/*">
-          <button type="submit">💾 पौधा सेव करें</button>
-        </form>
-        <div id="newPlantOnlyStatus" class="status" style="display:none"></div>
+        <div class="admin-subcard">
+          <div class="admin-col-header">
+            <h3>🌱 नया पौधा वेबसाइट में जोड़ें</h3>
+            <span class="admin-count-pill">प्रति पौधा बिक्री</span>
+          </div>
+          <form id="newPlantOnlyForm">
+            <div class="admin-form-grid">
+              <div>
+                <label>🌱 पौधे का नाम *</label>
+                <input id="pName" required placeholder="जैसे टमाटर, हरी मिर्च, बैंगन">
+              </div>
+              <div>
+                <label>🏷️ किस्म का प्रकार</label>
+                <select id="pType"><option value="देसी">देसी</option><option value="हाइब्रिड">हाइब्रिड</option><option value="अन्य">अन्य</option></select>
+              </div>
+              <div>
+                <label>✨ किस्म का नाम (वैकल्पिक)</label>
+                <input id="pVariety" placeholder="जैसे पूसा रूबी / F1 हाइब्रिड">
+              </div>
+              <div>
+                <label>💰 प्रति पौधा कीमत (₹) *</label>
+                <input id="pPrice" type="number" min="0" step="0.01" required placeholder="जैसे 5">
+              </div>
+              <div>
+                <label>📦 उपलब्ध स्टॉक (पौधे) *</label>
+                <input id="pStock" type="number" min="0" step="1" required value="100">
+              </div>
+              <div>
+                <label>📷 पौधे की साफ फोटो</label>
+                <input id="pImage" type="file" accept="image/*">
+              </div>
+              <div class="full-span">
+                <label>📝 संक्षिप्त विवरण (वैकल्पिक)</label>
+                <textarea id="pDesc" rows="2" placeholder="पौधे की विशेषता या लगाने का मौसम…"></textarea>
+              </div>
+            </div>
+            <button type="submit" class="admin-primary-submit">💾 नया पौधा सेव व पब्लिश करें</button>
+          </form>
+          <div id="newPlantOnlyStatus" class="status" style="display:none;margin-top:10px"></div>
+        </div>
       </div>
 
       <div id="manageViewAddVeg" class="manage-view">
-        <h3>🥬 नई सब्ज़ी जोड़ें</h3>
-        <form id="newVegOnlyForm">
-          <label>सब्ज़ी का नाम</label><input id="vName" required placeholder="जैसे खीरा, लौकी, गोभी, धनिया">
-          <label>किस्म प्रकार</label>
-          <select id="vType"><option value="देसी">देसी</option><option value="हाइब्रिड">हाइब्रिड</option><option value="अन्य">अन्य</option></select>
-          <label>किस्म का नाम (वैकल्पिक)</label><input id="vVariety">
-          
-          <!-- 🟢 यूनिट चयन (किलो या ग्राम) -->
-          <label>बिक्री की इकाई (Unit Type)</label>
-          <select id="vUnit">
-            <option value="kg">किलो (Kg) - जैसे आलू, टमाटर, गोभी, लौकी</option>
-            <option value="gram">ग्राम/बंडल (Gram) - जैसे धनिया, पुदीना, पालक, मेथी</option>
-          </select>
-
-          <label>कीमत प्रति इकाई (₹) [किलो के हिसाब से]</label><input id="vPrice" type="number" min="0" step="0.01" required placeholder="30">
-          <label>स्टॉक (कुल मात्रा किलो में)</label><input id="vStock" type="number" min="0" step="0.5" required value="0">
-          <label>विवरण</label><textarea id="vDesc" rows="2"></textarea>
-          <label>सब्ज़ी की फोटो</label><input id="vImage" type="file" accept="image/*">
-          <button type="submit">💾 सब्ज़ी सेव करें</button>
-        </form>
-        <div id="newVegOnlyStatus" class="status" style="display:none"></div>
+        <div class="admin-subcard">
+          <div class="admin-col-header">
+            <h3>🥬 नई ताज़ी सब्ज़ी वेबसाइट में जोड़ें</h3>
+            <span class="admin-count-pill">किलो / ग्राम बिक्री</span>
+          </div>
+          <form id="newVegOnlyForm">
+            <div class="admin-form-grid">
+              <div>
+                <label>🥬 सब्ज़ी का नाम *</label>
+                <input id="vName" required placeholder="जैसे खीरा, लौकी, गोभी, हरा धनिया">
+              </div>
+              <div>
+                <label>🏷️ किस्म का प्रकार</label>
+                <select id="vType"><option value="देसी">देसी</option><option value="हाइब्रिड">हाइब्रिड</option><option value="अन्य">अन्य</option></select>
+              </div>
+              <div>
+                <label>✨ किस्म का नाम (वैकल्पिक)</label>
+                <input id="vVariety" placeholder="जैसे ताज़ा ऑर्गेनिक">
+              </div>
+              <div>
+                <label>⚖️ बिक्री की इकाई (Unit Type)</label>
+                <select id="vUnit">
+                  <option value="kg">किलो (Kg) - जैसे आलू, टमाटर, गोभी, लौकी</option>
+                  <option value="gram">ग्राम/बंडल (Gram) - जैसे धनिया, पुदीना, पालक, मेथी</option>
+                </select>
+              </div>
+              <div>
+                <label>💰 कीमत प्रति किलो (₹) *</label>
+                <input id="vPrice" type="number" min="0" step="0.01" required placeholder="जैसे 30">
+              </div>
+              <div>
+                <label>📦 कुल स्टॉक (किलो में) *</label>
+                <input id="vStock" type="number" min="0" step="0.25" required value="10">
+              </div>
+              <div class="full-span">
+                <label>📷 सब्ज़ी की फोटो</label>
+                <input id="vImage" type="file" accept="image/*">
+              </div>
+              <div class="full-span">
+                <label>📝 विवरण (वैकल्पिक)</label>
+                <textarea id="vDesc" rows="2" placeholder="ताज़गी व विशेषता…"></textarea>
+              </div>
+            </div>
+            <button type="submit" class="admin-primary-submit">💾 नई सब्ज़ी सेव व पब्लिश करें</button>
+          </form>
+          <div id="newVegOnlyStatus" class="status" style="display:none;margin-top:10px"></div>
+        </div>
       </div>
 
       <div id="manageViewEdit" class="manage-view">
         <div class="manage-category-columns">
-          <div class="manage-category-card"><h3>🌱 पौधे</h3><div id="adminPlantEditorPlant">लोड हो रहा है…</div></div>
-          <div class="manage-category-card"><h3>🥬 सब्जियाँ</h3><div id="adminPlantEditorVeg">लोड हो रहा है…</div></div>
+          <div class="manage-category-card">
+            <div class="admin-col-header"><h3>🌱 पौधे (कीमत / फोटो बदलें)</h3></div>
+            <div id="adminPlantEditorPlant">लोड हो रहा है…</div>
+          </div>
+          <div class="manage-category-card">
+            <div class="admin-col-header"><h3>🥬 सब्जियाँ (कीमत / फोटो बदलें)</h3></div>
+            <div id="adminPlantEditorVeg">लोड हो रहा है…</div>
+          </div>
         </div>
       </div>
 
       <div id="manageViewList" class="manage-view">
         <div class="manage-category-columns">
-          <div class="manage-category-card"><h3>🌱 पौधे</h3><div id="adminPlantSimpleListPlant">लोड हो रहा है…</div></div>
-          <div class="manage-category-card"><h3>🥬 सब्जियाँ</h3><div id="adminPlantSimpleListVeg">लोड हो रहा है…</div></div>
+          <div class="manage-category-card">
+            <div class="admin-col-header"><h3>🌱 सभी पौधे सूची</h3></div>
+            <div id="adminPlantSimpleListPlant">लोड हो रहा है…</div>
+          </div>
+          <div class="manage-category-card">
+            <div class="admin-col-header"><h3>🥬 सभी सब्जियाँ सूची</h3></div>
+            <div id="adminPlantSimpleListVeg">लोड हो रहा है…</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- बिक्री हिसाब -->
+    <!-- 5. बिक्री हिसाब (Sales Ledger) -->
     <div id="adminSalesPane" class="admin-pane">
-      <div class="admin-section-card">
-        <h2>💰 कुल बिक्री हिसाब-किताब</h2>
-        <div class="metric-grid">
-          <div class="metric">
-            <div class="metric-label">कुल बिक्री राशि</div>
-            <div class="metric-value" id="salesTotalRevenue">₹0.00</div>
-          </div>
-          <div class="metric">
-            <div class="metric-label">🌱 कुल पौधे बिके</div>
-            <div class="metric-value" id="salesTotalPlants">0</div>
-          </div>
-          <div class="metric">
-            <div class="metric-label">🥬 कुल सब्ज़ी बिकी</div>
-            <div class="metric-value" id="salesTotalVeg">0.0</div>
-          </div>
-          <div class="metric">
-            <div class="metric-label">कुल कन्फर्म ऑर्डर</div>
-            <div class="metric-value" id="salesTotalOrders">0</div>
-          </div>
+      <div class="admin-pane-header">
+        <div>
+          <h2>💰 कुल बिक्री हिसाब-किताब (Sales Ledger)</h2>
+          <small>कन्फर्म और डिलीवर हो चुके सभी आर्डर्स का पूरा वित्तीय ब्योरा</small>
         </div>
+        <button type="button" onclick="loadSalesLedger()" class="admin-soft-btn">🔄 हिसाब अपडेट करें</button>
+      </div>
 
-        <div class="sales-category-columns" style="margin-top:14px">
-          <section class="sales-category-card">
-            <h3 style="color:var(--green);margin:0 0 8px">🌱 पौधों की बिक्री विवरण</h3>
-            <div id="salesPlantRecords">लोड हो रहा है…</div>
-          </section>
-          <section class="sales-category-card">
-            <h3 style="color:var(--green);margin:0 0 8px">🥬 सब्ज़ियों की बिक्री विवरण</h3>
-            <div id="salesVegRecords">लोड हो रहा है…</div>
-          </section>
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="metric-top"><span class="metric-ico">💵</span><span class="metric-label">कुल बिक्री राशि</span></div>
+          <div class="metric-value" id="salesTotalRevenue">₹0.00</div>
+          <small style="color:var(--muted)">कन्फर्म व डिलीवर आय</small>
         </div>
+        <div class="metric">
+          <div class="metric-top"><span class="metric-ico">🌱</span><span class="metric-label">कुल पौधे बिके</span></div>
+          <div class="metric-value" id="salesTotalPlants">0</div>
+          <small style="color:var(--muted)">पौधों की कुल संख्या</small>
+        </div>
+        <div class="metric">
+          <div class="metric-top"><span class="metric-ico">🥬</span><span class="metric-label">कुल सब्ज़ी बिकी</span></div>
+          <div class="metric-value" id="salesTotalVeg">0.0</div>
+          <small style="color:var(--muted)">सब्ज़ियों की कुल मात्रा</small>
+        </div>
+        <div class="metric delivered">
+          <div class="metric-top"><span class="metric-ico">🧾</span><span class="metric-label">कुल पक्के ऑर्डर</span></div>
+          <div class="metric-value" id="salesTotalOrders">0</div>
+          <small style="color:#2563eb">सफल ऑर्डर संख्या</small>
+        </div>
+      </div>
 
-        <h3 style="margin:20px 0 10px;color:var(--green)">📋 सभी कन्फर्म व डिलीवर बिक्री रसीदें</h3>
+      <div class="sales-category-columns" style="margin-top:14px">
+        <section class="sales-category-card">
+          <div class="admin-col-header">
+            <h3>🌱 पौधों की किस्म-वार बिक्री</h3>
+          </div>
+          <div id="salesPlantRecords">लोड हो रहा है…</div>
+        </section>
+        <section class="sales-category-card">
+          <div class="admin-col-header">
+            <h3>🥬 सब्ज़ियों की किस्म-वार बिक्री</h3>
+          </div>
+          <div id="salesVegRecords">लोड हो रहा है…</div>
+        </section>
+      </div>
+
+      <div class="dashboard-table-card" style="margin-top:16px">
+        <div class="admin-col-header" style="margin-bottom:10px">
+          <h3 style="margin:0">📋 सभी कन्फर्म व डिलीवर बिक्री रसीदें</h3>
+        </div>
         <div id="ownerSalesList">लोड हो रहा है…</div>
       </div>
     </div>
 
-    <!-- मंडी भाव (सभी प्रमुख एवं पत्तेदार सब्जियों के साथ अपडेटेड) -->
+    <!-- 6. मंडी भाव (Live Mandi Bhav) -->
     <div id="adminMandiPane" class="admin-pane">
-      <div class="admin-section-card">
-        <h2>📈 लाइव मंडी भाव (सरकारी AGMARKNET रिपोर्ट)</h2>
-        <p style="font-size:13px;color:var(--muted)">अपने जिले की कृषि उपज मंडी के ताज़ा भाव देखें और अपनी साइट पर रेट अपडेट करें:</p>
-        
+      <div class="admin-pane-header">
+        <div>
+          <h2>📈 लाइव मंडी भाव व रेट कैलकुलेटर</h2>
+          <small>कृषि उपज मंडी के ताज़ा भाव देखें और मुनाफा जोड़कर वेबसाइट पर नया रेट सेव करें</small>
+        </div>
+      </div>
+
+      <div class="admin-subcard" style="margin-bottom:16px">
+        <div class="admin-col-header">
+          <h3>🌾 1. सरकारी मंडी भाव जाँचें (AGMARKNET)</h3>
+          <span class="admin-count-pill">राजस्थान मंडी</span>
+        </div>
         <div class="mandi-grid">
           <div>
-            <label for="mandiDistrict">जिला चुनें</label>
+            <label for="mandiDistrict">📍 जिला मंडी चुनें</label>
             <select id="mandiDistrict">
               <option value="Jhunjhunu" selected>झुंझुनू (Jhunjhunu)</option>
               <option value="Sikar">सीकर (Sikar)</option>
@@ -2102,7 +2260,7 @@ body > main::after{
             </select>
           </div>
           <div>
-            <label for="mandiVeg">सब्ज़ी चुनें</label>
+            <label for="mandiVeg">🥬 सब्ज़ी चुनें</label>
             <select id="mandiVeg">
               <option value="Tomato" selected>टमाटर (Tomato)</option>
               <option value="Coriander">हरा धनिया (Coriander)</option>
@@ -2124,60 +2282,62 @@ body > main::after{
           </div>
         </div>
 
-        <button id="loadMandiBhav" type="button" style="margin-top:4px">🔄 लाइव मंडी भाव देखें</button>
-        <div id="mandiLiveStatus" class="status" style="display:none"></div>
+        <button id="loadMandiBhav" type="button" style="width:100%;margin-top:6px;padding:11px;border-radius:11px;font-weight:800">🔄 लाइव मंडी भाव प्राप्त करें</button>
+        <div id="mandiLiveStatus" class="status" style="display:none;margin-top:10px"></div>
 
-        <div id="mandiResultGrid" class="mandi-result" style="display:none">
-          <div><small>न्यूनतम भाव</small><strong id="mandiMinPrice">₹0 / किलो</strong></div>
-          <div style="background:#eef7ed;border-color:#b7e1be"><small style="color:var(--green)">मॉडल (औसत) भाव</small><strong id="mandiModalPrice" style="color:var(--green);font-size:24px">₹0 / किलो</strong></div>
-          <div><small>अधिकतम भाव</small><strong id="mandiMaxPrice">₹0 / किलो</strong></div>
+        <div id="mandiResultGrid" class="mandi-result" style="display:none;margin-top:14px">
+          <div class="mandi-rate-box"><small>⬇️ न्यूनतम मंडी भाव</small><strong id="mandiMinPrice">₹0 / किलो</strong></div>
+          <div class="mandi-rate-box featured"><small>⚖️ मॉडल (औसत) भाव</small><strong id="mandiModalPrice">₹0 / किलो</strong></div>
+          <div class="mandi-rate-box"><small>⬆️ अधिकतम मंडी भाव</small><strong id="mandiMaxPrice">₹0 / किलो</strong></div>
         </div>
+      </div>
 
-        <div class="mandi-profit-box">
-          <h3 style="margin:0 0 8px;color:var(--green)">🧮 अपना नया बिक्री भाव तय करें व पोर्टल पर अपडेट करें</h3>
-          <div class="mandi-grid">
-            <div>
-              <label>मंडी खरीद भाव (₹/किलो)</label>
-              <input id="mandiCalcBuy" type="number" step="0.5" placeholder="जैसे 20">
-            </div>
-            <div>
-              <label>ढुलाई + खराबा खर्च (₹/किलो)</label>
-              <input id="mandiCalcTransport" type="number" step="0.5" value="2">
-            </div>
-            <div>
-              <label>अपना मुनाफा (₹/किलो)</label>
-              <input id="mandiCalcMargin" type="number" step="0.5" value="3">
-            </div>
-            <div>
-              <label>नया ग्राहक भाव (₹/किलो)</label>
-              <input id="mandiCalcSell" type="number" step="0.5" placeholder="फाइनल रेट" style="font-weight:700;color:var(--green)">
-            </div>
+      <div class="admin-subcard">
+        <div class="admin-col-header">
+          <h3>🧮 2. मुनाफा जोड़ें व ग्राहक पोर्टल पर रेट अपडेट करें</h3>
+          <span class="admin-count-pill">ऑटो-कैलकुलेटर</span>
+        </div>
+        <div class="mandi-grid">
+          <div>
+            <label>मंडी खरीद भाव (₹/किलो)</label>
+            <input id="mandiCalcBuy" type="number" step="0.5" placeholder="जैसे 20">
           </div>
-
-          <label for="mandiSelectPlant">किस सब्ज़ी का भाव अपडेट करना है?</label>
-          <select id="mandiSelectPlant"><option value="">लोड हो रहा है…</option></select>
-          
-          <button id="saveMandiToPortalBtn" type="button" style="margin-top:10px;background:#16a34a">💾 ग्राहक पोर्टल में नया बिक्री भाव सेव करें</button>
-          <div id="mandiUpdateStatus" class="status" style="display:none"></div>
+          <div>
+            <label>ढुलाई + खराबा खर्च (₹/किलो)</label>
+            <input id="mandiCalcTransport" type="number" step="0.5" value="2">
+          </div>
+          <div>
+            <label>अपना मुनाफा (₹/किलो)</label>
+            <input id="mandiCalcMargin" type="number" step="0.5" value="3">
+          </div>
+          <div>
+            <label>नया ग्राहक भाव (₹/किलो)</label>
+            <input id="mandiCalcSell" type="number" step="0.5" placeholder="फाइनल रेट" style="font-weight:900;color:var(--green);background:#ecfdf5;border-color:#6ee7b7">
+          </div>
         </div>
+
+        <label for="mandiSelectPlant">🎯 वेबसाइट की किस सब्ज़ी का भाव अपडेट करना है?</label>
+        <select id="mandiSelectPlant"><option value="">लोड हो रहा है…</option></select>
+        
+        <button id="saveMandiToPortalBtn" type="button" class="admin-primary-submit" style="margin-top:10px">💾 ग्राहक पोर्टल में नया बिक्री भाव सेव करें</button>
+        <div id="mandiUpdateStatus" class="status" style="display:none;margin-top:10px"></div>
       </div>
     </div>
 
-    <!-- ⚙️ वेबसाइट मास्टर स्टूडियो -->
+    <!-- 7. ⚙️ वेबसाइट मास्टर स्टूडियो (Settings CMS) -->
     <div id="adminSettingsPane" class="admin-pane">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+      <div class="admin-pane-header">
         <div>
-          <h2 style="margin:0">⚙️ वेबसाइट मास्टर स्टूडियो (CMS)</h2>
-          <small style="color:var(--muted)">प्रत्येक सेटिंग को अलग टैब में आसानी से बदलें</small>
+          <h2>⚙️ वेबसाइट मास्टर स्टूडियो (CMS कंट्रोल)</h2>
+          <small>दुकान खोलने/बंद करने, ऑफर, डिलीवरी, UPI और ब्रांडिंग को यहाँ से नियंत्रित करें</small>
         </div>
       </div>
 
-      <!-- सब-टैब्स मेनू -->
       <div class="settings-subtabs">
         <button type="button" class="settings-subtab active" data-subtab="shop">🏪 1. दुकान &amp; सेल</button>
         <button type="button" class="settings-subtab" data-subtab="notice">📢 2. लाइव सूचना</button>
         <button type="button" class="settings-subtab" data-subtab="payment">💳 3. UPI पेमेंट</button>
-        <button type="button" class="settings-subtab" data-subtab="delivery">🚚 4. डिलीवरी &amp; मुफ़्त ऑफर</button>
+        <button type="button" class="settings-subtab" data-subtab="delivery">🚚 4. डिलीवरी नियम</button>
         <button type="button" class="settings-subtab" data-subtab="branding">🎨 5. थीम &amp; समय</button>
         <button type="button" class="settings-subtab" data-subtab="widget">💬 6. WhatsApp &amp; कूपन</button>
         <button type="button" class="settings-subtab" data-subtab="preview">👁️ 7. लाइव प्रीव्यू</button>
@@ -2186,62 +2346,87 @@ body > main::after{
       <form id="siteSettingsForm">
         <!-- टैब 1: दुकान & सेल -->
         <div id="subpane-shop" class="settings-subpane active">
-          <h3 style="color:var(--green);margin-top:0">🏪 दुकान स्थिति व न्यूनतम पौधे आर्डर सीमा</h3>
-          
-          <div style="background:#f4fbf7;border:1px solid #d1fae5;border-radius:14px;padding:14px;margin-bottom:14px">
-            <label style="font-weight:900;color:var(--deep)">🌱 पौधों की न्यूनतम खरीद मात्रा (Minimum Plant Order Qty)</label>
-            <p style="font-size:12px;color:var(--muted);margin:2px 0 8px">ग्राहक होमपेज पर कम से कम जितने पौधे चुन सके (जैसे 25, 20 या 50):</p>
-            <input id="settingMinPlantQty" type="number" min="1" value="25" style="font-weight:800;color:var(--green)">
+          <div class="admin-col-header">
+            <h3>🏪 दुकान स्थिति व न्यूनतम पौधे आर्डर सीमा</h3>
+            <span class="admin-count-pill">स्टोर कंट्रोल</span>
           </div>
-
-          <label>दुकान की स्थिति (Nursery Open / Close)</label>
-          <select id="settingShopStatus">
-            <option value="open">🟢 खुली है (ग्राहकों के आर्डर चालू हैं)</option>
-            <option value="closed">🔴 आज बंद है (सूचना दिखेगी, आर्डर बटन लॉक रहेंगे)</option>
-          </select>
-
-          <label>विशेष डिस्काउंट ऑफर (सीधा प्रतिशत छूट)</label>
-          <select id="settingDiscountPercent">
-            <option value="0">कोई छूट नहीं (0% Normal)</option>
-            <option value="10">🎉 10% की सीधी छूट</option>
-            <option value="15">🎉 15% की सीधी छूट</option>
-            <option value="20">🎉 20% की सुपर छूट</option>
-          </select>
+          <div class="admin-form-grid">
+            <div>
+              <label>🌱 पौधों की न्यूनतम खरीद मात्रा (Minimum Plant Qty)</label>
+              <input id="settingMinPlantQty" type="number" min="1" value="25" style="font-weight:800;color:var(--green)">
+              <small style="color:var(--muted);font-size:11.5px">ग्राहक होमपेज पर कम से कम जितने पौधे चुन सके (जैसे 25)</small>
+            </div>
+            <div>
+              <label>🏪 दुकान की स्थिति (Nursery Open / Close)</label>
+              <select id="settingShopStatus">
+                <option value="open">🟢 खुली है (ग्राहकों के आर्डर चालू हैं)</option>
+                <option value="closed">🔴 आज बंद है (सूचना दिखेगी, आर्डर बटन लॉक रहेंगे)</option>
+              </select>
+            </div>
+            <div class="full-span">
+              <label>🎉 विशेष डिस्काउंट ऑफर (सीधा प्रतिशत छूट)</label>
+              <select id="settingDiscountPercent">
+                <option value="0">कोई छूट नहीं (0% Normal)</option>
+                <option value="10">🎉 10% की सीधी छूट</option>
+                <option value="15">🎉 15% की सीधी छूट</option>
+                <option value="20">🎉 20% की सुपर छूट</option>
+              </select>
+            </div>
+          </div>
         </div>
 
         <!-- टैब 2: लाइव सूचना -->
         <div id="subpane-notice" class="settings-subpane">
-          <h3 style="color:var(--green);margin-top:0">📢 चलती हुई लाइव सूचना पट्टी (Marquee Alert Ticker)</h3>
-          <label>सूचना पट्टी चालू रखें?</label>
-          <select id="settingTickerStatus">
-            <option value="on">✅ चालू है (वेबसाइट के शीर्ष पर स्क्रॉल होगी)</option>
-            <option value="off">❌ बंद रखें</option>
-          </select>
-
-          <label>सूचना संदेश (Ticker Text)</label>
-          <input id="settingTickerText" value="🌱 कल सुबह ताज़ा खीरा और टमाटर उपलब्ध रहेगा - अभी बुक करें!">
+          <div class="admin-col-header">
+            <h3>📢 चलती हुई लाइव सूचना पट्टी (Marquee Alert Ticker)</h3>
+            <span class="admin-count-pill">टॉप बैनर</span>
+          </div>
+          <div class="admin-form-grid">
+            <div>
+              <label>सूचना पट्टी चालू रखें?</label>
+              <select id="settingTickerStatus">
+                <option value="on">✅ चालू है (वेबसाइट के शीर्ष पर स्क्रॉल होगी)</option>
+                <option value="off">❌ बंद रखें</option>
+              </select>
+            </div>
+            <div class="full-span">
+              <label>सूचना संदेश (Ticker Text)</label>
+              <input id="settingTickerText" value="🌱 कल सुबह ताज़ा खीरा और टमाटर उपलब्ध रहेगा - अभी बुक करें!">
+            </div>
+          </div>
         </div>
 
         <!-- टैब 3: UPI पेमेंट -->
         <div id="subpane-payment" class="settings-subpane">
-          <h3 style="color:var(--green);margin-top:0">💳 UPI भुगतान व QR कोड सेटिंग्स</h3>
-          <label>आपकी UPI ID (जिस पर ग्राहक पेमेंट करेंगे)</label>
-          <input id="settingUpiId" required value="BHARATPE2H0E0T6Z3P47445@unitype">
-
-          <label>खाताधारक / नर्सरी मालिक का नाम</label>
-          <input id="settingUpiName" required value="ANIL KUMAR MEENA">
+          <div class="admin-col-header">
+            <h3>💳 UPI भुगतान व खाताधारक सेटिंग्स</h3>
+            <span class="admin-count-pill">पेमेंट रिसीवर</span>
+          </div>
+          <div class="admin-form-grid">
+            <div>
+              <label>आपकी UPI ID (जिस पर ग्राहक पेमेंट करेंगे)</label>
+              <input id="settingUpiId" required value="BHARATPE2H0E0T6Z3P47445@unitype">
+            </div>
+            <div>
+              <label>खाताधारक / नर्सरी मालिक का नाम</label>
+              <input id="settingUpiName" required value="ANIL KUMAR MEENA">
+            </div>
+          </div>
         </div>
 
         <!-- टैब 4: डिलीवरी & मुफ़्त ऑफर -->
         <div id="subpane-delivery" class="settings-subpane">
-          <h3 style="color:var(--green);margin-top:0">🚚 डिलीवरी नियम (राउंड-ट्रिप फ्री रेंज कंट्रोल)</h3>
+          <div class="admin-col-header">
+            <h3>🚚 डिलीवरी नियम व मुफ़्त दूरी कंट्रोल</h3>
+            <span class="admin-count-pill">GPS आधारित</span>
+          </div>
           
           <div style="background:#f4fbf7;border:1px solid #d1fae5;border-radius:14px;padding:14px;margin-bottom:14px">
             <h4 style="margin:0 0 10px;color:var(--deep)">🌱 नर्सरी पौधे के डिलीवरी नियम</h4>
             <div class="mandi-grid" style="margin:0">
               <div>
-                <label>फ्री डिलीवरी कुल दूरी (किमी)</label>
-                <input id="settingPlantFreeKm" type="number" min="0" value="5" title="इस कुल दूरी (आना-जाना) तक कोई चार्ज नहीं लगेगा">
+                <label>फ्री डिलीवरी दूरी (किमी)</label>
+                <input id="settingPlantFreeKm" type="number" min="0" value="5">
               </div>
               <div>
                 <label>आगे की दर (₹/किमी)</label>
@@ -2262,8 +2447,8 @@ body > main::after{
             <h4 style="margin:0 0 10px;color:#b45309">🥬 ताज़ी सब्जियों के डिलीवरी नियम</h4>
             <div class="mandi-grid" style="margin:0">
               <div>
-                <label>फ्री डिलीवरी कुल दूरी (किमी)</label>
-                <input id="settingVegFreeKm" type="number" min="0" value="10" title="इस कुल दूरी (आना-जाना) तक कोई चार्ज नहीं लगेगा">
+                <label>फ्री डिलीवरी दूरी (किमी)</label>
+                <input id="settingVegFreeKm" type="number" min="0" value="10">
               </div>
               <div>
                 <label>आगे की दर (₹/किमी)</label>
@@ -2283,79 +2468,178 @@ body > main::after{
 
         <!-- टैब 5: थीम & समय -->
         <div id="subpane-branding" class="settings-subpane">
-          <h3 style="color:var(--green);margin-top:0">🎨 ब्रांडिंग, समय व रंग थीम</h3>
-          <label>नर्सरी का नाम</label>
-          <input id="settingNurseryName" required value="श्री नीम करोली महाराज ग्रीन नर्सरी">
-
-          <label>टैगलाइन / स्लोगन</label>
-          <input id="settingNurseryTagline" required value="हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए">
-
-          <label>नर्सरी का पता</label>
-          <input id="settingNurseryAddress" required value="मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान">
-
-          <label>मुख्य फ़ोन व WhatsApp नंबर</label>
-          <input id="settingPhone" type="tel" required value="9887666626">
-
-          <label>दुकान का समय (Opening Hours)</label>
-          <input id="settingOpeningHours" value="सुबह 07:00 AM से शाम 10:00 PM">
-
-          <label>वेबसाइट थीम कलर (Theme Color)</label>
-          <select id="settingThemeColor">
-            <option value="classic">🌿 क्लासिक डार्क ग्रीन (Classic Green)</option>
-            <option value="fresh">🍃 फ्रेश लाइट ग्रीन (Fresh Mint)</option>
-            <option value="gold">🌾 गोल्डन फार्म (Golden Farm)</option>
-          </select>
+          <div class="admin-col-header">
+            <h3>🎨 ब्रांडिंग, संपर्क नंबर, समय व रंग थीम</h3>
+            <span class="admin-count-pill">हेडर व फुटर</span>
+          </div>
+          <div class="admin-form-grid">
+            <div>
+              <label>नर्सरी का नाम</label>
+              <input id="settingNurseryName" required value="श्री नीम करोली महाराज ग्रीन नर्सरी">
+            </div>
+            <div>
+              <label>टैगलाइन / स्लोगन</label>
+              <input id="settingNurseryTagline" required value="हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए">
+            </div>
+            <div>
+              <label>नर्सरी का पता</label>
+              <input id="settingNurseryAddress" required value="मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान">
+            </div>
+            <div>
+              <label>मुख्य फ़ोन व WhatsApp नंबर</label>
+              <input id="settingPhone" type="tel" required value="9887666626">
+            </div>
+            <div>
+              <label>दुकान का समय (Opening Hours)</label>
+              <input id="settingOpeningHours" value="सुबह 07:00 AM से शाम 10:00 PM">
+            </div>
+            <div>
+              <label>वेबसाइट थीम कलर (Theme Color)</label>
+              <select id="settingThemeColor">
+                <option value="classic">🌿 क्लासिक डार्क ग्रीन (Classic Green)</option>
+                <option value="fresh">🍃 फ्रेश लाइट ग्रीन (Fresh Mint)</option>
+                <option value="gold">🌾 गोल्डन फार्म (Golden Farm)</option>
+              </select>
+            </div>
+          </div>
         </div>
 
         <!-- टैब 6: WhatsApp & कूपन -->
         <div id="subpane-widget" class="settings-subpane">
-          <h3 style="color:var(--green);margin-top:0">💬 फ़्लोटिंग WhatsApp विजेट व गुप्त कूपन कोड</h3>
-          <label>फ़्लोटिंग गोल WhatsApp बटन स्क्रीन पर रखें?</label>
-          <select id="settingWaWidget">
-            <option value="on">✅ चालू रखें (कोने में हरा बटन दिखेगा)</option>
-            <option value="off">❌ बंद रखें</option>
-          </select>
-
-          <label>गुप्त कूपन कोड (Promo Code)</label>
-          <input id="settingCouponCode" value="KISAN20" placeholder="जैसे KISAN20">
+          <div class="admin-col-header">
+            <h3>💬 फ़्लोटिंग WhatsApp विजेट व कूपन कोड</h3>
+            <span class="admin-count-pill">ग्राहक चैट</span>
+          </div>
+          <div class="admin-form-grid">
+            <div>
+              <label>फ़्लोटिंग गोल WhatsApp बटन स्क्रीन पर रखें?</label>
+              <select id="settingWaWidget">
+                <option value="on">✅ चालू रखें (कोने में हरा बटन दिखेगा)</option>
+                <option value="off">❌ बंद रखें</option>
+              </select>
+            </div>
+            <div>
+              <label>गुप्त कूपन कोड (Promo Code)</label>
+              <input id="settingCouponCode" value="KISAN20" placeholder="जैसे KISAN20">
+            </div>
+          </div>
         </div>
 
         <!-- टैब 7: लाइव प्रीव्यू -->
         <div id="subpane-preview" class="settings-subpane">
-          <h3 style="color:var(--green);margin-top:0">👁️ लाइव प्रीव्यू (ग्राहक को कैसा दिखेगा)</h3>
-          <div style="border:1px dashed #25884b;border-radius:12px;padding:14px;background:#fbfef9">
-            <div id="prevTicker" style="background:#14532d;color:#fef08a;padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;margin-bottom:8px">📢 सूचना: कल सुबह ताज़ा खीरा और टमाटर उपलब्ध रहेगा!</div>
-            <div id="prevOffer" style="background:#b45309;color:#fff;padding:6px 10px;font-size:13px;font-weight:700;border-radius:6px;margin-bottom:8px">🎉 विशेष ऑफर: 20% की छूट लागू है!</div>
-            <h4 id="prevName" style="margin:4px 0;color:#176b37">🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</h4>
-            <p id="prevAddress" style="margin:2px 0;font-size:13px;color:#555">📍 मीणा की ढाणी, चारावास | 📞 9887666626</p>
-            <p id="prevHours" style="margin:2px 0;font-size:12px;opacity:0.77">⏰ समय: सुबह 07:00 AM से शाम 10:00 PM</p>
+          <div class="admin-col-header">
+            <h3>👁️ लाइव प्रीव्यू (ग्राहक को वेबसाइट पर कैसा दिखेगा)</h3>
+            <span class="admin-count-pill">लाइव झलक</span>
+          </div>
+          <div style="border:2px dashed #34d399;border-radius:16px;padding:16px;background:linear-gradient(135deg,#064e2b,#08783c);color:#fff;box-shadow:0 6px 18px rgba(6,78,59,.15)">
+            <div id="prevTicker" style="background:rgba(0,0,0,.28);color:#fef08a;padding:6px 12px;font-size:12.5px;font-weight:800;border-radius:8px;margin-bottom:8px">📢 सूचना: कल सुबह ताज़ा खीरा और टमाटर उपलब्ध रहेगा!</div>
+            <div id="prevOffer" style="background:#d97706;color:#fff;padding:6px 12px;font-size:13px;font-weight:800;border-radius:8px;margin-bottom:10px">🎉 विशेष ऑफर: 20% की छूट लागू है!</div>
+            <h4 id="prevName" style="margin:4px 0;color:#fff;font-size:19px">🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</h4>
+            <p id="prevAddress" style="margin:4px 0;font-size:13px;color:#d1fae5">📍 मीणा की ढाणी, चारावास | 📞 9887666626</p>
+            <p id="prevHours" style="margin:4px 0 0;font-size:12px;color:#fef08a;font-weight:700">⏰ समय: सुबह 07:00 AM से शाम 10:00 PM</p>
           </div>
         </div>
 
-        <button type="submit" style="width:100%;font-size:16px;padding:12px;background:#16a34a;margin-top:14px;box-shadow:0 4px 14px rgba(22,163,74,0.3)">💾 सभी सेटिंग्स सुरक्षित व वेबसाइट पर लागू करें</button>
+        <button type="submit" class="admin-primary-submit" style="margin-top:14px">💾 सभी सेटिंग्स सुरक्षित व वेबसाइट पर लागू करें</button>
       </form>
-      <div id="siteSettingsStatus" class="status" style="display:none"></div>
+      <div id="siteSettingsStatus" class="status" style="display:none;margin-top:10px"></div>
     </div>
 
-    <!-- उधार रजिस्टर -->
+    <!-- 8. ⏰ उधार रजिस्टर (Credit / Dues Ledger) -->
     <div id="adminDuesPane" class="admin-pane">
-      <h2>⏰ उधार रजिस्टर</h2>
-      <form id="dueForm">
-        <label>ग्राहक का नाम</label><input id="dueName" required>
-        <label>मोबाइल</label><input id="duePhone" type="tel" required>
-        <label>कुल रकम (₹)</label><input id="dueTotal" type="number" required>
-        <label>मिली रकम (₹)</label><input id="duePaid" type="number" value="0" required>
-        <label>तारीख</label><input id="dueDate" type="date" required>
-        <button type="submit">सेव करें</button>
-      </form>
-      <div id="dueList" style="margin-top:14px"></div>
+      <div class="admin-pane-header">
+        <div>
+          <h2>⏰ ग्राहक उधार खाता रजिस्टर (Khata Book)</h2>
+          <small>ग्राहकों के उधार, जमा रकम और बाकी बकाया का पूरा हिसाब व WhatsApp तगादा</small>
+        </div>
+      </div>
+
+      <div class="metric-grid" style="margin-top:0">
+        <div class="metric">
+          <div class="metric-top"><span class="metric-ico">📒</span><span class="metric-label">कुल उधार खाता</span></div>
+          <div class="metric-value" id="duesTotalGiven">₹0</div>
+          <small style="color:var(--muted)">कुल दर्ज राशि</small>
+        </div>
+        <div class="metric">
+          <div class="metric-top"><span class="metric-ico">💵</span><span class="metric-label">कुल मिली रकम</span></div>
+          <div class="metric-value" id="duesTotalReceived">₹0</div>
+          <small style="color:var(--green)">जमा हो चुकी राशि</small>
+        </div>
+        <div class="metric warning">
+          <div class="metric-top"><span class="metric-ico">⏳</span><span class="metric-label">कुल बाकी बकाया</span></div>
+          <div class="metric-value" id="duesTotalPending">₹0</div>
+          <small style="color:#b91c1c">वसूली बाकी है</small>
+        </div>
+      </div>
+
+      <div class="admin-subcard" style="margin-bottom:16px">
+        <div class="admin-col-header">
+          <h3>➕ नया उधार हिसाब दर्ज करें</h3>
+          <span class="admin-count-pill">तुरंत सेव</span>
+        </div>
+        <form id="dueForm">
+          <div class="admin-form-grid">
+            <div>
+              <label>👤 ग्राहक का नाम *</label>
+              <input id="dueName" required placeholder="ग्राहक का पूरा नाम">
+            </div>
+            <div>
+              <label>📞 मोबाइल नंबर *</label>
+              <input id="duePhone" type="tel" required placeholder="10 अंकों का मोबाइल नंबर">
+            </div>
+            <div>
+              <label>💰 कुल रकम (₹) *</label>
+              <input id="dueTotal" type="number" min="1" required placeholder="जैसे 500">
+            </div>
+            <div>
+              <label>💵 मिली रकम (₹) *</label>
+              <input id="duePaid" type="number" min="0" value="0" required placeholder="जैसे 200">
+            </div>
+            <div>
+              <label>📅 तारीख *</label>
+              <input id="dueDate" type="date" required>
+            </div>
+            <div style="display:flex;align-items:flex-end">
+              <button type="submit" class="admin-primary-submit" style="margin:6px 0 10px">💾 उधार खाते में जोड़ें</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="admin-subcard">
+        <div class="admin-col-header">
+          <h3>📋 ग्राहक उधार सूची</h3>
+          <span class="admin-count-pill" id="duesCustomerCountBadge">0 ग्राहक</span>
+        </div>
+        <div id="dueList" style="margin-top:10px"></div>
+      </div>
     </div>
 
-    <!-- ChatGPT सहायता -->
+    <!-- 9. 🤖 ChatGPT सहायता (AI Smart Assistant) -->
     <div id="adminChatgptPane" class="admin-pane">
-      <h2>🤖 ChatGPT सहायता</h2>
-      <textarea id="nurseryChatQuestion" rows="4" placeholder="अपना सवाल लिखें…"></textarea>
-      <button type="button" id="nurseryAskChatGPT" style="margin-top:8px">🤖 ChatGPT खोलें</button>
+      <div class="admin-pane-header">
+        <div>
+          <h2>🤖 स्मार्ट नर्सरी AI सलाहकार (ChatGPT)</h2>
+          <small>पौधों के रोग, खाद, मौसमी खेती या ग्राहकों के ऑफर मैसेज तुरंत तैयार करें</small>
+        </div>
+      </div>
+
+      <div class="admin-subcard">
+        <div class="admin-col-header">
+          <h3>⚡ त्वरित सवाल चुनें (एक क्लिक में भरें)</h3>
+          <span class="admin-count-pill">स्मार्ट प्रॉम्प्ट्स</span>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+          <button type="button" class="admin-prompt-chip" data-prompt="झुंझुनू राजस्थान के मौसम में टमाटर और हरी मिर्च की पत्तियों के मुड़ने (Leaf Curl) का जैविक और सुरक्षित इलाज बताइए।">🍅 टमाटर/मिर्च पत्ती मरोड़ रोग इलाज</button>
+          <button type="button" class="admin-prompt-chip" data-prompt="श्री नीम करोली महाराज ग्रीन नर्सरी के ग्राहकों को WhatsApp पर भेजने के लिए ताज़ी सब्जियों और पौधों का एक आकर्षक हिंदी प्रचार संदेश लिखिए।">📢 WhatsApp ऑफर मैसेज बनाएँ</button>
+          <button type="button" class="admin-prompt-chip" data-prompt="नर्सरी में तैयार पौधों की जड़ों को मजबूत करने और रोपाई के बाद पौधे सूखने से बचाने के लिए किसानों को क्या सलाह दें?">🌱 पौधों की देखभाल टिप्स</button>
+          <button type="button" class="admin-prompt-chip" data-prompt="राजस्थान में इस महीने कौन-कौन सी सब्जियों की पौध और बीज लगाना सबसे ज्यादा मुनाफे वाला रहेगा?">📈 मौसमी मुनाफा फसल सलाह</button>
+        </div>
+
+        <label for="nurseryChatQuestion">✍️ अपना सवाल या विषय नीचे लिखें:</label>
+        <textarea id="nurseryChatQuestion" rows="4" placeholder="जैसे: बैंगन में फल छेदक कीट की रोकथाम कैसे करें या ग्राहकों के लिए दिवाली ऑफर मैसेज लिखें…"></textarea>
+        <button type="button" id="nurseryAskChatGPT" class="admin-primary-submit" style="margin-top:8px">🤖 ChatGPT पर तुरंत उत्तर खोलें ➔</button>
+      </div>
     </div>
   </section>
 </main>
@@ -3526,7 +3810,7 @@ document.getElementById('adminPanelNav').addEventListener('click', () => {
   if (window.closeNurseryMenu) window.closeNurseryMenu();
   const navMenu = document.getElementById('mainNavigation');
   const navButton = document.getElementById('menuToggleButton');
-  if (navMenu) { navMenu.classList.remove('menu-open'); navMenu.style.setProperty('display', 'none', 'important'); }
+  if (navMenu) { navMenu.classList.remove('menu-open'); navMenu.style.removeProperty('display'); }
   if (navButton) { navButton.setAttribute('aria-expanded', 'false'); navButton.setAttribute('aria-label', 'मेनू खोलें'); }
   ownerModal.classList.add('login-visible');
   // मोबाइल पर एडमिन वर्कस्पेस को नर्सरी हेडर के ठीक नीचे खोलें।
@@ -3560,7 +3844,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   if (window.closeNurseryMenu) window.closeNurseryMenu();
   const navMenuAfterLogin = document.getElementById('mainNavigation');
   const navButtonAfterLogin = document.getElementById('menuToggleButton');
-  if (navMenuAfterLogin) { navMenuAfterLogin.classList.remove('menu-open'); navMenuAfterLogin.style.setProperty('display', 'none', 'important'); }
+  if (navMenuAfterLogin) { navMenuAfterLogin.classList.remove('menu-open'); navMenuAfterLogin.style.removeProperty('display'); }
   if (navButtonAfterLogin) { navButtonAfterLogin.setAttribute('aria-expanded', 'false'); navButtonAfterLogin.setAttribute('aria-label', 'मेनू खोलें'); }
   document.getElementById('loginForm').style.display = 'none';
   document.getElementById('ownerPanelHeader').style.display = 'block';
@@ -3607,6 +3891,7 @@ function showAdminTab(tab) {
   if (tab === 'mandi') loadMandiDropdownPlants();
   if (tab === 'settings') fillSettingsForm();
   if (tab === 'manageplants') showManageView('add-plant');
+  if (tab === 'dues' && typeof window.renderDuesRegister === 'function') window.renderDuesRegister();
 }
 document.querySelectorAll('.admin-tab').forEach(b => b.addEventListener('click', () => showAdminTab(b.dataset.tab)));
 
@@ -3709,6 +3994,37 @@ async function quickUpdateStock(id, inputId) {
   } catch (err) { alert('त्रुटि: ' + err.message); }
 }
 
+let cachedAdminOrders = [];
+let currentOrderFilter = 'all';
+
+function filterAndRenderAdminOrders() {
+  const container = document.getElementById('ownerOrders');
+  if (!container) return;
+  const q = (document.getElementById('adminOrderSearchInput')?.value || '').trim().toLowerCase();
+
+  const filtered = (cachedAdminOrders || []).filter(o => {
+    const delivered = isOrderDelivered(o);
+    const cancelled = o.status === 'cancelled';
+    const confirmed = o.status === 'confirmed' && !delivered;
+    const pending = o.status === 'pending';
+
+    if (currentOrderFilter === 'pending' && !pending) return false;
+    if (currentOrderFilter === 'confirmed' && !confirmed) return false;
+    if (currentOrderFilter === 'delivered' && !delivered) return false;
+    if (currentOrderFilter === 'cancelled' && !cancelled) return false;
+
+    if (q) {
+      const hay = `${o.id} ${o.plant_name || ''} ${o.customer_name || ''} ${o.customer_phone || ''} ${o.customer_address || ''} ${o.notes || ''}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  container.innerHTML = filtered.length
+    ? filtered.map(o => renderOrderHtml(o, cachedAdminOrders)).join('')
+    : `<div class="admin-empty-state"><span>📭</span><p>इस श्रेणी या खोज में कोई ऑर्डर नहीं मिला।</p></div>`;
+}
+
 async function loadAdminAll() {
   const statsBox = document.getElementById('ownerStats');
   if (!statsBox) return;
@@ -3723,6 +4039,7 @@ async function loadAdminAll() {
 
     const items = plantsRes.data || [];
     const orders = ordersRes.data || [];
+    cachedAdminOrders = orders;
 
     const pList = items.filter(x => !isVeg(x));
     const vList = items.filter(x => isVeg(x));
@@ -3745,87 +4062,98 @@ async function loadAdminAll() {
 
     const lowStockItems = items.filter(x => Number(x.stock_quantity) <= 10 && x.is_active);
 
+    const pBadge = document.getElementById('plantStockCountBadge');
+    const vBadge = document.getElementById('vegStockCountBadge');
+    if (pBadge) pBadge.textContent = `${pList.length} किस्में (${totalPlantStock} पौधे)`;
+    if (vBadge) vBadge.textContent = `${vList.length} किस्में (${totalVegStock} किलो)`;
+
     statsBox.innerHTML = `
       <div class="metric-grid">
-        <div class="metric">
-          <div class="metric-label">🛒 आज के कुल ऑर्डर</div>
+        <div class="metric clickable-metric" onclick="showAdminTab('orders')" title="सभी ऑर्डर देखें">
+          <div class="metric-top"><span class="metric-ico">🛒</span><span class="metric-label">आज के कुल ऑर्डर</span></div>
           <div class="metric-value">${todayOrders.length}</div>
-          <small style="color:var(--muted)">आज प्राप्त कुल माँग</small>
+          <small style="color:var(--muted)">कुल ऑर्डर: ${orders.length}</small>
         </div>
-        <div class="metric pending">
-          <div class="metric-label">⏳ लंबित (Pending)</div>
+        <div class="metric pending clickable-metric" onclick="showAdminTab('orders');window.setAdminOrderFilter && window.setAdminOrderFilter('pending')" title="लंबित ऑर्डर देखें">
+          <div class="metric-top"><span class="metric-ico">⏳</span><span class="metric-label">लंबित (Pending)</span></div>
           <div class="metric-value">${pendingOrders.length}</div>
-          <small style="color:#d97706">जाँच बाकी है</small>
+          <small style="color:#b45309">जाँच व कन्फर्म बाकी</small>
         </div>
-        <div class="metric">
-          <div class="metric-label">✅ कन्फर्म ऑर्डर</div>
+        <div class="metric clickable-metric" onclick="showAdminTab('orders');window.setAdminOrderFilter && window.setAdminOrderFilter('confirmed')" title="कन्फर्म ऑर्डर देखें">
+          <div class="metric-top"><span class="metric-ico">✅</span><span class="metric-label">कन्फर्म ऑर्डर</span></div>
           <div class="metric-value">${confirmedOrders.length}</div>
-          <small style="color:var(--green)">पक्के ऑर्डर</small>
+          <small style="color:var(--green)">तैयार / पैक करने योग्य</small>
         </div>
-        <div class="metric delivered">
-          <div class="metric-label">🚚 डिलीवर हुए</div>
+        <div class="metric delivered clickable-metric" onclick="showAdminTab('orders');window.setAdminOrderFilter && window.setAdminOrderFilter('delivered')" title="डिलीवर ऑर्डर देखें">
+          <div class="metric-top"><span class="metric-ico">🚚</span><span class="metric-label">डिलीवर हुए</span></div>
           <div class="metric-value" style="color:#2563eb">${deliveredOrders.length}</div>
           <small style="color:#2563eb">ग्राहक तक पहुँचा दिए</small>
         </div>
-        <div class="metric">
-          <div class="metric-label">💰 आज का व्यापार</div>
+        <div class="metric clickable-metric" onclick="showAdminTab('sales')" title="बिक्री हिसाब देखें">
+          <div class="metric-top"><span class="metric-ico">💰</span><span class="metric-label">आज का व्यापार</span></div>
           <div class="metric-value">₹${todaySalesAmount.toFixed(2)}</div>
-          <small style="color:var(--muted)">कन्फर्म व डिलीवर बिक्री</small>
+          <small style="color:var(--muted)">आज की पक्की बिक्री</small>
         </div>
-        <div class="metric">
-          <div class="metric-label">🌱 कुल पौधे बाकी</div>
+        <div class="metric clickable-metric" onclick="showAdminTab('stock')" title="स्टॉक लिस्ट देखें">
+          <div class="metric-top"><span class="metric-ico">🌱</span><span class="metric-label">उपलब्ध स्टॉक</span></div>
           <div class="metric-value">${totalPlantStock}</div>
-          <small style="color:var(--muted)">${pList.length} किस्मों में</small>
+          <small style="color:var(--muted)">${pList.length} पौधे | ${totalVegStock}kg सब्ज़ी</small>
         </div>
       </div>
 
       ${lowStockItems.length ? `
-        <div class="status" style="background:#fef2f2;border:1px solid #fecaca;color:#991b1b;margin-top:12px">
-          <strong>⚠️ कम स्टॉक चेतावनी (Low Stock Alert):</strong>
-          <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap">
-            ${lowStockItems.map(x => `<span style="background:#fee2e2;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700">${isVeg(x)?'🥬':'🌱'} ${safe(x.name)}: केवल ${x.stock_quantity} ${isVeg(x)?'किलो':'पौधे'} बाकी</span>`).join('')}
+        <div class="admin-lowstock-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+            <strong style="color:#991b1b;font-size:14px">⚠️ कम स्टॉक चेतावनी (Low Stock Alert - ${lowStockItems.length} आइटम):</strong>
+            <button type="button" onclick="showAdminTab('stock')" style="padding:5px 11px;font-size:12px;background:#dc2626;color:#fff;border-radius:8px;font-weight:800">📦 अभी स्टॉक बढ़ाएँ</button>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            ${lowStockItems.map(x => `<span style="background:#fff;border:1px solid #fca5a5;color:#991b1b;padding:5px 10px;border-radius:9px;font-size:12.5px;font-weight:800;box-shadow:0 2px 5px rgba(185,28,28,.06)">${isVeg(x)?'🥬':'🌱'} ${safe(x.name)}: <b>${x.stock_quantity} ${isVeg(x)?'किलो':'पौधे'}</b></span>`).join('')}
           </div>
         </div>
       ` : ''}
 
       <div class="dashboard-table-card">
-        <h3>
-          <span>📋 आज के ऑर्डर विवरण (${todayOrders.length})</span>
-          <button type="button" onclick="loadAdminAll()" style="padding:4px 8px;font-size:12px;background:#edf5e9;color:var(--green);border:1px solid var(--line)">🔄 रीफ्रेश करें</button>
-        </h3>
-        ${todayOrders.length ? todayOrders.map(o => renderOrderHtml(o, orders)).join('') : '<p style="color:var(--muted)">आज अभी तक कोई नया ऑर्डर नहीं आया है।</p>'}
+        <div class="admin-col-header" style="margin-bottom:12px">
+          <h3 style="margin:0">📋 आज के ऑर्डर विवरण (${todayOrders.length})</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" onclick="showAdminTab('orders')" class="admin-soft-btn">🛒 सभी ऑर्डर (${orders.length})</button>
+          </div>
+        </div>
+        ${todayOrders.length ? todayOrders.map(o => renderOrderHtml(o, orders)).join('') : '<div class="admin-empty-state"><span>🌿</span><p>आज अभी तक कोई नया ऑर्डर नहीं आया है।</p></div>'}
       </div>
     `;
 
-    document.getElementById('ownerOrders').innerHTML = orders.length 
-      ? orders.map(o => renderOrderHtml(o, orders)).join('') 
-      : '<p style="color:var(--muted)">अभी कोई ऑर्डर उपलब्ध नहीं है।</p>';
+    filterAndRenderAdminOrders();
 
     const makeStockRow = x => {
       const isAvailable = x.is_active === true;
       const unit = isVeg(x) ? 'किलो/ग्राम' : 'पौधा';
       const inputId = 'stock-input-' + x.id;
       const imgThumb = x.image_url 
-        ? `<img src="${safe(x.image_url)}" alt="" style="width:52px;height:52px;object-fit:cover;border-radius:10px;background:#f1f7ed;border:1px solid #dcebe0">`
-        : `<div style="width:52px;height:52px;background:#ecfdf5;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;border:1px solid #d1fae5">${isVeg(x)?'🥬':'🌱'}</div>`;
+        ? `<img src="${safe(x.image_url)}" alt="" style="width:52px;height:52px;object-fit:cover;border-radius:10px;background:#f1f7ed;border:1px solid #dcebe0;flex-shrink:0">`
+        : `<div style="width:52px;height:52px;background:#ecfdf5;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;border:1px solid #d1fae5;flex-shrink:0">${isVeg(x)?'🥬':'🌱'}</div>`;
 
       return `
-        <div class="stock-row" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:12px 10px;margin-bottom:10px;background:#fff;border:1px solid #dcebe0;border-radius:14px;box-shadow:0 3px 12px rgba(6,78,59,.04)">
+        <div class="stock-row admin-pro-row" data-stock-name="${safe((x.name + ' ' + (x.variety || '')).toLowerCase())}">
           <div style="display:flex;align-items:center;gap:12px;min-width:0">
             ${imgThumb}
             <div style="min-width:0">
               <strong style="font-size:15px;color:#123b27;display:block">${safe(x.name)}</strong>
-              <small style="color:var(--muted);font-weight:800">₹${Number(x.selling_price).toFixed(2)} / ${unit}</small>
+              <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:2px">
+                <span class="admin-price-chip">₹${Number(x.selling_price).toFixed(2)} / ${unit}</span>
+                <span class="admin-status-dot ${isAvailable && Number(x.stock_quantity) > 0 ? 'online' : 'offline'}">${isAvailable && Number(x.stock_quantity) > 0 ? 'उपलब्ध' : 'Sold Out'}</span>
+              </div>
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-            <div style="display:flex;align-items:center;gap:4px">
-              <label style="font-size:11px;margin:0;color:var(--muted);font-weight:700">स्टॉक:</label>
-              <input id="${inputId}" type="number" min="0" step="${isVeg(x)?'0.5':'1'}" value="${x.stock_quantity}" style="width:78px;padding:6px 8px;margin:0;font-size:14px;text-align:center;font-weight:900;border-radius:8px;border:1px solid #cbd5e1">
+            <div style="display:flex;align-items:center;gap:5px;background:#f8faf6;padding:4px 8px;border-radius:10px;border:1px solid #dbe7d7">
+              <label style="font-size:11px;margin:0;color:var(--muted);font-weight:800">स्टॉक:</label>
+              <input id="${inputId}" type="number" min="0" step="${isVeg(x)?'0.5':'1'}" value="${x.stock_quantity}" style="width:74px;padding:5px 6px;margin:0;font-size:14px;text-align:center;font-weight:900;border-radius:7px;border:1px solid #cbd5e1">
             </div>
-            <button type="button" onclick="quickUpdateStock(${x.id}, '${inputId}')" style="padding:7px 12px;font-size:12.5px;background:#16a34a;color:#fff;border-radius:8px;font-weight:800;border:0;cursor:pointer" title="स्टॉक संख्या सेव करें">💾 सेव</button>
-            <button type="button" onclick="toggleProductStatus(${x.id}, ${isAvailable})" style="font-size:12.5px;padding:7px 12px;border-radius:8px;border:1px solid ${isAvailable ? '#f87171' : '#4ade80'};background:${isAvailable ? '#fff1f2' : '#f0fdf4'};color:${isAvailable ? '#b91c1c' : '#15803d'};font-weight:800;cursor:pointer">
-              ${isAvailable ? '🚫 Sold Out' : '✅ उपलब्ध'}
+            <button type="button" onclick="quickUpdateStock(${x.id}, '${inputId}')" style="padding:8px 13px;font-size:12.5px;background:#16a34a;color:#fff;border-radius:9px;font-weight:800;border:0;cursor:pointer" title="स्टॉक संख्या सेव करें">💾 सेव</button>
+            <button type="button" onclick="toggleProductStatus(${x.id}, ${isAvailable})" style="font-size:12.5px;padding:8px 12px;border-radius:9px;border:1px solid ${isAvailable ? '#f87171' : '#4ade80'};background:${isAvailable ? '#fff1f2' : '#f0fdf4'};color:${isAvailable ? '#b91c1c' : '#15803d'};font-weight:800;cursor:pointer">
+              ${isAvailable ? '🚫 Sold Out' : '✅ उपलब्ध करें'}
             </button>
           </div>
         </div>`;
@@ -3852,6 +4180,7 @@ function renderOrderHtml(o, allOrders) {
   const cancelReasonMatch = String(o.notes || '').match(/CANCEL_REASON:([^|]+)/);
   const phone = safe(o.customer_phone || '');
   const cleanPhone = phone.replace(/\D/g, '').slice(-10);
+  const orderTime = o.created_at ? new Date(o.created_at).toLocaleString('hi-IN', {timeZone:'Asia/Kolkata', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : '—';
 
   const isDuplicate = allOrders && allOrders.some(other => 
     other.id !== o.id && 
@@ -3861,43 +4190,66 @@ function renderOrderHtml(o, allOrders) {
 
   let statusBadgeHtml = '';
   if (isCancelled) {
-    statusBadgeHtml = '<span class="order-badge" style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:20px;background:#fee2e2;color:#991b1b">❌ रद्द (Cancelled)</span>';
+    statusBadgeHtml = '<span class="order-badge" style="font-size:12px;font-weight:800;padding:4px 10px;border-radius:20px;background:#fee2e2;color:#991b1b;border:1px solid #fecaca">❌ रद्द (Cancelled)</span>';
   } else if (isDelivered) {
-    statusBadgeHtml = '<span class="order-badge" style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:20px;background:#dbeafe;color:#1e40af">🚚 डिलीवर हुआ (Delivered)</span>';
+    statusBadgeHtml = '<span class="order-badge" style="font-size:12px;font-weight:800;padding:4px 10px;border-radius:20px;background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe">🚚 डिलीवर हुआ</span>';
   } else if (isConfirmed) {
-    statusBadgeHtml = '<span class="order-badge" style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:20px;background:#dcfce7;color:#166534">✅ कन्फर्म (Confirmed)</span>';
+    statusBadgeHtml = '<span class="order-badge" style="font-size:12px;font-weight:800;padding:4px 10px;border-radius:20px;background:#dcfce7;color:#166534;border:1px solid #86efac">✅ कन्फर्म (Confirmed)</span>';
   } else {
-    statusBadgeHtml = '<span class="order-badge" style="font-size:12px;font-weight:700;padding:3px 8px;border-radius:20px;background:#fef3c7;color:#92400e">⏳ लंबित (Pending)</span>';
+    statusBadgeHtml = '<span class="order-badge" style="font-size:12px;font-weight:800;padding:4px 10px;border-radius:20px;background:#fef3c7;color:#92400e;border:1px solid #fde68a">⏳ लंबित (Pending)</span>';
   }
 
   return `
-    <div class="order-item-card ${isCancelled ? 'is-cancelled' : (isDelivered ? 'is-delivered' : (isConfirmed ? 'is-confirmed' : 'is-pending'))}" id="order-card-${o.id}">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
-        <strong>ऑर्डर #${o.id} - ${safe(o.plant_name)}</strong>
-        <div id="badge-container-${o.id}">${statusBadgeHtml}</div>
+    <div class="order-item-card admin-order-pro-card ${isCancelled ? 'is-cancelled' : (isDelivered ? 'is-delivered' : (isConfirmed ? 'is-confirmed' : 'is-pending'))}" id="order-card-${o.id}">
+      <div class="admin-order-top">
+        <div style="display:flex;align-items:center;gap:10px;min-width:0">
+          <div class="admin-order-avatar">🛍️</div>
+          <div style="min-width:0">
+            <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+              <span class="admin-id-pill">#${o.id}</span>
+              <strong style="font-size:15px;color:#123b27">${safe(o.plant_name)}</strong>
+            </div>
+            <small style="color:var(--muted);font-weight:700">⏰ ${orderTime}</small>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span class="admin-total-pill">₹${total}</span>
+          <div id="badge-container-${o.id}">${statusBadgeHtml}</div>
+        </div>
       </div>
 
-      ${isDuplicate ? '<div style="margin-top:4px;font-size:12px;color:#b91c1c;font-weight:700">⚠️ ध्यान दें: 5 मिनट में एक ही ग्राहक का दोहरा ऑर्डर!</div>' : ''}
-      ${isCancelled && cancelReasonMatch ? `<div style="margin-top:4px;font-size:13px;color:#b91c1c;font-weight:700">❌ रद्द होने का कारण: ${safe(cancelReasonMatch[1])}</div>` : ''}
+      ${isDuplicate ? '<div class="admin-order-alert warn">⚠️ ध्यान दें: 5 मिनट में एक ही ग्राहक का दोहरा ऑर्डर!</div>' : ''}
+      ${isCancelled && cancelReasonMatch ? `<div class="admin-order-alert err">❌ रद्द होने का कारण: ${safe(cancelReasonMatch[1])}</div>` : ''}
 
-      <p style="margin:6px 0;font-size:14px;color:#2c3e50">
-        👤 <b>ग्राहक:</b> ${safe(o.customer_name)} | 📞 <b>मोबाइल:</b> ${phone}<br>
-        📍 <b>पता:</b> ${safe(o.customer_address)}<br>
-        💳 <b>UPI UTR नंबर:</b> <span style="background:#eef7ed;color:var(--green);padding:2px 6px;border-radius:4px;font-weight:800">${safe(utrMatch ? utrMatch[1] : 'उपलब्ध नहीं')}</span><br>
-        💰 <b>कुल मूल्य:</b> ₹${total} | ⏰ <b>समय:</b> ${o.created_at ? new Date(o.created_at).toLocaleString('hi-IN', {timeZone:'Asia/Kolkata', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}) : '—'}
-      </p>
+      <div class="admin-order-meta-grid">
+        <div class="meta-cell">
+          <small>👤 ग्राहक व मोबाइल</small>
+          <strong>${safe(o.customer_name)} (${phone || '—'})</strong>
+        </div>
+        <div class="meta-cell">
+          <small>💳 UPI UTR / ट्रांजैक्शन नंबर</small>
+          <strong style="color:#065f46;background:#ecfdf5;padding:2px 8px;border-radius:6px;border:1px solid #a7f3d0;display:inline-block">${safe(utrMatch ? utrMatch[1] : 'उपलब्ध नहीं')}</strong>
+        </div>
+        <div class="meta-cell full">
+          <small>📍 डिलीवरी पता</small>
+          <strong>${safe(o.customer_address)}</strong>
+        </div>
+      </div>
 
-      <div class="order-actions" id="actions-container-${o.id}" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
-        ${cleanPhone ? `<a class="btn" href="tel:${cleanPhone}" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📞 कॉल</a>` : ''}
-        ${cleanPhone ? `<a class="btn" href="https://wa.me/91${cleanPhone}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#dcfce7;color:#15803d">💬 WA</a>` : ''}
-        ${mapsMatch ? `<a class="btn" href="${safe(mapsMatch[1])}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📍 मैप</a>` : ''}
-        ${proofMatch ? `<a class="btn" href="${safe(proofMatch[1])}" target="_blank" rel="noopener" style="padding:5px 9px;font-size:12px;background:#edf5e9;color:var(--green)">📸 प्रूफ</a>` : ''}
-        
-        <button type="button" onclick="printOrderInvoice(${o.id}, '${safe(o.plant_name)}', ${o.unit_price}, 0, '${safe(o.customer_name)}', '${phone}', '${safe(o.customer_address)}', '${safe(o.notes)}', '${o.created_at}')" style="padding:5px 10px;font-size:12px;background:#f3f4f6;color:#1f2937;border:1px solid #d1d5db">🖨️ बिल</button>
+      <div class="order-actions admin-order-actions-bar" id="actions-container-${o.id}">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+          ${cleanPhone ? `<a class="btn admin-mini-btn" href="tel:${cleanPhone}">📞 कॉल</a>` : ''}
+          ${cleanPhone ? `<a class="btn admin-mini-btn wa" href="https://wa.me/91${cleanPhone}" target="_blank" rel="noopener">💬 WhatsApp</a>` : ''}
+          ${mapsMatch ? `<a class="btn admin-mini-btn" href="${safe(mapsMatch[1])}" target="_blank" rel="noopener">📍 GPS मैप</a>` : ''}
+          ${proofMatch ? `<a class="btn admin-mini-btn" href="${safe(proofMatch[1])}" target="_blank" rel="noopener">📸 स्क्रीनशॉट</a>` : ''}
+          <button type="button" class="admin-mini-btn neutral" onclick="printOrderInvoice(${o.id}, '${safe(o.plant_name)}', ${o.unit_price}, 0, '${safe(o.customer_name)}', '${phone}', '${safe(o.customer_address)}', '${safe(o.notes)}', '${o.created_at}')">🖨️ बिल प्रिंट</button>
+        </div>
 
-        ${isPending ? `<button type="button" onclick="confirmOrderSimple(event, ${o.id})" style="padding:5px 12px;font-size:12px;background:#16a34a">✅ कन्फर्म</button>` : ''}
-        ${isConfirmed ? `<button type="button" id="deliver-btn-${o.id}" onclick="markOrderDelivered(event, ${o.id}, '${safe(o.notes || '')}')" style="padding:5px 12px;font-size:12px;background:#2563eb">📦 डिलीवर</button>` : ''}
-        ${isPending || isConfirmed ? `<button type="button" onclick="cancelOrderPrompt(event, ${o.id}, '${safe(o.notes || '')}')" style="padding:5px 10px;font-size:12px;background:#dc2626">❌ रद्द करें</button>` : ''}
+        <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
+          ${isPending ? `<button type="button" onclick="confirmOrderSimple(event, ${o.id})" style="padding:7px 14px;font-size:12.5px;background:#16a34a;color:#fff;border-radius:9px;font-weight:800">✅ कन्फर्म करें</button>` : ''}
+          ${isConfirmed ? `<button type="button" id="deliver-btn-${o.id}" onclick="markOrderDelivered(event, ${o.id}, '${safe(o.notes || '')}')" style="padding:7px 14px;font-size:12.5px;background:#2563eb;color:#fff;border-radius:9px;font-weight:800">📦 डिलीवर करें</button>` : ''}
+          ${isPending || isConfirmed ? `<button type="button" onclick="cancelOrderPrompt(event, ${o.id}, '${safe(o.notes || '')}')" style="padding:7px 12px;font-size:12.5px;background:#fff1f2;color:#b91c1c;border:1px solid #fecaca;border-radius:9px;font-weight:800">❌ रद्द करें</button>` : ''}
+        </div>
       </div>
     </div>
   `;
@@ -4148,32 +4500,64 @@ async function renderAdminEdit() {
   pBox.innerHTML = ''; vBox.innerHTML = '';
 
   (data || []).forEach(p => {
-    const target = isVeg(p) ? vBox : pBox;
+    const veg = isVeg(p);
+    const target = veg ? vBox : pBox;
     const row = document.createElement('div');
-    row.className = 'admin-plant-edit-row';
-    const imgHtml = p.image_url ? `<img src="${safe(p.image_url)}" alt="">` : `<div style="font-size:30px">🌱</div>`;
+    row.className = 'admin-pro-row admin-edit-pro-card';
+    const imgHtml = p.image_url
+      ? `<img src="${safe(p.image_url)}" alt="" style="width:56px;height:56px;object-fit:cover;border-radius:12px;border:1px solid #dcebe0;background:#f1f7ed;flex-shrink:0">`
+      : `<div style="width:56px;height:56px;border-radius:12px;background:#ecfdf5;border:1px solid #d1fae5;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">${veg?'🥬':'🌱'}</div>`;
+
     row.innerHTML = `
-      <div class="wide"><strong>${safe(p.name)}</strong></div>
-      <div>${imgHtml}</div>
-      <div>
-        <label>कीमत</label><input class="ep" type="number" value="${p.selling_price}">
-        <label>स्टॉक</label><input class="es" type="number" value="${p.stock_quantity}">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:12px;min-width:0">
+          ${imgHtml}
+          <div style="min-width:0">
+            <strong style="font-size:15px;color:#123b27;display:block">${safe(p.name)}</strong>
+            <small style="color:var(--muted);font-weight:700">${safe(p.variety || (veg ? 'ताज़ी सब्ज़ी' : 'नर्सरी पौधा'))}</small>
+          </div>
+        </div>
+        <span class="admin-price-chip">वर्तमान: ₹${Number(p.selling_price).toFixed(2)}</span>
       </div>
-      <div class="wide"><input class="ef" type="file" accept="image/*"></div>
-      <div class="wide" style="display:flex;gap:8px;margin-top:6px;">
-        <button class="save-btn" type="button" style="flex:1;background:#16a34a;color:#fff;border:0;padding:8px;border-radius:8px;font-weight:700;cursor:pointer">💾 सेव करें</button>
-        <button class="delete-btn" type="button" style="flex:1;background:#dc2626;color:#fff;border:0;padding:8px;border-radius:8px;font-weight:700;cursor:pointer">🗑️ डिलीट करें</button>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px;width:100%;margin-top:8px;background:#f8faf6;padding:10px;border-radius:11px;border:1px solid #e2eee0">
+        <div>
+          <label style="font-size:11px;margin:0 0 3px;color:var(--muted)">💰 नई कीमत (₹)</label>
+          <input class="ep" type="number" step="0.5" value="${p.selling_price}" style="margin:0;padding:7px 9px;font-weight:800">
+        </div>
+        <div>
+          <label style="font-size:11px;margin:0 0 3px;color:var(--muted)">📦 नया स्टॉक (${veg?'किलो':'पौधे'})</label>
+          <input class="es" type="number" step="${veg?'0.5':'1'}" value="${p.stock_quantity}" style="margin:0;padding:7px 9px;font-weight:800">
+        </div>
+        <div style="grid-column:1/-1">
+          <label style="font-size:11px;margin:0 0 3px;color:var(--muted)">📷 नई फोटो अपलोड करें (वैकल्पिक)</label>
+          <input class="ef" type="file" accept="image/*" style="margin:0;padding:6px;font-size:12px">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;width:100%;margin-top:8px">
+        <button class="save-btn" type="button" style="flex:1;background:#16a34a;color:#fff;border:0;padding:9px 12px;border-radius:9px;font-size:13px;font-weight:800;cursor:pointer">💾 बदलाव सेव करें</button>
+        <button class="delete-btn" type="button" style="background:#fff1f2;color:#b91c1c;border:1px solid #fecaca;padding:9px 12px;border-radius:9px;font-size:13px;font-weight:800;cursor:pointer">🗑️ डिलीट</button>
       </div>`;
 
-    row.querySelector('.save-btn').addEventListener('click', async () => {
-      const price = Number(row.querySelector('.ep').value);
-      const stock = Number(row.querySelector('.es').value);
-      const file = row.querySelector('.ef').files?.[0];
-      let updates = {selling_price: price, stock_quantity: stock};
-      if (file) updates.image_url = await uploadPhoto(file, p.id);
-      await db.from('plants').update(updates).eq('id', p.id);
-      alert('अपडेट हो गया!');
-      loadPlants(); loadAdminAll(); renderAdminEdit();
+    row.querySelector('.save-btn').addEventListener('click', async (ev) => {
+      const btn = ev.currentTarget;
+      btn.disabled = true;
+      btn.textContent = 'सेव हो रहा है…';
+      try {
+        const price = Number(row.querySelector('.ep').value);
+        const stock = Number(row.querySelector('.es').value);
+        const file = row.querySelector('.ef').files?.[0];
+        let updates = {selling_price: price, stock_quantity: stock};
+        if (file) updates.image_url = await uploadPhoto(file, p.id);
+        await db.from('plants').update(updates).eq('id', p.id);
+        alert('✅ उत्पाद सफलतापूर्वक अपडेट हो गया!');
+        loadPlants(); loadAdminAll(); renderAdminEdit();
+      } catch (err) {
+        alert('त्रुटि: ' + err.message);
+        btn.disabled = false;
+        btn.textContent = '💾 बदलाव सेव करें';
+      }
     });
 
     row.querySelector('.delete-btn').addEventListener('click', async () => {
@@ -4181,7 +4565,7 @@ async function renderAdminEdit() {
       try {
         const { error } = await db.from('plants').delete().eq('id', p.id);
         if (error) throw error;
-        alert('उत्पाद सफलतापूर्वक डिलीट हो गया!');
+        alert('🗑️ उत्पाद सफलतापूर्वक डिलीट हो गया!');
         loadPlants(); loadAdminAll(); renderAdminEdit();
       } catch (err) {
         alert('डिलीट करने में त्रुटि: ' + err.message);
@@ -4195,7 +4579,28 @@ async function renderAdminEdit() {
 async function renderAdminList() {
   const { data } = await db.from('plants').select('*').order('name');
   const items = data || [];
-  const make = arr => arr.map(x => `<div class="stock-row"><span>${safe(x.name)}</span><span>₹${x.selling_price} (${x.stock_quantity})</span></div>`).join('');
+  const make = arr => arr.length ? arr.map(x => {
+    const veg = isVeg(x);
+    const isAvailable = x.is_active && Number(x.stock_quantity) > 0;
+    const thumb = x.image_url
+      ? `<img src="${safe(x.image_url)}" alt="" style="width:46px;height:46px;object-fit:cover;border-radius:10px;border:1px solid #dcebe0;flex-shrink:0">`
+      : `<div style="width:46px;height:46px;border-radius:10px;background:#ecfdf5;border:1px solid #d1fae5;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${veg?'🥬':'🌱'}</div>`;
+    return `
+      <div class="stock-row admin-pro-row">
+        <div style="display:flex;align-items:center;gap:10px;min-width:0">
+          ${thumb}
+          <div style="min-width:0">
+            <strong style="font-size:14.5px;color:#123b27;display:block">${safe(x.name)}</strong>
+            <small style="color:var(--muted);font-weight:700">${safe(x.variety || (veg ? 'सब्ज़ी' : 'पौधा'))}</small>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span class="admin-price-chip">₹${Number(x.selling_price).toFixed(2)}</span>
+          <span class="stock-count">${x.stock_quantity} ${veg?'किलो':'पौधे'}</span>
+          <span class="admin-status-dot ${isAvailable ? 'online' : 'offline'}">${isAvailable ? 'उपलब्ध' : 'Sold Out'}</span>
+        </div>
+      </div>`;
+  }).join('') : '<div class="admin-empty-state"><p>कोई उत्पाद नहीं मिला।</p></div>';
   document.getElementById('adminPlantSimpleListPlant').innerHTML = make(items.filter(x => !isVeg(x)));
   document.getElementById('adminPlantSimpleListVeg').innerHTML = make(items.filter(x => isVeg(x)));
 }
@@ -4557,7 +4962,7 @@ loadPlants();
     }
   };
 
-  // बिक्री हिसाब (loadSalesLedger) में कुल बिके पौधे और कुल बिकी सब्ज़ी की सही गिनती दिखाएँ
+  // बिक्री हिसाब (loadSalesLedger) में कुल बिके पौधे और कुल बिकी सब्ज़ी की सही गिनती व प्रीमियम कार्ड्स दिखाएँ
   window.loadSalesLedger = async function () {
     const pBox = document.getElementById('salesPlantRecords');
     const vBox = document.getElementById('salesVegRecords');
@@ -4604,29 +5009,58 @@ loadPlants();
       document.getElementById('salesTotalVeg').textContent = totalVegSoldKg.toFixed(2) + ' किलो';
       document.getElementById('salesTotalOrders').textContent = String(confirmedOrDelivered.length);
 
+      const renderBreakdownRow = (name, qtyText, isVegItem) => {
+        const matched = allPlants.find(p => String(p.name || '').trim() === name);
+        const thumb = matched && matched.image_url
+          ? `<img src="${safe(matched.image_url)}" alt="" style="width:44px;height:44px;object-fit:cover;border-radius:10px;border:1px solid #dcebe0;flex-shrink:0">`
+          : `<div style="width:44px;height:44px;border-radius:10px;background:#ecfdf5;border:1px solid #d1fae5;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${isVegItem?'🥬':'🌱'}</div>`;
+        return `
+          <div class="sale-row admin-pro-row">
+            <div style="display:flex;align-items:center;gap:10px;min-width:0">
+              ${thumb}
+              <div style="min-width:0">
+                <strong style="font-size:14.5px;color:#123b27;display:block">${safe(name)}</strong>
+                <small style="color:var(--muted);font-weight:700">${matched ? 'दर: ₹' + Number(matched.selling_price).toFixed(2) : (isVegItem ? 'ताज़ी सब्ज़ी' : 'नर्सरी पौधा')}</small>
+              </div>
+            </div>
+            <span class="stock-count" style="font-size:13px;padding:6px 12px">${qtyText} बिके</span>
+          </div>`;
+      };
+
       const pEntries = Object.entries(plantSummary);
       pBox.innerHTML = pEntries.length
-        ? pEntries.map(([name, qty]) => `<div class="sale-row"><span>🌱 ${safe(name)}</span><strong>${qty} पौधे</strong></div>`).join('')
-        : '<p style="color:var(--muted)">अभी कोई पौधा बिक्री रिकॉर्ड नहीं है।</p>';
+        ? pEntries.map(([name, qty]) => renderBreakdownRow(name, `${qty} पौधे`, false)).join('')
+        : '<div class="admin-empty-state"><p>अभी कोई पौधा बिक्री रिकॉर्ड नहीं है।</p></div>';
 
       const vEntries = Object.entries(vegSummary);
       vBox.innerHTML = vEntries.length
-        ? vEntries.map(([name, qty]) => `<div class="sale-row"><span>🥬 ${safe(name)}</span><strong>${qty} किलो</strong></div>`).join('')
-        : '<p style="color:var(--muted)">अभी कोई सब्ज़ी बिक्री रिकॉर्ड नहीं है।</p>';
+        ? vEntries.map(([name, qty]) => renderBreakdownRow(name, `${qty} किलो`, true)).join('')
+        : '<div class="admin-empty-state"><p>अभी कोई सब्ज़ी बिक्री रिकॉर्ड नहीं है।</p></div>';
 
       allList.innerHTML = confirmedOrDelivered.length ? confirmedOrDelivered.map(o => {
         const total = Number(o.unit_price || 0).toFixed(2);
         const isDel = isOrderDelivered(o);
+        const phone = safe(o.customer_phone || '');
+        const dateStr = o.created_at ? new Date(o.created_at).toLocaleString('hi-IN', {timeZone:'Asia/Kolkata', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'}) : '—';
         return `
-          <div class="sale-row" style="padding:10px 4px;border-bottom:1px solid #eef2eb">
-            <div>
-              <strong>#${o.id} - ${safe(o.plant_name)}</strong>
-              <span style="font-size:11px;font-weight:700;padding:2px 6px;border-radius:10px;margin-left:6px;background:${isDel ? '#dbeafe;color:#1e40af' : '#dcfce7;color:#166534'}">${isDel ? '🚚 डिलीवर' : '✅ कन्फर्म'}</span>
-              <div style="font-size:13px;color:var(--muted)">ग्राहक: ${safe(o.customer_name)} | 📞 ${safe(o.customer_phone)}</div>
+          <div class="sale-row admin-pro-row">
+            <div style="display:flex;align-items:center;gap:12px;min-width:0">
+              <div style="width:46px;height:46px;border-radius:12px;background:${isDel ? '#eff6ff' : '#ecfdf5'};border:1px solid ${isDel ? '#bfdbfe' : '#a7f3d0'};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${isDel ? '🚚' : '🧾'}</div>
+              <div style="min-width:0">
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                  <span class="admin-id-pill">#${o.id}</span>
+                  <strong style="font-size:14.5px;color:#123b27">${safe(o.plant_name)}</strong>
+                  <span style="font-size:11px;font-weight:800;padding:2px 8px;border-radius:10px;background:${isDel ? '#dbeafe;color:#1e40af' : '#dcfce7;color:#166534'}">${isDel ? '🚚 डिलीवर' : '✅ कन्फर्म'}</span>
+                </div>
+                <div style="font-size:12.5px;color:var(--muted);font-weight:700;margin-top:2px">👤 ${safe(o.customer_name)} | 📞 ${phone} | 📅 ${dateStr}</div>
+              </div>
             </div>
-            <div style="font-size:16px;font-weight:800;color:var(--green)">₹${total}</div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <button type="button" class="admin-mini-btn neutral" onclick="printOrderInvoice(${o.id}, '${safe(o.plant_name)}', ${o.unit_price}, 0, '${safe(o.customer_name)}', '${phone}', '${safe(o.customer_address)}', '${safe(o.notes)}', '${o.created_at}')">🖨️ रसीद</button>
+              <div style="font-size:16px;font-weight:900;color:var(--green);background:#ecfdf5;padding:6px 12px;border-radius:10px;border:1px solid #a7f3d0">₹${total}</div>
+            </div>
           </div>`;
-      }).join('') : '<p style="color:var(--muted)">कोई रसीद नहीं है।</p>';
+      }).join('') : '<div class="admin-empty-state"><p>अभी कोई पक्की बिक्री रसीद नहीं है।</p></div>';
     } catch (err) {
       allList.innerHTML = '<div class="status">त्रुटि: ' + err.message + '</div>';
     }
@@ -4635,7 +5069,7 @@ loadPlants();
 </script>
 
 <script>
-// एक ही Navigation controller; मेनू को हेडर के अंदर रखकर ठीक नीचे दिखाएँ।
+// रिस्पॉन्सिव Navigation Controller: डेस्कटॉप पर हमेशा हॉरिजॉन्टल नेविगेशन बार और मोबाइल पर टॉगल ड्रॉपडाउन मेनू
 (function(){
   const header = document.getElementById('mainHeader');
   const btn = document.getElementById('menuToggleButton');
@@ -4643,35 +5077,64 @@ loadPlants();
   if (!header || !btn || !menu || btn.dataset.menuControllerReady === 'true') return;
   btn.dataset.menuControllerReady = 'true';
   if (menu.parentElement !== header) header.appendChild(menu);
+
+  const isMobileScreen = () => window.matchMedia('(max-width: 700px)').matches;
+
   const setMenu = (open) => {
-    menu.classList.toggle('menu-open', open);
-    // !important CSS rules are also overridden so a closed menu cannot remain visible.
-    if (open) menu.style.setProperty('display', 'flex', 'important');
-    else menu.style.setProperty('display', 'none', 'important');
-    btn.setAttribute('aria-expanded', String(open));
-    btn.setAttribute('aria-label', open ? 'मेनू बंद करें' : 'मेनू खोलें');
+    const shouldOpen = Boolean(open) && isMobileScreen();
+    menu.classList.toggle('menu-open', shouldOpen);
+    menu.style.removeProperty('display');
+    btn.setAttribute('aria-expanded', String(shouldOpen));
+    btn.setAttribute('aria-label', shouldOpen ? 'मेनू बंद करें' : 'मुख्य मेनू खोलें');
   };
-  // Other scripts (Admin Login) can close the same menu reliably.
+
   window.closeNurseryMenu = () => setMenu(false);
+
   btn.addEventListener('click', (event) => {
     event.preventDefault();
     event.stopPropagation();
     setMenu(!menu.classList.contains('menu-open'));
   });
-  // हर मेनू विकल्प पर क्लिक होते ही ड्रॉपडाउन बंद होगा; मूल लिंक/बटन का काम जारी रहेगा।
+
   menu.addEventListener('click', (event) => {
     const item = event.target.closest('a, button');
-    if (item) setMenu(false);
+    if (item && isMobileScreen()) setMenu(false);
   }, true);
+
   document.addEventListener('click', (event) => {
-    if (!menu.contains(event.target) && !btn.contains(event.target)) setMenu(false);
+    if (isMobileScreen() && !menu.contains(event.target) && !btn.contains(event.target)) {
+      setMenu(false);
+    }
   });
+
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') setMenu(false);
   });
-  // Admin login open event must always close dropdown before showing the panel.
+
+  window.addEventListener('resize', () => {
+    if (!isMobileScreen()) {
+      menu.classList.remove('menu-open');
+      menu.style.removeProperty('display');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+
   const adminButton = document.getElementById('adminPanelNav');
   if (adminButton) adminButton.addEventListener('click', () => setMenu(false), true);
+
+  const homeLink = document.getElementById('homeNavLink');
+  if (homeLink) {
+    homeLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      ['about', 'plantCare', 'plantTypes'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.classList.remove('nav-page-open', 'about-page-open'); el.style.display = 'none'; }
+      });
+      document.querySelectorAll('#mainNavigation a').forEach(a => a.classList.toggle('nav-active', a === homeLink));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
   setMenu(false);
 })();
 </script>
@@ -4853,8 +5316,8 @@ loadPlants();
 })();
 </script>
 
-<style id="unified-responsive-header-v32">
-/* V32: Unified Responsive Header & Modal/Admin Workspace Fix for Mobile, Tablet & PC */
+<style id="unified-responsive-header-v34">
+/* V34: Desktop Horizontal Navigation Bar + Mobile Toggle Dropdown Menu + Admin Workspace Fix */
 header#mainHeader {
   position: relative !important;
   z-index: 1000 !important;
@@ -4880,7 +5343,6 @@ header#mainHeader::after {
 header#mainHeader > #menuToggleButton {
   position: relative !important;
   z-index: 1002 !important;
-  display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 7px !important;
@@ -4936,57 +5398,93 @@ header#mainHeader > #headerNurseryAddress {
   color: #d1fae5 !important;
 }
 
-/* Navigation Dropdown */
-#mainNavigation {
-  position: absolute !important;
-  z-index: 12000 !important;
-  box-sizing: border-box !important;
-  flex-direction: column !important;
-  align-items: stretch !important;
-  gap: 7px !important;
-  padding: 10px !important;
-  background: rgba(255, 255, 255, 0.98) !important;
-  border: 1px solid #b7e4c7 !important;
-  border-radius: 14px !important;
-  box-shadow: 0 16px 38px rgba(4, 44, 22, 0.24) !important;
-  backdrop-filter: blur(12px) !important;
-  max-height: min(70vh, 500px) !important;
-  overflow-y: auto !important;
-  overscroll-behavior: contain !important;
-}
-#mainNavigation:not(.menu-open) {
-  display: none !important;
-  pointer-events: none !important;
-}
-#mainNavigation.menu-open {
-  display: flex !important;
-  pointer-events: auto !important;
-}
+/* Base link/button styling inside #mainNavigation */
 #mainNavigation a,
 #mainNavigation button {
-  display: flex !important;
+  display: inline-flex !important;
   align-items: center !important;
-  justify-content: flex-start !important;
-  width: 100% !important;
-  min-height: 42px !important;
-  padding: 10px 14px !important;
-  border: 1px solid #dcfce7 !important;
-  border-radius: 10px !important;
-  background: #f3fbf5 !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  border: 1.5px solid #bbf7d0 !important;
+  border-radius: 11px !important;
+  background: linear-gradient(135deg, #f3fbf5, #dcfce7) !important;
   color: #075b35 !important;
-  font-size: 14px !important;
+  font-size: 13.5px !important;
   font-weight: 800 !important;
-  text-align: left !important;
   text-decoration: none !important;
   cursor: pointer !important;
+  transition: all 0.18s ease !important;
 }
 #mainNavigation a:hover,
 #mainNavigation button:hover {
-  background: #10b981 !important;
+  background: linear-gradient(135deg, #10b981, #059669) !important;
   color: #ffffff !important;
+  border-color: #059669 !important;
+  transform: translateY(-1px) !important;
+}
+#mainNavigation a.nav-active {
+  background: linear-gradient(135deg, #08783c, #064e2b) !important;
+  color: #ffffff !important;
+  border-color: #064e2b !important;
+  box-shadow: 0 4px 10px rgba(6, 78, 43, 0.22) !important;
+}
+#mainNavigation #adminPanelNav {
+  background: linear-gradient(135deg, #fef9c3, #fde047) !important;
+  color: #14532d !important;
+  border-color: #facc15 !important;
+  box-shadow: 0 3px 10px rgba(250, 204, 21, 0.25) !important;
+}
+#mainNavigation #adminPanelNav:hover {
+  background: linear-gradient(135deg, #facc15, #eab308) !important;
+  color: #052e16 !important;
 }
 
-/* 1. Compact Mobile (<=380px) */
+/* =========================================================
+   MOBILE VIEW (<=700px): Toggle Button + Dropdown Menu
+   ========================================================= */
+@media screen and (max-width: 700px) {
+  header#mainHeader > #menuToggleButton {
+    display: inline-flex !important;
+  }
+  #mainNavigation {
+    position: absolute !important;
+    top: calc(100% + 6px) !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+    max-width: none !important;
+    z-index: 12000 !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 7px !important;
+    padding: 10px !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    border: 1px solid #b7e4c7 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 16px 38px rgba(4, 44, 22, 0.24) !important;
+    backdrop-filter: blur(12px) !important;
+    max-height: min(72vh, 500px) !important;
+    overflow-y: auto !important;
+  }
+  #mainNavigation:not(.menu-open) {
+    display: none !important;
+    pointer-events: none !important;
+  }
+  #mainNavigation.menu-open {
+    display: flex !important;
+    pointer-events: auto !important;
+  }
+  #mainNavigation a,
+  #mainNavigation button {
+    width: 100% !important;
+    justify-content: flex-start !important;
+    min-height: 42px !important;
+    padding: 10px 14px !important;
+    text-align: left !important;
+  }
+}
+
+/* 1A. Compact Mobile (<=380px) */
 @media screen and (max-width: 380px) {
   header#mainHeader {
     display: grid !important;
@@ -5033,16 +5531,9 @@ header#mainHeader > #headerNurseryAddress {
   header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) {
     display: none !important;
   }
-  #mainNavigation {
-    top: calc(100% + 5px) !important;
-    left: 8px !important;
-    right: 8px !important;
-    width: auto !important;
-    max-width: none !important;
-  }
 }
 
-/* 2. Regular Mobile (381px - 700px) */
+/* 1B. Regular Mobile (381px - 700px) */
 @media screen and (min-width: 381px) and (max-width: 700px) {
   header#mainHeader {
     display: grid !important;
@@ -5088,98 +5579,30 @@ header#mainHeader > #headerNurseryAddress {
   header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) {
     display: none !important;
   }
-  #mainNavigation {
-    top: calc(100% + 5px) !important;
-    left: 10px !important;
-    right: 10px !important;
-    width: auto !important;
-    max-width: none !important;
-  }
 }
 
-/* 3. Tablet (701px - 960px) */
-@media screen and (min-width: 701px) and (max-width: 960px) {
-  header#mainHeader {
-    display: grid !important;
-    grid-template-columns: max-content 62px minmax(0, 1fr) !important;
-    grid-template-rows: auto auto auto auto !important;
-    align-items: center !important;
-    gap: 3px 14px !important;
-    min-height: 108px !important;
-    padding: 12px 18px !important;
-  }
+/* =========================================================
+   DESKTOP & TABLET VIEW (>=701px):
+   Hide Toggle Button & Show Full Horizontal Navigation Bar
+   ========================================================= */
+@media screen and (min-width: 701px) {
   header#mainHeader > #menuToggleButton {
-    grid-column: 1 !important;
-    grid-row: 1 / span 4 !important;
-    width: auto !important;
-    min-width: 122px !important;
-    min-height: 42px !important;
-    padding: 9px 13px !important;
-    font-size: 13.5px !important;
-    justify-self: start !important;
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
-  header#mainHeader > #headerBrandLogo {
-    grid-column: 2 !important;
-    grid-row: 1 / span 4 !important;
-    width: 58px !important;
-    height: 58px !important;
-    max-width: 58px !important;
-    max-height: 58px !important;
-    justify-self: center !important;
-  }
-  header#mainHeader > #headerNurseryName {
-    grid-column: 3 !important;
-    grid-row: 1 !important;
-    font-size: clamp(18px, 2.4vw, 23px) !important;
-    line-height: 1.22 !important;
-  }
-  header#mainHeader > #headerNurseryTagline {
-    grid-column: 3 !important;
-    grid-row: 2 !important;
-    font-size: 12.5px !important;
-  }
-  header#mainHeader > #headerNurseryAddress {
-    grid-column: 3 !important;
-    grid-row: 3 !important;
-    font-size: 11.5px !important;
-  }
-  header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) {
-    grid-column: 3 !important;
-    grid-row: 4 !important;
-    display: block !important;
-  }
-  #mainNavigation {
-    top: calc(100% + 7px) !important;
-    left: 18px !important;
-    right: auto !important;
-    width: 270px !important;
-    max-width: calc(100vw - 36px) !important;
-  }
-}
-
-/* 4. Desktop / PC (>=961px) */
-@media screen and (min-width: 961px) {
   header#mainHeader {
     display: grid !important;
-    grid-template-columns: minmax(12px, 1fr) max-content 74px minmax(320px, 560px) minmax(12px, 1fr) !important;
-    grid-template-rows: auto auto auto auto !important;
+    grid-template-columns: minmax(12px, 1fr) 74px minmax(300px, max-content) minmax(12px, 1fr) !important;
+    grid-template-rows: auto auto auto auto auto !important;
     align-items: center !important;
     justify-content: center !important;
     gap: 3px 16px !important;
-    min-height: 118px !important;
-    padding: 14px 24px !important;
-  }
-  header#mainHeader > #menuToggleButton {
-    grid-column: 2 !important;
-    grid-row: 1 / span 4 !important;
-    width: 138px !important;
-    min-height: 44px !important;
-    padding: 10px 14px !important;
-    font-size: 14px !important;
-    justify-self: end !important;
+    min-height: 138px !important;
+    padding: 14px 24px 12px !important;
   }
   header#mainHeader > #headerBrandLogo {
-    grid-column: 3 !important;
+    grid-column: 2 !important;
     grid-row: 1 / span 4 !important;
     width: 70px !important;
     height: 70px !important;
@@ -5188,35 +5611,61 @@ header#mainHeader > #headerNurseryAddress {
     justify-self: center !important;
   }
   header#mainHeader > #headerNurseryName {
-    grid-column: 4 !important;
+    grid-column: 3 !important;
     grid-row: 1 !important;
-    font-size: clamp(21px, 2vw, 27px) !important;
+    font-size: clamp(20px, 2.2vw, 27px) !important;
     line-height: 1.22 !important;
   }
   header#mainHeader > #headerNurseryTagline {
-    grid-column: 4 !important;
+    grid-column: 3 !important;
     grid-row: 2 !important;
     font-size: 14px !important;
   }
   header#mainHeader > #headerNurseryAddress {
-    grid-column: 4 !important;
+    grid-column: 3 !important;
     grid-row: 3 !important;
     font-size: 12px !important;
   }
   header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) {
-    grid-column: 4 !important;
+    grid-column: 3 !important;
     grid-row: 4 !important;
     display: block !important;
   }
-  #mainNavigation {
-    top: calc(100% + 8px) !important;
-    width: 280px !important;
-    max-width: calc(100vw - 32px) !important;
+  header#mainHeader > #mainNavigation,
+  #mainNavigation:not(.menu-open),
+  #mainNavigation.menu-open {
+    grid-column: 1 / -1 !important;
+    grid-row: 5 !important;
+    position: static !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 1180px !important;
+    max-height: none !important;
+    margin: 10px auto 0 !important;
+    padding: 8px 14px !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    border: 1.5px solid #a7f3d0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14) !important;
+    pointer-events: auto !important;
+    overflow: visible !important;
   }
-}
+  #mainNavigation a,
+  #mainNavigation button {
+    width: auto !important;
+    flex: 0 0 auto !important;
+    min-height: 38px !important;
+    padding: 7px 14px !important;
+    white-space: nowrap !important;
+    text-align: center !important;
+  }
 
-/* 5. Desktop Product Grid & Main Container (>=701px) */
-@media screen and (min-width: 701px) {
+  /* Desktop Product Grid & Main Container */
   body > main {
     width: calc(100% - 48px) !important;
     max-width: 1240px !important;
@@ -5252,12 +5701,23 @@ header#mainHeader > #headerNurseryAddress {
   }
 }
 
-/* 6. Admin Panel Open State (Mobile + Tablet + PC) — Never overlaps Admin Panel! */
-/* Importantly, when Admin Panel is CLOSED (even if admin-authenticated is true), the menu button stays visible! */
+/* =========================================================
+   ADMIN PANEL OPEN STATE (Mobile + Tablet + PC):
+   Compact Header Bar & Zero Overlap with Admin Panel
+   ========================================================= */
 body.admin-authenticated:not(.admin-panel-open) header#mainHeader > #menuToggleButton {
-  display: inline-flex !important;
   visibility: visible !important;
   pointer-events: auto !important;
+}
+@media screen and (max-width: 700px) {
+  body.admin-authenticated:not(.admin-panel-open) header#mainHeader > #menuToggleButton {
+    display: inline-flex !important;
+  }
+}
+@media screen and (min-width: 701px) {
+  body.admin-authenticated:not(.admin-panel-open) header#mainHeader > #menuToggleButton {
+    display: none !important;
+  }
 }
 body.admin-panel-open {
   overflow: hidden !important;
@@ -5348,23 +5808,16 @@ body.admin-panel-open #ownerCloseButton {
   box-shadow: 0 3px 10px rgba(6, 78, 59, 0.12) !important;
 }
 </style>
-<script id="v32-header-position-controller">
+<script id="v34-header-position-controller">
 (function () {
   const header = document.getElementById('mainHeader');
-  const btn = document.getElementById('menuToggleButton');
   const menu = document.getElementById('mainNavigation');
   const owner = document.getElementById('owner');
 
   function syncMenuPosition() {
-    if (!header || !btn || !menu) return;
-    if (window.matchMedia('(min-width: 701px)').matches) {
-      const leftPx = Math.max(12, btn.offsetLeft);
-      menu.style.setProperty('left', leftPx + 'px', 'important');
-      menu.style.setProperty('right', 'auto', 'important');
-    } else {
-      menu.style.removeProperty('left');
-      menu.style.removeProperty('right');
-    }
+    if (!menu) return;
+    menu.style.removeProperty('left');
+    menu.style.removeProperty('right');
   }
 
   function syncAdminHeaderHeight() {
@@ -5381,11 +5834,6 @@ body.admin-panel-open #ownerCloseButton {
 
   window.syncAdminHeaderHeight = syncAdminHeaderHeight;
 
-  if (btn) {
-    btn.addEventListener('click', function () {
-      syncMenuPosition();
-    });
-  }
   window.addEventListener('resize', function () {
     syncMenuPosition();
     syncAdminHeaderHeight();
@@ -5403,6 +5851,718 @@ body.admin-panel-open #ownerCloseButton {
 </script>
 
 
+
+
+<style id="v33-admin-suite-pro-theme">
+/* V33: Complete Admin Panel Suite Upgrade — Stock-List-Inspired Card System Across All 9 Dashboards */
+#owner.login-visible > form,
+#owner.login-visible > .admin-pane,
+#owner.login-visible > #ownerPanelHeader,
+#owner.login-visible > #adminTabs,
+#owner.login-visible > #adminCustomerSearch,
+#owner.login-visible > #loudAlertBanner {
+  max-width: 1040px !important;
+  margin: 0 auto 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #d7eadc !important;
+  border-radius: 18px !important;
+  padding: 18px !important;
+  box-shadow: 0 8px 26px rgba(6, 78, 59, 0.08) !important;
+}
+
+/* Admin Top Navigation Tabs */
+#adminTabs.admin-tabs {
+  grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)) !important;
+  gap: 8px !important;
+  padding: 12px !important;
+  background: #f6fbf7 !important;
+}
+#adminTabs .admin-tab {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  min-height: 54px !important;
+  padding: 8px 6px !important;
+  border: 1px solid #d5e9da !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  color: #14532d !important;
+  font-size: 12.5px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 6px rgba(6, 78, 59, 0.04) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease !important;
+}
+#adminTabs .admin-tab .tab-ico {
+  font-size: 18px !important;
+  line-height: 1 !important;
+}
+#adminTabs .admin-tab:hover {
+  transform: translateY(-1px) !important;
+  border-color: #86efac !important;
+  box-shadow: 0 4px 12px rgba(6, 78, 59, 0.1) !important;
+}
+#adminTabs .admin-tab.active {
+  background: linear-gradient(135deg, #08783c, #064e2b) !important;
+  color: #ffffff !important;
+  border-color: #064e2b !important;
+  box-shadow: 0 6px 16px rgba(6, 78, 59, 0.24) !important;
+}
+
+/* Pane Section Header */
+.admin-pane-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+  border-bottom: 1.5px solid #e2f1e6;
+}
+.admin-pane-header h2 {
+  margin: 0 !important;
+  font-size: 20px !important;
+  color: #123b27 !important;
+  font-weight: 900 !important;
+}
+.admin-pane-header small {
+  display: block;
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.admin-col-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #e3efe6;
+}
+.admin-col-header h3 {
+  margin: 0 !important;
+  font-size: 16px !important;
+  color: #123b27 !important;
+  font-weight: 900 !important;
+}
+.admin-count-pill {
+  display: inline-block;
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+/* Upgraded Metric Cards */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 12px 0 16px;
+}
+.metric {
+  background: linear-gradient(145deg, #f6fcf7, #ffffff) !important;
+  border: 1px solid #cfe7d5 !important;
+  border-radius: 16px !important;
+  padding: 14px !important;
+  box-shadow: 0 4px 14px rgba(6, 78, 59, 0.05) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.metric.clickable-metric {
+  cursor: pointer;
+}
+.metric.clickable-metric:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(6, 78, 59, 0.12) !important;
+}
+.metric-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.metric-ico {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #ecfdf5;
+  border: 1px solid #bbf7d0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+.metric.pending .metric-ico {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+.metric.delivered .metric-ico {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+.metric.warning .metric-ico {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+.metric-value {
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  line-height: 1.2;
+  margin: 2px 0 4px !important;
+}
+
+/* Stock-List Style Row & Subcards Used Across All Panes */
+.admin-pro-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  padding: 12px !important;
+  margin-bottom: 10px !important;
+  background: #ffffff !important;
+  border: 1px solid #dcebe0 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 3px 12px rgba(6, 78, 59, 0.04) !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.admin-pro-row:hover {
+  border-color: #86efac !important;
+  box-shadow: 0 6px 16px rgba(6, 78, 59, 0.08) !important;
+}
+.admin-subcard,
+.stock-category-card,
+.manage-category-card,
+.sales-category-card,
+.dashboard-table-card {
+  background: #fbfefb !important;
+  border: 1px solid #d8eadc !important;
+  border-radius: 16px !important;
+  padding: 15px !important;
+  box-shadow: 0 4px 14px rgba(6, 78, 59, 0.04) !important;
+}
+.admin-price-chip {
+  display: inline-block;
+  background: #ecfdf5;
+  color: #0f766e;
+  border: 1px solid #a7f3d0;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+.admin-status-dot {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.admin-status-dot.online {
+  background: #dcfce7;
+  color: #166534;
+}
+.admin-status-dot.offline {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Low Stock Warning Card */
+.admin-lowstock-card {
+  background: linear-gradient(135deg, #fff5f5, #fef2f2);
+  border: 1px solid #fca5a5;
+  border-radius: 15px;
+  padding: 14px;
+  margin: 12px 0 16px;
+  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.06);
+}
+
+/* Order Pro Card */
+.admin-order-pro-card {
+  background: #ffffff !important;
+  border: 1px solid #dcebe0 !important;
+  border-radius: 16px !important;
+  padding: 14px !important;
+  margin-bottom: 12px !important;
+  box-shadow: 0 4px 14px rgba(6, 78, 59, 0.05) !important;
+}
+.admin-order-pro-card.is-pending { border-left: 5px solid #f59e0b !important; }
+.admin-order-pro-card.is-confirmed { border-left: 5px solid #16a34a !important; }
+.admin-order-pro-card.is-delivered { border-left: 5px solid #2563eb !important; }
+.admin-order-pro-card.is-cancelled { border-left: 5px solid #dc2626 !important; }
+
+.admin-order-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #edf5ee;
+}
+.admin-order-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #ecfdf5;
+  border: 1px solid #bbf7d0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+  flex-shrink: 0;
+}
+.admin-id-pill {
+  display: inline-block;
+  background: #123b27;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 7px;
+}
+.admin-total-pill {
+  display: inline-block;
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 4px 11px;
+  border-radius: 10px;
+}
+.admin-order-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 8px;
+  margin: 10px 0;
+  background: #f8fbf8;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #e4f0e6;
+}
+.admin-order-meta-grid .meta-cell small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 700;
+}
+.admin-order-meta-grid .meta-cell strong {
+  font-size: 13.5px;
+  color: #14341f;
+}
+.admin-order-meta-grid .meta-cell.full {
+  grid-column: 1 / -1;
+}
+.admin-order-alert {
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+}
+.admin-order-alert.warn { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.admin-order-alert.err { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+.admin-order-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 6px;
+}
+.admin-mini-btn {
+  padding: 6px 11px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  border-radius: 8px !important;
+  background: #edf7ef !important;
+  color: #14532d !important;
+  border: 1px solid #cce8d4 !important;
+  text-decoration: none !important;
+  cursor: pointer;
+}
+.admin-mini-btn.wa {
+  background: #dcfce7 !important;
+  color: #15803d !important;
+  border-color: #86efac !important;
+}
+.admin-mini-btn.neutral {
+  background: #f8fafc !important;
+  color: #1e293b !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Filter Toolbar & Search Input */
+.admin-toolbar-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: #f6fbf7;
+  border: 1px solid #d8eadc;
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+}
+.admin-filter-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.admin-filter-pill {
+  background: #ffffff !important;
+  color: #14532d !important;
+  border: 1px solid #cde4d2 !important;
+  border-radius: 999px !important;
+  padding: 6px 12px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+}
+.admin-filter-pill.active {
+  background: linear-gradient(135deg, #08783c, #064e2b) !important;
+  color: #ffffff !important;
+  border-color: #064e2b !important;
+}
+.admin-search-input-wrap {
+  flex: 1 1 220px;
+  max-width: 340px;
+}
+.admin-search-input-wrap input {
+  margin: 0 !important;
+  padding: 8px 12px !important;
+  font-size: 13px !important;
+  border-radius: 10px !important;
+  border: 1px solid #bddbc5 !important;
+  background: #ffffff !important;
+}
+
+/* Forms & Buttons */
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.admin-form-grid .full-span {
+  grid-column: 1 / -1;
+}
+.admin-primary-submit {
+  width: 100%;
+  padding: 12px 16px !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, #16a34a, #065f46) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25) !important;
+}
+.admin-soft-btn {
+  background: #ecfdf5 !important;
+  color: #065f46 !important;
+  border: 1px solid #a7f3d0 !important;
+  padding: 7px 13px !important;
+  font-size: 12.5px !important;
+  font-weight: 800 !important;
+  border-radius: 10px !important;
+}
+
+/* Product Manage Sub-tabs & Settings Sub-tabs */
+.plant-manage-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+  background: #f4fbf6;
+  padding: 8px;
+  border-radius: 14px;
+  border: 1px solid #d8eadc;
+}
+.plant-manage-button {
+  background: #ffffff !important;
+  color: #14532d !important;
+  border: 1px solid #d1e7d6 !important;
+  padding: 9px 10px !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  border-radius: 10px !important;
+}
+.plant-manage-button.active {
+  background: linear-gradient(135deg, #08783c, #064e2b) !important;
+  color: #ffffff !important;
+  border-color: #064e2b !important;
+}
+
+/* Mandi Rate Result Cards */
+.mandi-rate-box {
+  background: #ffffff !important;
+  border: 1px solid #cfe7d5 !important;
+  border-radius: 14px !important;
+  padding: 14px 10px !important;
+  text-align: center !important;
+  box-shadow: 0 3px 10px rgba(6, 78, 59, 0.04);
+}
+.mandi-rate-box.featured {
+  background: linear-gradient(145deg, #ecfdf5, #ffffff) !important;
+  border: 2px solid #34d399 !important;
+}
+.mandi-rate-box.featured strong {
+  font-size: 23px !important;
+  color: #065f46 !important;
+}
+
+/* Prompt Chips for ChatGPT */
+.admin-prompt-chip {
+  background: #f0fdf4 !important;
+  color: #14532d !important;
+  border: 1px solid #a7f3d0 !important;
+  border-radius: 999px !important;
+  padding: 7px 13px !important;
+  font-size: 12.5px !important;
+  font-weight: 800 !important;
+  cursor: pointer;
+}
+.admin-prompt-chip:hover {
+  background: #10b981 !important;
+  color: #ffffff !important;
+}
+
+/* Empty State */
+.admin-empty-state {
+  text-align: center;
+  padding: 24px 14px;
+  background: #ffffff;
+  border: 1px dashed #c8e2ce;
+  border-radius: 14px;
+  color: var(--muted);
+}
+.admin-empty-state span {
+  font-size: 30px;
+  display: block;
+  margin-bottom: 6px;
+}
+.admin-empty-state p {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .admin-pane-header h2 { font-size: 17px !important; }
+  .admin-search-input-wrap { max-width: none; width: 100%; }
+  .mandi-result { grid-template-columns: 1fr !important; }
+}
+</style>
+
+<script id="v33-admin-suite-controller">
+(function () {
+  // 1. Order Filter Pills & Search
+  window.setAdminOrderFilter = function (filterName) {
+    currentOrderFilter = filterName || 'all';
+    document.querySelectorAll('#orderStatusFilterGroup .admin-filter-pill').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.orderFilter === currentOrderFilter);
+    });
+    if (typeof filterAndRenderAdminOrders === 'function') filterAndRenderAdminOrders();
+  };
+
+  document.querySelectorAll('#orderStatusFilterGroup .admin-filter-pill').forEach(btn => {
+    btn.addEventListener('click', function () {
+      window.setAdminOrderFilter(this.dataset.orderFilter);
+    });
+  });
+
+  document.getElementById('adminOrderSearchInput')?.addEventListener('input', function () {
+    if (typeof filterAndRenderAdminOrders === 'function') filterAndRenderAdminOrders();
+  });
+
+  // 2. Stock List Live Search
+  document.getElementById('adminStockSearchInput')?.addEventListener('input', function () {
+    const q = (this.value || '').trim().toLowerCase();
+    document.querySelectorAll('#ownerPlantStockList .stock-row, #ownerVegStockList .stock-row').forEach(row => {
+      const nameText = (row.dataset.stockName || row.textContent || '').toLowerCase();
+      row.style.display = (!q || nameText.includes(q)) ? 'flex' : 'none';
+    });
+  });
+
+  // 3. Real-time Website Settings Live Preview
+  const settingsForm = document.getElementById('siteSettingsForm');
+  if (settingsForm) {
+    settingsForm.addEventListener('input', function () {
+      const tText = document.getElementById('settingTickerText')?.value || '';
+      const disc = document.getElementById('settingDiscountPercent')?.value || '0';
+      const nName = document.getElementById('settingNurseryName')?.value || '';
+      const nAddr = document.getElementById('settingNurseryAddress')?.value || '';
+      const nPhone = document.getElementById('settingPhone')?.value || '';
+      const nHours = document.getElementById('settingOpeningHours')?.value || '';
+
+      const pTicker = document.getElementById('prevTicker');
+      const pOffer = document.getElementById('prevOffer');
+      const pName = document.getElementById('prevName');
+      const pAddr = document.getElementById('prevAddress');
+      const pHours = document.getElementById('prevHours');
+
+      if (pTicker) pTicker.textContent = '📢 ' + tText;
+      if (pOffer) pOffer.textContent = '🎉 विशेष ऑफर: ' + disc + '% की छूट लागू है!';
+      if (pName) pName.textContent = '🌱 ' + nName;
+      if (pAddr) pAddr.textContent = '📍 ' + nAddr + ' | 📞 ' + nPhone;
+      if (pHours) pHours.textContent = '⏰ समय: ' + nHours;
+    });
+  }
+
+  // 4. ChatGPT Quick Prompt Chips
+  document.querySelectorAll('.admin-prompt-chip').forEach(chip => {
+    chip.addEventListener('click', function () {
+      const box = document.getElementById('nurseryChatQuestion');
+      if (box) {
+        box.value = this.dataset.prompt || '';
+        box.focus();
+      }
+    });
+  });
+
+  // 5. Complete Interactive Dues Register (Khata Book)
+  const DUES_STORAGE_KEY = 'nursery_dues_register_v1';
+
+  function getDuesList() {
+    try {
+      return JSON.parse(localStorage.getItem(DUES_STORAGE_KEY) || '[]');
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function saveDuesList(list) {
+    try {
+      localStorage.setItem(DUES_STORAGE_KEY, JSON.stringify(list));
+    } catch (_) {}
+  }
+
+  const dueDateInput = document.getElementById('dueDate');
+  if (dueDateInput && !dueDateInput.value) {
+    dueDateInput.value = getISTDate();
+  }
+
+  window.renderDuesRegister = function () {
+    const list = getDuesList();
+    const container = document.getElementById('dueList');
+    if (!container) return;
+
+    let totalGiven = 0;
+    let totalReceived = 0;
+    list.forEach(item => {
+      totalGiven += Number(item.total) || 0;
+      totalReceived += Number(item.paid) || 0;
+    });
+    const totalPending = Math.max(0, totalGiven - totalReceived);
+
+    const gEl = document.getElementById('duesTotalGiven');
+    const rEl = document.getElementById('duesTotalReceived');
+    const pEl = document.getElementById('duesTotalPending');
+    const cBadge = document.getElementById('duesCustomerCountBadge');
+
+    if (gEl) gEl.textContent = '₹' + totalGiven.toFixed(0);
+    if (rEl) rEl.textContent = '₹' + totalReceived.toFixed(0);
+    if (pEl) pEl.textContent = '₹' + totalPending.toFixed(0);
+    if (cBadge) cBadge.textContent = list.length + ' ग्राहक';
+
+    if (!list.length) {
+      container.innerHTML = '<div class="admin-empty-state"><span>📒</span><p>अभी उधार रजिस्टर में कोई प्रविष्टि नहीं है। ऊपर फॉर्म से नया हिसाब जोड़ें।</p></div>';
+      return;
+    }
+
+    const cfg = getSiteConfig();
+    container.innerHTML = list.map((item, idx) => {
+      const total = Number(item.total) || 0;
+      const paid = Number(item.paid) || 0;
+      const balance = Math.max(0, total - paid);
+      const isSettled = balance <= 0;
+      const cleanPhone = String(item.phone || '').replace(/\D/g, '').slice(-10);
+      const waReminder = `नमस्ते ${item.name} जी, ${cfg.nurseryName} में आपके खाते का कुल हिसाब ₹${total} है, जिसमें ₹${paid} जमा हैं और ₹${balance} बकाया हैं। कृपया सुविधा अनुसार भुगतान करने का कष्ट करें। धन्यवाद! 🌱`;
+      const waHref = cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(waReminder)}` : '#';
+
+      return `
+        <div class="stock-row admin-pro-row">
+          <div style="display:flex;align-items:center;gap:12px;min-width:0">
+            <div style="width:48px;height:48px;border-radius:12px;background:${isSettled ? '#ecfdf5' : '#fff1f2'};border:1px solid ${isSettled ? '#a7f3d0' : '#fecaca'};display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${isSettled ? '✅' : '⏰'}</div>
+            <div style="min-width:0">
+              <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+                <strong style="font-size:15px;color:#123b27">${safe(item.name)}</strong>
+                <span class="admin-status-dot ${isSettled ? 'online' : 'offline'}">${isSettled ? 'चुकता (Settled)' : 'बाकी: ₹' + balance}</span>
+              </div>
+              <div style="font-size:12.5px;color:var(--muted);font-weight:700;margin-top:2px">
+                📞 ${safe(item.phone)} | 📅 ${safe(item.date || '—')} | कुल: <b>₹${total}</b> | जमा: <b style="color:#15803d">₹${paid}</b>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+            ${cleanPhone ? `<a class="btn admin-mini-btn" href="tel:${cleanPhone}">📞 कॉल</a>` : ''}
+            ${cleanPhone && !isSettled ? `<a class="btn admin-mini-btn wa" href="${waHref}" target="_blank" rel="noopener">💬 WA तगादा</a>` : ''}
+            ${!isSettled ? `<button type="button" onclick="window.collectDuePayment(${idx})" style="padding:7px 12px;font-size:12px;background:#16a34a;color:#fff;border-radius:8px;font-weight:800;border:0;cursor:pointer">💵 जमा करें</button>` : ''}
+            <button type="button" onclick="window.deleteDueEntry(${idx})" style="padding:7px 11px;font-size:12px;background:#fff1f2;color:#b91c1c;border:1px solid #fecaca;border-radius:8px;font-weight:800;cursor:pointer">🗑️ हटाएँ</button>
+          </div>
+        </div>`;
+    }).join('');
+  };
+
+  window.collectDuePayment = function (idx) {
+    const list = getDuesList();
+    const item = list[idx];
+    if (!item) return;
+    const rem = Math.max(0, (Number(item.total) || 0) - (Number(item.paid) || 0));
+    const entered = prompt(`${item.name} से कितनी रकम प्राप्त हुई? (बाकी बकाया: ₹${rem})`, String(rem));
+    if (entered === null) return;
+    const addAmt = Number(entered);
+    if (isNaN(addAmt) || addAmt <= 0) {
+      alert('कृपया सही राशि दर्ज करें!');
+      return;
+    }
+    item.paid = Math.min(Number(item.total) || 0, (Number(item.paid) || 0) + addAmt);
+    saveDuesList(list);
+    window.renderDuesRegister();
+  };
+
+  window.deleteDueEntry = function (idx) {
+    const list = getDuesList();
+    const item = list[idx];
+    if (!item) return;
+    if (!confirm(`क्या आप "${item.name}" का उधार रिकॉर्ड हटाना चाहते हैं?`)) return;
+    list.splice(idx, 1);
+    saveDuesList(list);
+    window.renderDuesRegister();
+  };
+
+  document.getElementById('dueForm')?.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const name = document.getElementById('dueName').value.trim();
+    const phone = document.getElementById('duePhone').value.trim();
+    const total = Number(document.getElementById('dueTotal').value) || 0;
+    const paid = Number(document.getElementById('duePaid').value) || 0;
+    const date = document.getElementById('dueDate').value || getISTDate();
+
+    const list = getDuesList();
+    list.unshift({ name, phone, total, paid, date, createdAt: Date.now() });
+    saveDuesList(list);
+    this.reset();
+    document.getElementById('duePaid').value = '0';
+    document.getElementById('dueDate').value = getISTDate();
+    window.renderDuesRegister();
+  });
+
+  window.renderDuesRegister();
+})();
+</script>
 
 </body>
 </html>
