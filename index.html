@@ -1665,6 +1665,45 @@ body > main::after{
 }
 </style>
 
+
+<style id="v35-info-fullscreen-mode">
+/* V35: Dedicated Full-Screen View for About, Plant Care & Plant Types */
+body.info-fullscreen-open > main > *:not(.nav-page-open) {
+  display: none !important;
+}
+body.info-fullscreen-open > main > .nav-page-open {
+  display: block !important;
+  width: 100% !important;
+  max-width: 1000px !important;
+  margin: 20px auto !important;
+  padding: 24px 20px !important;
+  background: #ffffff !important;
+  border-radius: 20px !important;
+  box-shadow: 0 10px 35px rgba(6, 78, 59, 0.15) !important;
+  position: relative !important;
+}
+.back-to-home-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: linear-gradient(135deg, #08783c, #064e2b) !important;
+  color: #ffffff !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  padding: 10px 18px !important;
+  border-radius: 12px !important;
+  border: 0 !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 14px rgba(6, 78, 59, 0.25) !important;
+  margin-bottom: 20px !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+.back-to-home-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 18px rgba(6, 78, 59, 0.35) !important;
+}
+</style>
+
 </head>
 <body>
 
@@ -1722,6 +1761,7 @@ body > main::after{
 
 <main>
   <section class="card" id="about">
+  <button type="button" class="back-to-home-btn" onclick="window.returnToHome()">← होम पर लौटें</button>
     <h2 id="aboutNurseryTitle">🌿 श्री नीम करोली महाराज ग्रीन नर्सरी — हमारे बारे में</h2>
     <p><strong>हमारा परिचय:</strong> श्री नीम करोली महाराज ग्रीन नर्सरी, मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान से घरों, खेतों और किचन गार्डन के लिए पौधे तथा ताज़ी सब्ज़ियाँ उपलब्ध कराने का प्रयास करती है। हमारा उद्देश्य ग्राहकों को पौधों की सही जानकारी, देखभाल के सरल सुझाव और उपलब्ध स्टॉक के अनुसार पौधे/सब्ज़ियाँ आसानी से उपलब्ध कराना है।</p>
     <h3>🌿 हमारी खासियत</h3>
@@ -1735,6 +1775,7 @@ body > main::after{
   </section>
 
   <section class="card" id="plantCare">
+  <button type="button" class="back-to-home-btn" onclick="window.returnToHome()">← होम पर लौटें</button>
     <h2>🪴 पौधों की देखभाल कैसे करें?</h2>
     <div class="care-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
       <article style="padding:14px;border:1px solid #d1fae5;border-radius:14px;background:#f0fdf4">
@@ -1766,6 +1807,7 @@ body > main::after{
   </section>
 
   <section class="card" id="plantTypes">
+  <button type="button" class="back-to-home-btn" onclick="window.returnToHome()">← होम पर लौटें</button>
     <h2>🌱 हमारी नर्सरी में किस प्रकार के पौधे और सब्ज़ियाँ?</h2>
     <p>नर्सरी में उपलब्ध किस्में और संख्या मौसम तथा स्टॉक के अनुसार बदल सकती हैं। वेबसाइट पर दिख रही वर्तमान सूची और कीमत को अंतिम मानें।</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
@@ -5148,10 +5190,22 @@ loadPlants();
     const submenu = document.getElementById('aboutNavSubmenu');
     const aboutMenu = document.getElementById('aboutNavMenu');
     const closeSubmenu = () => { if (submenu) submenu.hidden = true; if (toggle) toggle.setAttribute('aria-expanded','false'); };
-    const hideInfoPages = () => infoIds.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) { el.classList.remove('nav-page-open'); el.style.display = 'none'; }
-    });
+    const hideInfoPages = () => {
+      document.body.classList.remove('info-fullscreen-open');
+      infoIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.classList.remove('nav-page-open'); el.style.display = 'none'; }
+      });
+    };
+
+    window.returnToHome = function() {
+      hideInfoPages();
+      if (typeof window.closeNurseryMenu === 'function') window.closeNurseryMenu();
+      document.querySelectorAll('nav a, #mainNavigation a').forEach(a => a.classList.remove('nav-active'));
+      const homeLink = document.getElementById('homeNavLink');
+      if (homeLink) homeLink.classList.add('nav-active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
     if (toggle && submenu) {
       // Capture the click before older navigation handlers can interfere.
       toggle.addEventListener('click', function(event) {
@@ -5183,6 +5237,7 @@ loadPlants();
         hideInfoPages();
         target.style.display = 'block';
         target.classList.add('nav-page-open');
+        document.body.classList.add('info-fullscreen-open');
         closeSubmenu();
         infoLinks.forEach(a => a.classList.remove('nav-active'));
         toggle.classList.add('nav-active');
@@ -5205,6 +5260,7 @@ loadPlants();
         hideInfoPages();
         target.style.display = 'block';
         target.classList.add('nav-page-open');
+        document.body.classList.add('info-fullscreen-open');
         closeSubmenu();
         infoLinks.forEach(a => a.classList.toggle('nav-active', a === link || (targetId === 'about' && a === toggle)));
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
