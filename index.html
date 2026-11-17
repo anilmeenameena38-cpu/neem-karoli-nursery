@@ -1713,6 +1713,21 @@ body.info-fullscreen-open > main > .nav-page-open {
 </style>
 
 
+
+<style id="v37-admin-login-security-fix">
+/* V37: Ensure admin dashboard and panes are strictly hidden before successful admin login */
+#owner:not(.admin-authenticated-owner) .admin-pane,
+#owner:not(.admin-authenticated-owner) #adminTabs,
+#owner:not(.admin-authenticated-owner) #ownerPanelHeader,
+#owner:not(.admin-authenticated-owner) #loudAlertBanner,
+#owner:not(.admin-authenticated-owner) #adminCustomerSearch {
+  display: none !important;
+}
+#owner.admin-authenticated-owner #loginForm {
+  display: none !important;
+}
+</style>
+
 </head>
 <body>
 
@@ -3897,6 +3912,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   const navButtonAfterLogin = document.getElementById('menuToggleButton');
   if (navMenuAfterLogin) { navMenuAfterLogin.classList.remove('menu-open'); navMenuAfterLogin.style.removeProperty('display'); }
   if (navButtonAfterLogin) { navButtonAfterLogin.setAttribute('aria-expanded', 'false'); navButtonAfterLogin.setAttribute('aria-label', 'मेनू खोलें'); }
+  ownerModal.classList.add('admin-authenticated-owner');
   document.getElementById('loginForm').style.display = 'none';
   document.getElementById('ownerPanelHeader').style.display = 'block';
   document.getElementById('adminTabs').style.display = 'grid';
