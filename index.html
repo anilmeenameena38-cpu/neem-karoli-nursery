@@ -4882,25 +4882,43 @@ async function renderAdminEdit() {
     row.querySelector('.save-btn').addEventListener('click', async (ev) => {
       const btn = ev.currentTarget;
       btn.disabled = true;
-      btn.textContent = 'सेव हो रहा है…';
+      btn.textContent = 'फोटो व डेटा सेव हो रहा है…';
       try {
         const price = Number(row.querySelector('.ep').value);
         const stock = Number(row.querySelector('.es').value);
-        const file = row.querySelector('.ef').files?.[0];
+        const fileInput = row.querySelector('.ef');
+        const file = fileInput && fileInput.files ? fileInput.files[0] : null;
         const addonsText = row.querySelector('.ea')?.value.trim() || '';
-        let updates = {selling_price: price, stock_quantity: stock, addons_text: addonsText};
-        if (file) updates.image_url = await uploadPhoto(file, p.id);
-        await db.from('plants').update(updates).eq('id', p.id);
-        alert('✅ उत्पाद सफलतापूर्वक अपडेट हो गया!');
+        
+        let updates = {
+          selling_price: price,
+          stock_quantity: stock,
+          addons_text: addonsText
+        };
+
+        if (file) {
+          btn.textContent = 'फोटो अपलोड हो रही है…';
+          const uploadedUrl = await uploadPhoto(file, p.id);
+          if (uploadedUrl) {
+            // Append cache buster so browser immediately displays the new image
+            updates.image_url = uploadedUrl + (uploadedUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+          }
+        }
+
+        const { error: updateErr } = await db.from('plants').update(updates).eq('id', p.id);
+        if (updateErr) throw updateErr;
+
+        alert('✅ उत्पाद और फोटो सफलतापूर्वक अपडेट हो गए!');
         await loadPlants();
         await loadAdminAll();
         await renderAdminEdit();
+        if (typeof renderAdminList === 'function') await renderAdminList();
       } catch (err) {
-        alert('त्रुटि: ' + err.message);
+        alert('❌ त्रुटि: ' + (err.message || err));
         btn.disabled = false;
         btn.textContent = '💾 बदलाव सेव करें';
       }
-    });
+    });;
 
     row.querySelector('.delete-btn').addEventListener('click', async () => {
       if (!confirm(`क्या आप वाकई "${p.name}" को हमेशा के लिए डिलीट करना चाहते हैं?`)) return;
