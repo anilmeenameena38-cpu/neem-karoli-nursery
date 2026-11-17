@@ -200,7 +200,11 @@ main{max-width:1160px;margin:0 auto;padding:18px 14px}
   justify-content:space-between;
 }
 .plant:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(10,50,25,0.12)}
-.plant.sold-out{border-color:#fca5a5;background:#fffaf9}
+
+.plant.sold-out{border-color:#fecaca !important;background:#fffcfc !important;opacity:0.92;}
+.plant.sold-out img{filter:grayscale(60%);opacity:0.75;}
+.plant-badge-soldout{position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;padding:4px 10px;border-radius:10px;font-size:11.5px;font-weight:900;box-shadow:0 3px 10px rgba(220,38,38,0.3);letter-spacing:0.3px;}
+
 .plant-badge-soldout{position:absolute;top:10px;right:10px;background:#dc2626;color:#fff;padding:3px 9px;border-radius:8px;font-size:11px;font-weight:800;box-shadow:0 2px 6px rgba(0,0,0,0.25)}
 .plant img{display:block;width:100%;height:148px;object-fit:cover;border-radius:12px;margin-bottom:8px;background:#f1f7ed}
 .plant h3{margin:4px 0 2px;font-size:17px;font-weight:800;color:#14341f}
@@ -1661,126 +1665,6 @@ body > main::after{
 }
 </style>
 
-<style id="website-code-studio-styles">
-#adminCodeStudioPane .code-studio-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
-#adminCodeStudioPane .code-studio-head h2{margin:0 0 5px}
-#adminCodeStudioPane .code-studio-head p{margin:0 0 12px;color:#52665a;font-size:13px}
-#adminCodeStudioPane .code-studio-safe{background:#dcfce7;color:#166534;padding:6px 10px;border-radius:20px;font-size:11px;font-weight:800}
-#adminCodeStudioPane .code-studio-warning{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:11px;padding:11px;margin:10px 0;font-size:12px;line-height:1.55}
-#adminCodeStudioPane .code-studio-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
-#adminCodeStudioPane .code-studio-tab{background:#ecfdf5;color:#14532d;border:1px solid #a7f3d0;padding:8px 18px}
-#adminCodeStudioPane .code-studio-tab.active{background:#166534;color:#fff}
-#adminCodeStudioPane .code-studio-editor-wrap label{font-weight:800;margin-top:10px}
-#adminCodeStudioPane .code-studio-editor-wrap label small{display:block;color:#64748b;font-weight:500;font-size:11px}
-#adminCodeStudioPane .code-studio-editor{width:100%;min-height:260px;font:12px/1.55 Consolas,Monaco,monospace;tab-size:2;white-space:pre;overflow:auto;background:#0f172a;color:#e2e8f0;border:1px solid #334155;border-radius:10px;padding:12px}
-#adminCodeStudioPane .code-studio-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-#adminCodeStudioPane .code-studio-actions button{font-size:12px;padding:9px 11px}
-#adminCodeStudioPane #codeStudioExport{background:#166534}
-#adminCodeStudioPane #codeStudioPublish{background:#0f766e}
-#adminCodeStudioPane #codeStudioClear{background:#64748b}
-#adminCodeStudioPane .code-studio-status{padding:10px;border-radius:9px;background:#f1f5f9;color:#334155;font-size:12px;overflow-wrap:anywhere}
-#adminCodeStudioPane .code-studio-preview-wrap{margin-top:14px;border:1px solid #dbe7dd;border-radius:12px;padding:10px;background:#f8faf8}
-#adminCodeStudioPane .code-studio-preview-wrap h3{margin:0 0 8px;font-size:15px}
-#adminCodeStudioPane #codeStudioPreviewFrame{display:block;width:100%;height:260px;border:1px solid #cbd5e1;border-radius:8px;background:#fff}
-#adminCodeStudioPane .code-studio-help{margin-top:12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px;font-size:12px}
-#adminCodeStudioPane .code-studio-help summary{font-weight:800;cursor:pointer}
-#adminCodeStudioPane .code-studio-help li{margin:5px 0}
-@media(max-width:700px){#adminCodeStudioPane .code-studio-editor{min-height:210px;font-size:11px}#adminCodeStudioPane .code-studio-actions button{flex:1 1 42%;min-height:42px}#adminCodeStudioPane #codeStudioPreviewFrame{height:230px}}
-</style>
-
-
-<style id="admin-header-clearance-fix-v1">
-/* Keep the nursery header separate from the admin workspace on desktop and mobile. */
-body.admin-panel-open{overflow:hidden !important;}
-body.admin-panel-open header#mainHeader{
-  position:fixed !important;
-  top:0 !important; left:0 !important; right:0 !important;
-  width:100% !important;
-  z-index:20010 !important;
-}
-body.admin-panel-open #owner.login-visible{
-  display:block !important;
-  position:fixed !important;
-  top:var(--admin-header-height, 74px) !important;
-  right:0 !important; bottom:0 !important; left:0 !important;
-  width:100% !important; max-width:none !important;
-  height:auto !important; min-height:0 !important;
-  margin:0 !important;
-  padding:10px clamp(10px, 2vw, 24px) calc(16px + env(safe-area-inset-bottom, 0px)) !important;
-  border:0 !important; border-radius:0 !important;
-  overflow-x:hidden !important; overflow-y:auto !important;
-  -webkit-overflow-scrolling:touch !important;
-  overscroll-behavior:contain !important;
-  box-sizing:border-box !important;
-  background:linear-gradient(180deg,#edf6ef 0%,#f6f9f6 100%) !important;
-  z-index:20000 !important;
-}
-body.admin-panel-open #owner.login-visible > div:first-child{
-  position:sticky !important; top:0 !important; z-index:20 !important;
-  display:flex !important; justify-content:flex-end !important;
-  width:100% !important; max-width:1180px !important;
-  margin:0 auto 12px !important; padding:0 0 8px !important;
-  background:linear-gradient(180deg,#edf6ef 75%,rgba(237,246,239,0)) !important;
-}
-body.admin-panel-open #ownerCloseButton{
-  min-height:38px !important; padding:7px 14px !important; margin:0 !important;
-  border:1px solid #d5e5d9 !important; border-radius:10px !important;
-  background:#fff !important; color:#14532d !important;
-  box-shadow:0 2px 8px rgba(6,78,59,.08) !important;
-}
-body.admin-panel-open #owner.login-visible > #loginForm{
-  width:min(100%,540px) !important; max-width:540px !important;
-  margin:10px auto 18px !important; padding:17px 20px !important;
-  border:1px solid #d7e8db !important; border-radius:16px !important;
-  background:#fff !important; box-shadow:0 8px 24px rgba(6,78,59,.10) !important;
-  box-sizing:border-box !important;
-}
-body.admin-panel-open #loginForm h2{margin:0 0 8px !important;font-size:20px !important;line-height:1.3 !important;}
-body.admin-panel-open #loginForm label{margin:4px 0 2px !important;font-size:13px !important;line-height:1.25 !important;}
-body.admin-panel-open #loginForm input{min-height:36px !important;margin:3px 0 7px !important;padding:7px 10px !important;font-size:14px !important;}
-body.admin-panel-open #loginForm button{min-height:38px !important;padding:7px 14px !important;}
-body.admin-panel-open #ownerStatus{margin:6px 0 0 !important;padding:7px 9px !important;font-size:12px !important;}
-body.admin-panel-open #ownerPanelHeader,
-body.admin-panel-open #adminCustomerSearch,
-body.admin-panel-open #adminTabs,
-body.admin-panel-open #owner.login-visible > .admin-pane{
-  width:100% !important; max-width:1180px !important;
-  margin:0 auto 14px !important; padding:16px !important;
-  border:1px solid #dcebe0 !important; border-radius:15px !important;
-  background:#fff !important; box-shadow:0 4px 14px rgba(6,78,59,.07) !important;
-  box-sizing:border-box !important;
-}
-body.admin-panel-open #ownerPanelHeader{margin-top:4px !important;}
-body.admin-panel-open #adminTabs{
-  grid-template-columns:repeat(auto-fit,minmax(112px,1fr)) !important;
-  gap:8px !important;
-}
-body.admin-panel-open #adminTabs .admin-tab{
-  min-width:0 !important; min-height:48px !important;
-  padding:8px 6px !important; border-radius:10px !important;
-  font-size:12px !important; line-height:1.3 !important;
-  overflow-wrap:anywhere !important;
-}
-body.admin-panel-open #owner.login-visible > .admin-pane{overflow:visible !important;}
-body.admin-panel-open #owner.login-visible > .admin-pane.active{display:block !important;}
-body.admin-panel-open #owner.login-visible > .admin-pane h2{margin-top:0 !important;}
-body.admin-panel-open .mobile-store-nav,
-body.admin-panel-open #floatingBottomCartBar,
-body.admin-panel-open #floatingWaWidget{display:none !important;}
-@media(max-width:700px){
-  body.admin-panel-open #owner.login-visible{
-    padding:10px 10px calc(16px + env(safe-area-inset-bottom, 0px)) !important;
-  }
-  body.admin-panel-open #owner.login-visible > #loginForm{padding:16px !important;}
-  body.admin-panel-open #ownerPanelHeader,
-  body.admin-panel-open #adminCustomerSearch,
-  body.admin-panel-open #adminTabs,
-  body.admin-panel-open #owner.login-visible > .admin-pane{padding:12px !important;}
-  body.admin-panel-open #adminTabs{grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:7px !important;}
-  body.admin-panel-open #adminTabs .admin-tab{min-height:44px !important;padding:7px 4px !important;font-size:11px !important;}
-}
-</style>
-
 </head>
 <body>
 
@@ -2060,7 +1944,7 @@ body.admin-panel-open #floatingWaWidget{display:none !important;}
     </div>
 
     <div id="adminTabs" class="admin-tabs">
-      <button class="admin-tab active" type="button" data-tab="dashboard">📊 डैशबोर्ड</button>
+      <button class="admin-tab active" type="button" data-tab="dashboard">📊 मुख्य पृष्ठ</button>
       <button class="admin-tab" type="button" data-tab="orders">🛒 ऑर्डर</button>
       <button class="admin-tab" type="button" data-tab="stock">🌱 स्टॉक लिस्ट</button>
       <button class="admin-tab" type="button" data-tab="manageplants">➕ नया उत्पाद</button>
@@ -2069,12 +1953,11 @@ body.admin-panel-open #floatingWaWidget{display:none !important;}
       <button class="admin-tab" type="button" data-tab="settings">⚙️ वेबसाइट कंट्रोल</button>
       <button class="admin-tab" type="button" data-tab="dues">⏰ उधार रजिस्टर</button>
       <button class="admin-tab" type="button" data-tab="chatgpt">🤖 ChatGPT</button>
-      <button class="admin-tab" type="button" data-tab="codeStudio">🧩 पूरा कंट्रोल सेंटर</button>
     </div>
 
-    <!-- डैशबोर्ड -->
+    <!-- मुख्य पृष्ठ -->
     <div id="adminDashboardPane" class="admin-pane active">
-      <div id="ownerStats">डैशबोर्ड लोड हो रहा है…</div>
+      <div id="ownerStats">मुख्य पृष्ठ लोड हो रहा है…</div>
     </div>
 
     <!-- ऑर्डर लिस्ट -->
@@ -2086,7 +1969,6 @@ body.admin-panel-open #floatingWaWidget{display:none !important;}
     <!-- स्टॉक प्रबंधन -->
     <div id="adminStockPane" class="admin-pane">
       <h2>📦 स्टॉक प्रबंधन (Sold Out व स्टॉक बदलाव)</h2>
-      <div class="status" style="margin:8px 0 12px;background:#ecfdf5;border:1px solid #a7f3d0;color:#14532d">ऑर्डर सेव होते ही स्टॉक रिजर्व होगा। ऑर्डर रद्द होने पर रिजर्व मात्रा केवल एक बार अपने आप वापस जुड़ेगी।</div>
       <div class="stock-category-columns">
         <section class="stock-category-card">
           <h3>🌱 नर्सरी के पौधे</h3>
@@ -2474,67 +2356,6 @@ body.admin-panel-open #floatingWaWidget{display:none !important;}
       <h2>🤖 ChatGPT सहायता</h2>
       <textarea id="nurseryChatQuestion" rows="4" placeholder="अपना सवाल लिखें…"></textarea>
       <button type="button" id="nurseryAskChatGPT" style="margin-top:8px">🤖 ChatGPT खोलें</button>
-    </div>
-    <!-- सुरक्षित वेबसाइट कंट्रोल सेंटर -->
-    <div id="adminCodeStudioPane" class="admin-pane">
-      <div class="code-studio-head">
-        <div><h2>🧩 पूरा वेबसाइट कंट्रोल सेंटर</h2><p>ChatGPT से मिला HTML, CSS या JavaScript यहाँ पेस्ट करें। पहले प्रीव्यू करें, फिर लागू या डाउनलोड करें।</p></div>
-        <span class="code-studio-safe">मौजूदा डेटा सुरक्षित रखने के लिए Backup पहले बनाएँ</span>
-      </div>
-      <div class="code-studio-warning"><b>ध्यान दें:</b> HTML/CSS/JavaScript गलत होने पर वेबसाइट का रूप या व्यवहार बिगड़ सकता है। पहले Preview और Backup जाँचें। इस ब्राउज़र में लागू करने से सभी ग्राहकों की लाइव वेबसाइट अपने-आप नहीं बदलेगी। सभी ग्राहकों के लिए अपडेट करने हेतु Publish सेटअप या अपडेटेड HTML होस्टिंग पर अपलोड करना होगा।</div>
-      <div class="code-studio-tabs" role="tablist" aria-label="कोड का प्रकार">
-        <button type="button" class="code-studio-tab active" data-code-tab="html">HTML</button>
-        <button type="button" class="code-studio-tab" data-code-tab="css">CSS</button>
-        <button type="button" class="code-studio-tab" data-code-tab="js">JavaScript</button>
-      </div>
-      <div class="code-studio-editor-wrap">
-        <label for="codeStudioHtml">HTML कोड <small>नया सेक्शन/कंटेंट जोड़ने के लिए</small></label>
-        <textarea id="codeStudioHtml" class="code-studio-editor" spellcheck="false" placeholder="ChatGPT से मिला HTML कोड यहाँ पेस्ट करें…"></textarea>
-        <label for="codeStudioCss">CSS कोड <small>डिजाइन, रंग, मोबाइल/कंप्यूटर लेआउट</small></label>
-        <textarea id="codeStudioCss" class="code-studio-editor" spellcheck="false" placeholder="ChatGPT से मिला CSS कोड यहाँ पेस्ट करें…" hidden></textarea>
-        <label for="codeStudioJs">JavaScript कोड <small>नया व्यवहार/फंक्शन — केवल भरोसेमंद कोड चलाएँ</small></label>
-        <textarea id="codeStudioJs" class="code-studio-editor" spellcheck="false" placeholder="ChatGPT से मिला JavaScript कोड यहाँ पेस्ट करें…" hidden></textarea>
-      </div>
-      <div class="code-studio-actions">
-        <button type="button" id="codeStudioSaveDraft">💾 ड्राफ्ट सेव</button>
-        <button type="button" id="codeStudioPreview">👁️ प्रीव्यू</button>
-        <button type="button" id="codeStudioApply">⚡ इस ब्राउज़र में लागू</button>
-        <button type="button" id="codeStudioPublish">🌐 सभी ग्राहकों के लिए Publish</button>
-        <button type="button" id="codeStudioExport">⬇️ अपडेटेड वेबसाइट डाउनलोड</button>
-        <button type="button" id="codeStudioBackup">🛡️ बैकअप बनाएं</button>
-        <button type="button" id="codeStudioRestore">↩️ बैकअप वापस लाएं</button>
-        <button type="button" id="codeStudioClear">बॉक्स साफ करें</button>
-      </div>
-      <div id="codeStudioStatus" class="code-studio-status" role="status" aria-live="polite">तैयार — पहले HTML/CSS/JavaScript में कोड पेस्ट करें।</div>
-      <div class="code-studio-preview-wrap">
-        <h3>प्रीव्यू विंडो</h3>
-        <iframe id="codeStudioPreviewFrame" title="कस्टम कोड प्रीव्यू" sandbox="allow-scripts" srcdoc="<!doctype html><html lang='hi'><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><body style='font-family:Arial,sans-serif;padding:16px;color:#14532d'>यहाँ आपके HTML और CSS का प्रीव्यू दिखाई देगा।</body></html>"></iframe>
-      </div>
-      <details class="code-studio-help">
-        <summary>🌐 सभी ग्राहकों के लिए ऑनलाइन Publish सेटअप</summary>
-        <p>Supabase के SQL Editor में नीचे दिया SQL एक बार Run करें। इससे ग्राहक पेज अपडेट पढ़ सकेंगे और केवल Owner UID वाला एडमिन बदलाव प्रकाशित कर सकेगा।</p>
-        <textarea id="codeStudioSqlSetup" readonly rows="12" style="width:100%;font:11px/1.45 Consolas,monospace;background:#0f172a;color:#e2e8f0;padding:10px;border-radius:8px">create table if not exists public.site_code_updates (
-  id integer primary key check (id = 1),
-  html text not null default '',
-  css text not null default '',
-  js text not null default '',
-  updated_at timestamptz not null default now(),
-  updated_by uuid
-);
-alter table public.site_code_updates enable row level security;
-grant select on public.site_code_updates to anon, authenticated;
-grant insert, update on public.site_code_updates to authenticated;
-drop policy if exists "Public can read nursery code" on public.site_code_updates;
-create policy "Public can read nursery code" on public.site_code_updates for select using (true);
-drop policy if exists "Nursery owner can publish code" on public.site_code_updates;
-create policy "Nursery owner can publish code" on public.site_code_updates for all to authenticated using (auth.uid() = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9'::uuid) with check (auth.uid() = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9'::uuid);</textarea>
-        <button type="button" id="codeStudioCopySql" style="margin-top:8px">📋 SQL कॉपी करें</button>
-      </details>
-      <details class="code-studio-help">
-        <summary>इसे कैसे इस्तेमाल करें?</summary>
-        <ol><li>ChatGPT से मिला केवल संबंधित कोड कॉपी करें।</li><li>HTML, CSS या JavaScript के सही बॉक्स में पेस्ट करें।</li><li>प्रीव्यू देखकर जाँचें।</li><li>ड्राफ्ट/बैकअप सेव करें।</li><li>सभी ग्राहकों तक बदलाव पहुँचाने के लिए Publish सेटअप पूरा करें या अपडेटेड HTML होस्टिंग पर अपलोड करें।</li></ol>
-        <p><b>सुरक्षा:</b> पूरा पुराना HTML/JavaScript यहाँ पेस्ट करके overwrite न करें। अनजान JavaScript न चलाएँ।</p>
-      </details>
     </div>
   </section>
 </main>
@@ -3087,16 +2908,541 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
 
 
 
+<style id="desktop-header-left-cleanup-v18">
+/* Desktop only: remove stray decorative items from the left header column.
+   Keep the menu, logo and nursery text aligned; mobile header is untouched. */
+@media screen and (min-width:701px) {
+  header#mainHeader {
+    grid-template-columns: max-content 82px minmax(240px,1fr) !important;
+    grid-template-rows: auto auto auto auto !important;
+    align-items: center !important;
+    column-gap: 14px !important;
+    row-gap: 4px !important;
+  }
+  header#mainHeader > #menuToggleButton {
+    grid-column: 1 !important;
+    grid-row: 1 / span 4 !important;
+    justify-self: start !important;
+    align-self: center !important;
+    width: auto !important;
+    min-width: 120px !important;
+    margin: 0 !important;
+  }
+  header#mainHeader > #headerBrandLogo {
+    grid-column: 2 !important;
+    grid-row: 1 / span 4 !important;
+    align-self: center !important;
+  }
+  header#mainHeader > #headerNurseryName {
+    grid-column: 3 !important; grid-row: 1 !important;
+  }
+  header#mainHeader > #headerNurseryTagline {
+    grid-column: 3 !important; grid-row: 2 !important;
+  }
+  header#mainHeader > #headerNurseryAddress {
+    grid-column: 3 !important; grid-row: 3 !important;
+  }
+  header#mainHeader > div:not(.header-badge-box) {
+    grid-column: 3 !important; grid-row: 4 !important;
+    justify-self: start !important;
+    margin: 0 !important;
+  }
+  header#mainHeader > .header-badge-box,
+  header#mainHeader::after {
+    display: none !important;
+    content: none !important;
+  }
+}
+</style>
+
+
+<style id="desktop-centered-header-store-menu-v19">
+/* Desktop-only visual refinement. Phone/tablet rules (<=700px) are untouched. */
+@media screen and (min-width:701px) {
+  /* Center the complete header group without changing its green branding. */
+  header#mainHeader {
+    display:grid !important;
+    grid-template-columns: 1fr max-content 92px minmax(420px, max-content) 1fr !important;
+    grid-template-rows:auto auto auto auto !important;
+    justify-content:center !important;
+    align-content:center !important;
+    align-items:center !important;
+    column-gap:14px !important;
+    row-gap:3px !important;
+    min-height:190px !important;
+    padding:24px 32px !important;
+    text-align:left !important;
+    position:relative !important;
+    overflow:visible !important;
+  }
+  header#mainHeader > #menuToggleButton {
+    grid-column:2 !important; grid-row:1 / span 4 !important;
+    justify-self:end !important; align-self:center !important;
+    width:150px !important; min-height:48px !important;
+    margin:0 !important; padding:10px 14px !important;
+    border:1px solid rgba(255,255,255,.75) !important;
+    border-radius:12px !important;
+    background:linear-gradient(135deg,#ffffff,#ecfdf5) !important;
+    color:#075b35 !important;
+    box-shadow:0 4px 12px rgba(0,0,0,.16) !important;
+    font-size:14px !important; font-weight:900 !important;
+    letter-spacing:.2px !important;
+    transition:transform .18s ease,box-shadow .18s ease !important;
+  }
+  header#mainHeader > #menuToggleButton:hover {
+    transform:translateY(-2px) !important;
+    box-shadow:0 7px 16px rgba(0,0,0,.2) !important;
+  }
+  header#mainHeader > #headerBrandLogo {
+    grid-column:3 !important; grid-row:1 / span 4 !important;
+    justify-self:center !important; align-self:center !important;
+    width:88px !important; height:88px !important;
+    margin:0 !important;
+  }
+  header#mainHeader > #headerNurseryName {
+    grid-column:4 !important; grid-row:1 !important;
+    justify-self:start !important; align-self:end !important;
+    margin:0 !important; text-align:left !important;
+    font-size:clamp(24px,2.2vw,32px) !important;
+    line-height:1.25 !important;
+  }
+  header#mainHeader > #headerNurseryTagline {
+    grid-column:4 !important; grid-row:2 !important;
+    justify-self:start !important; align-self:start !important;
+    margin:0 !important; text-align:left !important;
+    font-size:14px !important; line-height:1.35 !important;
+  }
+  header#mainHeader > #headerNurseryAddress {
+    grid-column:4 !important; grid-row:3 !important;
+    justify-self:start !important; align-self:start !important;
+    margin:0 !important; text-align:left !important;
+  }
+  header#mainHeader > div:not(.header-badge-box):not(#mainNavigation) {
+    grid-column:4 !important; grid-row:4 !important;
+    justify-self:start !important; align-self:start !important;
+    margin:0 !important;
+  }
+  header#mainHeader > .header-badge-box,
+  header#mainHeader::after { display:none !important; content:none !important; }
+
+  /* A tidy dropdown anchored to the menu button, with clear click targets. */
+  #mainNavigation {
+    position:absolute !important;
+    top:calc(100% + 8px) !important;
+    left:calc(50% - 310px) !important;
+    right:auto !important;
+    width:290px !important;
+    max-width:calc(100vw - 32px) !important;
+    padding:12px !important;
+    gap:7px !important;
+    border:1px solid #b7e4c7 !important;
+    border-radius:16px !important;
+    background:rgba(255,255,255,.98) !important;
+    box-shadow:0 16px 38px rgba(4,44,22,.22) !important;
+    backdrop-filter:blur(12px) !important;
+  }
+  #mainNavigation a, #mainNavigation button {
+    min-height:43px !important;
+    padding:11px 14px !important;
+    border:1px solid #e0f2e5 !important;
+    border-radius:10px !important;
+    background:#f3fbf5 !important;
+    color:#075b35 !important;
+    font-size:14px !important;
+    font-weight:800 !important;
+    transition:background .15s ease, transform .15s ease !important;
+  }
+  #mainNavigation a:hover, #mainNavigation button:hover {
+    background:#d9f5e2 !important;
+    transform:translateX(2px) !important;
+  }
+
+  /* Center the product panels and let the four-card row use a wide layout. */
+  body > main {
+    width:calc(100% - 48px) !important;
+    max-width:1240px !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+    padding-left:20px !important;
+    padding-right:20px !important;
+  }
+  body > main #viewPlantCategory,
+  body > main #viewVegCategory {
+    display:block !important;
+    width:100% !important;
+    max-width:none !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+  #plantOnlyList.plants, #vegOnlyList.plants {
+    display:grid !important;
+    width:100% !important;
+    max-width:none !important;
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    gap:16px !important;
+    justify-content:center !important;
+    align-items:stretch !important;
+  }
+  #plantOnlyList .plant, #vegOnlyList .plant {
+    width:100% !important; min-width:0 !important;
+    padding:12px !important;
+  }
+  #plantOnlyList .plant img, #vegOnlyList .plant img {
+    width:100% !important; height:180px !important;
+    object-fit:cover !important;
+  }
+}
+</style>
 
 
 
 
 
+<script id="v30-auto-stock-sync">
+// V30: ऑर्डर होने, कन्फर्म होने और रद्द होने पर कस्टमर पैनल व एडमिन पैनल दोनों में ऑटोमैटिक स्टॉक सिंक
+(function () {
+  function parseOrderItemsFromText(order, allPlants) {
+    const rawText = String((order && order.plant_name) || '');
+    const parts = rawText.split(',').map(s => s.trim()).filter(Boolean);
+    const pattern = /^(.+?)\s*\(([0-9.]+)\s*(pcs|kg|g|पौधे|किलो|ग्राम)?\)$/i;
+    const result = [];
 
+    parts.forEach(part => {
+      const m = part.match(pattern);
+      if (!m) return;
+      const name = m[1].trim();
+      const rawQty = Number(m[2]) || 0;
+      const unit = String(m[3] || '').toLowerCase();
+      if (rawQty <= 0) return;
 
+      const veg = (unit === 'kg' || unit === 'g' || unit === 'किलो' || unit === 'ग्राम');
+      const qtyInStockUnit = (unit === 'g' || unit === 'ग्राम') ? (rawQty / 1000) : rawQty;
 
+      let matched = (allPlants || []).find(p =>
+        String(p.name || '').trim() === name && Boolean(isVeg(p)) === veg
+      );
+      if (!matched) {
+        matched = (allPlants || []).find(p => String(p.name || '').trim() === name);
+      }
+      result.push({
+        id: matched ? matched.id : null,
+        name: name,
+        qty: qtyInStockUnit,
+        veg: matched ? Boolean(isVeg(matched)) : veg
+      });
+    });
+    return result;
+  }
 
+  async function adjustDatabaseStockForOrder(order, direction) {
+    const { data: currentPlants, error: pErr } = await db.from('plants').select('*');
+    if (pErr || !currentPlants) return false;
 
+    const parsedItems = parseOrderItemsFromText(order, currentPlants);
+    if (!parsedItems.length) return false;
+
+    let allUpdated = true;
+    for (const item of parsedItems) {
+      if (!item.id) continue;
+      const plantRow = currentPlants.find(p => Number(p.id) === Number(item.id));
+      if (!plantRow) continue;
+
+      const currentStock = Number(plantRow.stock_quantity) || 0;
+      const nextStock = Math.max(0, Number((currentStock + (direction * item.qty)).toFixed(3)));
+      plantRow.stock_quantity = nextStock;
+
+      const { data: updatedRows, error: upErr } = await db
+        .from('plants')
+        .update({ stock_quantity: nextStock })
+        .eq('id', plantRow.id)
+        .select('id, stock_quantity');
+
+      if (upErr || !updatedRows || !updatedRows.length) {
+        allUpdated = false;
+      }
+    }
+    return allUpdated;
+  }
+
+  function computePendingDeductionsMap(orders, allPlants) {
+    const map = {};
+    (orders || []).forEach(o => {
+      if (!o || o.status === 'cancelled') return;
+      const notes = String(o.notes || '');
+      if (!notes.includes('STOCK_SYNC:pending') || notes.includes('STOCK_DEDUCTED:1')) return;
+      const items = parseOrderItemsFromText(o, allPlants);
+      items.forEach(it => {
+        if (!it.id) return;
+        map[it.id] = Number(((map[it.id] || 0) + it.qty).toFixed(3));
+      });
+    });
+    return map;
+  }
+
+  // जब ग्राहक नया ऑर्डर सबमिट करे, तो तुरंत स्टॉक घटाएँ या STOCK_SYNC:pending मार्क करें
+  const orderFormEl = document.getElementById('orderForm');
+  if (orderFormEl) {
+    orderFormEl.addEventListener('submit', function () {
+      setTimeout(async () => {
+        try {
+          const { data: recentOrders } = await db
+            .from('order_requests')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(3);
+
+          if (recentOrders && recentOrders.length) {
+            const latest = recentOrders[0];
+            const notes = String(latest.notes || '');
+            if (!notes.includes('STOCK_DEDUCTED:1') && !notes.includes('STOCK_SYNC:')) {
+              const updatedInDb = await adjustDatabaseStockForOrder(latest, -1);
+              const newNotes = notes + (updatedInDb ? ' | STOCK_DEDUCTED:1' : ' | STOCK_SYNC:pending');
+              await db.from('order_requests').update({ notes: newNotes }).eq('id', latest.id);
+            }
+          }
+          await window.loadPlants();
+          if (document.body.classList.contains('admin-authenticated')) {
+            await window.loadAdminAll();
+          }
+        } catch (err) {
+          console.error('Auto stock deduct after order error:', err);
+        }
+      }, 1500);
+    });
+  }
+
+  // कस्टमर पैनल (loadPlants) में भी पेंडिंग सिंक वाले ऑर्डर्स का स्टॉक घटाकर दिखाएँ
+  const originalLoadPlants = window.loadPlants;
+  window.loadPlants = async function () {
+    await originalLoadPlants();
+    try {
+      const { data: pendingSyncOrders } = await db
+        .from('order_requests')
+        .select('id, plant_name, status, notes')
+        .ilike('notes', '%STOCK_SYNC:pending%');
+
+      if (!pendingSyncOrders || !pendingSyncOrders.length) return;
+      const deductMap = computePendingDeductionsMap(pendingSyncOrders, plants);
+      if (!Object.keys(deductMap).length) return;
+
+      const cfg = getSiteConfig();
+      document.querySelectorAll('.plant[data-cart-key]').forEach(card => {
+        const key = card.dataset.cartKey || '';
+        const idPart = Number(key.split('-')[1]);
+        const deductQty = deductMap[idPart] || 0;
+        if (!deductQty) return;
+
+        const p = (plants || []).find(x => Number(x.id) === idPart);
+        if (!p) return;
+        const veg = isVeg(p);
+        const isGram = veg && isGramVeg(p);
+        const effectiveStock = Math.max(0, Number(((Number(p.stock_quantity) || 0) - deductQty).toFixed(3)));
+        p.stock_quantity = effectiveStock;
+
+        const stockEl = card.querySelector('.stock-text');
+        if (stockEl) {
+          if (effectiveStock <= 0) {
+            stockEl.innerHTML = 'स्टॉक: <b style="color:#dc2626">0 उपलब्ध</b>';
+          } else if (veg && isGram) {
+            const grams = Math.round(effectiveStock * 1000);
+            stockEl.textContent = 'स्टॉक: ' + (grams >= 1000 ? `${effectiveStock} किलो (${grams}g)` : `${grams} ग्राम`);
+          } else {
+            stockEl.textContent = `स्टॉक: ${effectiveStock} ${veg ? 'किलो' : 'पौधे'}`;
+          }
+        }
+        const qtyInput = card.querySelector('.card-qty-input');
+        if (qtyInput) qtyInput.max = String(effectiveStock);
+        if (effectiveStock <= 0 && cfg.shopStatus !== 'closed') {
+          card.classList.add('sold-out');
+          const buyBtn = card.querySelector('.plant-buy-button');
+          if (buyBtn) {
+            buyBtn.disabled = true;
+            buyBtn.textContent = '🚫 उपलब्ध नहीं';
+          }
+        }
+      });
+    } catch (_) {}
+  };
+
+  // एडमिन पैनल (loadAdminAll) खुलने पर पेंडिंग स्टॉक सिंक को डेटाबेस में पक्का सेव करें
+  const originalLoadAdminAll = window.loadAdminAll;
+  window.loadAdminAll = async function () {
+    try {
+      const { data: pendingSyncOrders } = await db
+        .from('order_requests')
+        .select('*')
+        .ilike('notes', '%STOCK_SYNC:pending%');
+
+      if (pendingSyncOrders && pendingSyncOrders.length) {
+        for (const ord of pendingSyncOrders) {
+          if (ord.status === 'cancelled') continue;
+          const notes = String(ord.notes || '');
+          if (notes.includes('STOCK_DEDUCTED:1')) continue;
+          const ok = await adjustDatabaseStockForOrder(ord, -1);
+          if (ok) {
+            const updatedNotes = notes.replace('STOCK_SYNC:pending', 'STOCK_DEDUCTED:1');
+            await db.from('order_requests').update({ notes: updatedNotes }).eq('id', ord.id);
+          }
+        }
+      }
+    } catch (_) {}
+    await originalLoadAdminAll();
+  };
+
+  // एडमिन द्वारा "✅ कन्फर्म" दबाने पर यदि उस ऑर्डर का स्टॉक अभी तक नहीं घटा है तो तुरंत घटाएँ
+  window.confirmOrderSimple = async function (event, orderId) {
+    if (event) { event.preventDefault(); event.stopPropagation(); }
+    if (!confirm(`क्या आप ऑर्डर #${orderId} कन्फर्म करना चाहते हैं?`)) return;
+
+    const btn = event ? event.target : null;
+    if (btn) { btn.disabled = true; btn.textContent = 'प्रोसेसिंग…'; }
+
+    try {
+      const { data: ord, error: fetchErr } = await db
+        .from('order_requests')
+        .select('*')
+        .eq('id', orderId)
+        .single();
+      if (fetchErr) throw fetchErr;
+
+      let notes = String(ord.notes || '');
+      if (!notes.includes('STOCK_DEDUCTED:1')) {
+        const deducted = await adjustDatabaseStockForOrder(ord, -1);
+        if (deducted) {
+          notes = notes.replace('STOCK_SYNC:pending', '').trim() + ' | STOCK_DEDUCTED:1';
+        }
+      }
+
+      const { error: ordErr } = await db
+        .from('order_requests')
+        .update({ status: 'confirmed', notes: notes })
+        .eq('id', orderId);
+      if (ordErr) throw ordErr;
+
+      stopLoudAlert();
+      await window.loadAdminAll();
+      await window.loadPlants();
+      alert('✅ ऑर्डर कन्फर्म हो गया और स्टॉक अपडेट कर दिया गया!');
+    } catch (e) {
+      alert('त्रुटि: ' + e.message);
+      if (btn) { btn.disabled = false; btn.textContent = '✅ कन्फर्म'; }
+    }
+  };
+
+  // एडमिन द्वारा "❌ रद्द करें" दबाने पर घटा हुआ स्टॉक वापस जोड़ें
+  window.cancelOrderPrompt = async function (event, orderId, existingNotes) {
+    if (event) { event.preventDefault(); event.stopPropagation(); }
+
+    const reason = prompt(
+      'कृपया ऑर्डर रद्द करने का कारण चुनें या लिखें:\n\n1. फर्जी भुगतान स्क्रीनशॉट / UTR नंबर अमान्य\n2. स्टॉक में माल उपलब्ध नहीं है\n3. गलत पता या संपर्क नंबर\n4. अन्य कारण',
+      'फर्जी भुगतान स्क्रीनशॉट / UTR नंबर अमान्य'
+    );
+    if (reason === null) return;
+    const cleanReason = reason.trim() || 'अन्य कारण';
+
+    try {
+      const { data: ord } = await db.from('order_requests').select('*').eq('id', orderId).single();
+      let notes = String((ord && ord.notes) || existingNotes || '');
+
+      if (notes.includes('STOCK_DEDUCTED:1') && !notes.includes('STOCK_RESTORED:1')) {
+        const restored = await adjustDatabaseStockForOrder(ord, +1);
+        if (restored) {
+          notes += ' | STOCK_RESTORED:1';
+        }
+      }
+      notes = notes.replace('STOCK_SYNC:pending', 'STOCK_SYNC:cancelled') + ' | CANCEL_REASON:' + cleanReason;
+
+      const { error } = await db
+        .from('order_requests')
+        .update({ status: 'cancelled', notes: notes })
+        .eq('id', orderId);
+      if (error) throw error;
+
+      stopLoudAlert();
+      await window.loadAdminAll();
+      await window.loadPlants();
+      alert(`❌ ऑर्डर #${orderId} रद्द कर दिया गया और स्टॉक वापस अपडेट हो गया!`);
+    } catch (e) {
+      alert('रद्द करने में त्रुटि: ' + e.message);
+    }
+  };
+
+  // बिक्री हिसाब (loadSalesLedger) में कुल बिके पौधे और कुल बिकी सब्ज़ी की सही गिनती दिखाएँ
+  window.loadSalesLedger = async function () {
+    const pBox = document.getElementById('salesPlantRecords');
+    const vBox = document.getElementById('salesVegRecords');
+    const allList = document.getElementById('ownerSalesList');
+
+    pBox.innerHTML = 'लोड हो रहा है…';
+    vBox.innerHTML = 'लोड हो रहा है…';
+    allList.innerHTML = 'लोड हो रहा है…';
+
+    try {
+      const [ordersRes, plantsRes] = await Promise.all([
+        db.from('order_requests').select('*').order('created_at', { ascending: false }),
+        db.from('plants').select('*').order('name')
+      ]);
+      if (ordersRes.error) throw ordersRes.error;
+
+      const allPlants = plantsRes.data || plants || [];
+      const confirmedOrDelivered = (ordersRes.data || []).filter(
+        o => o.status === 'confirmed' || isOrderDelivered(o)
+      );
+
+      let totalRevenue = 0;
+      let totalPlantsSold = 0;
+      let totalVegSoldKg = 0;
+      const plantSummary = {};
+      const vegSummary = {};
+
+      confirmedOrDelivered.forEach(o => {
+        totalRevenue += Number(o.unit_price || 0);
+        const items = parseOrderItemsFromText(o, allPlants);
+        items.forEach(it => {
+          if (it.veg) {
+            totalVegSoldKg += it.qty;
+            vegSummary[it.name] = Number(((vegSummary[it.name] || 0) + it.qty).toFixed(3));
+          } else {
+            totalPlantsSold += it.qty;
+            plantSummary[it.name] = Math.round((plantSummary[it.name] || 0) + it.qty);
+          }
+        });
+      });
+
+      document.getElementById('salesTotalRevenue').textContent = '₹' + totalRevenue.toFixed(2);
+      document.getElementById('salesTotalPlants').textContent = String(Math.round(totalPlantsSold)) + ' पौधे';
+      document.getElementById('salesTotalVeg').textContent = totalVegSoldKg.toFixed(2) + ' किलो';
+      document.getElementById('salesTotalOrders').textContent = String(confirmedOrDelivered.length);
+
+      const pEntries = Object.entries(plantSummary);
+      pBox.innerHTML = pEntries.length
+        ? pEntries.map(([name, qty]) => `<div class="sale-row"><span>🌱 ${safe(name)}</span><strong>${qty} पौधे</strong></div>`).join('')
+        : '<p style="color:var(--muted)">अभी कोई पौधा बिक्री रिकॉर्ड नहीं है।</p>';
+
+      const vEntries = Object.entries(vegSummary);
+      vBox.innerHTML = vEntries.length
+        ? vEntries.map(([name, qty]) => `<div class="sale-row"><span>🥬 ${safe(name)}</span><strong>${qty} किलो</strong></div>`).join('')
+        : '<p style="color:var(--muted)">अभी कोई सब्ज़ी बिक्री रिकॉर्ड नहीं है।</p>';
+
+      allList.innerHTML = confirmedOrDelivered.length ? confirmedOrDelivered.map(o => {
+        const total = Number(o.unit_price || 0).toFixed(2);
+        const isDel = isOrderDelivered(o);
+        return `
+          <div class="sale-row" style="padding:10px 4px;border-bottom:1px solid #eef2eb">
+            <div>
+              <strong>#${o.id} - ${safe(o.plant_name)}</strong>
+              <span style="font-size:11px;font-weight:700;padding:2px 6px;border-radius:10px;margin-left:6px;background:${isDel ? '#dbeafe;color:#1e40af' : '#dcfce7;color:#166534'}">${isDel ? '🚚 डिलीवर' : '✅ कन्फर्म'}</span>
+              <div style="font-size:13px;color:var(--muted)">ग्राहक: ${safe(o.customer_name)} | 📞 ${safe(o.customer_phone)}</div>
+            </div>
+            <div style="font-size:16px;font-weight:800;color:var(--green)">₹${total}</div>
+          </div>`;
+      }).join('') : '<p style="color:var(--muted)">कोई रसीद नहीं है।</p>';
+    } catch (err) {
+      allList.innerHTML = '<div class="status">त्रुटि: ' + err.message + '</div>';
+    }
+  };
+})();
+</script>
 
 </body>
     </html>
@@ -3733,26 +4079,10 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
       customer_address: fullAddress,
       notes: `CART_ORDER | UTR:${utrNumber} | DISTANCE:${deliveryDistanceKm?.toFixed(1)}km | DELIVERY_FEE:${appliedDeliveryFee} | DISCOUNT:${discountAmt} | MAPS:${customerLocation?.mapsUrl || ''} | PROOF:${proofUrl}`,
       status: 'pending'
-    }).select('id, stock_reserved').single();
+    }).select('id').single();
 
     if (insErr) throw insErr;
-    if (!insertedOrder || insertedOrder.stock_reserved !== true) {
-      if (insertedOrder && insertedOrder.id) {
-        const { data: savedOrder } = await db.from('order_requests').select('notes').eq('id', insertedOrder.id).maybeSingle();
-        const savedNotes = String(savedOrder?.notes || '');
-        await db.from('order_requests').update({
-          status: 'cancelled',
-          notes: savedNotes + ' | CANCEL_REASON:स्टॉक रिजर्वेशन पूरा नहीं हुआ'
-        }).eq('id', insertedOrder.id);
-      }
-      throw new Error('ऑटोमैटिक स्टॉक रिजर्वेशन चालू नहीं है। एडमिन को Supabase में दिया गया Stock Reserve SQL एक बार Run करना होगा। ऑर्डर कन्फर्म नहीं किया गया।');
-    }
-    const newOrderId = insertedOrder.id;
-    // डेटाबेस ट्रिगर ने ऑर्डर insert के साथ ही स्टॉक घटा दिया है; दोनों पैनल तुरंत रिफ्रेश करें।
-    if (typeof window.loadPlants === 'function') await window.loadPlants();
-    if (document.body.classList.contains('admin-authenticated') && typeof window.loadAdminAll === 'function') {
-      await window.loadAdminAll();
-    }
+    const newOrderId = insertedOrder ? insertedOrder.id : 'नया';
 
     const message = 'नया मल्टी-आइटम नर्सरी ऑर्डर' +
       '\nऑर्डर आईडी: #' + newOrderId +
@@ -3808,28 +4138,12 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
     window.open(waUrl, '_blank');
 
   } catch (err) {
-    let message = String(err && err.message || 'अज्ञात त्रुटि');
-    if (/STOCK_INSUFFICIENT/i.test(message)) {
-      message = 'माफ़ कीजिए, चुने गए किसी उत्पाद का स्टॉक अभी कम हो गया है। कार्ट की मात्रा और उपलब्ध स्टॉक दोबारा जाँचें।';
-    } else if (/STOCK_PRODUCT_NOT_FOUND|STOCK_ITEM_FORMAT|STOCK_ITEMS_/i.test(message)) {
-      message = 'ऑर्डर के किसी उत्पाद का नाम या मात्रा स्टॉक सूची से मेल नहीं खा रही। एडमिन से उत्पाद का नाम/कैटेगरी जाँचने को कहें।';
-    } else if (/stock_reserved|column.*does not exist|schema cache/i.test(message)) {
-      message = 'ऑटोमैटिक स्टॉक रिजर्वेशन का Supabase SQL सेटअप अभी पूरा नहीं हुआ है। एडमिन को Stock Reserve SQL Run करना होगा।';
-    }
-    status.textContent = '❌ ' + message;
+    status.textContent = '❌ त्रुटि: ' + err.message;
     button.disabled = false;
   }
 });
 
 const ownerModal = document.getElementById('owner');
-function updateAdminPanelHeaderOffset(){
-  if (!ownerModal || !ownerModal.classList.contains('login-visible') || !document.body.classList.contains('admin-panel-open')) return;
-  const adminHeader = document.getElementById('mainHeader');
-  if (adminHeader) {
-    ownerModal.style.setProperty('--admin-header-height', Math.ceil(adminHeader.getBoundingClientRect().height) + 'px');
-  }
-}
-window.addEventListener('resize', updateAdminPanelHeaderOffset, { passive:true });
 document.getElementById('adminPanelNav').addEventListener('click', () => { 
   // एडमिन लॉगिन खोलने से पहले नेविगेशन मेनू बंद करें।
   if (window.closeNurseryMenu) window.closeNurseryMenu();
@@ -3838,10 +4152,12 @@ document.getElementById('adminPanelNav').addEventListener('click', () => {
   if (navMenu) { navMenu.classList.remove('menu-open'); navMenu.style.setProperty('display', 'none', 'important'); }
   if (navButton) { navButton.setAttribute('aria-expanded', 'false'); navButton.setAttribute('aria-label', 'मेनू खोलें'); }
   ownerModal.classList.add('login-visible');
-  // हर स्क्रीन पर एडमिन वर्कस्पेस को हेडर के नीचे अलग रखें।
+  // मोबाइल पर एडमिन वर्कस्पेस को नर्सरी हेडर के ठीक नीचे खोलें।
   document.body.classList.add('admin-panel-open');
-  updateAdminPanelHeaderOffset();
-  requestAnimationFrame(updateAdminPanelHeaderOffset);
+  const adminHeader = document.getElementById('mainHeader');
+  if (adminHeader && window.matchMedia('(max-width:700px)').matches) {
+    ownerModal.style.setProperty('--admin-header-height', Math.ceil(adminHeader.getBoundingClientRect().height) + 'px');
+  }
   initAudioContext();
   const sel = document.getElementById('ringtoneSelector');
   if (sel) sel.value = selectedRingtone;
@@ -4112,17 +4428,27 @@ async function loadAdminAll() {
       const isAvailable = x.is_active === true;
       const unit = isVeg(x) ? 'किलो/ग्राम' : 'पौधा';
       const inputId = 'stock-input-' + x.id;
+      const imgThumb = x.image_url 
+        ? `<img src="${safe(x.image_url)}" alt="" style="width:52px;height:52px;object-fit:cover;border-radius:10px;background:#f1f7ed;border:1px solid #dcebe0">`
+        : `<div style="width:52px;height:52px;background:#ecfdf5;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;border:1px solid #d1fae5">${isVeg(x)?'🥬':'🌱'}</div>`;
+
       return `
-        <div class="stock-row" style="flex-wrap:wrap;gap:8px;padding:12px 4px;">
-          <div>
-            <strong>${isVeg(x)?'🥬':'🌱'} ${safe(x.name)}</strong>
-            <small style="display:block;color:var(--muted)">₹${Number(x.selling_price).toFixed(2)} / ${unit}</small>
+        <div class="stock-row" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:12px 10px;margin-bottom:10px;background:#fff;border:1px solid #dcebe0;border-radius:14px;box-shadow:0 3px 12px rgba(6,78,59,.04)">
+          <div style="display:flex;align-items:center;gap:12px;min-width:0">
+            ${imgThumb}
+            <div style="min-width:0">
+              <strong style="font-size:15px;color:#123b27;display:block">${safe(x.name)}</strong>
+              <small style="color:var(--muted);font-weight:800">₹${Number(x.selling_price).toFixed(2)} / ${unit}</small>
+            </div>
           </div>
-          <div style="display:flex;align-items:center;gap:6px">
-            <input id="${inputId}" type="number" min="0" step="${isVeg(x)?'0.5':'1'}" value="${x.stock_quantity}" style="width:70px;padding:4px 6px;margin:0;font-size:13px;text-align:center">
-            <button type="button" onclick="quickUpdateStock(${x.id}, '${inputId}')" style="padding:5px 8px;font-size:12px;background:#edf5e9;color:var(--green);border:1px solid var(--line)" title="स्टॉक संख्या सेव करें">💾</button>
-            <button type="button" onclick="toggleProductStatus(${x.id}, ${isAvailable})" style="font-size:12px;padding:5px 9px;border-radius:8px;border:1px solid ${isAvailable ? '#f87171' : '#4ade80'};background:${isAvailable ? '#fff1f2' : '#f0fdf4'};color:${isAvailable ? '#b91c1c' : '#15803d'};font-weight:700">
-              ${isAvailable ? '🚫 Sold Out करें' : '✅ उपलब्ध करें'}
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:4px">
+              <label style="font-size:11px;margin:0;color:var(--muted);font-weight:700">स्टॉक:</label>
+              <input id="${inputId}" type="number" min="0" step="${isVeg(x)?'0.5':'1'}" value="${x.stock_quantity}" style="width:78px;padding:6px 8px;margin:0;font-size:14px;text-align:center;font-weight:900;border-radius:8px;border:1px solid #cbd5e1">
+            </div>
+            <button type="button" onclick="quickUpdateStock(${x.id}, '${inputId}')" style="padding:7px 12px;font-size:12.5px;background:#16a34a;color:#fff;border-radius:8px;font-weight:800;border:0;cursor:pointer" title="स्टॉक संख्या सेव करें">💾 सेव</button>
+            <button type="button" onclick="toggleProductStatus(${x.id}, ${isAvailable})" style="font-size:12.5px;padding:7px 12px;border-radius:8px;border:1px solid ${isAvailable ? '#f87171' : '#4ade80'};background:${isAvailable ? '#fff1f2' : '#f0fdf4'};color:${isAvailable ? '#b91c1c' : '#15803d'};font-weight:800;cursor:pointer">
+              ${isAvailable ? '🚫 Sold Out' : '✅ उपलब्ध'}
             </button>
           </div>
         </div>`;
@@ -4580,373 +4906,6 @@ document.getElementById('nurseryAskChatGPT')?.addEventListener('click', () => {
   const q = document.getElementById('nurseryChatQuestion').value.trim();
   if (q) window.open('https://chatgpt.com/?q=' + encodeURIComponent(q), '_blank');
 });
-
-
-// V30 stock-sync controller: the block is now inside the main app script, not in the invoice HTML.
-window.loadPlants = loadPlants;
-window.loadAdminAll = loadAdminAll;
-
-// V30: ऑर्डर होने, कन्फर्म होने और रद्द होने पर कस्टमर पैनल व एडमिन पैनल दोनों में ऑटोमैटिक स्टॉक सिंक
-(function () {
-  function parseOrderItemsFromText(order, allPlants) {
-    const rawText = String((order && order.plant_name) || '');
-    const parts = rawText.split(',').map(s => s.trim()).filter(Boolean);
-    const pattern = /^(.+?)\s*\(([0-9.]+)\s*(pcs|kg|g|पौधे|किलो|ग्राम)?\)$/i;
-    const result = [];
-
-    parts.forEach(part => {
-      const m = part.match(pattern);
-      if (!m) return;
-      const name = m[1].trim();
-      const rawQty = Number(m[2]) || 0;
-      const unit = String(m[3] || '').toLowerCase();
-      if (rawQty <= 0) return;
-
-      const veg = (unit === 'kg' || unit === 'g' || unit === 'किलो' || unit === 'ग्राम');
-      const qtyInStockUnit = (unit === 'g' || unit === 'ग्राम') ? (rawQty / 1000) : rawQty;
-
-      let matched = (allPlants || []).find(p =>
-        String(p.name || '').trim() === name && Boolean(isVeg(p)) === veg
-      );
-      if (!matched) {
-        matched = (allPlants || []).find(p => String(p.name || '').trim() === name);
-      }
-      result.push({
-        id: matched ? matched.id : null,
-        name: name,
-        qty: qtyInStockUnit,
-        veg: matched ? Boolean(isVeg(matched)) : veg
-      });
-    });
-    return result;
-  }
-
-  async function adjustDatabaseStockForOrder(order, direction) {
-    const { data: currentPlants, error: pErr } = await db.from('plants').select('*');
-    if (pErr || !currentPlants) return false;
-
-    const parsedItems = parseOrderItemsFromText(order, currentPlants);
-    if (!parsedItems.length) return false;
-
-    let allUpdated = true;
-    for (const item of parsedItems) {
-      if (!item.id) continue;
-      const plantRow = currentPlants.find(p => Number(p.id) === Number(item.id));
-      if (!plantRow) continue;
-
-      const currentStock = Number(plantRow.stock_quantity) || 0;
-      const nextStock = Math.max(0, Number((currentStock + (direction * item.qty)).toFixed(3)));
-      plantRow.stock_quantity = nextStock;
-
-      const { data: updatedRows, error: upErr } = await db
-        .from('plants')
-        .update({ stock_quantity: nextStock })
-        .eq('id', plantRow.id)
-        .select('id, stock_quantity');
-
-      if (upErr || !updatedRows || !updatedRows.length) {
-        allUpdated = false;
-      }
-    }
-    return allUpdated;
-  }
-
-  function computePendingDeductionsMap(orders, allPlants) {
-    const map = {};
-    (orders || []).forEach(o => {
-      if (!o || o.status === 'cancelled') return;
-      const notes = String(o.notes || '');
-      if (!notes.includes('STOCK_SYNC:pending') || notes.includes('STOCK_DEDUCTED:1')) return;
-      const items = parseOrderItemsFromText(o, allPlants);
-      items.forEach(it => {
-        if (!it.id) return;
-        map[it.id] = Number(((map[it.id] || 0) + it.qty).toFixed(3));
-      });
-    });
-    return map;
-  }
-
-  // नए ऑर्डर का स्टॉक public.order_requests पर SQL BEFORE INSERT trigger
-  // उसी transaction में रिजर्व करता है। यहाँ 'सबसे नया ऑर्डर' खोजकर दोबारा घटाना नहीं है.
-
-
-  // कस्टमर पैनल (loadPlants) में भी पेंडिंग सिंक वाले ऑर्डर्स का स्टॉक घटाकर दिखाएँ
-  const originalLoadPlants = window.loadPlants;
-  window.loadPlants = async function () {
-    await originalLoadPlants();
-    try {
-      const { data: pendingSyncOrders } = await db
-        .from('order_requests')
-        .select('id, plant_name, status, notes')
-        .ilike('notes', '%STOCK_SYNC:pending%');
-
-      if (!pendingSyncOrders || !pendingSyncOrders.length) return;
-      const deductMap = computePendingDeductionsMap(pendingSyncOrders, plants);
-      if (!Object.keys(deductMap).length) return;
-
-      const cfg = getSiteConfig();
-      document.querySelectorAll('.plant[data-cart-key]').forEach(card => {
-        const key = card.dataset.cartKey || '';
-        const idPart = Number(key.split('-')[1]);
-        const deductQty = deductMap[idPart] || 0;
-        if (!deductQty) return;
-
-        const p = (plants || []).find(x => Number(x.id) === idPart);
-        if (!p) return;
-        const veg = isVeg(p);
-        const isGram = veg && isGramVeg(p);
-        const effectiveStock = Math.max(0, Number(((Number(p.stock_quantity) || 0) - deductQty).toFixed(3)));
-        p.stock_quantity = effectiveStock;
-
-        const stockEl = card.querySelector('.stock-text');
-        if (stockEl) {
-          if (effectiveStock <= 0) {
-            stockEl.innerHTML = 'स्टॉक: <b style="color:#dc2626">0 उपलब्ध</b>';
-          } else if (veg && isGram) {
-            const grams = Math.round(effectiveStock * 1000);
-            stockEl.textContent = 'स्टॉक: ' + (grams >= 1000 ? `${effectiveStock} किलो (${grams}g)` : `${grams} ग्राम`);
-          } else {
-            stockEl.textContent = `स्टॉक: ${effectiveStock} ${veg ? 'किलो' : 'पौधे'}`;
-          }
-        }
-        const qtyInput = card.querySelector('.card-qty-input');
-        if (qtyInput) qtyInput.max = String(effectiveStock);
-        if (effectiveStock <= 0 && cfg.shopStatus !== 'closed') {
-          card.classList.add('sold-out');
-          const buyBtn = card.querySelector('.plant-buy-button');
-          if (buyBtn) {
-            buyBtn.disabled = true;
-            buyBtn.textContent = '🚫 उपलब्ध नहीं';
-          }
-        }
-      });
-    } catch (_) {}
-  };
-
-  // एडमिन पैनल (loadAdminAll) खुलने पर पेंडिंग स्टॉक सिंक को डेटाबेस में पक्का सेव करें
-  const originalLoadAdminAll = window.loadAdminAll;
-  window.loadAdminAll = async function () {
-    try {
-      const { data: pendingSyncOrders } = await db
-        .from('order_requests')
-        .select('*')
-        .ilike('notes', '%STOCK_SYNC:pending%');
-
-      if (pendingSyncOrders && pendingSyncOrders.length) {
-        for (const ord of pendingSyncOrders) {
-          if (ord.status === 'cancelled') continue;
-          const notes = String(ord.notes || '');
-          if (notes.includes('STOCK_DEDUCTED:1')) continue;
-          const legacyItems = parseOrderItemsFromText(ord, plants || []).filter(it => it.id && it.qty > 0);
-          const ok = legacyItems.length > 0 && await adjustDatabaseStockForOrder(ord, -1);
-          if (ok) {
-            const updatedNotes = notes.replace('STOCK_SYNC:pending', 'STOCK_DEDUCTED:1');
-            const { error: markError } = await db.from('order_requests').update({
-              notes: updatedNotes,
-              stock_items: legacyItems.map(it => ({ id: String(it.id), qty: Number(it.qty) })),
-              stock_reserved: true,
-              stock_restored: false
-            }).eq('id', ord.id);
-            if (markError) {
-              // Roll the legacy deduction back if its once-only marker could not be saved.
-              await adjustDatabaseStockForOrder(ord, +1);
-              console.error('Legacy stock reservation marker failed; stock deduction rolled back:', markError);
-            }
-          }
-        }
-      }
-    } catch (_) {}
-    await originalLoadAdminAll();
-  };
-
-  // एडमिन द्वारा "✅ कन्फर्म" दबाने पर यदि उस ऑर्डर का स्टॉक अभी तक नहीं घटा है तो तुरंत घटाएँ
-  window.confirmOrderSimple = async function (event, orderId) {
-    if (event) { event.preventDefault(); event.stopPropagation(); }
-    if (!confirm(`क्या आप ऑर्डर #${orderId} कन्फर्म करना चाहते हैं?`)) return;
-    const btn = event && event.target;
-    if (btn) { btn.disabled = true; btn.textContent = 'प्रोसेसिंग…'; }
-    try {
-      const { data: ord, error: fetchErr } = await db.from('order_requests').select('*').eq('id', orderId).single();
-      if (fetchErr) throw fetchErr;
-      if (ord.status === 'cancelled') throw new Error('रद्द ऑर्डर कन्फर्म नहीं किया जा सकता।');
-      let notes = String(ord.notes || '');
-      if (!ord.stock_reserved && !notes.includes('STOCK_DEDUCTED:1')) {
-        const legacyItems = parseOrderItemsFromText(ord, plants || []).filter(it => it.id && it.qty > 0);
-        if (!legacyItems.length || !(await adjustDatabaseStockForOrder(ord, -1))) {
-          throw new Error('पुराने ऑर्डर का स्टॉक रिजर्व नहीं हो पाया। स्टॉक जाँचें।');
-        }
-        notes = notes.replace('STOCK_SYNC:pending', '').trim() + ' | STOCK_DEDUCTED:1';
-        const { error: markError } = await db.from('order_requests').update({
-          notes,
-          stock_items: legacyItems.map(it => ({ id: String(it.id), qty: Number(it.qty) })),
-          stock_reserved: true,
-          stock_restored: false
-        }).eq('id', orderId);
-        if (markError) throw markError;
-      }
-      const { error: ordErr } = await db.from('order_requests').update({ status: 'confirmed', notes }).eq('id', orderId);
-      if (ordErr) throw ordErr;
-      stopLoudAlert();
-      await window.loadAdminAll();
-      await window.loadPlants();
-      alert('✅ ऑर्डर कन्फर्म हो गया! ऑर्डर बनते समय स्टॉक पहले ही रिजर्व हो चुका है।');
-    } catch (e) {
-      alert('त्रुटि: ' + e.message);
-      if (btn) { btn.disabled = false; btn.textContent = '✅ कन्फर्म'; }
-    }
-  };
-
-
-  // एडमिन द्वारा "❌ रद्द करें" दबाने पर घटा हुआ स्टॉक वापस जोड़ें
-  window.cancelOrderPrompt = async function (event, orderId, existingNotes) {
-    if (event) { event.preventDefault(); event.stopPropagation(); }
-    const reason = prompt(
-      'कृपया ऑर्डर रद्द करने का कारण चुनें या लिखें:\n\n1. फर्जी भुगतान स्क्रीनशॉट / UTR नंबर अमान्य\n2. स्टॉक में माल उपलब्ध नहीं है\n3. गलत पता या संपर्क नंबर\n4. अन्य कारण',
-      'फर्जी भुगतान स्क्रीनशॉट / UTR नंबर अमान्य'
-    );
-    if (reason === null) return;
-    const cleanReason = reason.trim() || 'अन्य कारण';
-    const btn = event && event.target;
-    if (btn) { btn.disabled = true; btn.textContent = 'रद्द हो रहा है…'; }
-    try {
-      const { data: ord, error: fetchErr } = await db
-        .from('order_requests').select('*').eq('id', orderId).single();
-      if (fetchErr) throw fetchErr;
-      if (ord.status === 'cancelled') {
-        alert('यह ऑर्डर पहले ही रद्द हो चुका है। स्टॉक दोबारा नहीं जोड़ा जाएगा।');
-        if (btn) btn.disabled = false;
-        return;
-      }
-      if (isOrderDelivered(ord)) {
-        throw new Error('डिलीवर हो चुके ऑर्डर को रद्द नहीं किया जा सकता।');
-      }
-      let notes = String(ord.notes || existingNotes || '');
-      if (!notes.includes('CANCEL_REASON:')) notes += ' | CANCEL_REASON:' + cleanReason;
-      // SQL UPDATE trigger स्टॉक को उसी transaction में एक बार वापस जोड़ता है।
-      const { data: updated, error } = await db.from('order_requests')
-        .update({ status: 'cancelled', notes })
-        .eq('id', orderId).neq('status', 'cancelled')
-        .select('id,status,stock_reserved,stock_restored').maybeSingle();
-      if (error) throw error;
-      if (!updated) throw new Error('ऑर्डर की स्थिति नहीं बदली। पेज रिफ्रेश करके फिर जाँचें।');
-      if (updated.stock_reserved && !updated.stock_restored) {
-        throw new Error('ऑर्डर रद्द हुआ, लेकिन स्टॉक वापसी की पुष्टि नहीं मिली। Supabase Stock Reserve SQL और trigger जाँचें।');
-      }
-      stopLoudAlert();
-      await window.loadAdminAll();
-      await window.loadPlants();
-      alert(`❌ ऑर्डर #${orderId} रद्द हो गया। रिजर्व किया गया स्टॉक अपने आप एक बार वापस जुड़ गया।`);
-    } catch (e) {
-      alert('रद्द करने में त्रुटि: ' + e.message);
-      if (btn) { btn.disabled = false; btn.textContent = '❌ रद्द करें'; }
-    }
-  };
-
-
-  // बिक्री हिसाब (loadSalesLedger) में कुल बिके पौधे और कुल बिकी सब्ज़ी की सही गिनती दिखाएँ
-  window.loadSalesLedger = async function () {
-    const pBox = document.getElementById('salesPlantRecords');
-    const vBox = document.getElementById('salesVegRecords');
-    const allList = document.getElementById('ownerSalesList');
-
-    pBox.innerHTML = 'लोड हो रहा है…';
-    vBox.innerHTML = 'लोड हो रहा है…';
-    allList.innerHTML = 'लोड हो रहा है…';
-
-    try {
-      const [ordersRes, plantsRes] = await Promise.all([
-        db.from('order_requests').select('*').order('created_at', { ascending: false }),
-        db.from('plants').select('*').order('name')
-      ]);
-      if (ordersRes.error) throw ordersRes.error;
-
-      const allPlants = plantsRes.data || plants || [];
-      const confirmedOrDelivered = (ordersRes.data || []).filter(
-        o => o.status === 'confirmed' || isOrderDelivered(o)
-      );
-
-      let totalRevenue = 0;
-      let totalPlantsSold = 0;
-      let totalVegSoldKg = 0;
-      const plantSummary = {};
-      const vegSummary = {};
-
-      confirmedOrDelivered.forEach(o => {
-        totalRevenue += Number(o.unit_price || 0);
-        const items = parseOrderItemsFromText(o, allPlants);
-        items.forEach(it => {
-          if (it.veg) {
-            totalVegSoldKg += it.qty;
-            vegSummary[it.name] = Number(((vegSummary[it.name] || 0) + it.qty).toFixed(3));
-          } else {
-            totalPlantsSold += it.qty;
-            plantSummary[it.name] = Math.round((plantSummary[it.name] || 0) + it.qty);
-          }
-        });
-      });
-
-      document.getElementById('salesTotalRevenue').textContent = '₹' + totalRevenue.toFixed(2);
-      document.getElementById('salesTotalPlants').textContent = String(Math.round(totalPlantsSold)) + ' पौधे';
-      document.getElementById('salesTotalVeg').textContent = totalVegSoldKg.toFixed(2) + ' किलो';
-      document.getElementById('salesTotalOrders').textContent = String(confirmedOrDelivered.length);
-
-      const pEntries = Object.entries(plantSummary);
-      pBox.innerHTML = pEntries.length
-        ? pEntries.map(([name, qty]) => `<div class="sale-row"><span>🌱 ${safe(name)}</span><strong>${qty} पौधे</strong></div>`).join('')
-        : '<p style="color:var(--muted)">अभी कोई पौधा बिक्री रिकॉर्ड नहीं है।</p>';
-
-      const vEntries = Object.entries(vegSummary);
-      vBox.innerHTML = vEntries.length
-        ? vEntries.map(([name, qty]) => `<div class="sale-row"><span>🥬 ${safe(name)}</span><strong>${qty} किलो</strong></div>`).join('')
-        : '<p style="color:var(--muted)">अभी कोई सब्ज़ी बिक्री रिकॉर्ड नहीं है।</p>';
-
-      allList.innerHTML = confirmedOrDelivered.length ? confirmedOrDelivered.map(o => {
-        const total = Number(o.unit_price || 0).toFixed(2);
-        const isDel = isOrderDelivered(o);
-        return `
-          <div class="sale-row" style="padding:10px 4px;border-bottom:1px solid #eef2eb">
-            <div>
-              <strong>#${o.id} - ${safe(o.plant_name)}</strong>
-              <span style="font-size:11px;font-weight:700;padding:2px 6px;border-radius:10px;margin-left:6px;background:${isDel ? '#dbeafe;color:#1e40af' : '#dcfce7;color:#166534'}">${isDel ? '🚚 डिलीवर' : '✅ कन्फर्म'}</span>
-              <div style="font-size:13px;color:var(--muted)">ग्राहक: ${safe(o.customer_name)} | 📞 ${safe(o.customer_phone)}</div>
-            </div>
-            <div style="font-size:16px;font-weight:800;color:var(--green)">₹${total}</div>
-          </div>`;
-      }).join('') : '<p style="color:var(--muted)">कोई रसीद नहीं है।</p>';
-    } catch (err) {
-      allList.innerHTML = '<div class="status">त्रुटि: ' + err.message + '</div>';
-    }
-  };
-})();
-
-// ग्राहक और एडमिन दोनों के खुले पेज पर स्टॉक बदलाव तुरंत दिखाएँ (Supabase Realtime enabled होना चाहिए).
-(function setupNurseryStockRealtime(){
-  if (typeof db === 'undefined' || !db || typeof db.channel !== 'function') return;
-  let refreshBusy = false;
-  let refreshAgain = false;
-  const refresh = async () => {
-    if (document.visibilityState === 'hidden') return;
-    if (refreshBusy) { refreshAgain = true; return; }
-    refreshBusy = true;
-    try {
-      if (typeof window.loadPlants === 'function') await window.loadPlants();
-      if (document.body.classList.contains('admin-authenticated') && typeof window.loadAdminAll === 'function') {
-        await window.loadAdminAll();
-      }
-    } catch (err) { console.warn('Live stock refresh failed:', err); }
-    finally {
-      refreshBusy = false;
-      if (refreshAgain) { refreshAgain = false; refresh(); }
-    }
-  };
-  try {
-    db.channel('nursery-live-stock')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'plants' }, refresh)
-      .subscribe();
-    window.addEventListener('focus', refresh);
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
-  } catch (err) { console.warn('Supabase stock realtime is unavailable:', err); }
-})();
 
 applySiteConfigToUI();
 loadPlants();
@@ -5538,86 +5497,6 @@ loadPlants();
 </style>
 
 
-
-
-<script id="website-code-studio-script">
-(function(){
-  const byId = id => document.getElementById(id);
-  const fields = {html:byId('codeStudioHtml'),css:byId('codeStudioCss'),js:byId('codeStudioJs')};
-  if (!fields.html || !fields.css || !fields.js) return;
-  const status = byId('codeStudioStatus');
-  const DRAFT_KEY = 'neem_nursery_code_studio_draft_v1';
-  const BACKUP_KEY = 'neem_nursery_code_studio_backup_v1';
-  let activeTab = 'html';
-  function values(){return {html:fields.html.value,css:fields.css.value,js:fields.js.value,updatedAt:new Date().toISOString()};}
-  function applyPublishedCode(v){
-    if(!v)return;
-    let root=byId('chatgptCustomHtmlRoot');
-    if((v.html||'').trim()){
-      if(!root){root=document.createElement('div');root.id='chatgptCustomHtmlRoot';const footer=document.querySelector('body > footer');document.body.insertBefore(root,footer||null);}
-      root.innerHTML=v.html;
-    }
-    if(typeof v.css==='string'&&v.css.trim()){
-      let style=byId('chatgptCustomCssLive');if(!style){style=document.createElement('style');style.id='chatgptCustomCssLive';document.head.appendChild(style);}style.textContent=v.css;
-    }
-    if(typeof v.js==='string'&&v.js.trim()){
-      const previous=byId('chatgptCustomJsLive');if(previous)previous.remove();
-      const script=document.createElement('script');script.id='chatgptCustomJsLive';script.text=v.js;document.body.appendChild(script);
-    }
-  }
-  // हर ग्राहक के पेज पर Supabase से Admin द्वारा प्रकाशित अपडेट पढ़ें। टेबल न बनी हो तो मूल वेबसाइट चलती रहेगी।
-  (async()=>{try{if(typeof db==='undefined')return;const {data,error}=await db.from('site_code_updates').select('html,css,js').eq('id',1).maybeSingle();if(!error&&data)applyPublishedCode(data);}catch(e){console.warn('Nursery code update not loaded:',e.message);}})();
-  byId('codeStudioCopySql').addEventListener('click',async()=>{const sql=byId('codeStudioSqlSetup').value;try{await navigator.clipboard.writeText(sql);setStatus('Supabase SQL कॉपी हो गया। इसे SQL Editor में Run करें।','ok');}catch(e){byId('codeStudioSqlSetup').focus();byId('codeStudioSqlSetup').select();setStatus('SQL टेक्स्ट चुना गया है; Ctrl+C दबाकर कॉपी करें।','ok');}});
-  byId('codeStudioPublish').addEventListener('click',async()=>{
-    const v=values();if(!v.html.trim()&&!v.css.trim()&&!v.js.trim()){setStatus('Publish करने से पहले कोड पेस्ट करें।','error');return;}
-    if(!confirm('यह कोड सभी वेबसाइट विज़िटर के लिए लाइव होगा। गलत कोड वेबसाइट का लेआउट या फंक्शन बिगाड़ सकता है। क्या आपने Preview और Backup जाँच लिया है?'))return;
-    try{
-      const {data:userData,error:userError}=await db.auth.getUser();
-      if(userError||!userData.user||userData.user.id!==OWNER_UID){setStatus('Publish के लिए पहले अपने Owner Admin खाते से लॉगिन करें।','error');return;}
-      const {error}=await db.from('site_code_updates').upsert({id:1,html:v.html,css:v.css,js:v.js,updated_at:new Date().toISOString(),updated_by:OWNER_UID},{onConflict:'id'});
-      if(error)throw error;
-      applyPublishedCode(v);setStatus('ऑनलाइन Publish सफल। वेबसाइट के नए/रिफ्रेश हुए पेज पर ग्राहकों को अपडेट मिलेगा।','ok');
-    }catch(e){setStatus('Publish नहीं हुआ। Supabase में SQL सेटअप/Policy जाँचें: '+e.message,'error');}
-  });
-  function setStatus(message,kind){status.textContent=message;status.style.background=kind==='error'?'#fee2e2':kind==='ok'?'#dcfce7':'#f1f5f9';status.style.color=kind==='error'?'#991b1b':kind==='ok'?'#166534':'#334155';}
-  function showTab(tab){activeTab=tab;Object.keys(fields).forEach(k=>{fields[k].hidden=k!==tab;});document.querySelectorAll('.code-studio-tab').forEach(b=>b.classList.toggle('active',b.dataset.codeTab===tab));}
-  document.querySelectorAll('.code-studio-tab').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.codeTab)));
-  try{const saved=JSON.parse(localStorage.getItem(DRAFT_KEY)||'null');if(saved){fields.html.value=saved.html||'';fields.css.value=saved.css||'';fields.js.value=saved.js||'';setStatus('पिछला सेव किया हुआ ड्राफ्ट लोड हो गया।','ok');}}catch(e){setStatus('पुराना ड्राफ्ट पढ़ा नहीं जा सका।','error');}
-  byId('codeStudioSaveDraft').addEventListener('click',()=>{try{localStorage.setItem(DRAFT_KEY,JSON.stringify(values()));setStatus('ड्राफ्ट इसी ब्राउज़र में सेव हो गया।','ok');}catch(e){setStatus('ड्राफ्ट सेव नहीं हुआ: '+e.message,'error');}});
-  byId('codeStudioBackup').addEventListener('click',()=>{try{localStorage.setItem(BACKUP_KEY,JSON.stringify(values()));setStatus('कोड का बैकअप इसी ब्राउज़र में बन गया।','ok');}catch(e){setStatus('बैकअप नहीं बन पाया: '+e.message,'error');}});
-  byId('codeStudioRestore').addEventListener('click',()=>{try{const b=JSON.parse(localStorage.getItem(BACKUP_KEY)||'null');if(!b){setStatus('अभी कोई बैकअप उपलब्ध नहीं है।','error');return;}fields.html.value=b.html||'';fields.css.value=b.css||'';fields.js.value=b.js||'';setStatus('बैकअप वापस लाया गया।','ok');}catch(e){setStatus('बैकअप पढ़ने में समस्या: '+e.message,'error');}});
-  function previewDoc(){const v=values();return '<!doctype html><html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:Arial,sans-serif;padding:14px;color:#14341f}'+v.css.replace(/<\/style/gi,'<\\/style')+'</style></head><body>'+v.html+'<script>try{'+v.js.replace(/<\/script/gi,'<\\/script')+'}catch(e){document.body.insertAdjacentHTML("beforeend","<pre style=\"color:#b91c1c\">JS Error: "+String(e)+"</pre>") }<\/script></body></html>';}
-  byId('codeStudioPreview').addEventListener('click',()=>{try{byId('codeStudioPreviewFrame').srcdoc=previewDoc();setStatus('प्रीव्यू तैयार है। यह अलग सुरक्षित विंडो में दिखता है।','ok');}catch(e){setStatus('प्रीव्यू नहीं बन पाया: '+e.message,'error');}});
-  byId('codeStudioApply').addEventListener('click',()=>{
-    const v=values();
-    if(!v.html.trim()&&!v.css.trim()&&!v.js.trim()){setStatus('पहले कोई कोड पेस्ट करें।','error');return;}
-    try { if(v.js.trim()) new Function(v.js); } catch(e) { setStatus('JavaScript में syntax error है: '+e.message,'error'); return; }
-    if(!confirm('यह कोड केवल अभी खुले ब्राउज़र में लागू होगा। JavaScript चल सकता है। क्या आप भरोसेमंद कोड लागू करना चाहते हैं?'))return;
-    try{
-      let root=byId('chatgptCustomHtmlRoot');if(!root){root=document.createElement('div');root.id='chatgptCustomHtmlRoot';const footer=document.querySelector('body > footer');document.body.insertBefore(root,footer||null);}
-      root.innerHTML=v.html;
-      let style=byId('chatgptCustomCssLive');if(!style){style=document.createElement('style');style.id='chatgptCustomCssLive';document.head.appendChild(style);}style.textContent=v.css;
-      const old=byId('chatgptCustomJsLive');if(old)old.remove();
-      if(v.js.trim()){const script=document.createElement('script');script.id='chatgptCustomJsLive';script.text=v.js;document.body.appendChild(script);}
-      setStatus('कोड इस ब्राउज़र में लागू हुआ। स्थायी ग्राहक अपडेट के लिए अपडेटेड HTML डाउनलोड करके होस्टिंग पर अपलोड करें।','ok');
-    }catch(e){setStatus('कोड लागू करते समय त्रुटि: '+e.message,'error');}
-  });
-  byId('codeStudioExport').addEventListener('click',()=>{
-    try{
-      const v=values();let source='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
-      const cssBlock=v.css.trim()?'\n<style id="chatgpt-custom-css">\n'+v.css.replace(/<\/style/gi,'<\\/style')+'\n</style>\n':'';
-      const htmlBlock=v.html.trim()?'\n<!-- ChatGPT Custom HTML -->\n<div id="chatgptCustomHtmlRoot">\n'+v.html+'\n</div>\n':'';
-      const jsBlock=v.js.trim()?'\n<script id="chatgpt-custom-js">\n'+v.js.replace(/<\/script/gi,'<\\/script')+'\n<\/script>\n':'';
-      source=source.replace('</head>',cssBlock+'</head>');
-      source=source.replace(/<footer\b/i,htmlBlock+'<footer');
-      source=source.replace('</body>',jsBlock+'</body>');
-      const blob=new Blob([source],{type:'text/html;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='neem_nursery_updated.html';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
-      setStatus('अपडेटेड HTML फाइल डाउनलोड शुरू हुई। इसे होस्टिंग पर अपलोड करने के बाद ही सभी ग्राहकों को बदलाव दिखेगा।','ok');
-    }catch(e){setStatus('HTML फाइल तैयार नहीं हुई: '+e.message,'error');}
-  });
-  byId('codeStudioClear').addEventListener('click',()=>{if(!confirm('तीनों कोड बॉक्स खाली करने हैं? पहले ड्राफ्ट सेव कर लें।'))return;Object.values(fields).forEach(f=>f.value='');setStatus('तीनों कोड बॉक्स साफ कर दिए गए।','ok');});
-})();
-</script>
 
 </body>
 </html>
