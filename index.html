@@ -2468,438 +2468,181 @@ body.info-fullscreen-open > main > .nav-page-open {
     </div>
 
     <!-- 7. ⚙️ वेबसाइट मास्टर स्टूडियो (Settings CMS) -->
-    <div id="adminSettingsPane" class="admin-pane">
+    <div <div id="adminSettingsPane" class="admin-pane">
       <div class="admin-pane-header">
         <div>
           <h2>⚙️ वेबसाइट मास्टर स्टूडियो (CMS कंट्रोल)</h2>
-          <small>दुकान खोलने/बंद करने, ऑफर, डिलीवरी, UPI और ब्रांडिंग को यहाँ से नियंत्रित करें</small>
+          <small>वेबसाइट की दुकान, डिलीवरी, पेमेंट, ब्रांडिंग और सभी फीचर्स को यहाँ व्यवस्थित रूप से नियंत्रित करें</small>
         </div>
-      </div>
-
-      <div class="settings-subtabs">
-        <button type="button" class="settings-subtab active" data-subtab="shop">🏪 1. दुकान &amp; सेल</button>
-        <button type="button" class="settings-subtab" data-subtab="notice">📢 2. लाइव सूचना</button>
-        <button type="button" class="settings-subtab" data-subtab="payment">💳 3. UPI पेमेंट</button>
-        <button type="button" class="settings-subtab" data-subtab="delivery">🚚 4. डिलीवरी नियम</button>
-        <button type="button" class="settings-subtab" data-subtab="branding">🎨 5. थीम &amp; समय</button>
-        <button type="button" class="settings-subtab" data-subtab="widget">💬 6. WhatsApp &amp; कूपन</button>
-        <button type="button" class="settings-subtab" data-subtab="preview">👁️ 7. लाइव प्रीव्यू</button>
-        <button type="button" class="settings-subtab" data-subtab="addons">🥤 8. एड-ऑन्स व डिस्पोजल</button>
-        <button type="button" class="settings-subtab" data-subtab="complete">🧭 9. पूरा वेबसाइट कंट्रोल</button>
+        <button type="button" id="masterCmsSaveBtn" class="admin-primary-submit" style="max-width:240px;margin:0">💾 सभी सेटिंग्स सेव करें</button>
       </div>
 
       <form id="siteSettingsForm">
-        <!-- टैब 1: दुकान & सेल -->
-        <div id="subpane-shop" class="settings-subpane active">
-          <div style="background:#f4fbf7;border:1px solid #d1fae5;border-radius:14px;padding:14px;margin-bottom:14px">
-            <h4 style="margin:0 0 10px;color:var(--deep)">📐 होमपेज कॉलम लेआउट कंट्रोल (Product Column Display)</h4>
-            <div class="admin-form-grid" style="margin:0">
-              <div>
-                <label>🌱 पौधों की सूची के कॉलम (Plants Columns)</label>
-                <select id="settingPlantCols">
-                  <option value="2">2 कॉलम (बड़े कार्ड)</option>
-                  <option value="3" selected>3 कॉलम (संतुलित)</option>
-                  <option value="4">4 कॉलम (डेस्कटॉप शैली)</option>
-                </select>
-              </div>
-              <div>
-                <label>🥬 सब्ज़ियों की सूची के कॉलम (Veg Columns)</label>
-                <select id="settingVegCols">
-                  <option value="2">2 कॉलम</option>
-                  <option value="3" selected>3 कॉलम</option>
-                  <option value="4">4 कॉलम</option>
-                </select>
-              </div>
-              <div>
-                <label>🛒 किराना व केक के कॉलम (Grocery Columns)</label>
-                <select id="settingGroceryCols">
-                  <option value="2">2 कॉलम</option>
-                  <option value="3" selected>3 कॉलम</option>
-                  <option value="4">4 कॉलम</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="admin-col-header">
-            <h3>🏪 दुकान स्थिति व न्यूनतम पौधे आर्डर सीमा</h3>
-            <span class="admin-count-pill">स्टोर कंट्रोल</span>
-          </div>
-          <div class="admin-form-grid">
-            <div>
-              <label>🌱 पौधों की न्यूनतम खरीद मात्रा (Minimum Plant Qty)</label>
-              <input id="settingMinPlantQty" type="number" min="1" value="25" style="font-weight:800;color:var(--green)">
-              <small style="color:var(--muted);font-size:11.5px">ग्राहक होमपेज पर कम से कम जितने पौधे चुन सके (जैसे 25)</small>
-            </div>
-            <div>
-              <label>🥬 सब्जियों की न्यूनतम खरीद मात्रा (किलो)</label>
-              <input id="settingMinVegQty" type="number" min="0.25" step="0.25" value="1" style="font-weight:800;color:var(--green)">
-              <small style="color:var(--muted);font-size:11.5px">जैसे 0.5 = आधा किलो, 1 = एक किलो</small>
-            </div>
-            <div>
-              <label>🛒 किराना / केक / कोल्ड ड्रिंक की न्यूनतम मात्रा (पीस/पैक)</label>
-              <input id="settingMinGroceryQty" type="number" min="1" step="1" value="1" style="font-weight:800;color:var(--green)">
-              <small style="color:var(--muted);font-size:11.5px">जैसे 1 = एक पीस या एक पैक</small>
-            </div>
-            <div>
-              <label>🏪 दुकान की स्थिति (Nursery Open / Close)</label>
-              <select id="settingShopStatus">
-                <option value="open">🟢 खुली है (ग्राहकों के आर्डर चालू हैं)</option>
-                <option value="closed">🔴 आज बंद है (सूचना दिखेगी, आर्डर बटन लॉक रहेंगे)</option>
-              </select>
-            </div>
-            <div class="full-span">
-              <label>🎉 विशेष डिस्काउंट ऑफर (सीधा प्रतिशत छूट)</label>
-              <select id="settingDiscountPercent">
-                <option value="0">कोई छूट नहीं (0% Normal)</option>
-                <option value="10">🎉 10% की सीधी छूट</option>
-                <option value="15">🎉 15% की सीधी छूट</option>
-                <option value="20">🎉 20% की सुपर छूट</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- टैब 2: लाइव सूचना -->
-        <div id="subpane-notice" class="settings-subpane">
-          <div class="admin-col-header">
-            <h3>📢 चलती हुई लाइव सूचना पट्टी (Marquee Alert Ticker)</h3>
-            <span class="admin-count-pill">टॉप बैनर</span>
-          </div>
-          <div class="admin-form-grid">
-            <div>
-              <label>सूचना पट्टी चालू रखें?</label>
-              <select id="settingTickerStatus">
-                <option value="on">✅ चालू है (वेबसाइट के शीर्ष पर स्क्रॉल होगी)</option>
-                <option value="off">❌ बंद रखें</option>
-              </select>
-            </div>
-            <div class="full-span">
-              <label>सूचना संदेश (Ticker Text)</label>
-              <input id="settingTickerText" value="🌱 कल सुबह ताज़ा खीरा और टमाटर उपलब्ध रहेगा - अभी बुक करें!">
-            </div>
-          </div>
-        </div>
-
-        <!-- टैब 3: UPI पेमेंट -->
-        <div id="subpane-payment" class="settings-subpane">
-          <div class="admin-col-header">
-            <h3>💳 UPI भुगतान व खाताधारक सेटिंग्स</h3>
-            <span class="admin-count-pill">पेमेंट रिसीवर</span>
-          </div>
-          <div class="admin-form-grid">
-            <div>
-              <label>आपकी UPI ID (जिस पर ग्राहक पेमेंट करेंगे)</label>
-              <input id="settingUpiId" required value="BHARATPE2H0E0T6Z3P47445@unitype">
-            </div>
-            <div>
-              <label>खाताधारक / नर्सरी मालिक का नाम</label>
-              <input id="settingUpiName" required value="ANIL KUMAR MEENA">
-            </div>
-          </div>
-        </div>
-
-        <!-- टैब 4: डिलीवरी & मुफ़्त ऑफर -->
-        <div id="subpane-delivery" class="settings-subpane">
-          <div class="admin-col-header">
-            <h3>🚚 डिलीवरी नियम व मुफ़्त दूरी कंट्रोल</h3>
-            <span class="admin-count-pill">GPS आधारित</span>
-          </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px">
           
-          <div style="background:#f4fbf7;border:1px solid #d1fae5;border-radius:14px;padding:14px;margin-bottom:14px">
-            <h4 style="margin:0 0 10px;color:var(--deep)">🌱 नर्सरी पौधे के डिलीवरी नियम</h4>
-            <div class="mandi-grid" style="margin:0">
-              <div>
-                <label>फ्री डिलीवरी दूरी (किमी)</label>
-                <input id="settingPlantFreeKm" type="number" min="0" value="5">
-              </div>
-              <div>
-                <label>आगे की दर (₹/किमी)</label>
-                <input id="settingPlantDeliveryRate" type="number" min="0" value="10">
-              </div>
-              <div>
-                <label>अधिकतम दूरी (किमी)</label>
-                <input id="settingPlantMaxDistance" type="number" min="1" value="50">
-              </div>
-              <div>
-                <label>न्यूनतम आर्डर (₹)</label>
-                <input id="settingPlantMinOrder" type="number" min="0" value="50">
-              </div>
+          <!-- फोल्डर 1: 🏪 स्टोर व सेल कंट्रोल -->
+          <div class="admin-subcard" style="background:#fbfefc;border:1px solid #d8eadc;border-radius:18px;padding:18px;box-shadow:0 4px 16px rgba(6,78,59,.05)">
+            <div class="admin-col-header" style="margin-bottom:14px">
+              <h3 style="margin:0;color:#123b27;font-size:17px">🏪 1. स्टोर व सेल कंट्रोल</h3>
+              <span class="admin-count-pill">दुकान स्थिति</span>
             </div>
-          </div>
-
-          <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:14px">
-            <h4 style="margin:0 0 10px;color:#b45309">🥬 ताज़ी सब्जियों के डिलीवरी नियम</h4>
-            <div class="mandi-grid" style="margin:0">
-              <div>
-                <label>फ्री डिलीवरी दूरी (किमी)</label>
-                <input id="settingVegFreeKm" type="number" min="0" value="10">
-              </div>
-              <div>
-                <label>आगे की दर (₹/किमी)</label>
-                <input id="settingVegDeliveryRate" type="number" min="0" value="10">
-              </div>
-              <div>
-                <label>अधिकतम दूरी (किमी)</label>
-                <input id="settingVegMaxDistance" type="number" min="1" value="30">
-              </div>
-              <div>
-                <label>न्यूनतम आर्डर (₹)</label>
-                <input id="settingVegMinOrder" type="number" min="0" value="50">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- टैब 5: थीम & समय -->
-        <div id="subpane-branding" class="settings-subpane">
-          <div class="admin-col-header">
-            <h3>🎨 ब्रांडिंग, संपर्क नंबर, समय व रंग थीम</h3>
-            <span class="admin-count-pill">हेडर व फुटर</span>
-          </div>
-          <div class="admin-form-grid">
-            <div>
-              <label>नर्सरी का नाम</label>
-              <input id="settingNurseryName" required value="श्री नीम करोली महाराज ग्रीन नर्सरी">
-            </div>
-            <div>
-              <label>टैगलाइन / स्लोगन</label>
-              <input id="settingNurseryTagline" required value="हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए">
-            </div>
-            <div>
-              <label>नर्सरी का पता</label>
-              <input id="settingNurseryAddress" required value="मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान">
-            </div>
-            <div>
-              <label>मुख्य फ़ोन व WhatsApp नंबर</label>
-              <input id="settingPhone" type="tel" required value="9887666626">
-            </div>
-            <div>
-              <label>दुकान का समय (Opening Hours)</label>
-              <input id="settingOpeningHours" value="सुबह 07:00 AM से शाम 10:00 PM">
-            </div>
-            <div>
-              <label>वेबसाइट थीम कलर (Theme Color)</label>
-              <select id="settingThemeColor">
-                <option value="classic">🌿 क्लासिक डार्क ग्रीन (Classic Green)</option>
-                <option value="fresh">🍃 फ्रेश लाइट ग्रीन (Fresh Mint)</option>
-                <option value="gold">🌾 गोल्डन फार्म (Golden Farm)</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- टैब 6: WhatsApp & कूपन -->
-        <div id="subpane-widget" class="settings-subpane">
-          <div class="admin-col-header">
-            <h3>💬 फ़्लोटिंग WhatsApp विजेट व कूपन कोड</h3>
-            <span class="admin-count-pill">ग्राहक चैट</span>
-          </div>
-          <div class="admin-form-grid">
-            <div>
-              <label>फ़्लोटिंग गोल WhatsApp बटन स्क्रीन पर रखें?</label>
-              <select id="settingWaWidget">
-                <option value="on">✅ चालू रखें (कोने में हरा बटन दिखेगा)</option>
-                <option value="off">❌ बंद रखें</option>
-              </select>
-            </div>
-            <div>
-              <label>गुप्त कूपन कोड (Promo Code)</label>
-              <input id="settingCouponCode" value="KISAN20" placeholder="जैसे KISAN20">
-            </div>
-          </div>
-        </div>
-
-
-        <!-- टैब 8: एड-ऑन्स व डिस्पोजल मैनेजर -->
-        <div id="subpane-addons" class="settings-subpane">
-          <div class="admin-col-header">
-            <h3>🥤 कोल्ड ड्रिंक्स व केक के साथ दिखने वाले एड-ऑन्स (डिस्पोजल, कुरकुरा आदि)</h3>
-            <span class="admin-count-pill">कस्टम ऐड-ऑन्स</span>
-          </div>
-          <p style="font-size:13px;color:var(--muted);margin-bottom:12px">यहाँ आप नए एड-ऑन्स (जैसे डिस्पोजल ग्लास, प्लेट, नमकीन, कुरकुरा) और उनकी कीमत सेट कर सकते हैं, जो ग्राहक को कोल्ड ड्रिंक और केक के नीचे अपने आप दिखाई देंगे।</p>
-          <div class="admin-form-grid" style="margin-bottom:12px">
-            <div>
-              <label>🥤 आइटम का नाम (जैसे डिस्पोजल ग्लास)</label>
-              <input id="newAddonNameInput" placeholder="जैसे डिस्पोजल ग्लास (10 पीस)">
-            </div>
-            <div>
-              <label>💰 कीमत (₹)</label>
-              <input id="newAddonPriceInput" type="number" min="0" step="1" placeholder="जैसे 20">
-            </div>
-            <div style="display:flex;align-items:flex-end">
-              <button type="button" id="addNewAddonBtn" class="admin-primary-submit" style="margin:6px 0 10px">➕ नया एड-ऑन जोड़ें</button>
-            </div>
-          </div>
-          <div id="adminAddonsListContainer" style="margin-top:12px"></div>
-        </div>
-
-
-        <!-- टैब 7: लाइव प्रीव्यू -->
-        <div id="subpane-preview" class="settings-subpane">
-          <div class="admin-col-header">
-            <h3>👁️ लाइव प्रीव्यू (ग्राहक को वेबसाइट पर कैसा दिखेगा)</h3>
-            <span class="admin-count-pill">लाइव झलक</span>
-          </div>
-          <div style="border:2px dashed #34d399;border-radius:16px;padding:16px;background:linear-gradient(135deg,#064e2b,#08783c);color:#fff;box-shadow:0 6px 18px rgba(6,78,59,.15)">
-            <div id="prevTicker" style="background:rgba(0,0,0,.28);color:#fef08a;padding:6px 12px;font-size:12.5px;font-weight:800;border-radius:8px;margin-bottom:8px">📢 सूचना: कल सुबह ताज़ा खीरा और टमाटर उपलब्ध रहेगा!</div>
-            <div id="prevOffer" style="background:#d97706;color:#fff;padding:6px 12px;font-size:13px;font-weight:800;border-radius:8px;margin-bottom:10px">🎉 विशेष ऑफर: 20% की छूट लागू है!</div>
-            <h4 id="prevName" style="margin:4px 0;color:#fff;font-size:19px">🌱 श्री नीम करोली महाराज ग्रीन नर्सरी</h4>
-            <p id="prevAddress" style="margin:4px 0;font-size:13px;color:#d1fae5">📍 मीणा की ढाणी, चारावास | 📞 9887666626</p>
-            <p id="prevHours" style="margin:4px 0 0;font-size:12px;color:#fef08a;font-weight:700">⏰ समय: सुबह 07:00 AM से शाम 10:00 PM</p>
-          </div>
-        </div>
-
-        <button type="submit" class="admin-primary-submit" style="margin-top:14px">💾 सभी सेटिंग्स सुरक्षित व वेबसाइट पर लागू करें</button>
-              <div id="subpane-complete" class="settings-subpane">
-          <div style="background:linear-gradient(135deg,#064e3b,#0f766e);color:#fff;padding:18px;border-radius:16px;margin-bottom:16px;box-shadow:0 6px 20px rgba(6,78,59,.15)">
-            <strong style="font-size:18px;display:block;margin-bottom:4px">🧭 वेबसाइट मास्टर कंट्रोल सेंटर (Full Website Manager)</strong>
-            <span style="font-size:13px;opacity:0.95">यहाँ से आप पूरी वेबसाइट के पेज, लेआउट, कॉलम, कैटेगरी और आर्डर चालू/बंद करने की व्यवस्था को बेहद आसानी से नियंत्रित कर सकते हैं।</span>
-          </div>
-
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px">
             
-            <!-- कार्ड 1: होमपेज व दृश्यता -->
-            <div class="admin-subcard" style="background:#fbfefc;border:1px solid #d8eadc;border-radius:16px;padding:16px">
-              <div class="admin-col-header" style="margin-bottom:12px">
-                <h3 style="margin:0;color:#123b27">🏠 होमपेज व मुख्य पेज विजिबिलिटी</h3>
-                <span class="admin-count-pill">पेज कंट्रोल</span>
+            <label>🏪 दुकान की स्थिति (Nursery Open / Close)</label>
+            <select id="settingShopStatus">
+              <option value="open">🟢 खुली है (ग्राहकों के आर्डर चालू हैं)</option>
+              <option value="closed">🔴 आज बंद है (सूचना दिखेगी, आर्डर बटन लॉक रहेंगे)</option>
+            </select>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+              <div>
+                <label>🌱 पौधों की न्यूनतम मात्रा</label>
+                <input id="settingMinPlantQty" type="number" min="1" value="25" style="font-weight:900;color:var(--green)">
               </div>
-              <label>होमपेज का मुख्य शीर्षक (Heading)</label>
-              <input id="cmsxHomeTitle" type="text" maxlength="90" placeholder="नर्सरी का मुख्य शीर्षक">
-              
-              <label>होमपेज का उप-शीर्षक / परिचय</label>
-              <textarea id="cmsxHomeSubtitle" rows="2" maxlength="260" placeholder="ग्राहकों को होमपेज पर दिखने वाला परिचय"></textarea>
-              
-              <div style="margin-top:12px;display:grid;gap:6px">
-                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
-                  <input id="cmsxShowHome" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> होमपेज पर उत्पाद कैटेगरी दिखाएँ
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
-                  <input id="cmsxShowAbout" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 'हमारे बारे में' पेज दिखाएँ
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
-                  <input id="cmsxShowCare" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 'पौधों की देखभाल' पेज दिखाएँ
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
-                  <input id="cmsxShowTypes" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 'पौधों के प्रकार' पेज दिखाएँ
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
-                  <input id="cmsxShowContact" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 'संपर्क' सेक्शन दिखाएँ
-                </label>
+              <div>
+                <label>🥬 सब्ज़ी न्यूनतम (किलो)</label>
+                <input id="settingMinVegQty" type="number" min="0.25" step="0.25" value="1" style="font-weight:900;color:var(--green)">
               </div>
             </div>
 
-            <!-- कार्ड 2: लेआउट व कॉलम कंट्रोल -->
-            <div class="admin-subcard" style="background:#fbfefc;border:1px solid #d8eadc;border-radius:16px;padding:16px">
-              <div class="admin-col-header" style="margin-bottom:12px">
-                <h3 style="margin:0;color:#123b27">📐 लेआउट व कॉलम कंट्रोल</h3>
-                <span class="admin-count-pill">डिजाइन</span>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                <div>
-                  <label>डेस्कटॉप: पौधे कॉलम</label>
-                  <select id="cmsxDesktopPlantCols"><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</option></select>
-                </div>
-                <div>
-                  <label>मोबाइल: पौधे कॉलम</label>
-                  <select id="cmsxMobilePlantCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option></select>
-                </div>
-                <div>
-                  <label>डेस्कटॉप: सब्ज़ी कॉलम</label>
-                  <select id="cmsxDesktopVegCols"><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</option></select>
-                </div>
-                <div>
-                  <label>मोबाइल: सब्ज़ी कॉलम</label>
-                  <select id="cmsxMobileVegCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option></select>
-                </div>
-                <div>
-                  <label>डेस्कटॉप: किराना कॉलम</label>
-                  <select id="cmsxDesktopGroceryCols"><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</option></select>
-                </div>
-                <div>
-                  <label>मोबाइल: किराना कॉलम</label>
-                  <select id="cmsxMobileGroceryCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option></select>
-                </div>
-              </div>
+            <label style="margin-top:10px">🎉 विशेष डिस्काउंट ऑफर (प्रतिशत छूट)</label>
+            <select id="settingDiscountPercent">
+              <option value="0">कोई छूट नहीं (0% Normal)</option>
+              <option value="10">🎉 10% की सीधी छूट</option>
+              <option value="15">🎉 15% की सीधी छूट</option>
+              <option value="20">🎉 20% की सुपर छूट</option>
+            </select>
 
-              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="margin-top:12px;background:#f4fbf7;border:1px solid #d1fae5;border-radius:12px;padding:12px">
+              <h4 style="margin:0 0 8px;color:var(--deep);font-size:13.5px">📐 उत्पाद कॉलम लेआउट (Product Columns)</h4>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
                 <div>
-                  <label>उत्पाद फोटो ऊँचाई</label>
-                  <select id="cmsxProductImageHeight"><option value="90">छोटी (90px)</option><option value="120">मध्यम (120px)</option><option value="160">बड़ी (160px)</option></select>
+                  <label style="font-size:11px">पौधे कॉलम</label>
+                  <select id="settingPlantCols"><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option></select>
                 </div>
                 <div>
-                  <label>कार्ड डिजाइन</label>
-                  <select id="cmsxCardStyle"><option value="soft">सॉफ्ट गोल</option><option value="square">चौकोर</option><option value="shadow">शैडो</option></select>
+                  <label style="font-size:11px">सब्ज़ी कॉलम</label>
+                  <select id="settingVegCols"><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option></select>
+                </div>
+                <div>
+                  <label style="font-size:11px">किराना कॉलम</label>
+                  <select id="settingGroceryCols"><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option></select>
                 </div>
               </div>
-              <label style="margin-top:10px">थीम रंग (Theme Color)</label>
-              <input id="cmsxThemeColor" type="color" value="#087a4b" style="height:42px;padding:2px">
-            </div>
-
-            <!-- कार्ड 3: कैटेगरी और आर्डर स्विच -->
-            <div class="admin-subcard" style="background:#fbfefc;border:1px solid #d8eadc;border-radius:16px;padding:16px">
-              <div class="admin-col-header" style="margin-bottom:12px">
-                <h3 style="margin:0;color:#123b27">🛍️ कैटेगरी व ऑर्डर स्विच</h3>
-                <span class="admin-count-pill">स्टोर स्विच</span>
-              </div>
-              <p style="font-size:12px;color:var(--muted);margin:0 0 10px">आप किसी भी कैटेगरी को बिना डिलीट किए छिपा सकते हैं या उसके ऑर्डर चालू/बंद कर सकते हैं।</p>
-              
-              <div style="display:grid;gap:6px">
-                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
-                  <input id="cmsxPlantsVisible" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 🌱 पौधों की कैटेगरी दिखाएँ
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
-                  <input id="cmsxPlantsOrder" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 🌱 पौधों के आर्डर चालू रखें
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
-                  <input id="cmsxVegVisible" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 🥬 सब्ज़ियों की कैटेगरी दिखाएँ
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
-                  <input id="cmsxVegOrder" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 🥬 सब्ज़ियों के आर्डर चालू रखें
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
-                  <input id="cmsxGroceryVisible" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 🛒 किराना / केक कैटेगरी दिखाएँ
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
-                  <input id="cmsxGroceryOrder" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 🛒 किराना / केक आर्डर चालू रखें
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;font-weight:900;cursor:pointer;background:#fef2f2;padding:8px 10px;border-radius:10px;border:1px solid #fecaca;color:#991b1b">
-                  <input id="cmsxAllOrders" type="checkbox" style="width:18px;height:18px;accent-color:#dc2626"> 🚨 मास्टर स्विच: सभी नए ऑर्डर स्वीकार करें
-                </label>
-              </div>
-            </div>
-
-            <!-- कार्ड 4: About Us सामग्री -->
-            <div class="admin-subcard" style="background:#fbfefc;border:1px solid #d8eadc;border-radius:16px;padding:16px">
-              <div class="admin-col-header" style="margin-bottom:12px">
-                <h3 style="margin:0;color:#123b27">📝 About Us व जानकारी सामग्री</h3>
-                <span class="admin-count-pill">कंटेंट</span>
-              </div>
-              <label>हमारा परिचय (About Text)</label>
-              <textarea id="cmsxAboutText" rows="3" maxlength="1200" placeholder="नर्सरी का पूरा परिचय…"></textarea>
-              
-              <label>हमारी खासियतें (Features, एक प्रति लाइन)</label>
-              <textarea id="cmsxFeaturesText" rows="3" maxlength="900" placeholder="प्रत्येक लाइन में एक खासियत लिखें…"></textarea>
-              
-              <label>हमारा वादा (Our Promise)</label>
-              <textarea id="cmsxPromiseText" rows="2" maxlength="600" placeholder="ग्राहकों से हमारा वादा…"></textarea>
-            </div>
-
-          </div>
-
-          <!-- नीचे डेटाबेस सिंक और सेव बटन -->
-          <div style="margin-top:16px;background:#f4fbf6;border:1px solid #cce8d4;border-radius:16px;padding:16px;text-align:center">
-            <div id="cmsxDbStatus" style="padding:10px;border-radius:10px;background:#eff6ff;color:#1e40af;font-size:13px;font-weight:800;margin-bottom:12px">
-              डेटाबेस कनेक्शन तैयार है…
-            </div>
-            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-              <button type="button" id="cmsxSaveBtn" class="admin-primary-submit" style="max-width:280px;margin:0">☁️ सभी सेटिंग्स तुरंत सेव व लागू करें</button>
-              <button type="button" id="cmsxReloadBtn" class="admin-soft-btn" style="padding:11px 18px">🔄 रीफ्रेश करें</button>
-              <button type="button" id="cmsxExportBtn" class="admin-soft-btn" style="padding:11px 18px">⬇️ बैकअप</button>
             </div>
           </div>
-        </div></form>
-      <div id="siteSettingsStatus" class="status" style="display:none;margin-top:10px"></div>
+
+          <!-- फोल्डर 2: 🚚 डिलीवरी व UPI पेमेंट -->
+          <div class="admin-subcard" style="background:#fbfefc;border:1px solid #d8eadc;border-radius:18px;padding:18px;box-shadow:0 4px 16px rgba(6,78,59,.05)">
+            <div class="admin-col-header" style="margin-bottom:14px">
+              <h3 style="margin:0;color:#123b27;font-size:17px">🚚 2. डिलीवरी व UPI पेमेंट</h3>
+              <span class="admin-count-pill">भाड़ा व भुगतान</span>
+            </div>
+
+            <label>💳 आपकी UPI ID (जिस पर पेमेंट आएगा)</label>
+            <input id="settingUpiId" required value="BHARATPE2H0E0T6Z3P47445@unitype">
+
+            <label>👤 खाताधारक / मालिक का नाम</label>
+            <input id="settingUpiName" required value="ANIL KUMAR MEENA">
+
+            <div style="margin-top:12px;background:#fefce8;border:1px solid #fde047;border-radius:12px;padding:12px">
+              <h4 style="margin:0 0 8px;color:#854d0e;font-size:13.5px">🚚 GPS डिलीवरी नियम</h4>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div>
+                  <label style="font-size:11px">फ्री डिलीवरी दूरी (किमी)</label>
+                  <input id="settingPlantFreeKm" type="number" min="0" value="5">
+                </div>
+                <div>
+                  <label style="font-size:11px">आगे की दर (₹/किमी)</label>
+                  <input id="settingPlantDeliveryRate" type="number" min="0" value="10">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- फोल्डर 3: 🎨 ब्रांडिंग, हेडर व विजेट -->
+          <div class="admin-subcard" style="background:#fbfefc;border:1px solid #d8eadc;border-radius:18px;padding:18px;box-shadow:0 4px 16px rgba(6,78,59,.05)">
+            <div class="admin-col-header" style="margin-bottom:14px">
+              <h3 style="margin:0;color:#123b27;font-size:17px">🎨 3. ब्रांडिंग, संपर्क व थीम</h3>
+              <span class="admin-count-pill">हेडर व फुटर</span>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div>
+                <label>नर्सरी का नाम</label>
+                <input id="settingNurseryName" required value="श्री नीम करोली महाराज ग्रीन नर्सरी">
+              </div>
+              <div>
+                <label>मुख्य फ़ोन नंबर</label>
+                <input id="settingPhone" type="tel" required value="9887666626">
+              </div>
+            </div>
+
+            <label>टैगलाइन / स्लोगन</label>
+            <input id="settingNurseryTagline" required value="हरी सब्जियाँ • स्वस्थ पौधे • घर और खेत के लिए">
+
+            <label>नर्सरी का पूरा पता</label>
+            <input id="settingNurseryAddress" required value="मीणा की ढाणी, चारावास, झुंझुनू, राजस्थान">
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+              <div>
+                <label>दुकान का समय</label>
+                <input id="settingOpeningHours" value="सुबह 07:00 AM से शाम 10:00 PM">
+              </div>
+              <div>
+                <label>थीम कलर</label>
+                <select id="settingThemeColor">
+                  <option value="classic">🌿 क्लासिक ग्रीन</option>
+                  <option value="fresh">🍃 फ्रेश मिंट</option>
+                  <option value="gold">🌾 गोल्डन फार्म</option>
+                </select>
+              </div>
+            </div>
+
+            <label style="margin-top:10px">📢 चलती हुई लाइव सूचना पट्टी (Ticker)</label>
+            <input id="settingTickerText" value="🌱 कल सुबह ताज़ा खीरा और टमाटर उपलब्ध रहेगा - अभी बुक करें!">
+          </div>
+
+          <!-- फोल्डर 4: 🧭 एडवांस कैटेगरी व ऑर्डर कंट्रोल -->
+          <div class="admin-subcard" style="background:#fbfefc;border:1px solid #d8eadc;border-radius:18px;padding:18px;box-shadow:0 4px 16px rgba(6,78,59,.05)">
+            <div class="admin-col-header" style="margin-bottom:14px">
+              <h3 style="margin:0;color:#123b27;font-size:17px">🧭 4. कैटेगरी व ऑर्डर मास्टर स्विच</h3>
+              <span class="admin-count-pill">एडवांस</span>
+            </div>
+            
+            <p style="font-size:12px;color:var(--muted);margin:0 0 10px">आप बिना डिलीट किए किसी भी कैटेगरी को छिपा सकते हैं या उसके ऑर्डर बंद कर सकते हैं।</p>
+
+            <div style="display:grid;gap:6px">
+              <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:7px 10px;border-radius:9px;border:1px solid #d1fae5">
+                <input id="cmsxPlantsVisible" type="checkbox" style="width:17px;height:17px;accent-color:#16a34a" checked> 🌱 पौधों की कैटेगरी दिखाएँ
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:7px 10px;border-radius:9px;border:1px solid #d1fae5">
+                <input id="cmsxPlantsOrder" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a" checked> 🌱 पौधों के आर्डर चालू रखें
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:7px 10px;border-radius:9px;border:1px solid #d1fae5">
+                <input id="cmsxVegVisible" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a" checked> 🥬 सब्ज़ियों की कैटेगरी दिखाएँ
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:7px 10px;border-radius:9px;border:1px solid #d1fae5">
+                <input id="cmsxVegOrder" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a" checked> 🥬 सब्ज़ियों के आर्डर चालू रखें
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:7px 10px;border-radius:9px;border:1px solid #d1fae5">
+                <input id="cmsxGroceryVisible" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a" checked> 🛒 किराना / केक कैटेगरी दिखाएँ
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:7px 10px;border-radius:9px;border:1px solid #d1fae5">
+                <input id="cmsxGroceryOrder" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a" checked> 🛒 किराना / केक आर्डर चालू रखें
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-weight:900;cursor:pointer;background:#fef2f2;padding:8px 10px;border-radius:9px;border:1px solid #fecaca;color:#991b1b">
+                <input id="cmsxAllOrders" type="checkbox" style="width:18px;height:18px;accent-color:#dc2626" checked> 🚨 मास्टर स्विच: सभी नए ऑर्डर स्वीकार करें
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="margin-top:20px;text-align:center;background:#f4fbf6;border:1px solid #cce8d4;border-radius:16px;padding:16px">
+          <div id="siteSettingsStatus" class="status" style="display:none;margin-bottom:10px"></div>
+          <button type="submit" class="admin-primary-submit" style="max-width:320px;margin:0 auto">💾 सभी सेटिंग्स सुरक्षित व वेबसाइट पर लागू करें</button>
+        </div>
+      </form>
     </div>
 
     <!-- 8. ⏰ उधार रजिस्टर (Credit / Dues Ledger) -->
