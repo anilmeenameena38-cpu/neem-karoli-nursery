@@ -4225,10 +4225,10 @@ document.getElementById('locationButton').addEventListener('click', () => {
     stat.textContent = '✅ GPS लोकेशन मिल गई। जगह का पता खोजा जा रहा है…';
     customerLocation.address = await getReadableLocationAddress(lat, lon);
     const accuracyText = accuracyM ? ` GPS सटीकता लगभग ${Math.round(accuracyM)} मीटर।` : '';
-    const addressText = customerLocation.address ? `\n📍 पहचाना गया पता: ${customerLocation.address}` : '\n📍 जगह का नाम नहीं मिला; GPS मैप लिंक उपलब्ध है।';
-    stat.textContent = `✅ नर्सरी से सीधी GPS दूरी: ${oneWayKm.toFixed(1)} किमी।${accuracyText}${addressText} सड़क की दूरी Google Maps में देखें।`;
+    // Customer-facing screen shows distance only; the detected address is kept for the admin order record.
+    stat.textContent = `✅ नर्सरी से सीधी GPS दूरी: ${oneWayKm.toFixed(1)} किमी।${accuracyText} सड़क की दूरी Google Maps में देखें।`;
     document.getElementById('deliveryEstimate').style.display = 'block';
-    document.getElementById('deliveryEstimate').textContent = `सीधी GPS दूरी: ${oneWayKm.toFixed(1)} किमी (सड़क की दूरी अलग हो सकती है)` + (customerLocation.address ? ` | पता: ${customerLocation.address}` : ' | पता उपलब्ध नहीं हुआ; मैप लिंक देखें।');
+    document.getElementById('deliveryEstimate').textContent = `सीधी GPS दूरी: ${oneWayKm.toFixed(1)} किमी (सड़क की दूरी अलग हो सकती है)`;
     document.getElementById('bharatpePaymentBox').style.display = 'block';
     renderCartModal();
   }, err => {
