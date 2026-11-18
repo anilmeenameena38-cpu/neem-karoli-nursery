@@ -1913,7 +1913,7 @@ body.info-fullscreen-open > main > .nav-page-open {
           <label>मोबाइल नंबर</label><input id="phone" type="tel" required placeholder="10 अंकों का मोबाइल">
           <label>गाँव / ढाणी</label><input id="village" type="text" required placeholder="गाँव / ढाणी">
           <label>पूरा पता</label><textarea id="address" rows="2" required placeholder="मकान / गली / लैंडमार्क"></textarea>
-          <button id="locationButton" type="button" style="width:100%">📍 मेरी लोकेशन शेयर करें</button>
+          <button id="locationButton" type="button" disabled style="width:100%;opacity:.55;cursor:not-allowed">🔒 पहले डिलीवरी विवरण भरें</button>
           <div id="locationStatus" class="status" style="font-size:13px">लोकेशन मिलने पर डिलीवरी जाँची जाएगी।</div>
           <div id="deliveryEstimate" class="status" style="display:none"></div>
         </div>
@@ -4206,8 +4206,39 @@ async function getReadableLocationAddress(lat, lon) {
   }
 }
 
+const deliveryDetailIds = ['customer', 'phone', 'village', 'address'];
+function deliveryDetailsAreComplete() {
+  const name = document.getElementById('customer').value.trim();
+  const phone = document.getElementById('phone').value.replace(/\D/g, '');
+  const village = document.getElementById('village').value.trim();
+  const address = document.getElementById('address').value.trim();
+  return Boolean(name && /^\d{10}$/.test(phone) && village && address);
+}
+function updateLocationButtonState() {
+  const btn = document.getElementById('locationButton');
+  const ready = deliveryDetailsAreComplete();
+  btn.disabled = !ready;
+  btn.style.opacity = ready ? '1' : '.55';
+  btn.style.cursor = ready ? 'pointer' : 'not-allowed';
+  btn.textContent = ready ? '📍 मेरी लोकेशन शेयर करें' : '🔒 पहले डिलीवरी विवरण भरें';
+  if (!ready) {
+    document.getElementById('locationStatus').textContent = 'लोकेशन शेयर करने से पहले नाम, सही 10 अंकों का मोबाइल नंबर, गाँव / ढाणी और पूरा पता भरें।';
+  }
+}
+deliveryDetailIds.forEach(id => {
+  const field = document.getElementById(id);
+  field.addEventListener('input', updateLocationButtonState);
+  field.addEventListener('change', updateLocationButtonState);
+});
+updateLocationButtonState();
+
 document.getElementById('locationButton').addEventListener('click', () => {
   const stat = document.getElementById('locationStatus');
+  if (!deliveryDetailsAreComplete()) {
+    updateLocationButtonState();
+    alert('कृपया पहले नाम, सही 10 अंकों का मोबाइल नंबर, गाँव / ढाणी और पूरा पता भरें।');
+    return;
+  }
   if (!navigator.geolocation) {
     stat.textContent = 'इस डिवाइस में GPS लोकेशन उपलब्ध नहीं है।';
     return;
