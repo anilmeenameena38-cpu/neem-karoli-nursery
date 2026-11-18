@@ -1776,9 +1776,14 @@ body.info-fullscreen-open > main > .nav-page-open {
 <!-- मोबाइल फ्रेंडली चौड़े नेविगेशन टैब -->
 <nav id="mainNavigation" aria-label="मुख्य नेविगेशन">
   <a href="#mainHeader" id="homeNavLink" class="nav-active">🏠 होम</a>
-  <a href="#about">🌿 हमारे बारे में</a>
-  <a href="#plantCare">🪴 पौधों की देखभाल</a>
-  <a href="#plantTypes">🌱 पौधों के प्रकार</a>
+  <div id="aboutNavMenu" class="about-nav-menu">
+    <a href="#about" id="aboutNavToggle" aria-expanded="false" aria-controls="aboutNavSubmenu">🌿 हमारे बारे में ▾</a>
+    <div id="aboutNavSubmenu" class="about-nav-submenu" hidden>
+      <a href="#about">🌿 हमारे बारे में</a>
+      <a href="#plantCare">🪴 पौधों की देखभाल</a>
+      <a href="#plantTypes">🌱 पौधों के प्रकार</a>
+    </div>
+  </div>
   <a href="#contact">📞 संपर्क</a>
   <a href="#customerTracking" id="customerTrackingNav">📦 ऑर्डर ट्रैकिंग</a>
   <button id="adminPanelNav" type="button">🔐 एडमिन लॉगिन</button>
@@ -1846,8 +1851,7 @@ body.info-fullscreen-open > main > .nav-page-open {
 
   <!-- सभी उत्पादों के लिए साझा खोज -->
   <div class="card" style="margin:10px 0;padding:12px;display:flex;gap:8px;align-items:center">
-    <input id="storeProductSearch" type="search" placeholder="🔎 पौधा, सब्जी, केक या कोल्ड ड्रिंक खोजें…" aria-label="उत्पाद खोजें" style="flex:1;min-width:0;padding:11px 12px;border:1px solid #cbd5e1;border-radius:10px;font-size:14px">
-    <button id="clearStoreSearch" type="button" style="padding:10px 12px;border:0;border-radius:10px;background:#e2f3e8;color:#14532d;font-weight:800">✕ साफ</button>
+    <input id="storeProductSearch" type="search" placeholder="🔎 पौधा, सब्जी, केक या कोल्ड ड्रिंक खोजें…" aria-label="उत्पाद खोजें" style="width:100%;min-width:0;padding:11px 12px;border:1px solid #cbd5e1;border-radius:10px;font-size:14px">
   </div>
 
   <!-- मोबाइल पर पौधे और ताजी सब्जियाँ अलग टैब में -->
@@ -2449,7 +2453,7 @@ body.info-fullscreen-open > main > .nav-page-open {
         <div class="mandi-grid">
           <div>
             <label>मंडी खरीद भाव (₹/किलो)</label>
-            <input id="mandiCalcBuy" type="number" step="0.5" placeholder="जैसे 20">
+            <input id="mandiCalcBuy" type="number" step="0.5" placeholder="जैसे 1.50">
           </div>
           <div>
             <label>ढुलाई + खराबा खर्च (₹/किलो)</label>
@@ -2730,7 +2734,7 @@ body.info-fullscreen-open > main > .nav-page-open {
             </div>
             <div>
               <label>💰 कीमत (₹)</label>
-              <input id="newAddonPriceInput" type="number" min="0" step="1" placeholder="जैसे 20">
+              <input id="newAddonPriceInput" type="number" min="0" step="0.01" placeholder="जैसे 20">
             </div>
             <div style="display:flex;align-items:flex-end">
               <button type="button" id="addNewAddonBtn" class="admin-primary-submit" style="margin:6px 0 10px">➕ नया एड-ऑन जोड़ें</button>
@@ -3601,9 +3605,16 @@ async function loadPlants() {
         </div>
 
         
-        <!-- Per-Product Add-ons (Disposables, Snacks, etc.) -->
+        <!-- Add-ons: ग्राहक अपनी जरूरत के अनुसार अलग मात्रा चुन सकता है -->
         ${(() => {
-          let addText = String(p.addons_text || localStorage.getItem('nursery_addons_' + p.id) || '').trim();
+          let addonItems = [];
+          const perProductText = String(p.addons_text || localStorage.getItem('nursery_addons_' + p.id) || '').trim();
+          if (perProductText) {
+            addonItems.push(...perProductText.split(',').map(part => {
+              const bits = part.split(':');
+              return { name: (bits[0] || '').trim(), price: Number((bits[1] || '').trim()) || 0 };
+            }).filter(a => a.name));
+          }
           const categoryText = String(p.category || p.category_name || p.type || '').toLowerCase();
           const isCakeOrColdDrink = grocery && (
             categoryText.includes('cake') || categoryText.includes('केक') ||
@@ -3613,22 +3624,26 @@ async function loadPlants() {
           );
           if (isCakeOrColdDrink) {
             const globalAddons = (() => { try { return JSON.parse(localStorage.getItem('nursery_custom_addons_v1') || '[]'); } catch (_) { return []; } })();
-            addText = [addText, globalAddons.map(a => `${a.name}:${a.price}`).join(',')].filter(Boolean).join(',');
+            globalAddons.forEach(a => {
+              if (a && a.name && !addonItems.some(x => x.name === a.name)) {
+                addonItems.push({ name: String(a.name), price: Number(a.price) || 0 });
+              }
+            });
           }
-          if (!addText.trim()) return '';
+          if (!addonItems.length) return '';
           return `
-          <div class="product-addon-selector" style="margin:6px 0;padding:6px 8px;background:#fefce8;border:1px dashed #fde047;border-radius:10px;text-align:left;font-size:12px">
-            <div style="font-weight:800;color:#854d0e;margin-bottom:3px">🥤 साथ में जोड़ें (Add-ons):</div>
-            ${addText.split(',').map(part => {
-              const [name, price] = part.split(':').map(s => s.trim());
-              if (!name) return '';
-              const pVal = Number(price) || 0;
-              return `
-                <label style="margin:2px 0;font-weight:700;color:#854d0e;display:flex;align-items:center;gap:5px">
-                  <input type="checkbox" class="card-addon-chk" data-addon-name="${safe(name)}" data-addon-price="${pVal}" style="margin:0;width:15px;height:15px"> ${safe(name)} [+₹${pVal}]
-                </label>
-              `;
-            }).join('')}
+          <div class="product-addon-selector" style="margin:6px 0;padding:7px 8px;background:#fefce8;border:1px dashed #fde047;border-radius:10px;text-align:left;font-size:12px">
+            <div style="font-weight:800;color:#854d0e;margin-bottom:5px">➕ साथ में क्या चाहिए? (मात्रा चुनें)</div>
+            ${addonItems.map(a => `
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin:5px 0;color:#854d0e;font-weight:700">
+                <span style="min-width:0;flex:1">${safe(a.name)} <small>(₹${Number(a.price).toFixed(2)}/पीस)</small></span>
+                <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+                  <button type="button" class="addon-qty-btn" data-addon-action="minus" aria-label="${safe(a.name)} कम करें" style="width:25px;height:27px;border:1px solid #d6b95b;border-radius:7px;background:#fff">−</button>
+                  <input type="number" class="card-addon-qty" min="0" step="1" value="0" inputmode="numeric" data-addon-name="${safe(a.name)}" data-addon-price="${Number(a.price)}" aria-label="${safe(a.name)} की मात्रा" style="width:46px;height:27px;text-align:center;border:1px solid #d6b95b;border-radius:7px;font-weight:800">
+                  <button type="button" class="addon-qty-btn" data-addon-action="plus" aria-label="${safe(a.name)} बढ़ाएँ" style="width:25px;height:27px;border:1px solid #d6b95b;border-radius:7px;background:#fff">+</button>
+                </div>
+              </div>
+            `).join('')}
           </div>`;
         })()}
 
@@ -3651,6 +3666,37 @@ async function loadPlants() {
       const qtyInput = card.querySelector('.card-qty-input');
       const minusBtn = card.querySelector('.minus-btn');
       const plusBtn = card.querySelector('.plus-btn');
+
+      const collectCardAddons = () => Array.from(card.querySelectorAll('.card-addon-qty')).map(input => ({
+        name: input.dataset.addonName || '',
+        price: Number(input.dataset.addonPrice) || 0,
+        qty: Math.max(0, Math.floor(Number(input.value) || 0))
+      })).filter(addon => addon.name && addon.qty > 0);
+
+      const syncCardAddonsToCart = () => {
+        const cartIndex = shoppingCart.findIndex(item => item.id === p.id && Boolean(item.veg) === Boolean(veg));
+        if (cartIndex < 0) return;
+        shoppingCart[cartIndex].addons = collectCardAddons();
+        updateCartBadge();
+        if (!document.getElementById('order').hidden) renderCartModal();
+      };
+
+      card.querySelectorAll('.card-addon-qty').forEach(addonInput => {
+        addonInput.addEventListener('input', () => {
+          const value = Math.max(0, Math.min(999, Math.floor(Number(addonInput.value) || 0)));
+          addonInput.value = String(value);
+          syncCardAddonsToCart();
+        });
+      });
+      card.querySelectorAll('.addon-qty-btn').forEach(addonBtn => {
+        addonBtn.addEventListener('click', () => {
+          const field = addonBtn.parentElement?.querySelector('.card-addon-qty');
+          if (!field) return;
+          const current = Math.max(0, Math.floor(Number(field.value) || 0));
+          field.value = String(Math.max(0, current + (addonBtn.dataset.addonAction === 'plus' ? 1 : -1)));
+          field.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+      });
 
       // मात्रा बदलते ही, यदि उत्पाद पहले से कार्ट में है तो कार्ट और कीमत भी अपडेट करें।
       const syncQuantityWithCart = () => syncCartQuantityFromCard(p, veg, qtyInput);
@@ -3716,15 +3762,16 @@ async function loadPlants() {
           event.stopPropagation();
           if (typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
           const existingIndex = shoppingCart.findIndex(item => item.id === p.id && Boolean(item.veg) === Boolean(veg));
-          const selectedAddons = Array.from(card.querySelectorAll('.card-addon-chk:checked')).map(chk => ({
-            name: chk.dataset.addonName || '',
-            price: Number(chk.dataset.addonPrice) || 0
-          })).filter(addon => addon.name);
+          const selectedAddons = Array.from(card.querySelectorAll('.card-addon-qty')).map(input => ({
+            name: input.dataset.addonName || '',
+            price: Number(input.dataset.addonPrice) || 0,
+            qty: Math.max(0, Math.floor(Number(input.value) || 0))
+          })).filter(addon => addon.name && addon.qty > 0);
           if (existingIndex !== -1 && selectedAddons.length) {
             // If the product is already in the cart, a new add-on selection updates
             // its add-ons instead of removing the product.
             shoppingCart[existingIndex].addons = selectedAddons;
-            card.querySelectorAll('.card-addon-chk').forEach(chk => { chk.checked = false; });
+            
             updateCartBadge();
             updateProductCartButtons();
             if (!document.getElementById('order').hidden) renderCartModal();
@@ -3757,7 +3804,7 @@ async function loadPlants() {
             return;
           }
           addToCart(p, q, veg, isGram, selectedAddons);
-          card.querySelectorAll('.card-addon-chk').forEach(chk => { chk.checked = false; });
+          
           syncButton();
         });
       }
@@ -3813,8 +3860,8 @@ function addToCart(plant, qty, veg, isGram, addons = []) {
     shoppingCart[existingIndex].qty += qty;
     const currentAddons = shoppingCart[existingIndex].addons || [];
     const incomingAddons = addons || [];
-    const merged = new Map(currentAddons.map(a => [String(a.name), a]));
-    incomingAddons.forEach(a => merged.set(String(a.name), a));
+    const merged = new Map(currentAddons.map(a => [String(a.name), { ...a, qty: Number(a.qty) || 1 }]));
+    incomingAddons.forEach(a => merged.set(String(a.name), { ...a, qty: Number(a.qty) || 1 }));
     shoppingCart[existingIndex].addons = Array.from(merged.values());
     if (!shoppingCart[existingIndex].image_url && plant.image_url) shoppingCart[existingIndex].image_url = plant.image_url;
   } else {
@@ -3833,6 +3880,16 @@ function addToCart(plant, qty, veg, isGram, addons = []) {
   updateProductCartButtons();
 }
 
+function changeCartAddonQty(itemIndex, addonIndex, delta) {
+  const item = shoppingCart[itemIndex];
+  if (!item || !item.addons || !item.addons[addonIndex]) return;
+  const addon = item.addons[addonIndex];
+  addon.qty = Math.max(0, (Number(addon.qty) || 1) + Number(delta || 0));
+  if (addon.qty <= 0) item.addons.splice(addonIndex, 1);
+  updateCartBadge();
+  renderCartModal();
+}
+
 function updateProductCartButtons() {
   document.querySelectorAll('.plant[data-cart-key]').forEach(card => {
     const button = card.querySelector('.plant-buy-button');
@@ -3846,13 +3903,16 @@ function updateProductCartButtons() {
   });
 }
 
+function getCartAddonTotal(item) {
+  return (item.addons || []).reduce((sum, addon) =>
+    sum + (Number(addon.price) || 0) * (Number(addon.qty) || 1), 0);
+}
+
 function updateCartBadge() {
   // बैज में अलग-अलग उत्पाद नहीं, कुल चुनी हुई मात्रा दिखाएँ।
   const totalCount = shoppingCart.reduce((sum, item) => sum + (Number(item.qty) || 0), 0);
-  const totalPrice = shoppingCart.reduce((sum, item) => {
-    const addonsTotal = (item.addons || []).reduce((addonSum, addon) => addonSum + (Number(addon.price) || 0), 0);
-    return sum + (Number(item.price) || 0) * (Number(item.qty) || 0) + addonsTotal;
-  }, 0);
+  const totalPrice = shoppingCart.reduce((sum, item) =>
+    sum + (Number(item.price) || 0) * (Number(item.qty) || 0) + getCartAddonTotal(item), 0);
 
   const bottomBar = document.getElementById('floatingBottomCartBar');
   const barCount = document.getElementById('barItemCount');
@@ -3947,7 +4007,7 @@ function renderCartModal() {
   let subtotal = 0;
 
   shoppingCart.forEach((item, idx) => {
-    const addonsTotal = (item.addons || []).reduce((s, a) => s + (Number(a.price) || 0), 0);
+    const addonsTotal = getCartAddonTotal(item);
     const itemTotal = (item.price * item.qty) + addonsTotal;
     subtotal += itemTotal;
 
@@ -3974,7 +4034,7 @@ function renderCartModal() {
         ${cartImage}
         <div class="cart-item-info">
           <strong>${safe(item.name)}</strong> (${qtyText})
-          ${(item.addons && item.addons.length) ? `<div style="font-size:11.5px;color:#b45309;font-weight:700;margin-top:2px">➕ एड-ऑन्स: ${item.addons.map(a => `${a.name} (+₹${a.price})`).join(', ')}</div>` : ''}
+          ${(item.addons && item.addons.length) ? `<div style="font-size:11.5px;color:#b45309;font-weight:700;margin-top:2px">➕ एड-ऑन्स: ${item.addons.map((a, addonIdx) => `${safe(a.name)} (${Number(a.qty) || 1} × ₹${Number(a.price).toFixed(2)} = ₹${((Number(a.qty) || 1) * (Number(a.price) || 0)).toFixed(2)}) <button type="button" onclick="changeCartAddonQty(${idx},${addonIdx},-1)" style="border:1px solid #d6b95b;border-radius:5px;background:#fff;padding:1px 6px">−</button> <button type="button" onclick="changeCartAddonQty(${idx},${addonIdx},1)" style="border:1px solid #d6b95b;border-radius:5px;background:#fff;padding:1px 6px">+</button>`).join('<br>')}</div>` : ''}
           <div style="font-size:12px;color:var(--muted);margin-top:3px">कुल: ₹${itemTotal.toFixed(2)}</div>
         </div>
         <button type="button" onclick="removeFromCart(${idx})" style="background:#fee2e2;color:#b91c1c;border:0;padding:6px 8px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">✕ हटाएँ</button>
@@ -4217,7 +4277,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
       proofUrl = signed.signedUrl;
     }
 
-    let subtotal = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty) + (item.addons || []).reduce((a, addon) => a + (Number(addon.price) || 0), 0), 0);
+    let subtotal = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty) + getCartAddonTotal(item), 0);
     const discountAmt = cfg.discountPercent > 0 ? (subtotal * cfg.discountPercent) / 100 : 0;
     const finalSubtotal = subtotal - discountAmt;
 
@@ -4231,7 +4291,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
     const itemsSummaryText = shoppingCart.map(i => {
       let qText = i.veg && i.isGram ? (i.qty < 1 ? Math.round(i.qty * 1000) + 'g' : i.qty + 'kg') : (i.qty + (i.veg ? 'kg' : 'pcs'));
-      let addonStr = (i.addons && i.addons.length) ? ` [साथ में: ${i.addons.map(a => a.name).join(', ')}]` : '';
+      let addonStr = (i.addons && i.addons.length) ? ` [साथ में: ${i.addons.map(a => `${a.name} × ${Number(a.qty) || 1}`).join(', ')}]` : '';
       return `${i.name} (${qText})${addonStr}`;
     }).join(', ');
     
@@ -5300,15 +5360,30 @@ function renderAdminAddonsManager() {
     return;
   }
   container.innerHTML = list.map((item, idx) => `
-    <div class="stock-row admin-pro-row" style="margin-bottom:8px">
-      <div>
+    <div class="stock-row admin-pro-row" style="margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <div style="flex:1;min-width:120px">
         <strong>${safe(item.name)}</strong>
-        <span class="admin-price-chip" style="margin-left:8px">₹${item.price}</span>
+        <small style="display:block;color:var(--muted)">प्रति पीस कीमत (₹)</small>
       </div>
+      <input type="number" min="0" step="0.01" value="${Number(item.price) || 0}" aria-label="${safe(item.name)} की कीमत" onchange="window.updateCustomAddonPrice(${idx},this.value)" style="width:92px;padding:8px;border:1px solid #cbd5e1;border-radius:8px;font-weight:800">
       <button type="button" onclick="window.removeCustomAddon(${idx})" style="background:#fff1f2;color:#b91c1c;border:1px solid #fecaca;padding:6px 10px;border-radius:8px;font-weight:800;cursor:pointer">🗑️ हटाएं</button>
     </div>
   `).join('');
 }
+
+window.updateCustomAddonPrice = function(idx, value) {
+  const price = Number(value);
+  if (!Number.isFinite(price) || price < 0) {
+    alert('कृपया शून्य या उससे अधिक सही कीमत दर्ज करें।');
+    renderAdminAddonsManager();
+    return;
+  }
+  const list = getCustomAddons();
+  if (!list[idx]) return;
+  list[idx].price = Math.round(price * 100) / 100;
+  saveCustomAddons(list);
+  renderAdminAddonsManager();
+};
 
 window.removeCustomAddon = function(idx) {
   const list = getCustomAddons();
@@ -5914,16 +5989,26 @@ loadPlants();
 // स्टोर सर्च और मोबाइल नेविगेशन: मौजूदा उत्पाद/ऑर्डर डेटा को नहीं छूता।
 (function(){
   const search=document.getElementById('storeProductSearch');
-  const clear=document.getElementById('clearStoreSearch');
+  const categorySections=[
+    document.getElementById('viewPlantCategory'),
+    document.getElementById('viewVegCategory'),
+    document.getElementById('viewGroceryCategory')
+  ].filter(Boolean);
   function filterProducts(){
     const q=(search?.value||'').trim().toLocaleLowerCase('hi');
     document.querySelectorAll('#plantOnlyList .plant, #vegOnlyList .plant, #groceryOnlyList .plant').forEach(card=>{
       const match=!q || card.textContent.toLocaleLowerCase('hi').includes(q);
       card.style.display=match?'':'none';
     });
+    // खोज के दौरान तीनों श्रेणियाँ दिखें ताकि परिणाम दूसरे टैब में छिपे नहीं।
+    categorySections.forEach(section=>{
+      if(q) section.style.setProperty('display','block','important');
+      else section.style.removeProperty('display');
+    });
+    document.body.classList.toggle('store-search-active',Boolean(q));
   }
   search?.addEventListener('input',filterProducts);
-  clear?.addEventListener('click',()=>{if(search){search.value='';filterProducts();search.focus();}});
+  search?.addEventListener('search',filterProducts);
   document.querySelectorAll('.mobile-store-link').forEach(btn=>btn.addEventListener('click',()=>{
     document.querySelectorAll('.mobile-store-link').forEach(x=>x.classList.remove('active'));
     btn.classList.add('active');
