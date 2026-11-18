@@ -3477,6 +3477,77 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
   window.addEventListener('DOMContentLoaded', applyColumnSettings);
 })();
 <\/script>
+
+<style id="mobile-addon-visible-v1">
+/* मोबाइल पर एड-ऑन्स का पूरा विकल्प हमेशा कार्ड में दिखाई दे */
+@media screen and (max-width:700px) {
+  .product-addon-selector {
+    display:block !important;
+    width:100% !important;
+    margin:7px 0 !important;
+    border-radius:10px !important;
+    font-size:11px !important;
+  }
+  .product-addon-selector > summary {
+    min-height:34px !important;
+    padding:8px 7px !important;
+    font-size:11px !important;
+    flex-wrap:wrap !important;
+  }
+  .product-addon-selector > div {
+    display:block !important;
+    padding:5px 6px 7px !important;
+  }
+  .product-addon-selector > div > div {
+    min-height:34px !important;
+    gap:4px !important;
+    padding:5px 0 !important;
+  }
+  .product-addon-selector .addon-qty-btn {
+    width:27px !important;
+    min-width:27px !important;
+    height:29px !important;
+    font-size:16px !important;
+  }
+  .product-addon-selector .card-addon-qty {
+    width:43px !important;
+    min-width:43px !important;
+    height:29px !important;
+    margin:0 !important;
+    padding:2px !important;
+    font-size:13px !important;
+  }
+}
+</style>
+<script id="mobile-addon-auto-expand-v1">
+(function(){
+  function expandMobileAddons(root){
+    if(!window.matchMedia('(max-width:700px)').matches) return;
+    const scope = root && root.querySelectorAll ? root : document;
+    scope.querySelectorAll('.product-addon-selector').forEach(function(details){
+      details.open = true;
+      const summary = details.querySelector('summary');
+      if(summary) summary.setAttribute('aria-label','साथ में मिलने वाले एड-ऑन्स चुनें');
+    });
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    expandMobileAddons(document);
+    const observer = new MutationObserver(function(records){
+      records.forEach(function(record){
+        record.addedNodes.forEach(function(node){
+          if(node.nodeType !== 1) return;
+          if(node.matches && node.matches('.product-addon-selector')) expandMobileAddons(node.parentElement || node);
+          else expandMobileAddons(node);
+        });
+      });
+    });
+    observer.observe(document.body,{childList:true,subtree:true});
+  });
+  window.addEventListener('resize',function(){ expandMobileAddons(document); });
+  window.addEventListener('orientationchange',function(){ setTimeout(function(){expandMobileAddons(document);},150); });
+})();
+</script>
+
 </body>
 
     </html>
