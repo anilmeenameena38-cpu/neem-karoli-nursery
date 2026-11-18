@@ -2485,41 +2485,11 @@ body.info-fullscreen-open > main > .nav-page-open {
         <button type="button" class="settings-subtab" data-subtab="widget">💬 6. WhatsApp &amp; कूपन</button>
         <button type="button" class="settings-subtab" data-subtab="preview">👁️ 7. लाइव प्रीव्यू</button>
         <button type="button" class="settings-subtab" data-subtab="addons">🥤 8. एड-ऑन्स व डिस्पोजल</button>
-        <button type="button" class="settings-subtab" data-subtab="complete">🧭 9. पूरा वेबसाइट कंट्रोल</button>
       </div>
 
       <form id="siteSettingsForm">
         <!-- टैब 1: दुकान & सेल -->
         <div id="subpane-shop" class="settings-subpane active">
-          <div style="background:#f4fbf7;border:1px solid #d1fae5;border-radius:14px;padding:14px;margin-bottom:14px">
-            <h4 style="margin:0 0 10px;color:var(--deep)">📐 होमपेज कॉलम लेआउट कंट्रोल (Product Column Display)</h4>
-            <div class="admin-form-grid" style="margin:0">
-              <div>
-                <label>🌱 पौधों की सूची के कॉलम (Plants Columns)</label>
-                <select id="settingPlantCols">
-                  <option value="2">2 कॉलम (बड़े कार्ड)</option>
-                  <option value="3" selected>3 कॉलम (संतुलित)</option>
-                  <option value="4">4 कॉलम (डेस्कटॉप शैली)</option>
-                </select>
-              </div>
-              <div>
-                <label>🥬 सब्ज़ियों की सूची के कॉलम (Veg Columns)</label>
-                <select id="settingVegCols">
-                  <option value="2">2 कॉलम</option>
-                  <option value="3" selected>3 कॉलम</option>
-                  <option value="4">4 कॉलम</option>
-                </select>
-              </div>
-              <div>
-                <label>🛒 किराना व केक के कॉलम (Grocery Columns)</label>
-                <select id="settingGroceryCols">
-                  <option value="2">2 कॉलम</option>
-                  <option value="3" selected>3 कॉलम</option>
-                  <option value="4">4 कॉलम</option>
-                </select>
-              </div>
-            </div>
-          </div>
           <div class="admin-col-header">
             <h3>🏪 दुकान स्थिति व न्यूनतम पौधे आर्डर सीमा</h3>
             <span class="admin-count-pill">स्टोर कंट्रोल</span>
@@ -2529,16 +2499,6 @@ body.info-fullscreen-open > main > .nav-page-open {
               <label>🌱 पौधों की न्यूनतम खरीद मात्रा (Minimum Plant Qty)</label>
               <input id="settingMinPlantQty" type="number" min="1" value="25" style="font-weight:800;color:var(--green)">
               <small style="color:var(--muted);font-size:11.5px">ग्राहक होमपेज पर कम से कम जितने पौधे चुन सके (जैसे 25)</small>
-            </div>
-            <div>
-              <label>🥬 सब्जियों की न्यूनतम खरीद मात्रा (किलो)</label>
-              <input id="settingMinVegQty" type="number" min="0.25" step="0.25" value="1" style="font-weight:800;color:var(--green)">
-              <small style="color:var(--muted);font-size:11.5px">जैसे 0.5 = आधा किलो, 1 = एक किलो</small>
-            </div>
-            <div>
-              <label>🛒 किराना / केक / कोल्ड ड्रिंक की न्यूनतम मात्रा (पीस/पैक)</label>
-              <input id="settingMinGroceryQty" type="number" min="1" step="1" value="1" style="font-weight:800;color:var(--green)">
-              <small style="color:var(--muted);font-size:11.5px">जैसे 1 = एक पीस या एक पैक</small>
             </div>
             <div>
               <label>🏪 दुकान की स्थिति (Nursery Open / Close)</label>
@@ -2750,92 +2710,6 @@ body.info-fullscreen-open > main > .nav-page-open {
         </div>
 
         <button type="submit" class="admin-primary-submit" style="margin-top:14px">💾 सभी सेटिंग्स सुरक्षित व वेबसाइट पर लागू करें</button>
-              <div id="subpane-complete" class="settings-subpane">
-          <div class="cmsx-intro"><strong>🧭 पूरा वेबसाइट कंट्रोल सेंटर</strong><span>यहाँ से होमपेज, कैटेगरी, अलग-अलग ऑर्डर, About Us और मोबाइल लेआउट नियंत्रित करें।</span></div>
-          <div class="cmsx-grid">
-            <section class="cmsx-card">
-              <h3>🏠 होमपेज और सेक्शन</h3>
-              <label>होमपेज का मुख्य शीर्षक<input id="cmsxHomeTitle" type="text" maxlength="90" placeholder="नर्सरी का मुख्य शीर्षक"></label>
-              <label>होमपेज की छोटी जानकारी<textarea id="cmsxHomeSubtitle" rows="2" maxlength="260" placeholder="ग्राहकों को होमपेज पर दिखने वाला परिचय"></textarea></label>
-              <label class="cmsx-check"><input id="cmsxShowHome" type="checkbox"> होमपेज पर उत्पाद कैटेगरी दिखाएँ</label>
-              <label class="cmsx-check"><input id="cmsxShowAbout" type="checkbox"> हमारे बारे में पेज दिखाएँ</label>
-              <label class="cmsx-check"><input id="cmsxShowCare" type="checkbox"> पौधों की देखभाल पेज दिखाएँ</label>
-              <label class="cmsx-check"><input id="cmsxShowTypes" type="checkbox"> पौधों के प्रकार पेज दिखाएँ</label>
-              <label class="cmsx-check"><input id="cmsxShowContact" type="checkbox"> संपर्क सेक्शन दिखाएँ</label>
-            </section>
-            <section class="cmsx-card cmsx-wide">
-              <h3>🎨 होमपेज डिजाइन और कॉलम कंट्रोल</h3>
-              <p class="cmsx-help">डेस्कटॉप और मोबाइल के लिए अलग कॉलम चुनें। बदलाव सेव करने के बाद ग्राहक वाले होमपेज पर लागू होंगे।</p>
-              <div class="cmsx-design-grid">
-                <label>कंप्यूटर पर पौधे कॉलम<select id="cmsxDesktopPlantCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</option></select></label>
-                <label>कंप्यूटर पर सब्ज़ी कॉलम<select id="cmsxDesktopVegCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</select></label>
-                <label>कंप्यूटर पर किराना कॉलम<select id="cmsxDesktopGroceryCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</option></select></label>
-                <label>मोबाइल पर पौधे कॉलम<select id="cmsxMobilePlantCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</option></select></label>
-                <label>मोबाइल पर सब्ज़ी कॉलम<select id="cmsxMobileVegCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</select></label>
-                <label>मोबाइल पर किराना कॉलम<select id="cmsxMobileGroceryCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</select></label>
-                <label>प्रोडक्ट फोटो की ऊँचाई<select id="cmsxProductImageHeight"><option value="90">छोटी - 90px</option><option value="120">मध्यम - 120px</option><option value="160">बड़ी - 160px</option><option value="200">बहुत बड़ी - 200px</option></select></label>
-                <label>कार्ड का डिजाइन<select id="cmsxCardStyle"><option value="soft">सॉफ्ट गोल कार्ड</option><option value="square">कम गोल कार्ड</option><option value="shadow">शैडो कार्ड</option></select></label>
-                <label>मुख्य थीम रंग<input id="cmsxThemeColor" type="color" value="#087a4b"></label>
-              </div>
-              <label>होमपेज बैनर फोटो का URL<input id="cmsxHeroImageUrl" type="url" placeholder="https://... फोटो का लिंक"></label>
-              <label>बैनर बटन का नाम<input id="cmsxHeroButtonText" type="text" maxlength="35" placeholder="अभी खरीदें"></label>
-              <label>बैनर बटन का लिंक<input id="cmsxHeroButtonUrl" type="text" maxlength="180" placeholder="#viewPlantCategory या https://..."></label>
-              <div class="cmsx-preview" id="cmsxDesignPreview">होमपेज डिजाइन का Preview यहाँ दिखेगा</div>
-            </section>
-            <section class="cmsx-card">
-              <h3>🛍️ कैटेगरी और अलग-अलग ऑर्डर</h3>
-              <p class="cmsx-help">दिखाने और ऑर्डर लेने के स्विच अलग रखे गए हैं। किसी कैटेगरी को छिपाए बिना भी उसका ऑर्डर बंद कर सकते हैं।</p>
-              <label class="cmsx-check"><input id="cmsxPlantsVisible" type="checkbox"> 🌱 पौधों की कैटेगरी दिखाएँ</label>
-              <label class="cmsx-check"><input id="cmsxPlantsOrder" type="checkbox"> पौधों के ऑर्डर चालू रखें</label>
-              <label class="cmsx-check"><input id="cmsxVegVisible" type="checkbox"> 🥬 सब्ज़ियों की कैटेगरी दिखाएँ</label>
-              <label class="cmsx-check"><input id="cmsxVegOrder" type="checkbox"> सब्ज़ियों के ऑर्डर चालू रखें</label>
-              <label class="cmsx-check"><input id="cmsxGroceryVisible" type="checkbox"> 🥤 किराना / एड-ऑन कैटेगरी दिखाएँ</label>
-              <label class="cmsx-check"><input id="cmsxGroceryOrder" type="checkbox"> किराना / एड-ऑन ऑर्डर चालू रखें</label>
-              <label class="cmsx-check"><input id="cmsxAllOrders" type="checkbox"> सभी नए ऑर्डर स्वीकार करें</label>
-            </section>
-            <section class="cmsx-card">
-              <h3>📝 About Us सामग्री</h3>
-              <label>हमारा परिचय<textarea id="cmsxAboutText" rows="5" maxlength="1200"></textarea></label>
-              <label>हमारी खासियत<textarea id="cmsxFeaturesText" rows="4" maxlength="900" placeholder="हर खासियत नई लाइन में लिखें"></textarea></label>
-              <label>हमारा वादा<textarea id="cmsxPromiseText" rows="3" maxlength="600"></textarea></label>
-            </section>
-            <section class="cmsx-card">
-              <h3>📱 मोबाइल और SEO कंट्रोल</h3>
-              <label>Google खोज के लिए विवरण<textarea id="cmsxMetaDescription" rows="3" maxlength="300"></textarea></label>
-              <label class="cmsx-check"><input id="cmsxMobileCompact" type="checkbox"> मोबाइल पर कॉम्पैक्ट प्रोडक्ट कार्ड</label>
-            </section>
-            <section class="cmsx-card cmsx-wide">
-              <h3>☁️ डेटाबेस सेव, बैकअप और पब्लिश</h3>
-              <div id="cmsxDbStatus" class="cmsx-db-status">डेटाबेस कनेक्शन जाँचा जा रहा है…</div>
-              <div class="cmsx-actions">
-                <button type="button" id="cmsxSaveBtn">☁️ सभी सेटिंग सेव करें</button>
-                <button type="button" id="cmsxReloadBtn">🔄 डेटाबेस से सेटिंग लाएँ</button>
-                <button type="button" id="cmsxExportBtn">⬇️ बैकअप डाउनलोड</button>
-                <label class="cmsx-import">⬆️ बैकअप वापस लाएँ<input type="file" id="cmsxImportFile" accept="application/json"></label>
-              </div>
-              <p class="cmsx-help">डेटाबेस में सेव होने पर यही सेटिंग ग्राहक की वेबसाइट पर दूसरे मोबाइल और कंप्यूटर में भी लागू होगी। अगर टेबल अभी नहीं बनी है, तो नीचे दिए SQL को Supabase SQL Editor में एक बार चलाना होगा।</p>
-              <details class="cmsx-sql"><summary>Supabase में एक बार चलाने वाला SQL</summary><pre id="cmsxSqlText">create table if not exists public.site_settings (
-  id text primary key,
-  config jsonb not null default '{}'::jsonb,
-  updated_at timestamptz not null default now(),
-  updated_by uuid
-);
-grant select on public.site_settings to anon, authenticated;
-grant insert, update on public.site_settings to authenticated;
-alter table public.site_settings enable row level security;
-drop policy if exists "Public can read nursery settings" on public.site_settings;
-create policy "Public can read nursery settings" on public.site_settings
-for select to anon, authenticated using (id = 'public');
-drop policy if exists "Owner can insert nursery settings" on public.site_settings;
-create policy "Owner can insert nursery settings" on public.site_settings
-for insert to authenticated with check (id = 'public' and auth.uid() = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9');
-drop policy if exists "Owner can update nursery settings" on public.site_settings;
-create policy "Owner can update nursery settings" on public.site_settings
-for update to authenticated using (id = 'public' and auth.uid() = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9') with check (id = 'public' and auth.uid() = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9');
-insert into public.site_settings (id, config) values ('public', '{}'::jsonb) on conflict (id) do nothing;</pre><button type="button" id="cmsxCopySqlBtn">SQL कॉपी करें</button></details>
-            </section>
-          </div>
-        </div>
       </form>
       <div id="siteSettingsStatus" class="status" style="display:none;margin-top:10px"></div>
     </div>
@@ -2989,8 +2863,6 @@ const DEFAULT_SITE_CONFIG = {
   upiId: 'BHARATPE2H0E0T6Z3P47445@unitype',
   upiName: 'ANIL KUMAR MEENA',
   minPlantQty: 25,
-  minVegQty: 1,
-  minGroceryQty: 1,
   plantFreeKm: 5,
   plantDeliveryRate: 10,
   plantMaxDistance: 50,
@@ -3086,9 +2958,7 @@ function applySiteConfigToUI() {
 
 function fillSettingsForm() {
   const cfg = getSiteConfig();
-  document.getElementById('settingMinPlantQty').value = cfg.minPlantQty ?? 25;
-  document.getElementById('settingMinVegQty').value = cfg.minVegQty ?? 1;
-  document.getElementById('settingMinGroceryQty').value = cfg.minGroceryQty ?? 1;
+  document.getElementById('settingMinPlantQty').value = cfg.minPlantQty || 25;
   document.getElementById('settingShopStatus').value = cfg.shopStatus;
   document.getElementById('settingDiscountPercent').value = String(cfg.discountPercent);
   document.getElementById('settingTickerStatus').value = cfg.tickerStatus;
@@ -3135,9 +3005,7 @@ document.querySelectorAll('.settings-subtab').forEach(btn => {
 document.getElementById('siteSettingsForm')?.addEventListener('submit', function(e) {
   e.preventDefault();
   const newConfig = {
-    minPlantQty: Math.max(1, Number(document.getElementById('settingMinPlantQty').value) || 1),
-    minVegQty: Math.max(0.25, Number(document.getElementById('settingMinVegQty').value) || 0.25),
-    minGroceryQty: Math.max(1, Number(document.getElementById('settingMinGroceryQty').value) || 1),
+    minPlantQty: Number(document.getElementById('settingMinPlantQty').value) || 25,
     shopStatus: document.getElementById('settingShopStatus').value,
     discountPercent: Number(document.getElementById('settingDiscountPercent').value),
     tickerStatus: document.getElementById('settingTickerStatus').value,
@@ -3485,63 +3353,7 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
 
 
 
-
-<script id="column-control-logic">
-(function(){
-  function applyColumnSettings() {
-    try {
-      const cfg = JSON.parse(localStorage.getItem('nursery_site_config') || '{}');
-      const pCols = cfg.plantCols || '3';
-      const vCols = cfg.vegCols || '3';
-      const gCols = cfg.groceryCols || '3';
-
-      const pList = document.getElementById('plantOnlyList');
-      const vList = document.getElementById('vegOnlyList');
-      const gList = document.getElementById('groceryOnlyList');
-
-      if (pList) pList.style.gridTemplateColumns = 'repeat(' + pCols + ', minmax(0, 1fr))';
-      if (vList) vList.style.gridTemplateColumns = 'repeat(' + vCols + ', minmax(0, 1fr))';
-      if (gList) gList.style.gridTemplateColumns = 'repeat(' + gCols + ', minmax(0, 1fr))';
-    } catch (_) {}
-  }
-
-  const oldLoad = window.loadPlants;
-  if (typeof oldLoad === 'function') {
-    window.loadPlants = async function() {
-      await oldLoad();
-      applyColumnSettings();
-    };
-  }
-
-  document.getElementById('siteSettingsForm')?.addEventListener('submit', function() {
-    try {
-      const cfg = JSON.parse(localStorage.getItem('nursery_site_config') || '{}');
-      cfg.plantCols = document.getElementById('settingPlantCols')?.value || '3';
-      cfg.vegCols = document.getElementById('settingVegCols')?.value || '3';
-      cfg.groceryCols = document.getElementById('settingGroceryCols')?.value || '3';
-      localStorage.setItem('nursery_site_config', JSON.stringify(cfg));
-      applyColumnSettings();
-    } catch (_) {}
-  });
-
-  const oldFill = window.fillSettingsForm;
-  if (typeof oldFill === 'function') {
-    window.fillSettingsForm = function() {
-      oldFill();
-      try {
-        const cfg = JSON.parse(localStorage.getItem('nursery_site_config') || '{}');
-        if (document.getElementById('settingPlantCols')) document.getElementById('settingPlantCols').value = cfg.plantCols || '3';
-        if (document.getElementById('settingVegCols')) document.getElementById('settingVegCols').value = cfg.vegCols || '3';
-        if (document.getElementById('settingGroceryCols')) document.getElementById('settingGroceryCols').value = cfg.groceryCols || '3';
-      } catch (_) {}
-    };
-  }
-
-  window.addEventListener('DOMContentLoaded', applyColumnSettings);
-})();
-<\/script>
 </body>
-
     </html>
   `);
   printWindow.document.close();
@@ -3588,9 +3400,7 @@ async function loadPlants() {
   const pList = document.getElementById('plantOnlyList');
   const vList = document.getElementById('vegOnlyList');
   const cfg = getSiteConfig();
-  const minPlantLimit = Math.max(1, Number(cfg.minPlantQty ?? 25));
-  const minVegLimit = Math.max(0.25, Number(cfg.minVegQty ?? 1));
-  const minGroceryLimit = Math.max(1, Number(cfg.minGroceryQty ?? 1));
+  const minPlantLimit = Number(cfg.minPlantQty) || 25;
 
   try {
     const { data, error } = await db.from('plants').select('*').order('name');
@@ -3613,20 +3423,19 @@ async function loadPlants() {
       if (grocery) {
         unit = 'पीस/पैक';
         stepVal = 1;
-        initialVal = minGroceryLimit;
-        unitLabelText = `न्यूनतम ${minGroceryLimit} पीस/पैक`;
+        initialVal = 1;
+        unitLabelText = 'न्यूनतम 1 पीस';
       } else if (veg) {
         if (isGram) {
           unit = 'किलो (ग्राम में)';
           stepVal = 0.25;
-          initialVal = minVegLimit;
-          unitLabelText = `किलो (न्यूनतम ${minVegLimit})`;
+          initialVal = 0.25;
+          unitLabelText = 'किलो (जैसे 0.25=250g, 1=1kg)';
         } else {
           unit = 'किलो';
           stepVal = 1;
-          stepVal = 0.5;
-          initialVal = minVegLimit;
-          unitLabelText = `न्यूनतम ${minVegLimit} किलो`;
+          initialVal = 1;
+          unitLabelText = 'न्यूनतम 1 किलो';
         }
       }
 
@@ -3704,7 +3513,7 @@ async function loadPlants() {
 
       minusBtn?.addEventListener('click', () => {
         let val = Number(qtyInput.value) || initialVal;
-        const limit = grocery ? minGroceryLimit : (veg ? minVegLimit : minPlantLimit);
+        const limit = veg ? (isGram ? 0.25 : 1) : minPlantLimit;
         val = Math.max(limit, val - stepVal);
         qtyInput.value = isGram ? val.toFixed(2) : (veg ? val.toFixed(1) : Math.round(val));
         syncQuantityWithCart();
@@ -3719,7 +3528,7 @@ async function loadPlants() {
 
       qtyInput?.addEventListener('change', () => {
         let val = Number(qtyInput.value) || initialVal;
-        const limit = grocery ? minGroceryLimit : (veg ? minVegLimit : minPlantLimit);
+        const limit = veg ? (isGram ? 0.25 : 1) : minPlantLimit;
         const max = Number(p.stock_quantity) || 9999;
         val = Math.min(max, Math.max(limit, val));
         if (Number(qtyInput.value) < limit) {
@@ -3739,11 +3548,7 @@ async function loadPlants() {
         };
         syncButton();
 
-        buyButton.addEventListener('click', (event) => {
-          // Product-card action must not bubble into category/navigation click handlers.
-          // Adding a vegetable keeps the customer on the vegetables tab.
-          event.preventDefault();
-          event.stopPropagation();
+        buyButton.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation();
           const existingIndex = shoppingCart.findIndex(item => item.id === p.id && Boolean(item.veg) === Boolean(veg));
           if (existingIndex !== -1) {
             shoppingCart.splice(existingIndex, 1);
@@ -3755,9 +3560,9 @@ async function loadPlants() {
           }
 
           const q = Number(qtyInput.value);
-          const limit = grocery ? minGroceryLimit : (veg ? minVegLimit : minPlantLimit);
+          const limit = veg ? (isGram ? 0.25 : 1) : minPlantLimit;
           if (q < limit) {
-            alert(`⚠️ न्यूनतम मात्रा ${limit + (grocery ? ' पीस/पैक' : (veg ? ' किलो' : ' पौधे'))} होना अनिवार्य है!`);
+            alert(`⚠️ न्यूनतम मात्रा ${isGram ? '250 ग्राम' : limit} होना अनिवार्य है!`);
             qtyInput.value = limit;
             return;
           }
@@ -5971,9 +5776,9 @@ loadPlants();
     }
   }
 
-  plantBtn.addEventListener('click', function(event){ event.preventDefault(); event.stopPropagation(); setStoreView('plants'); });
-  vegBtn.addEventListener('click', function(event){ event.preventDefault(); event.stopPropagation(); setStoreView('veg'); });
-  if (groceryBtn) groceryBtn.addEventListener('click', function(event){ event.preventDefault(); event.stopPropagation(); setStoreView('grocery'); });
+  plantBtn.addEventListener('click', function(){ setStoreView('plants'); });
+  vegBtn.addEventListener('click', function(){ setStoreView('veg'); });
+  if (groceryBtn) groceryBtn.addEventListener('click', function(){ setStoreView('grocery'); });
   setStoreView('plants');
 
   // Keep the appropriate layout if the device is rotated or resized.
@@ -7232,213 +7037,5 @@ body.admin-panel-open #ownerCloseButton {
 })();
 </script>
 
-
-<script id="column-control-logic">
-(function(){
-  function applyColumnSettings() {
-    try {
-      const cfg = JSON.parse(localStorage.getItem('nursery_site_config') || '{}');
-      const pCols = cfg.plantCols || '3';
-      const vCols = cfg.vegCols || '3';
-      const gCols = cfg.groceryCols || '3';
-
-      const pList = document.getElementById('plantOnlyList');
-      const vList = document.getElementById('vegOnlyList');
-      const gList = document.getElementById('groceryOnlyList');
-
-      if (pList) pList.style.gridTemplateColumns = 'repeat(' + pCols + ', minmax(0, 1fr))';
-      if (vList) vList.style.gridTemplateColumns = 'repeat(' + vCols + ', minmax(0, 1fr))';
-      if (gList) gList.style.gridTemplateColumns = 'repeat(' + gCols + ', minmax(0, 1fr))';
-    } catch (_) {}
-  }
-
-  const oldLoad = window.loadPlants;
-  if (typeof oldLoad === 'function') {
-    window.loadPlants = async function() {
-      await oldLoad();
-      applyColumnSettings();
-    };
-  }
-
-  document.getElementById('siteSettingsForm')?.addEventListener('submit', function() {
-    try {
-      const cfg = JSON.parse(localStorage.getItem('nursery_site_config') || '{}');
-      cfg.plantCols = document.getElementById('settingPlantCols')?.value || '3';
-      cfg.vegCols = document.getElementById('settingVegCols')?.value || '3';
-      cfg.groceryCols = document.getElementById('settingGroceryCols')?.value || '3';
-      localStorage.setItem('nursery_site_config', JSON.stringify(cfg));
-      applyColumnSettings();
-    } catch (_) {}
-  });
-
-  const oldFill = window.fillSettingsForm;
-  if (typeof oldFill === 'function') {
-    window.fillSettingsForm = function() {
-      oldFill();
-      try {
-        const cfg = JSON.parse(localStorage.getItem('nursery_site_config') || '{}');
-        if (document.getElementById('settingPlantCols')) document.getElementById('settingPlantCols').value = cfg.plantCols || '3';
-        if (document.getElementById('settingVegCols')) document.getElementById('settingVegCols').value = cfg.vegCols || '3';
-        if (document.getElementById('settingGroceryCols')) document.getElementById('settingGroceryCols').value = cfg.groceryCols || '3';
-      } catch (_) {}
-    };
-  }
-
-  window.addEventListener('DOMContentLoaded', applyColumnSettings);
-})();
-</script>
-<style id="complete-cms-extension-style">
-#cmsxHomeHero{margin:12px 0;padding:18px;border-radius:16px;background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:1px solid #a7f3d0;color:#14532d}#cmsxHomeHero h2{margin:0 0 6px;font-size:clamp(18px,4vw,25px)}#cmsxHomeHero p{margin:0;line-height:1.55;font-size:14px}body.cmsx-compact-mobile #plantOnlyList .plant,body.cmsx-compact-mobile #vegOnlyList .plant,body.cmsx-compact-mobile #groceryOnlyList .plant{padding:6px!important;gap:5px!important}body.cmsx-compact-mobile #plantOnlyList .plant img,body.cmsx-compact-mobile #vegOnlyList .plant img,body.cmsx-compact-mobile #groceryOnlyList .plant img{height:95px!important;object-fit:contain!important}
-#subpane-complete .cmsx-intro{padding:15px;border-radius:15px;background:linear-gradient(135deg,#064e3b,#0f766e);color:#fff;display:grid;gap:5px;margin-bottom:14px}
-#subpane-complete .cmsx-intro span{font-size:12px;opacity:.9;line-height:1.5}
-#subpane-complete .cmsx-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-#subpane-complete .cmsx-card{min-width:0;border:1px solid #dbe9df;border-radius:14px;padding:13px;background:#fbfefc}
-#subpane-complete .cmsx-card h3{margin:0 0 12px;color:#14532d;font-size:15px}
-#subpane-complete .cmsx-card>label:not(.cmsx-check){display:grid;gap:5px;margin:9px 0;font-size:12px;font-weight:800;color:#315443}
-#subpane-complete input:not([type=checkbox]):not([type=file]),#subpane-complete textarea,#subpane-complete select{width:100%;min-width:0;border:1px solid #cbded0;border-radius:9px;padding:10px;background:#fff;color:#173b2b;font:inherit;box-sizing:border-box}
-#subpane-complete .cmsx-check{display:flex;align-items:center;gap:9px;padding:9px 7px;margin:4px 0;border-radius:9px;background:#f0f8f2;font-size:12px;font-weight:750;color:#244d35}
-#subpane-complete .cmsx-check input{width:18px;height:18px;accent-color:#059669}
-#subpane-complete .cmsx-help{font-size:11px;line-height:1.5;color:#64756b;margin:7px 0}
-#subpane-complete .cmsx-wide{grid-column:1/-1}
-#subpane-complete .cmsx-db-status{padding:10px;border-radius:9px;background:#eff6ff;color:#1e40af;font-size:12px;font-weight:800;overflow-wrap:anywhere}
-#subpane-complete .cmsx-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-#subpane-complete .cmsx-actions button,#subpane-complete #cmsxCopySqlBtn{border:0;border-radius:9px;padding:10px 12px;background:#047857;color:white;font-weight:800;font-size:12px}
-#subpane-complete .cmsx-actions button:nth-child(2){background:#1d4ed8}#subpane-complete .cmsx-actions button:nth-child(3){background:#475569}
-#subpane-complete .cmsx-import{display:inline-flex;align-items:center;padding:10px 12px;border-radius:9px;background:#7c3aed;color:white;font-size:12px;font-weight:800}
-#subpane-complete .cmsx-import input{display:none}
-#subpane-complete .cmsx-sql{margin-top:12px;padding:10px;background:#f3f6f4;border-radius:10px;font-size:12px}
-#subpane-complete .cmsx-sql pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:260px;overflow:auto;font-size:10px}
-
-#subpane-complete .cmsx-design-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-#subpane-complete .cmsx-design-grid label{display:grid;gap:5px;font-size:12px;font-weight:800;color:#315443}
-#subpane-complete .cmsx-design-grid select,#subpane-complete .cmsx-card input[type=url],#subpane-complete .cmsx-card input[type=text]{width:100%;min-width:0;padding:10px;border:1px solid #cbded0;border-radius:9px;background:#fff}
-#subpane-complete .cmsx-card input[type=color]{width:100%;height:42px;border:1px solid #cbded0;border-radius:9px;background:#fff}
-#subpane-complete .cmsx-preview{margin-top:12px;min-height:105px;padding:18px;border-radius:14px;background:#087a4b;color:#fff;display:grid;align-content:center;gap:6px;background-position:center;background-size:cover}
-#subpane-complete .cmsx-preview p{margin:0;font-size:12px}
-#cmsxHomeHero .cmsx-hero-cta{display:inline-flex;margin-top:12px;padding:9px 15px;border-radius:999px;background:#fff;color:#065f46;font-weight:900;text-decoration:none;width:max-content}
-body.cmsx-card-square #plantOnlyList .plant,body.cmsx-card-square #vegOnlyList .plant,body.cmsx-card-square #groceryOnlyList .plant{border-radius:5px!important}
-body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .plant,body.cmsx-card-shadow #groceryOnlyList .plant{box-shadow:0 5px 18px rgba(0,0,0,.12)!important;border:0!important}
-@media(max-width:650px){#subpane-complete .cmsx-grid{grid-template-columns:1fr}#subpane-complete .cmsx-wide{grid-column:auto}#subpane-complete .cmsx-actions>*{flex:1 1 45%;justify-content:center}}
-</style>
-<script id="complete-cms-extension-runtime">
-(function(){
- 'use strict';
- const KEY='nursery_site_config', DEFAULTS={cmsxHomeTitle:'',cmsxHomeSubtitle:'',cmsxShowHome:true,cmsxShowAbout:true,cmsxShowCare:true,cmsxShowTypes:true,cmsxShowContact:true,cmsxPlantsVisible:true,cmsxPlantsOrder:true,cmsxVegVisible:true,cmsxVegOrder:true,cmsxGroceryVisible:true,cmsxGroceryOrder:true,cmsxAllOrders:true,cmsxAboutText:'',cmsxFeaturesText:'',cmsxPromiseText:'',cmsxDesktopPlantCols:'3',cmsxDesktopVegCols:'3',cmsxDesktopGroceryCols:'3',cmsxMobilePlantCols:'2',cmsxMobileVegCols:'2',cmsxMobileGroceryCols:'2',cmsxProductImageHeight:'120',cmsxCardStyle:'soft',cmsxThemeColor:'#087a4b',cmsxHeroImageUrl:'',cmsxHeroButtonText:'',cmsxHeroButtonUrl:'',cmsxMetaDescription:'',cmsxMobileCompact:false};
- const $=id=>document.getElementById(id); const status=(msg,kind)=>{const el=$('cmsxDbStatus');if(el){el.textContent=msg;el.style.background=kind==='ok'?'#ecfdf5':kind==='err'?'#fff1f2':'#eff6ff';el.style.color=kind==='ok'?'#166534':kind==='err'?'#991b1b':'#1e40af';}};
- function cfg(){try{return Object.assign({},DEFAULTS,JSON.parse(localStorage.getItem(KEY)||'{}'));}catch(_){return {...DEFAULTS};}}
- function setCfg(c){localStorage.setItem(KEY,JSON.stringify(c));}
- function val(id){const e=$(id);return e?e.value:'';} function checked(id){return !!$(id)?.checked;}
- function readForm(){return {cmsxHomeTitle:val('cmsxHomeTitle').trim(),cmsxHomeSubtitle:val('cmsxHomeSubtitle').trim(),cmsxShowHome:checked('cmsxShowHome'),cmsxShowAbout:checked('cmsxShowAbout'),cmsxShowCare:checked('cmsxShowCare'),cmsxShowTypes:checked('cmsxShowTypes'),cmsxShowContact:checked('cmsxShowContact'),cmsxPlantsVisible:checked('cmsxPlantsVisible'),cmsxPlantsOrder:checked('cmsxPlantsOrder'),cmsxVegVisible:checked('cmsxVegVisible'),cmsxVegOrder:checked('cmsxVegOrder'),cmsxGroceryVisible:checked('cmsxGroceryVisible'),cmsxGroceryOrder:checked('cmsxGroceryOrder'),cmsxAllOrders:checked('cmsxAllOrders'),cmsxAboutText:val('cmsxAboutText').trim(),cmsxFeaturesText:val('cmsxFeaturesText').trim(),cmsxPromiseText:val('cmsxPromiseText').trim(),cmsxDesktopPlantCols:val('cmsxDesktopPlantCols')||'3',cmsxDesktopVegCols:val('cmsxDesktopVegCols')||'3',cmsxDesktopGroceryCols:val('cmsxDesktopGroceryCols')||'3',cmsxMobilePlantCols:val('cmsxMobilePlantCols')||'2',cmsxMobileVegCols:val('cmsxMobileVegCols')||'2',cmsxMobileGroceryCols:val('cmsxMobileGroceryCols')||'2',cmsxProductImageHeight:val('cmsxProductImageHeight')||'120',cmsxCardStyle:val('cmsxCardStyle')||'soft',cmsxThemeColor:val('cmsxThemeColor')||'#087a4b',cmsxHeroImageUrl:val('cmsxHeroImageUrl').trim(),cmsxHeroButtonText:val('cmsxHeroButtonText').trim(),cmsxHeroButtonUrl:val('cmsxHeroButtonUrl').trim(),cmsxMetaDescription:val('cmsxMetaDescription').trim(),cmsxMobileCompact:checked('cmsxMobileCompact')};}
- function fill(c){Object.keys(DEFAULTS).forEach(k=>{const e=$(k);if(!e)return;if(e.type==='checkbox')e.checked=c[k]!==undefined?!!c[k]:!!DEFAULTS[k];else e.value=c[k]??DEFAULTS[k];});}
- function toggle(id,on){const e=$(id);if(e){if(on)e.style.removeProperty('display');else e.style.setProperty('display','none','important');}}
- function apply(c){
-   // Keep the category switcher and its matching content in sync.
-   const categoryRules = [
-     ['viewPlantCategory','showPlantsTab',!!c.cmsxShowHome && !!c.cmsxPlantsVisible],
-     ['viewVegCategory','showVegTab',!!c.cmsxShowHome && !!c.cmsxVegVisible],
-     ['viewGroceryCategory','showGroceryTab',!!c.cmsxShowHome && !!c.cmsxGroceryVisible]
-   ];
-   categoryRules.forEach(([sectionId,tabId,visible])=>{
-     toggle(sectionId,visible);
-     toggle(tabId,visible);
-   });
-
-   // Content pages and their navigation links.
-   const pageRules = [
-     ['about','cmsxShowAbout'],['plantCare','cmsxShowCare'],
-     ['plantTypes','cmsxShowTypes'],['contact','cmsxShowContact']
-   ];
-   pageRules.forEach(([id,key])=>toggle(id,!!c[key]));
-   const navTargets = [
-     ['about','cmsxShowAbout'],['plantCare','cmsxShowCare'],
-     ['plantTypes','cmsxShowTypes'],['contact','cmsxShowContact']
-   ];
-   navTargets.forEach(([id,key])=>{
-     document.querySelectorAll('a[href="#'+id+'"]').forEach(a=>toggle(a,!!c[key]));
-   });
-
-   // Put the editable homepage banner before the category switcher, not inside a category.
-   const title=String(c.cmsxHomeTitle||'').trim();
-   const sub=String(c.cmsxHomeSubtitle||'').trim();
-   let hero=$('cmsxHomeHero');
-   if(title || sub){
-     if(!hero){
-       hero=document.createElement('section');
-       hero.id='cmsxHomeHero';
-       hero.className='cmsx-home-hero';
-     }
-     hero.replaceChildren();
-     if(title){const h=document.createElement('h2');h.textContent=title;hero.appendChild(h);}
-     if(sub){const p=document.createElement('p');p.textContent=sub;hero.appendChild(p);}
-     const imageUrl=String(c.cmsxHeroImageUrl||'').trim();
-     if(imageUrl){hero.style.backgroundImage='linear-gradient(90deg,rgba(4,55,35,.82),rgba(4,55,35,.25)),url("'+imageUrl.replace(/[\"\\]/g,'')+'")';hero.style.backgroundSize='cover';hero.style.backgroundPosition='center';hero.style.color='#fff';}
-     else {hero.style.removeProperty('background-image');hero.style.color='';}
-     if(c.cmsxHeroButtonText && c.cmsxHeroButtonUrl){let a=hero.querySelector('a.cmsx-hero-cta');if(!a){a=document.createElement('a');a.className='cmsx-hero-cta';hero.appendChild(a);}a.textContent=c.cmsxHeroButtonText;a.href=c.cmsxHeroButtonUrl;}
-     else hero.querySelector('a.cmsx-hero-cta')?.remove();
-     const tabs=document.querySelector('.store-view-tabs');
-     const first=$('viewPlantCategory');
-     if(tabs && tabs.parentNode) tabs.parentNode.insertBefore(hero,tabs);
-     else if(first && first.parentNode) first.parentNode.insertBefore(hero,first);
-   } else if(hero) hero.remove();
-
-   // Update About Us copy without destroying the section labels.
-   const about=$('about');
-   if(about){
-     const directPs=Array.from(about.children).filter(el=>el.tagName==='P');
-     if(directPs[0] && c.cmsxAboutText){
-       directPs[0].innerHTML='<strong>हमारा परिचय:</strong> '+escapeHtml(c.cmsxAboutText);
-     }
-     if(directPs[1] && c.cmsxPromiseText){
-       directPs[1].innerHTML='<strong>हमारा वादा:</strong> '+escapeHtml(c.cmsxPromiseText);
-     }
-     const ul=about.querySelector(':scope > ul');
-     if(ul && c.cmsxFeaturesText){
-       ul.innerHTML=String(c.cmsxFeaturesText).split(String.fromCharCode(10)).filter(Boolean)
-         .map(x=>'<li>'+escapeHtml(x)+'</li>').join('');
-     }
-   }
-
-   let meta=document.querySelector('meta[name="description"]');
-   if(!meta && c.cmsxMetaDescription){
-     meta=document.createElement('meta');meta.name='description';document.head.appendChild(meta);
-   }
-   if(meta && c.cmsxMetaDescription) meta.setAttribute('content',c.cmsxMetaDescription);
-
-   // Enforce category-specific order switches on all currently rendered products.
-   const rules=[
-     ['plantOnlyList',!!c.cmsxPlantsOrder && !!c.cmsxAllOrders],
-     ['vegOnlyList',!!c.cmsxVegOrder && !!c.cmsxAllOrders],
-     ['groceryOnlyList',!!c.cmsxGroceryOrder && !!c.cmsxAllOrders]
-   ];
-   rules.forEach(([id,enabled])=>{
-     const root=$(id); if(!root)return;
-     root.querySelectorAll('.plant-buy-button').forEach(b=>{
-       b.disabled=!enabled;
-       if(!enabled){b.dataset.cmsxWasDisabled=b.disabled?'1':'0';b.textContent='आज ऑर्डर बंद';}
-       else if(b.textContent==='आज ऑर्डर बंद') b.textContent='कार्ट में जोड़ें';
-     });
-   });
-
-   // Mobile columns apply immediately and also on viewport resize.
-   const mobile=window.matchMedia('(max-width:700px)').matches;
-   const p=$('plantOnlyList'),v=$('vegOnlyList'),g=$('groceryOnlyList');
-   const gridCols=mobile?['cmsxMobilePlantCols','cmsxMobileVegCols','cmsxMobileGroceryCols']:['cmsxDesktopPlantCols','cmsxDesktopVegCols','cmsxDesktopGroceryCols'];
-   [p,v,g].forEach((root,i)=>{if(root){root.style.setProperty('display','grid','important');root.style.setProperty('grid-template-columns','repeat('+Math.max(1,Math.min(4,Number(c[gridCols[i]]|| (mobile?2:3))))+',minmax(0,1fr))','important');root.querySelectorAll('.plant img').forEach(img=>img.style.setProperty('height',(Number(c.cmsxProductImageHeight)||120)+'px','important'));}});
-   document.body.classList.toggle('cmsx-card-square',c.cmsxCardStyle==='square');
-   document.body.classList.toggle('cmsx-card-shadow',c.cmsxCardStyle==='shadow');
-   if(c.cmsxThemeColor){document.documentElement.style.setProperty('--green',c.cmsxThemeColor);document.documentElement.style.setProperty('--primary',c.cmsxThemeColor);}
-   document.body.classList.toggle('cmsx-compact-mobile',!!c.cmsxMobileCompact);
-   const preview=$('cmsxDesignPreview');if(preview){preview.innerHTML='';preview.style.background=c.cmsxThemeColor||'#087a4b';preview.style.color='#fff';preview.style.backgroundImage=c.cmsxHeroImageUrl?'linear-gradient(90deg,rgba(4,55,35,.82),rgba(4,55,35,.25)),url("'+String(c.cmsxHeroImageUrl).replace(/[\"\\]/g,'')+'")':'';preview.style.backgroundSize='cover';preview.innerHTML='<strong>'+escapeHtml(c.cmsxHomeTitle||'आपकी नर्सरी का होमपेज')+'</strong><p>'+escapeHtml(c.cmsxHomeSubtitle||'यहाँ आपके होमपेज का छोटा परिचय दिखेगा')+'</p><small>उत्पाद कार्ड: '+(mobile?c.cmsxMobilePlantCols:c.cmsxDesktopPlantCols)+' कॉलम</small>';}
-
- }
- function escapeHtml(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
- async function loadRemote(){try{if(typeof db==='undefined'||!db.from)throw new Error('Supabase क्लाइंट उपलब्ध नहीं');const {data,error}=await db.from('site_settings').select('config').eq('id','public').maybeSingle();if(error)throw error;if(data&&data.config){const merged=Object.assign({},cfg(),data.config);setCfg(merged);fill(merged);if(typeof window.applySiteConfigToUI==='function')window.applySiteConfigToUI();apply(merged);status('☁️ डेटाबेस से सेटिंग सफलतापूर्वक लोड हुई।','ok');}else status('डेटाबेस टेबल में public सेटिंग नहीं मिली। SQL चलाकर सेव करें।','err');}catch(e){status('डेटाबेस सिंक उपलब्ध नहीं: '+(e.message||e)+' | अभी इस डिवाइस की सेव सेटिंग लागू है।','err');}}
- async function saveRemote(){const c=Object.assign({},cfg(),readForm());setCfg(c);apply(c);if(typeof window.applySiteConfigToUI==='function')window.applySiteConfigToUI();if(typeof window.loadPlants==='function')await window.loadPlants();try{const {data:{user}}=await db.auth.getUser();if(!user||user.id!=='1a014e64-4b85-4d2a-ba62-2cae5d9f10c9')throw new Error('पहले मालिक के एडमिन अकाउंट से लॉगिन करें');const {error}=await db.from('site_settings').upsert({id:'public',config:c,updated_at:new Date().toISOString(),updated_by:user.id},{onConflict:'id'});if(error)throw error;status('✅ सेटिंग डेटाबेस में सेव हो गईं। सभी डिवाइस पर लागू होंगी।','ok');}catch(e){status('⚠️ इस डिवाइस पर सेव हुआ, लेकिन डेटाबेस सेव नहीं हुआ: '+(e.message||e)+' | SQL / लॉगिन / RLS जाँचें।','err');}}
- function init(){const c=cfg();fill(c);apply(c);$('cmsxSaveBtn')?.addEventListener('click',saveRemote);$('cmsxReloadBtn')?.addEventListener('click',loadRemote);$('cmsxExportBtn')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify(cfg(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='neem-nursery-site-backup.json';a.click();URL.revokeObjectURL(a.href);});$('cmsxImportFile')?.addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const imported=JSON.parse(await f.text());const merged=Object.assign({},cfg(),imported);setCfg(merged);fill(merged);apply(merged);status('बैकअप लोड हुआ। अब डेटाबेस में सेव करें।','ok');}catch(_){status('गलत बैकअप फाइल।','err');}});$('cmsxCopySqlBtn')?.addEventListener('click',()=>{const t=$('cmsxSqlText')?.textContent||'';if(navigator.clipboard?.writeText)navigator.clipboard.writeText(t).then(()=>status('SQL कॉपी हो गया।','ok')).catch(()=>status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err'));else status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err');});document.querySelectorAll('.settings-subtab').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.subtab==='complete')fill(cfg());}));$('siteSettingsForm')?.addEventListener('submit',()=>setTimeout(saveRemote,0));['plantOnlyList','vegOnlyList','groceryOnlyList'].forEach(id=>{const root=$(id);if(root&&window.MutationObserver)new MutationObserver(()=>apply(cfg())).observe(root,{childList:true,subtree:true});});loadRemote();}
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
-})();
-</script>
-
 </body>
-
 </html>
