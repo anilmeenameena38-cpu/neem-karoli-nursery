@@ -4251,10 +4251,6 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
   const button = document.getElementById('orderButton');
   const status = document.getElementById('orderStatus');
-  const orderForm = document.getElementById('orderForm');
-  // तेज़ double-click / दो submit events से एक ही cart का duplicate order न बने।
-  if (orderForm.dataset.orderSubmitting === 'true') return;
-  orderForm.dataset.orderSubmitting = 'true';
   button.disabled = true;
   status.style.display = 'block';
   status.textContent = 'ऑर्डर दर्ज हो रहा है…';
@@ -4378,7 +4374,6 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
   } catch (err) {
     status.textContent = '❌ त्रुटि: ' + err.message;
-    orderForm.dataset.orderSubmitting = 'false';
     button.disabled = false;
   }
 });
@@ -5598,22 +5593,10 @@ loadPlants();
       submit.disabled = true;
       submit.textContent = 'कन्फर्म हो रहा है…';
       try {
-        // केवल निर्धारित मालिक का authenticated session ही भुगतान verify कर सकता है।
-        const { data: authData, error: authError } = await db.auth.getUser();
-        if (authError) throw authError;
-        if (!authData?.user || authData.user.id !== '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9') {
-          throw new Error('भुगतान कन्फर्म करने के लिए मालिक के एडमिन अकाउंट से लॉगिन करें।');
-        }
         const { data: current, error: readError } = await db.from('order_requests')
           .select('id,status,notes').eq('id', orderId).single();
         if (readError) throw readError;
         if (!current || current.status !== 'pending') throw new Error('ऑर्डर की स्थिति बदल चुकी है। सूची रीफ्रेश करें।');
-        // पहले से किसी दूसरे confirmed order में यही UTR इस्तेमाल हुआ हो तो रोकें।
-        const { data: reusedUtr, error: duplicateError } = await db.from('order_requests')
-          .select('id').eq('status', 'confirmed').neq('id', orderId)
-          .ilike('notes', `%PAYMENT_VERIFIED_UTR:${entered}%`).limit(1).maybeSingle();
-        if (duplicateError) throw duplicateError;
-        if (reusedUtr) throw new Error(`यह UTR पहले ही ऑर्डर #${reusedUtr.id} में इस्तेमाल हो चुका है। इसे दोबारा कन्फर्म नहीं किया जा सकता।`);
         const stamp = new Date().toISOString();
         const cleanNotes = String(current.notes || '')
           .replace(/\s*\|\s*PAYMENT_VERIFIED_UTR:[^|]*/gi, '')
