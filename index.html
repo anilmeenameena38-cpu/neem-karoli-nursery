@@ -5597,7 +5597,7 @@ loadPlants();
     if (btn) { btn.disabled = false; btn.textContent = '💳 भुगतान जाँचकर कन्फर्म करें'; }
   };
 
-  (function bindUtrVerificationControls(){
+  function bindUtrVerificationControls(){
     const input = document.getElementById('manualVerifiedUtr');
     const amount = document.getElementById('verifyReceivedAmount');
     const received = document.getElementById('verifyPaymentReceived');
@@ -5619,6 +5619,8 @@ loadPlants();
       else if (!received.checked) { msg.textContent = 'UTR और राशि मेल खाते हैं। अब वास्तविक बैंक क्रेडिट की पुष्टि करें।'; msg.style.color = '#a16207'; }
       else { msg.textContent = 'कृपया सुनिश्चित करें कि बैंक/UPI ऐप में पैसा वास्तव में प्राप्त हुआ है।'; msg.style.color = '#15803d'; }
       submit.disabled = !(utrMatch && amountMatch && received.checked);
+      submit.style.opacity = submit.disabled ? '.55' : '1';
+      submit.style.cursor = submit.disabled ? 'not-allowed' : 'pointer';
     };
     input.addEventListener('input', validate);
     amount.addEventListener('input', validate);
@@ -5653,7 +5655,13 @@ loadPlants();
         submit.textContent = 'UTR Verify करके Confirm करें';
       }
     });
-  })();
+  }
+  // The modal markup is below this script. Bind after the browser has parsed it.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindUtrVerificationControls, { once: true });
+  } else {
+    bindUtrVerificationControls();
+  }
 
   // Cancellation only changes status; the BEFORE UPDATE trigger restores stock exactly once.
   window.cancelOrderPrompt = async function (event, orderId) {
