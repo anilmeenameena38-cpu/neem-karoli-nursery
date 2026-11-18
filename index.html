@@ -1844,6 +1844,12 @@ body.info-fullscreen-open > main > .nav-page-open {
     <p style="margin-top:14px">किसी खास पौधे या सब्ज़ी की उपलब्धता पूछने के लिए <a href="#contact">हमसे संपर्क करें</a>।</p>
   </section>
 
+  <!-- सभी उत्पादों के लिए साझा खोज -->
+  <div class="card" style="margin:10px 0;padding:12px;display:flex;gap:8px;align-items:center">
+    <input id="storeProductSearch" type="search" placeholder="🔎 पौधा, सब्जी, केक या कोल्ड ड्रिंक खोजें…" aria-label="उत्पाद खोजें" style="flex:1;min-width:0;padding:11px 12px;border:1px solid #cbd5e1;border-radius:10px;font-size:14px">
+    <button id="clearStoreSearch" type="button" style="padding:10px 12px;border:0;border-radius:10px;background:#e2f3e8;color:#14532d;font-weight:800">✕ साफ</button>
+  </div>
+
   <!-- मोबाइल पर पौधे और ताजी सब्जियाँ अलग टैब में -->
   <div class="store-view-tabs" id="storeViewTabs" role="tablist" aria-label="खरीदारी का प्रकार" style="grid-template-columns:repeat(3,minmax(0,1fr))!important">
     <button type="button" class="store-view-tab active" id="showPlantsTab" role="tab" aria-selected="true" aria-controls="viewPlantCategory">🌱 पौधे</button>
@@ -2731,6 +2737,11 @@ body.info-fullscreen-open > main > .nav-page-open {
             </div>
           </div>
           <div id="adminAddonsListContainer" style="margin-top:12px"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+            <button type="button" id="publishCustomAddonsBtn" class="admin-primary-submit">☁️ ऐड-ऑन्स प्रकाशित करें</button>
+            <span id="customAddonsPublishStatus" style="font-size:12px;font-weight:800;align-self:center" aria-live="polite"></span>
+          </div>
+          <p style="font-size:11px;color:var(--muted);margin-top:6px">प्रकाशित करने पर ऐड-ऑन्स Supabase में सेव होंगे और ग्राहक की वेबसाइट पर भी दिखेंगे।</p>
         </div>
 
 
@@ -3167,84 +3178,6 @@ document.getElementById('siteSettingsForm')?.addEventListener('submit', function
 
   localStorage.setItem('nursery_site_config', JSON.stringify(newConfig));
   
-// 🥤 Dynamic Add-ons Manager (Disposables, Snacks, etc.)
-function getCustomAddons() {
-  try {
-    const saved = localStorage.getItem('nursery_custom_addons_v1');
-    return saved ? JSON.parse(saved) : [
-      { name: "डिसपोज़ल ग्लास (10 पीस)", price: 20 },
-      { name: "कुरकुरा / नमकीन पैक", price: 15 }
-    ];
-  } catch (_) {
-    return [
-      { name: "डिसपोज़ल ग्लास (10 पीस)", price: 20 },
-      { name: "कुरकुरा / नमकीन पैक", price: 15 }
-    ];
-  }
-}
-
-function saveCustomAddons(list) {
-  try {
-    localStorage.setItem('nursery_custom_addons_v1', JSON.stringify(list));
-  } catch (_) {}
-}
-
-function renderAdminAddonsManager() {
-  const container = document.getElementById('adminAddonsListContainer');
-  if (!container) return;
-  const list = getCustomAddons();
-  if (!list.length) {
-    container.innerHTML = '<p style="color:var(--muted);font-size:13px">कोई एड-ऑन नहीं जोड़ा गया है।</p>';
-    return;
-  }
-  container.innerHTML = list.map((item, idx) => `
-    <div class="stock-row admin-pro-row" style="margin-bottom:8px">
-      <div>
-        <strong>${safe(item.name)}</strong>
-        <span class="admin-price-chip" style="margin-left:8px">₹${item.price}</span>
-      </div>
-      <button type="button" onclick="window.removeCustomAddon(${idx})" style="background:#fff1f2;color:#b91c1c;border:1px solid #fecaca;padding:6px 10px;border-radius:8px;font-weight:800;cursor:pointer">🗑️ हटाएं</button>
-    </div>
-  `).join('');
-}
-
-window.removeCustomAddon = function(idx) {
-  const list = getCustomAddons();
-  list.splice(idx, 1);
-  saveCustomAddons(list);
-  renderAdminAddonsManager();
-  loadPlants();
-};
-
-document.getElementById('addNewAddonBtn')?.addEventListener('click', () => {
-  const nameInput = document.getElementById('newAddonNameInput');
-  const priceInput = document.getElementById('newAddonPriceInput');
-  const name = nameInput?.value.trim();
-  const price = Number(priceInput?.value);
-  if (!name || isNaN(price) || price < 0) {
-    alert('कृपया सही नाम और कीमत दर्ज करें!');
-    return;
-  }
-  const list = getCustomAddons();
-  list.push({ name, price });
-  saveCustomAddons(list);
-  nameInput.value = '';
-  priceInput.value = '';
-  renderAdminAddonsManager();
-  loadPlants();
-  alert('✅ एड-ऑन सफलतापूर्वक जोड़ दिया गया!');
-});
-
-// Hook into settings tab change to render addons manager when tab 8 is clicked
-document.querySelectorAll('.settings-subtab').forEach(btn => {
-  btn.addEventListener('click', function() {
-    if (this.dataset.subtab === 'addons') {
-      renderAdminAddonsManager();
-    }
-  });
-});
-
-
 applySiteConfigToUI();
   fillSettingsForm();
   loadPlants();
@@ -3595,6 +3528,11 @@ async function loadPlants() {
   try {
     const { data, error } = await db.from('plants').select('*').order('name');
     if (error) throw error;
+    try {
+      const { data: addonSettings } = await db.from('site_settings').select('config').eq('id', 'public').maybeSingle();
+      const published = addonSettings?.config?.customAddons;
+      if (Array.isArray(published)) localStorage.setItem('nursery_custom_addons_v1', JSON.stringify(published));
+    } catch (_) {}
     plants = data || [];
     pList.innerHTML = ''; vList.innerHTML = '';
     const gList = document.getElementById('groceryOnlyList');
@@ -3631,7 +3569,10 @@ async function loadPlants() {
       }
 
       const target = grocery ? gList : (veg ? vList : pList);
-      const isSoldOut = (!p.is_active || Number(p.stock_quantity) <= 0 || cfg.shopStatus === 'closed');
+      const requiredMinimum = grocery ? minGroceryLimit : (veg ? minVegLimit : minPlantLimit);
+      const numericStock = Number(p.stock_quantity) || 0;
+      const isBelowMinimum = numericStock > 0 && numericStock < requiredMinimum;
+      const isSoldOut = (!p.is_active || numericStock <= 0 || isBelowMinimum || cfg.shopStatus === 'closed');
       const card = document.createElement('div'); 
       card.className = 'plant' + (isSoldOut ? ' sold-out' : '');
       
@@ -3656,13 +3597,24 @@ async function loadPlants() {
           ${imgHtml}
           <h3>${safe(p.name)}</h3>
           <div><span class="price-tag">₹${Number(p.selling_price).toFixed(2)} / ${grocery ? 'पीस/पैक' : (veg ? (isGram ? 'किलो (ग्राम चुनें)' : 'किलो') : 'पौधा')}</span></div>
-          <p class="stock-text">स्टॉक: ${isSoldOut ? '<b style="color:#dc2626">0 उपलब्ध</b>' : stockDisplay}</p>
+          <p class="stock-text">स्टॉक: ${isBelowMinimum ? `<b style="color:#dc2626">${stockDisplay} (न्यूनतम ऑर्डर ${requiredMinimum} से कम)</b>` : (isSoldOut ? '<b style="color:#dc2626">0 उपलब्ध</b>' : stockDisplay)}</p>
         </div>
 
         
         <!-- Per-Product Add-ons (Disposables, Snacks, etc.) -->
         ${(() => {
-          const addText = localStorage.getItem('nursery_addons_' + p.id) || '';
+          let addText = String(p.addons_text || localStorage.getItem('nursery_addons_' + p.id) || '').trim();
+          const categoryText = String(p.category || p.category_name || p.type || '').toLowerCase();
+          const isCakeOrColdDrink = grocery && (
+            categoryText.includes('cake') || categoryText.includes('केक') ||
+            categoryText.includes('cold') || categoryText.includes('कोल्ड') ||
+            categoryText.includes('drink') || categoryText.includes('beverage') ||
+            /cake|cold drink|कोल्ड ड्रिंक|केक|coca.?cola|coke|sprite|pepsi|mirinda|fanta|thums.?up|maaza|limca|7.?up/i.test(String(p.name || ''))
+          );
+          if (isCakeOrColdDrink) {
+            const globalAddons = (() => { try { return JSON.parse(localStorage.getItem('nursery_custom_addons_v1') || '[]'); } catch (_) { return []; } })();
+            addText = [addText, globalAddons.map(a => `${a.name}:${a.price}`).join(',')].filter(Boolean).join(',');
+          }
           if (!addText.trim()) return '';
           return `
           <div class="product-addon-selector" style="margin:6px 0;padding:6px 8px;background:#fefce8;border:1px dashed #fde047;border-radius:10px;text-align:left;font-size:12px">
@@ -3690,6 +3642,7 @@ async function loadPlants() {
             <input class="card-qty-input card-qty" type="number" min="${initialVal}" max="${p.stock_quantity}" step="${stepVal}" value="${initialVal}" ${isSoldOut ? 'disabled' : ''}>
             <button type="button" class="stepper-btn plus-btn" ${isSoldOut ? 'disabled' : ''}>+</button>
           </div>
+          <div class="stock-limit-note" style="font-size:11px;color:#0f766e;font-weight:800;text-align:center;margin:4px 0">उपलब्ध स्टॉक: ${stockDisplay} · अधिकतम इतनी ही मात्रा</div>
           <button class="plant-buy-button btn" type="button" ${isSoldOut ? 'disabled' : ''}>
             ${isSoldOut ? (cfg.shopStatus === 'closed' ? '🔒 बंद है' : '🚫 उपलब्ध नहीं') : '🛒 कार्ट में जोड़ें'}
           </button>
@@ -3701,6 +3654,23 @@ async function loadPlants() {
 
       // मात्रा बदलते ही, यदि उत्पाद पहले से कार्ट में है तो कार्ट और कीमत भी अपडेट करें।
       const syncQuantityWithCart = () => syncCartQuantityFromCard(p, veg, qtyInput);
+      qtyInput?.addEventListener('input', () => {
+        const maxStock = Number(p.stock_quantity) || 0;
+        if (qtyInput.value === '') return;
+        let typed = Number(qtyInput.value);
+        if (!Number.isFinite(typed)) typed = initialVal;
+        if (typed > maxStock) {
+          qtyInput.value = isGram ? maxStock.toFixed(2) : (veg ? maxStock.toFixed(1) : Math.floor(maxStock));
+          qtyInput.setCustomValidity(`उपलब्ध स्टॉक केवल ${stockDisplay} है`);
+          const note = card.querySelector('.stock-limit-note');
+          if (note) note.textContent = `अधिकतम उपलब्ध स्टॉक ${stockDisplay} ही है`;
+        } else {
+          qtyInput.setCustomValidity('');
+          const note = card.querySelector('.stock-limit-note');
+          if (note) note.textContent = `उपलब्ध स्टॉक: ${stockDisplay} · अधिकतम इतनी ही मात्रा`;
+        }
+        syncQuantityWithCart();
+      });
 
       minusBtn?.addEventListener('click', () => {
         let val = Number(qtyInput.value) || initialVal;
@@ -3746,6 +3716,20 @@ async function loadPlants() {
           event.stopPropagation();
           if (typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
           const existingIndex = shoppingCart.findIndex(item => item.id === p.id && Boolean(item.veg) === Boolean(veg));
+          const selectedAddons = Array.from(card.querySelectorAll('.card-addon-chk:checked')).map(chk => ({
+            name: chk.dataset.addonName || '',
+            price: Number(chk.dataset.addonPrice) || 0
+          })).filter(addon => addon.name);
+          if (existingIndex !== -1 && selectedAddons.length) {
+            // If the product is already in the cart, a new add-on selection updates
+            // its add-ons instead of removing the product.
+            shoppingCart[existingIndex].addons = selectedAddons;
+            card.querySelectorAll('.card-addon-chk').forEach(chk => { chk.checked = false; });
+            updateCartBadge();
+            updateProductCartButtons();
+            if (!document.getElementById('order').hidden) renderCartModal();
+            return;
+          }
           if (existingIndex !== -1) {
             shoppingCart.splice(existingIndex, 1);
             updateCartBadge();
@@ -3757,6 +3741,10 @@ async function loadPlants() {
 
           const q = Number(qtyInput.value);
           const limit = grocery ? minGroceryLimit : (veg ? minVegLimit : minPlantLimit);
+          if (Number(p.stock_quantity) < limit) {
+            alert(`⚠️ उपलब्ध स्टॉक ${p.stock_quantity} है, लेकिन न्यूनतम ऑर्डर ${limit} है। अभी यह उत्पाद ऑर्डर के लिए उपलब्ध नहीं है।`);
+            return;
+          }
           if (q < limit) {
             alert(`⚠️ न्यूनतम मात्रा ${limit + (grocery ? ' पीस/पैक' : (veg ? ' किलो' : ' पौधे'))} होना अनिवार्य है!`);
             qtyInput.value = limit;
@@ -3768,10 +3756,6 @@ async function loadPlants() {
             qtyInput.value = availableStock;
             return;
           }
-          const selectedAddons = Array.from(card.querySelectorAll('.card-addon-chk:checked')).map(chk => ({
-            name: chk.dataset.addonName || '',
-            price: Number(chk.dataset.addonPrice) || 0
-          })).filter(addon => addon.name);
           addToCart(p, q, veg, isGram, selectedAddons);
           card.querySelectorAll('.card-addon-chk').forEach(chk => { chk.checked = false; });
           syncButton();
@@ -3827,6 +3811,11 @@ function addToCart(plant, qty, veg, isGram, addons = []) {
   const existingIndex = shoppingCart.findIndex(item => item.id === plant.id && Boolean(item.veg) === Boolean(veg));
   if (existingIndex > -1) {
     shoppingCart[existingIndex].qty += qty;
+    const currentAddons = shoppingCart[existingIndex].addons || [];
+    const incomingAddons = addons || [];
+    const merged = new Map(currentAddons.map(a => [String(a.name), a]));
+    incomingAddons.forEach(a => merged.set(String(a.name), a));
+    shoppingCart[existingIndex].addons = Array.from(merged.values());
     if (!shoppingCart[existingIndex].image_url && plant.image_url) shoppingCart[existingIndex].image_url = plant.image_url;
   } else {
     shoppingCart.push({
@@ -5283,7 +5272,7 @@ document.getElementById('nurseryAskChatGPT')?.addEventListener('click', () => {
 // 🥤 Dynamic Add-ons Manager (Disposables, Snacks, etc.)
 function getCustomAddons() {
   try {
-    const saved = localStorage.getItem('nursery_custom_addons_v1');
+    const saved = localStorage.getItem('nursery_custom_addons_draft_v1') || localStorage.getItem('nursery_custom_addons_v1');
     return saved ? JSON.parse(saved) : [
       { name: "डिसपोज़ल ग्लास (10 पीस)", price: 20 },
       { name: "कुरकुरा / नमकीन पैक", price: 15 }
@@ -5298,7 +5287,7 @@ function getCustomAddons() {
 
 function saveCustomAddons(list) {
   try {
-    localStorage.setItem('nursery_custom_addons_v1', JSON.stringify(list));
+    localStorage.setItem('nursery_custom_addons_draft_v1', JSON.stringify(list));
   } catch (_) {}
 }
 
@@ -5328,6 +5317,34 @@ window.removeCustomAddon = function(idx) {
   renderAdminAddonsManager();
   loadPlants();
 };
+
+document.getElementById('publishCustomAddonsBtn')?.addEventListener('click', async () => {
+  const status = document.getElementById('customAddonsPublishStatus');
+  const btn = document.getElementById('publishCustomAddonsBtn');
+  const list = getCustomAddons();
+  if (status) status.textContent = 'प्रकाशित किया जा रहा है…';
+  if (btn) btn.disabled = true;
+  try {
+    if (typeof db === 'undefined' || !db.from || !db.auth) throw new Error('Supabase कनेक्शन उपलब्ध नहीं है');
+    const { data: authData, error: authError } = await db.auth.getUser();
+    if (authError) throw authError;
+    const user = authData?.user;
+    if (!user || user.id !== '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9') throw new Error('मालिक के एडमिन अकाउंट से लॉगिन करें');
+    const { data: existing, error: readError } = await db.from('site_settings').select('config').eq('id', 'public').maybeSingle();
+    if (readError) throw readError;
+    const config = Object.assign({}, existing?.config || {}, { customAddons: list });
+    const { error: saveError } = await db.from('site_settings').upsert({id:'public',config,updated_at:new Date().toISOString(),updated_by:user.id},{onConflict:'id'});
+    if (saveError) throw saveError;
+    localStorage.setItem('nursery_custom_addons_v1', JSON.stringify(list));
+    localStorage.removeItem('nursery_custom_addons_draft_v1');
+    if (status) status.textContent = '✅ प्रकाशित! अब ग्राहक वेबसाइट रीफ्रेश करें।';
+    await loadPlants();
+  } catch (err) {
+    if (status) status.textContent = '❌ प्रकाशित नहीं हुआ: ' + (err?.message || err);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+});
 
 document.getElementById('addNewAddonBtn')?.addEventListener('click', () => {
   const nameInput = document.getElementById('newAddonNameInput');
