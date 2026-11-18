@@ -2609,6 +2609,25 @@ body.info-fullscreen-open > main > .nav-page-open {
               <label>खाताधारक / नर्सरी मालिक का नाम</label>
               <input id="settingUpiName" required value="ANIL KUMAR MEENA">
             </div>
+            <div>
+              <label>UPI पेमेंट चालू रखें?</label>
+              <select id="settingPaymentEnabled"><option value="on">हाँ — चालू</option><option value="off">नहीं — बंद</option></select>
+            </div>
+            <div>
+              <label>भुगतान के बाद UTR और स्क्रीनशॉट अनिवार्य?</label>
+              <select id="settingPaymentProofRequired"><option value="on">हाँ — दोनों अनिवार्य</option><option value="off">नहीं — वैकल्पिक</option></select>
+            </div>
+            <div>
+              <label>UPI ऐप खोलने के बाद टाइमर (सेकंड)</label>
+              <input id="settingPaymentTimer" type="number" min="0" max="300" step="1" value="10">
+            </div>
+            <div class="full-span" style="border:1px solid #d1fae5;background:#f4fbf7;border-radius:12px;padding:12px">
+              <label for="settingPaymentQrFile">अपना UPI QR कोड बदलें (JPG / PNG / WEBP)</label>
+              <input id="settingPaymentQrFile" type="file" accept="image/*">
+              <img id="settingPaymentQrPreview" alt="नया QR प्रीव्यू" style="display:none;max-width:180px;max-height:180px;object-fit:contain;margin-top:10px;background:#fff;padding:6px;border-radius:10px">
+              <button type="button" id="settingPaymentQrRemove" class="admin-soft-btn" style="margin-top:8px">पुराना QR वापस रखें</button>
+              <small style="display:block;margin-top:6px;color:#475569">QR इमेज छोटी करके वेबसाइट सेटिंग के साथ सेव होगी। सेव करने के बाद सभी डिवाइस पर दिखेगी।</small>
+            </div>
           </div>
         </div>
 
@@ -3025,6 +3044,10 @@ const DEFAULT_SITE_CONFIG = {
   tickerText: '🌱 कल सुबह ताज़ा खीरा और टमाटर उपलब्ध रहेगा - अभी बुक करें!',
   upiId: 'BHARATPE2H0E0T6Z3P47445@unitype',
   upiName: 'Neem Karoli Maharaj Green Nursery',
+  paymentEnabled: 'on',
+  paymentProofRequired: 'on',
+  paymentTimerSeconds: 10,
+  paymentQrData: '',
   minPlantQty: 25,
   minVegQty: 1,
   minGroceryQty: 1,
@@ -3098,6 +3121,25 @@ function applySiteConfigToUI() {
 
   const upiIdDisplay = document.getElementById('displayUpiId');
   if (upiIdDisplay) upiIdDisplay.textContent = cfg.upiId;
+  const paymentQr = document.getElementById('bharatpeNurseryQr');
+  if (paymentQr && cfg.paymentQrData) paymentQr.src = cfg.paymentQrData;
+  const paymentBox = document.getElementById('bharatpePaymentBox');
+  if (paymentBox && cfg.paymentEnabled === 'off') {
+    paymentBox.style.opacity = '0.72';
+    const payBtn = document.getElementById('upiPayButton');
+    if (payBtn) { payBtn.style.pointerEvents = 'none'; payBtn.style.opacity = '.45'; payBtn.textContent = 'UPI पेमेंट फिलहाल बंद है'; }
+  } else {
+    const payBtn = document.getElementById('upiPayButton');
+    if (payBtn) { payBtn.style.pointerEvents = ''; payBtn.style.opacity = ''; payBtn.textContent = '💳 UPI से भुगतान करें'; }
+  }
+  const proofBox = document.getElementById('paymentProofSection');
+  if (proofBox) {
+    const required = cfg.paymentProofRequired !== 'off';
+    const utr = document.getElementById('paymentUtrNumber');
+    const proof = document.getElementById('paymentProofFile');
+    if (utr) utr.required = required;
+    if (proof) proof.required = required;
+  }
 
   const waBtn = document.getElementById('floatingWaWidget');
   if (waBtn) {
@@ -3132,6 +3174,11 @@ function fillSettingsForm() {
   document.getElementById('settingTickerText').value = cfg.tickerText;
   document.getElementById('settingUpiId').value = cfg.upiId;
   document.getElementById('settingUpiName').value = cfg.upiName;
+  document.getElementById('settingPaymentEnabled').value = cfg.paymentEnabled || 'on';
+  document.getElementById('settingPaymentProofRequired').value = cfg.paymentProofRequired || 'on';
+  document.getElementById('settingPaymentTimer').value = cfg.paymentTimerSeconds ?? 10;
+  const qrPreview = document.getElementById('settingPaymentQrPreview');
+  if (qrPreview) { if (cfg.paymentQrData) { qrPreview.src = cfg.paymentQrData; qrPreview.style.display = 'block'; } else { qrPreview.removeAttribute('src'); qrPreview.style.display = 'none'; } }
 
   document.getElementById('settingPlantFreeKm').value = cfg.plantFreeKm;
   document.getElementById('settingPlantDeliveryRate').value = cfg.plantDeliveryRate;
@@ -3182,6 +3229,10 @@ document.getElementById('siteSettingsForm')?.addEventListener('submit', function
     tickerText: document.getElementById('settingTickerText').value.trim(),
     upiId: document.getElementById('settingUpiId').value.trim(),
     upiName: document.getElementById('settingUpiName').value.trim(),
+    paymentEnabled: document.getElementById('settingPaymentEnabled').value,
+    paymentProofRequired: document.getElementById('settingPaymentProofRequired').value,
+    paymentTimerSeconds: Math.max(0, Math.min(300, Number(document.getElementById('settingPaymentTimer').value) || 0)),
+    paymentQrData: getSiteConfig().paymentQrData || '',
     
     plantFreeKm: Number(document.getElementById('settingPlantFreeKm').value) || 0,
     plantDeliveryRate: Number(document.getElementById('settingPlantDeliveryRate').value) || 10,
@@ -4272,6 +4323,42 @@ document.getElementById('locationButton').addEventListener('click', () => {
   }, { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
 });
 
+// QR upload: resize/compress before saving into the shared site configuration.
+(function initPaymentQrControls(){
+  const liveQrOriginal = document.getElementById('bharatpeNurseryQr');
+  if (liveQrOriginal && !liveQrOriginal.dataset.originalSrc) liveQrOriginal.dataset.originalSrc = liveQrOriginal.getAttribute('src') || '';
+  const fileInput = document.getElementById('settingPaymentQrFile');
+  const preview = document.getElementById('settingPaymentQrPreview');
+  const removeBtn = document.getElementById('settingPaymentQrRemove');
+  if (fileInput) fileInput.addEventListener('change', function(){
+    const file = this.files && this.files[0]; if (!file) return;
+    if (!file.type.startsWith('image/')) { alert('कृपया QR की इमेज चुनें।'); this.value=''; return; }
+    const reader = new FileReader();
+    reader.onload = function(){
+      const img = new Image();
+      img.onload = function(){
+        const canvas = document.createElement('canvas');
+        const scale = Math.min(1, 900 / Math.max(img.width, img.height));
+        canvas.width = Math.max(1, Math.round(img.width * scale)); canvas.height = Math.max(1, Math.round(img.height * scale));
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        const data = canvas.toDataURL('image/jpeg', 0.82);
+        if (data.length > 850000) { alert('QR इमेज बहुत बड़ी है। छोटी/कम साइज की इमेज चुनें।'); return; }
+        const cfg = getSiteConfig(); cfg.paymentQrData = data; localStorage.setItem('nursery_site_config', JSON.stringify(cfg));
+        if (preview) { preview.src=data; preview.style.display='block'; }
+        const liveQr=document.getElementById('bharatpeNurseryQr'); if(liveQr) liveQr.src=data;
+      };
+      img.onerror=()=>alert('QR इमेज पढ़ी नहीं जा सकी।'); img.src=reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+  if(removeBtn) removeBtn.addEventListener('click', function(){
+    const cfg=getSiteConfig(); cfg.paymentQrData=''; localStorage.setItem('nursery_site_config',JSON.stringify(cfg));
+    if(preview){preview.removeAttribute('src');preview.style.display='none';}
+    const liveQr=document.getElementById('bharatpeNurseryQr'); if(liveQr) liveQr.src=liveQr.dataset.originalSrc || liveQr.src;
+    if(fileInput) fileInput.value='';
+  });
+})();
+
 function startUpiTimer() {
   const countdownEl = document.getElementById('upiCountdown');
   const countStatus = document.getElementById('paymentCountdownStatus');
@@ -4281,15 +4368,16 @@ function startUpiTimer() {
   countStatus.style.display = 'block';
   doneBtn.style.display = 'none';
 
-  let seconds = 10;
-  countdownEl.textContent = '00:10';
-  countStatus.textContent = 'भुगतान प्रक्रिया जाँची जा रही है... 10 सेकंड प्रतीक्षा करें।';
+  let seconds = Math.max(0, Math.min(300, Number(getSiteConfig().paymentTimerSeconds ?? 10)));
+  countdownEl.textContent = '00:' + String(seconds).padStart(2, '0');
+  countStatus.textContent = 'भुगतान ऐप से लौटकर आगे बढ़ें।';
+  if (seconds === 0) { countdownEl.style.display = 'none'; countStatus.textContent = 'भुगतान सफल होने पर नीचे दिए बटन को दबाएँ:'; doneBtn.style.display = 'block'; return; }
 
   if (upiCountdownInterval) clearInterval(upiCountdownInterval);
 
   upiCountdownInterval = setInterval(() => {
     seconds--;
-    countdownEl.textContent = '00:0' + seconds;
+    countdownEl.textContent = '00:' + String(seconds).padStart(2, '0');
     if (seconds <= 0) {
       clearInterval(upiCountdownInterval);
       countdownEl.style.display = 'none';
@@ -4317,6 +4405,10 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
     alert('⚠️ आज नर्सरी बंद है। कृपया कल ऑर्डर करें।');
     return;
   }
+  if (cfg.paymentEnabled === 'off') {
+    alert('⚠️ ऑनलाइन UPI पेमेंट फिलहाल बंद है। कृपया नर्सरी मालिक से संपर्क करें।');
+    return;
+  }
 
   if (shoppingCart.length === 0) {
     alert('⚠️ आपकी कार्ट खाली है!');
@@ -4324,7 +4416,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
   }
 
   const utrNumber = document.getElementById('paymentUtrNumber').value.trim();
-  if (!/^\d{12}$/.test(utrNumber)) {
+  if (cfg.paymentProofRequired !== 'off' && !/^\d{12}$/.test(utrNumber)) {
     alert('⚠️ कृपया 12 अंकों का सही UPI UTR / ट्रांजैक्शन नंबर दर्ज करें!');
     document.getElementById('paymentUtrNumber').focus();
     return;
