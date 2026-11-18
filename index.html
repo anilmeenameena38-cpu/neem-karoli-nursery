@@ -5585,8 +5585,8 @@ loadPlants();
         Math.round(receivedAmount * 100) === Math.round(expectedAmount * 100);
       const msg = document.getElementById('verifyUtrMessage');
       if (!entered) { msg.textContent = 'बैंक/UPI ऐप में दिखा UTR दर्ज करें।'; msg.style.color = '#64748b'; }
-      else if (!match) { msg.textContent = '❌ UTR मेल नहीं खा रहा। ऑर्डर कन्फर्म नहीं होगा।'; msg.style.color = '#b91c1c'; }
-      else if (!amountMatch) { msg.textContent = '❌ प्राप्त राशि ऑर्डर की पूरी राशि से मेल नहीं खाती।'; msg.style.color = '#b91c1c'; }
+      else if (!match) { msg.textContent = '❌ UTR मेल नहीं खा रहा। ऑर्डर कन्फर्म नहीं होगा।'; msg.style.color = '#991b1b'; msg.style.fontSize = '15px'; msg.style.fontWeight = '900'; msg.style.lineHeight = '1.55'; msg.style.background = '#fef2f2'; msg.style.border = '1px solid #fecaca'; msg.style.borderRadius = '10px'; msg.style.padding = '10px 12px'; }
+      else if (!amountMatch) { msg.textContent = '❌ प्राप्त राशि ऑर्डर की पूरी राशि से मेल नहीं खाती।'; msg.style.color = '#991b1b'; msg.style.fontSize = '15px'; msg.style.fontWeight = '900'; msg.style.lineHeight = '1.55'; msg.style.background = '#fef2f2'; msg.style.border = '1px solid #fecaca'; msg.style.borderRadius = '10px'; msg.style.padding = '10px 12px'; }
       else if (!received.checked) { msg.textContent = 'UTR और राशि सही हैं। अब बैंक में सफल क्रेडिट की पुष्टि करें।'; msg.style.color = '#a16207'; }
       else { msg.textContent = '✅ UTR और पूरी राशि सही हैं। बैंक में सफल भुगतान की पुष्टि की गई है।'; msg.style.color = '#15803d'; }
       submit.disabled = !(match && amountMatch && received.checked);
@@ -5632,7 +5632,14 @@ loadPlants();
         }
         const messageEl = document.getElementById('verifyUtrMessage');
         messageEl.textContent = '❌ ' + userMessage;
-        messageEl.style.color = '#b91c1c';
+        messageEl.style.color = '#991b1b';
+        messageEl.style.fontSize = '15px';
+        messageEl.style.fontWeight = '900';
+        messageEl.style.lineHeight = '1.55';
+        messageEl.style.background = '#fef2f2';
+        messageEl.style.border = '1px solid #fecaca';
+        messageEl.style.borderRadius = '10px';
+        messageEl.style.padding = '10px 12px';
         submit.disabled = false;
         submit.style.opacity = '1';
       } finally {
