@@ -1729,6 +1729,20 @@ body.info-fullscreen-open > main > .nav-page-open {
 }
 </style>
 
+<style id="addon-accordion-mobile-cart-fix">
+.product-addon-selector summary::-webkit-details-marker{display:none}
+.product-addon-selector .addon-toggle-open{display:none}
+.product-addon-selector[open] .addon-toggle-closed{display:none}
+.product-addon-selector[open] .addon-toggle-open{display:inline}
+.product-addon-selector summary{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+@media(max-width:700px){
+ .product-addon-selector{width:100%;max-width:100%;margin:5px 0!important}
+ .product-addon-selector summary{min-height:34px;padding:6px 8px!important;font-size:11px!important}
+ .product-addon-selector .addon-toggle-hint{font-size:10px!important;white-space:nowrap}
+ .product-addon-selector [data-addon-action]{width:27px!important;height:27px!important;font-size:16px!important;font-weight:1000!important}
+ .product-addon-selector .card-addon-qty{width:40px!important;height:27px!important;font-size:12px!important}
+}
+</style>
 </head>
 <body>
 
@@ -3486,14 +3500,19 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
 
 function safe(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function isGrocery(p) {
-  const cat = String(p && p.category || '').toLowerCase();
+  const cat = String(p && (p.category || p.category_name || p.type) || '').toLowerCase();
   const name = String(p && p.name || '').toLowerCase();
+  const explicitVeg = /सब्जी|सब्ज़ी|सब्जियां|सब्ज़ियां|vegetable|vegetables|fresh.?veg|हरी.?सब्ज/i.test(cat);
+  if (explicitVeg) return false;
   return cat.includes('किराना') || cat.includes('grocery') || cat.includes('cake') || cat.includes('drink') || cat.includes('बेकरी') ||
-         /केक|कोल्ड ड्रिंक|coca-cola|sprite|pepsi|thumbs up|fanta|cake|pastry|grocery|किराना|मसाला|तेल|चाय|चीनी/i.test(name + ' ' + cat);
+         /केक|कोल्ड ड्रिंक|coca.?cola|sprite|pepsi|thumbs.?up|fanta|cake|pastry|grocery|किराना|मसाला|तेल|चाय|चीनी/i.test(name + ' ' + cat);
 }
 function isVeg(p) {
+  const cat = String(p && (p.category || p.category_name || p.type) || '').toLowerCase();
+  const name = String(p && p.name || '').toLowerCase();
   if (isGrocery(p)) return false;
-  return /सब्जी|सब्ज़ी|veg|vegetable/i.test(String(p && p.category || ''));
+  return /सब्जी|सब्ज़ी|सब्जियां|सब्ज़ियां|veg|vegetable|fresh.?produce/i.test(cat) ||
+         /टमाटर|आलू|प्याज|प्याज़|भिंडी|बैंगन|हरी मिर्च|मिर्च|खीरा|ककड़ी|लौकी|तोरई|पालक|मेथी|धनिया|पुदीना|गोभी|फूलगोभी|गाजर|मूली|करेला|कद्दू|tomato|potato|onion|okra|brinjal|eggplant|chilli|chili|cucumber|bottle gourd|spinach|coriander|mint|cauliflower|carrot|radish|bitter gourd/i.test(name);
 }
 function isPlant(p) {
   return !isVeg(p) && !isGrocery(p);
@@ -3635,7 +3654,7 @@ async function loadPlants() {
           <details class="product-addon-selector" style="margin:5px 0;padding:0;background:#fffdf0;border:1px solid #eadb91;border-radius:9px;text-align:left;font-size:11.5px;overflow:hidden">
             <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:7px 9px;color:#75420b;font-weight:900;font-size:12px">
               <span><b style="font-size:15px;font-weight:1000;margin-right:3px">＋</b> साथ में क्या चाहिए?</span>
-              <span style="font-size:10px;font-weight:900;color:#0f766e">चुनने के लिए खोलें ▾</span>
+              <span class="addon-toggle-hint" style="font-size:10px;font-weight:900;color:#0f766e"><span class="addon-toggle-closed">खोलें ＋</span><span class="addon-toggle-open">बंद करें −</span></span>
             </summary>
             <div style="padding:5px 8px 7px;border-top:1px solid #f1e6b5">
               ${addonItems.map(a => `
@@ -3773,22 +3792,16 @@ async function loadPlants() {
             price: Number(input.dataset.addonPrice) || 0,
             qty: Math.max(0, Math.floor(Number(input.value) || 0))
           })).filter(addon => addon.name && addon.qty > 0);
-          if (existingIndex !== -1 && selectedAddons.length) {
-            // If the product is already in the cart, a new add-on selection updates
-            // its add-ons instead of removing the product.
-            shoppingCart[existingIndex].addons = selectedAddons;
-            
-            updateCartBadge();
-            updateProductCartButtons();
-            if (!document.getElementById('order').hidden) renderCartModal();
-            return;
-          }
           if (existingIndex !== -1) {
             shoppingCart.splice(existingIndex, 1);
+            card.querySelectorAll('.card-addon-qty').forEach(input => { input.value = ''; });
+            const addonDetails = card.querySelector('.product-addon-selector');
+            if (addonDetails) addonDetails.open = false;
             updateCartBadge();
             updateProductCartButtons();
             if (!shoppingCart.length && !document.getElementById('order').hidden) closeOrderPopup();
             else if (!document.getElementById('order').hidden) renderCartModal();
+            syncButton();
             return;
           }
 
@@ -4127,7 +4140,16 @@ function renderCartModal() {
 }
 
 function removeFromCart(index) {
+  const removedItem = shoppingCart[index];
   shoppingCart.splice(index, 1);
+  if (removedItem) {
+    document.querySelectorAll('.plant').forEach(card => {
+      if (!card.dataset.cartKey || !card.dataset.cartKey.endsWith('-' + removedItem.id)) return;
+      card.querySelectorAll('.card-addon-qty').forEach(input => { input.value = ''; });
+      const details = card.querySelector('.product-addon-selector');
+      if (details) details.open = false;
+    });
+  }
   updateCartBadge();
   updateProductCartButtons();
   if (shoppingCart.length === 0) {
@@ -6065,6 +6087,8 @@ loadPlants();
   const grocerySection = document.getElementById('viewGroceryCategory');
 
   function setStoreView(view) {
+    window.__nurseryActiveStoreView = view;
+    window.setNurseryStoreView = setStoreView;
     const isPlants = view === 'plants';
     const isVeg = view === 'veg';
     const isGrocery = view === 'grocery';
