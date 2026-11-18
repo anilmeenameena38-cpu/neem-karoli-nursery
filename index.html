@@ -2751,92 +2751,154 @@ body.info-fullscreen-open > main > .nav-page-open {
 
         <button type="submit" class="admin-primary-submit" style="margin-top:14px">💾 सभी सेटिंग्स सुरक्षित व वेबसाइट पर लागू करें</button>
               <div id="subpane-complete" class="settings-subpane">
-          <div class="cmsx-intro"><strong>🧭 पूरा वेबसाइट कंट्रोल सेंटर</strong><span>यहाँ से होमपेज, कैटेगरी, अलग-अलग ऑर्डर, About Us और मोबाइल लेआउट नियंत्रित करें।</span></div>
-          <div class="cmsx-grid">
-            <section class="cmsx-card">
-              <h3>🏠 होमपेज और सेक्शन</h3>
-              <label>होमपेज का मुख्य शीर्षक<input id="cmsxHomeTitle" type="text" maxlength="90" placeholder="नर्सरी का मुख्य शीर्षक"></label>
-              <label>होमपेज की छोटी जानकारी<textarea id="cmsxHomeSubtitle" rows="2" maxlength="260" placeholder="ग्राहकों को होमपेज पर दिखने वाला परिचय"></textarea></label>
-              <label class="cmsx-check"><input id="cmsxShowHome" type="checkbox"> होमपेज पर उत्पाद कैटेगरी दिखाएँ</label>
-              <label class="cmsx-check"><input id="cmsxShowAbout" type="checkbox"> हमारे बारे में पेज दिखाएँ</label>
-              <label class="cmsx-check"><input id="cmsxShowCare" type="checkbox"> पौधों की देखभाल पेज दिखाएँ</label>
-              <label class="cmsx-check"><input id="cmsxShowTypes" type="checkbox"> पौधों के प्रकार पेज दिखाएँ</label>
-              <label class="cmsx-check"><input id="cmsxShowContact" type="checkbox"> संपर्क सेक्शन दिखाएँ</label>
-            </section>
-            <section class="cmsx-card cmsx-wide">
-              <h3>🎨 होमपेज डिजाइन और कॉलम कंट्रोल</h3>
-              <p class="cmsx-help">डेस्कटॉप और मोबाइल के लिए अलग कॉलम चुनें। बदलाव सेव करने के बाद ग्राहक वाले होमपेज पर लागू होंगे।</p>
-              <div class="cmsx-design-grid">
-                <label>कंप्यूटर पर पौधे कॉलम<select id="cmsxDesktopPlantCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</option></select></label>
-                <label>कंप्यूटर पर सब्ज़ी कॉलम<select id="cmsxDesktopVegCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</select></label>
-                <label>कंप्यूटर पर किराना कॉलम<select id="cmsxDesktopGroceryCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</option></select></label>
-                <label>मोबाइल पर पौधे कॉलम<select id="cmsxMobilePlantCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</option></select></label>
-                <label>मोबाइल पर सब्ज़ी कॉलम<select id="cmsxMobileVegCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</select></label>
-                <label>मोबाइल पर किराना कॉलम<select id="cmsxMobileGroceryCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</select></label>
-                <label>प्रोडक्ट फोटो की ऊँचाई<select id="cmsxProductImageHeight"><option value="90">छोटी - 90px</option><option value="120">मध्यम - 120px</option><option value="160">बड़ी - 160px</option><option value="200">बहुत बड़ी - 200px</option></select></label>
-                <label>कार्ड का डिजाइन<select id="cmsxCardStyle"><option value="soft">सॉफ्ट गोल कार्ड</option><option value="square">कम गोल कार्ड</option><option value="shadow">शैडो कार्ड</option></select></label>
-                <label>मुख्य थीम रंग<input id="cmsxThemeColor" type="color" value="#087a4b"></label>
-              </div>
-              <label>होमपेज बैनर फोटो का URL<input id="cmsxHeroImageUrl" type="url" placeholder="https://... फोटो का लिंक"></label>
-              <label>बैनर बटन का नाम<input id="cmsxHeroButtonText" type="text" maxlength="35" placeholder="अभी खरीदें"></label>
-              <label>बैनर बटन का लिंक<input id="cmsxHeroButtonUrl" type="text" maxlength="180" placeholder="#viewPlantCategory या https://..."></label>
-              <div class="cmsx-preview" id="cmsxDesignPreview">होमपेज डिजाइन का Preview यहाँ दिखेगा</div>
-            </section>
-            <section class="cmsx-card">
-              <h3>🛍️ कैटेगरी और अलग-अलग ऑर्डर</h3>
-              <p class="cmsx-help">दिखाने और ऑर्डर लेने के स्विच अलग रखे गए हैं। किसी कैटेगरी को छिपाए बिना भी उसका ऑर्डर बंद कर सकते हैं।</p>
-              <label class="cmsx-check"><input id="cmsxPlantsVisible" type="checkbox"> 🌱 पौधों की कैटेगरी दिखाएँ</label>
-              <label class="cmsx-check"><input id="cmsxPlantsOrder" type="checkbox"> पौधों के ऑर्डर चालू रखें</label>
-              <label class="cmsx-check"><input id="cmsxVegVisible" type="checkbox"> 🥬 सब्ज़ियों की कैटेगरी दिखाएँ</label>
-              <label class="cmsx-check"><input id="cmsxVegOrder" type="checkbox"> सब्ज़ियों के ऑर्डर चालू रखें</label>
-              <label class="cmsx-check"><input id="cmsxGroceryVisible" type="checkbox"> 🥤 किराना / एड-ऑन कैटेगरी दिखाएँ</label>
-              <label class="cmsx-check"><input id="cmsxGroceryOrder" type="checkbox"> किराना / एड-ऑन ऑर्डर चालू रखें</label>
-              <label class="cmsx-check"><input id="cmsxAllOrders" type="checkbox"> सभी नए ऑर्डर स्वीकार करें</label>
-            </section>
-            <section class="cmsx-card">
-              <h3>📝 About Us सामग्री</h3>
-              <label>हमारा परिचय<textarea id="cmsxAboutText" rows="5" maxlength="1200"></textarea></label>
-              <label>हमारी खासियत<textarea id="cmsxFeaturesText" rows="4" maxlength="900" placeholder="हर खासियत नई लाइन में लिखें"></textarea></label>
-              <label>हमारा वादा<textarea id="cmsxPromiseText" rows="3" maxlength="600"></textarea></label>
-            </section>
-            <section class="cmsx-card">
-              <h3>📱 मोबाइल और SEO कंट्रोल</h3>
-              <label>Google खोज के लिए विवरण<textarea id="cmsxMetaDescription" rows="3" maxlength="300"></textarea></label>
-              <label class="cmsx-check"><input id="cmsxMobileCompact" type="checkbox"> मोबाइल पर कॉम्पैक्ट प्रोडक्ट कार्ड</label>
-            </section>
-            <section class="cmsx-card cmsx-wide">
-              <h3>☁️ डेटाबेस सेव, बैकअप और पब्लिश</h3>
-              <div id="cmsxDbStatus" class="cmsx-db-status">डेटाबेस कनेक्शन जाँचा जा रहा है…</div>
-              <div class="cmsx-actions">
-                <button type="button" id="cmsxSaveBtn">☁️ सभी सेटिंग सेव करें</button>
-                <button type="button" id="cmsxReloadBtn">🔄 डेटाबेस से सेटिंग लाएँ</button>
-                <button type="button" id="cmsxExportBtn">⬇️ बैकअप डाउनलोड</button>
-                <label class="cmsx-import">⬆️ बैकअप वापस लाएँ<input type="file" id="cmsxImportFile" accept="application/json"></label>
-              </div>
-              <p class="cmsx-help">डेटाबेस में सेव होने पर यही सेटिंग ग्राहक की वेबसाइट पर दूसरे मोबाइल और कंप्यूटर में भी लागू होगी। अगर टेबल अभी नहीं बनी है, तो नीचे दिए SQL को Supabase SQL Editor में एक बार चलाना होगा।</p>
-              <details class="cmsx-sql"><summary>Supabase में एक बार चलाने वाला SQL</summary><pre id="cmsxSqlText">create table if not exists public.site_settings (
-  id text primary key,
-  config jsonb not null default '{}'::jsonb,
-  updated_at timestamptz not null default now(),
-  updated_by uuid
-);
-grant select on public.site_settings to anon, authenticated;
-grant insert, update on public.site_settings to authenticated;
-alter table public.site_settings enable row level security;
-drop policy if exists "Public can read nursery settings" on public.site_settings;
-create policy "Public can read nursery settings" on public.site_settings
-for select to anon, authenticated using (id = 'public');
-drop policy if exists "Owner can insert nursery settings" on public.site_settings;
-create policy "Owner can insert nursery settings" on public.site_settings
-for insert to authenticated with check (id = 'public' and auth.uid() = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9');
-drop policy if exists "Owner can update nursery settings" on public.site_settings;
-create policy "Owner can update nursery settings" on public.site_settings
-for update to authenticated using (id = 'public' and auth.uid() = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9') with check (id = 'public' and auth.uid() = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9');
-insert into public.site_settings (id, config) values ('public', '{}'::jsonb) on conflict (id) do nothing;</pre><button type="button" id="cmsxCopySqlBtn">SQL कॉपी करें</button></details>
-            </section>
+          <div style="background:linear-gradient(135deg,#064e3b,#0f766e);color:#fff;padding:18px;border-radius:16px;margin-bottom:16px;box-shadow:0 6px 20px rgba(6,78,59,.15)">
+            <strong style="font-size:18px;display:block;margin-bottom:4px">🧭 वेबसाइट मास्टर कंट्रोल सेंटर (Full Website Manager)</strong>
+            <span style="font-size:13px;opacity:0.95">यहाँ से आप पूरी वेबसाइट के पेज, लेआउट, कॉलम, कैटेगरी और आर्डर चालू/बंद करने की व्यवस्था को बेहद आसानी से नियंत्रित कर सकते हैं।</span>
           </div>
-        </div>
-      </form>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px">
+            
+            <!-- कार्ड 1: होमपेज व दृश्यता -->
+            <div class="admin-subcard" style="background:#fbfefc;border:1px solid #d8eadc;border-radius:16px;padding:16px">
+              <div class="admin-col-header" style="margin-bottom:12px">
+                <h3 style="margin:0;color:#123b27">🏠 होमपेज व मुख्य पेज विजिबिलिटी</h3>
+                <span class="admin-count-pill">पेज कंट्रोल</span>
+              </div>
+              <label>होमपेज का मुख्य शीर्षक (Heading)</label>
+              <input id="cmsxHomeTitle" type="text" maxlength="90" placeholder="नर्सरी का मुख्य शीर्षक">
+              
+              <label>होमपेज का उप-शीर्षक / परिचय</label>
+              <textarea id="cmsxHomeSubtitle" rows="2" maxlength="260" placeholder="ग्राहकों को होमपेज पर दिखने वाला परिचय"></textarea>
+              
+              <div style="margin-top:12px;display:grid;gap:6px">
+                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
+                  <input id="cmsxShowHome" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> होमपेज पर उत्पाद कैटेगरी दिखाएँ
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
+                  <input id="cmsxShowAbout" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 'हमारे बारे में' पेज दिखाएँ
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
+                  <input id="cmsxShowCare" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 'पौधों की देखभाल' पेज दिखाएँ
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
+                  <input id="cmsxShowTypes" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 'पौधों के प्रकार' पेज दिखाएँ
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
+                  <input id="cmsxShowContact" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 'संपर्क' सेक्शन दिखाएँ
+                </label>
+              </div>
+            </div>
+
+            <!-- कार्ड 2: लेआउट व कॉलम कंट्रोल -->
+            <div class="admin-subcard" style="background:#fbfefc;border:1px solid #d8eadc;border-radius:16px;padding:16px">
+              <div class="admin-col-header" style="margin-bottom:12px">
+                <h3 style="margin:0;color:#123b27">📐 लेआउट व कॉलम कंट्रोल</h3>
+                <span class="admin-count-pill">डिजाइन</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div>
+                  <label>डेस्कटॉप: पौधे कॉलम</label>
+                  <select id="cmsxDesktopPlantCols"><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</option></select>
+                </div>
+                <div>
+                  <label>मोबाइल: पौधे कॉलम</label>
+                  <select id="cmsxMobilePlantCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option></select>
+                </div>
+                <div>
+                  <label>डेस्कटॉप: सब्ज़ी कॉलम</label>
+                  <select id="cmsxDesktopVegCols"><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</option></select>
+                </div>
+                <div>
+                  <label>मोबाइल: सब्ज़ी कॉलम</label>
+                  <select id="cmsxMobileVegCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option></select>
+                </div>
+                <div>
+                  <label>डेस्कटॉप: किराना कॉलम</label>
+                  <select id="cmsxDesktopGroceryCols"><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option><option value="4">4 कॉलम</option></select>
+                </div>
+                <div>
+                  <label>मोबाइल: किराना कॉलम</label>
+                  <select id="cmsxMobileGroceryCols"><option value="1">1 कॉलम</option><option value="2">2 कॉलम</option><option value="3">3 कॉलम</option></select>
+                </div>
+              </div>
+
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div>
+                  <label>उत्पाद फोटो ऊँचाई</label>
+                  <select id="cmsxProductImageHeight"><option value="90">छोटी (90px)</option><option value="120">मध्यम (120px)</option><option value="160">बड़ी (160px)</option></select>
+                </div>
+                <div>
+                  <label>कार्ड डिजाइन</label>
+                  <select id="cmsxCardStyle"><option value="soft">सॉफ्ट गोल</option><option value="square">चौकोर</option><option value="shadow">शैडो</option></select>
+                </div>
+              </div>
+              <label style="margin-top:10px">थीम रंग (Theme Color)</label>
+              <input id="cmsxThemeColor" type="color" value="#087a4b" style="height:42px;padding:2px">
+            </div>
+
+            <!-- कार्ड 3: कैटेगरी और आर्डर स्विच -->
+            <div class="admin-subcard" style="background:#fbfefc;border:1px solid #d8eadc;border-radius:16px;padding:16px">
+              <div class="admin-col-header" style="margin-bottom:12px">
+                <h3 style="margin:0;color:#123b27">🛍️ कैटेगरी व ऑर्डर स्विच</h3>
+                <span class="admin-count-pill">स्टोर स्विच</span>
+              </div>
+              <p style="font-size:12px;color:var(--muted);margin:0 0 10px">आप किसी भी कैटेगरी को बिना डिलीट किए छिपा सकते हैं या उसके ऑर्डर चालू/बंद कर सकते हैं।</p>
+              
+              <div style="display:grid;gap:6px">
+                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
+                  <input id="cmsxPlantsVisible" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 🌱 पौधों की कैटेगरी दिखाएँ
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
+                  <input id="cmsxPlantsOrder" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 🌱 पौधों के आर्डर चालू रखें
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
+                  <input id="cmsxVegVisible" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 🥬 सब्ज़ियों की कैटेगरी दिखाएँ
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
+                  <input id="cmsxVegOrder" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 🥬 सब्ज़ियों के आर्डर चालू रखें
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
+                  <input id="cmsxGroceryVisible" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 🛒 किराना / केक कैटेगरी दिखाएँ
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;background:#f0fdf4;padding:8px 10px;border-radius:10px;border:1px solid #d1fae5">
+                  <input id="cmsxGroceryOrder" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a"> 🛒 किराना / केक आर्डर चालू रखें
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;font-weight:900;cursor:pointer;background:#fef2f2;padding:8px 10px;border-radius:10px;border:1px solid #fecaca;color:#991b1b">
+                  <input id="cmsxAllOrders" type="checkbox" style="width:18px;height:18px;accent-color:#dc2626"> 🚨 मास्टर स्विच: सभी नए ऑर्डर स्वीकार करें
+                </label>
+              </div>
+            </div>
+
+            <!-- कार्ड 4: About Us सामग्री -->
+            <div class="admin-subcard" style="background:#fbfefc;border:1px solid #d8eadc;border-radius:16px;padding:16px">
+              <div class="admin-col-header" style="margin-bottom:12px">
+                <h3 style="margin:0;color:#123b27">📝 About Us व जानकारी सामग्री</h3>
+                <span class="admin-count-pill">कंटेंट</span>
+              </div>
+              <label>हमारा परिचय (About Text)</label>
+              <textarea id="cmsxAboutText" rows="3" maxlength="1200" placeholder="नर्सरी का पूरा परिचय…"></textarea>
+              
+              <label>हमारी खासियतें (Features, एक प्रति लाइन)</label>
+              <textarea id="cmsxFeaturesText" rows="3" maxlength="900" placeholder="प्रत्येक लाइन में एक खासियत लिखें…"></textarea>
+              
+              <label>हमारा वादा (Our Promise)</label>
+              <textarea id="cmsxPromiseText" rows="2" maxlength="600" placeholder="ग्राहकों से हमारा वादा…"></textarea>
+            </div>
+
+          </div>
+
+          <!-- नीचे डेटाबेस सिंक और सेव बटन -->
+          <div style="margin-top:16px;background:#f4fbf6;border:1px solid #cce8d4;border-radius:16px;padding:16px;text-align:center">
+            <div id="cmsxDbStatus" style="padding:10px;border-radius:10px;background:#eff6ff;color:#1e40af;font-size:13px;font-weight:800;margin-bottom:12px">
+              डेटाबेस कनेक्शन तैयार है…
+            </div>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+              <button type="button" id="cmsxSaveBtn" class="admin-primary-submit" style="max-width:280px;margin:0">☁️ सभी सेटिंग्स तुरंत सेव व लागू करें</button>
+              <button type="button" id="cmsxReloadBtn" class="admin-soft-btn" style="padding:11px 18px">🔄 रीफ्रेश करें</button>
+              <button type="button" id="cmsxExportBtn" class="admin-soft-btn" style="padding:11px 18px">⬇️ बैकअप</button>
+            </div>
+          </div>
+        </div></form>
       <div id="siteSettingsStatus" class="status" style="display:none;margin-top:10px"></div>
     </div>
 
