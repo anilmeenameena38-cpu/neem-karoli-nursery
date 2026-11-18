@@ -3605,7 +3605,7 @@ async function loadPlants() {
         </div>
 
         
-        <!-- Add-ons: ग्राहक अपनी जरूरत के अनुसार अलग मात्रा चुन सकता है -->
+        <!-- Compact expandable add-ons: शुरुआत में जगह बचाने के लिए बंद -->
         ${(() => {
           let addonItems = [];
           const perProductText = String(p.addons_text || localStorage.getItem('nursery_addons_' + p.id) || '').trim();
@@ -3632,19 +3632,24 @@ async function loadPlants() {
           }
           if (!addonItems.length) return '';
           return `
-          <div class="product-addon-selector" style="margin:6px 0;padding:7px 8px;background:#fefce8;border:1px dashed #fde047;border-radius:10px;text-align:left;font-size:12px">
-            <div style="font-weight:800;color:#854d0e;margin-bottom:5px">➕ साथ में क्या चाहिए? (मात्रा चुनें)</div>
-            ${addonItems.map(a => `
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin:5px 0;color:#854d0e;font-weight:700">
-                <span style="min-width:0;flex:1">${safe(a.name)} <small>(₹${Number(a.price).toFixed(2)}/पीस)</small></span>
-                <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
-                  <button type="button" class="addon-qty-btn" data-addon-action="minus" aria-label="${safe(a.name)} कम करें" style="width:25px;height:27px;border:1px solid #d6b95b;border-radius:7px;background:#fff">−</button>
-                  <input type="number" class="card-addon-qty" min="0" step="1" value="0" inputmode="numeric" data-addon-name="${safe(a.name)}" data-addon-price="${Number(a.price)}" aria-label="${safe(a.name)} की मात्रा" style="width:46px;height:27px;text-align:center;border:1px solid #d6b95b;border-radius:7px;font-weight:800">
-                  <button type="button" class="addon-qty-btn" data-addon-action="plus" aria-label="${safe(a.name)} बढ़ाएँ" style="width:25px;height:27px;border:1px solid #d6b95b;border-radius:7px;background:#fff">+</button>
+          <details class="product-addon-selector" style="margin:5px 0;padding:0;background:#fffdf0;border:1px solid #eadb91;border-radius:9px;text-align:left;font-size:11.5px;overflow:hidden">
+            <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:7px 9px;color:#75420b;font-weight:900;font-size:12px">
+              <span><b style="font-size:15px;font-weight:1000;margin-right:3px">＋</b> साथ में क्या चाहिए?</span>
+              <span style="font-size:10px;font-weight:900;color:#0f766e">चुनने के लिए खोलें ▾</span>
+            </summary>
+            <div style="padding:5px 8px 7px;border-top:1px solid #f1e6b5">
+              ${addonItems.map(a => `
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:5px;padding:4px 0;border-bottom:1px solid #f5edcf;color:#70400c;font-weight:900">
+                  <span style="min-width:0;flex:1;font-weight:900;line-height:1.25">${safe(a.name)} <small style="font-weight:900;white-space:nowrap">(₹${Number(a.price).toFixed(2)}/पीस)</small></span>
+                  <div style="display:flex;align-items:center;gap:3px;flex-shrink:0">
+                    <button type="button" class="addon-qty-btn" data-addon-action="minus" aria-label="${safe(a.name)} कम करें" style="width:25px;height:25px;border:1px solid #c5a94d;border-radius:6px;background:#fff;color:#713f12;font-size:15px;font-weight:1000;line-height:1;padding:0">−</button>
+                    <input type="number" class="card-addon-qty" min="0" step="1" value="" inputmode="numeric" data-addon-name="${safe(a.name)}" data-addon-price="${Number(a.price)}" aria-label="${safe(a.name)} की मात्रा" style="width:38px;height:25px;text-align:center;border:1px solid #c5a94d;border-radius:6px;font-size:12px;font-weight:900;padding:0">
+                    <button type="button" class="addon-qty-btn" data-addon-action="plus" aria-label="${safe(a.name)} बढ़ाएँ" style="width:25px;height:25px;border:1px solid #c5a94d;border-radius:6px;background:#fff;color:#713f12;font-size:15px;font-weight:1000;line-height:1;padding:0">＋</button>
+                  </div>
                 </div>
-              </div>
-            `).join('')}
-          </div>`;
+              `).join('')}
+            </div>
+          </details>`;
         })()}
 
         <div class="card-stepper-box">
@@ -3684,7 +3689,7 @@ async function loadPlants() {
       card.querySelectorAll('.card-addon-qty').forEach(addonInput => {
         addonInput.addEventListener('input', () => {
           const value = Math.max(0, Math.min(999, Math.floor(Number(addonInput.value) || 0)));
-          addonInput.value = String(value);
+          addonInput.value = value === 0 ? '' : String(value);
           syncCardAddonsToCart();
         });
       });
@@ -3693,7 +3698,8 @@ async function loadPlants() {
           const field = addonBtn.parentElement?.querySelector('.card-addon-qty');
           if (!field) return;
           const current = Math.max(0, Math.floor(Number(field.value) || 0));
-          field.value = String(Math.max(0, current + (addonBtn.dataset.addonAction === 'plus' ? 1 : -1)));
+          const next = Math.max(0, current + (addonBtn.dataset.addonAction === 'plus' ? 1 : -1));
+          field.value = next === 0 ? '' : String(next);
           field.dispatchEvent(new Event('input', { bubbles: true }));
         });
       });
