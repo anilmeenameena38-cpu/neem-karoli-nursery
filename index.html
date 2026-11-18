@@ -5619,10 +5619,22 @@ loadPlants();
         await window.loadAdminAll();
         alert('✅ Supabase ने UTR, राशि और मालिक की अनुमति सत्यापित कर ऑर्डर कन्फर्म कर दिया।');
       } catch (err) {
-        document.getElementById('verifyUtrMessage').textContent = 'त्रुटि: ' + (err.message || err);
-        document.getElementById('verifyUtrMessage').style.color = '#b91c1c';
+        const rawMessage = String(err && err.message ? err.message : err || 'अज्ञात त्रुटि');
+        let userMessage = rawMessage;
+        if (rawMessage.includes('UTR_ALREADY_USED')) {
+          userMessage = 'यह UTR पहले किसी दूसरे ऑर्डर में दर्ज हो चुका है। बैंक/UPI ऐप में इस भुगतान का नया और वास्तविक UTR जाँचें। पुराने डेमो UTR को दोबारा इस्तेमाल न करें।';
+        } else if (rawMessage.includes('UTR_MISMATCH')) {
+          userMessage = 'बैंक/UPI ऐप में मिला UTR ग्राहक के दिए UTR से मेल नहीं खाता।';
+        } else if (rawMessage.includes('AMOUNT_MISMATCH')) {
+          userMessage = 'बैंक में प्राप्त राशि ऑर्डर की पूरी राशि से मेल नहीं खाती।';
+        } else if (rawMessage.includes('OWNER_ONLY')) {
+          userMessage = 'केवल अधिकृत मालिक का लॉगिन भुगतान सत्यापित कर सकता है।';
+        }
+        const messageEl = document.getElementById('verifyUtrMessage');
+        messageEl.textContent = '❌ ' + userMessage;
+        messageEl.style.color = '#b91c1c';
         submit.disabled = false;
-        validate();
+        submit.style.opacity = '1';
       } finally {
         submit.textContent = 'UTR Verify करके Confirm करें';
       }
