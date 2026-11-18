@@ -1743,6 +1743,22 @@ body.info-fullscreen-open > main > .nav-page-open {
  .product-addon-selector .card-addon-qty{width:40px!important;height:27px!important;font-size:12px!important}
 }
 </style>
+<style id="mobile-addon-visibility-fix-v2">
+.product-addon-selector{display:block!important;visibility:visible!important;opacity:1!important}
+.product-addon-selector:not([open])> :not(summary){display:none}
+.product-addon-selector[open]> :not(summary){display:block}
+.product-addon-selector summary{display:flex!important;visibility:visible!important;cursor:pointer!important;pointer-events:auto!important}
+@media(max-width:700px){
+  .plant .product-addon-selector,
+  #groceryOnlyList .product-addon-selector,
+  .product-addon-selector{
+    display:block!important;visibility:visible!important;opacity:1!important;
+    width:100%!important;max-width:100%!important;box-sizing:border-box!important;
+    position:relative!important;z-index:2!important;overflow:visible!important;
+  }
+  .plant .product-addon-selector summary{display:flex!important;min-height:36px!important;align-items:center!important}
+}
+</style>
 </head>
 <body>
 
@@ -3552,10 +3568,19 @@ async function loadPlants() {
     const { data, error } = await db.from('plants').select('*').order('name');
     if (error) throw error;
     try {
-      const { data: addonSettings } = await db.from('site_settings').select('config').eq('id', 'public').maybeSingle();
+      const { data: addonSettings, error: addonSettingsError } = await db.from('site_settings').select('config').eq('id', 'public').maybeSingle();
+      if (addonSettingsError) throw addonSettingsError;
       const published = addonSettings?.config?.customAddons;
-      if (Array.isArray(published)) localStorage.setItem('nursery_custom_addons_v1', JSON.stringify(published));
-    } catch (_) {}
+      window.nurseryPublishedAddons = Array.isArray(published) ? published : [];
+      localStorage.setItem('nursery_custom_addons_v1', JSON.stringify(window.nurseryPublishedAddons));
+    } catch (addonLoadError) {
+      console.warn('Published add-ons could not be loaded from Supabase:', addonLoadError);
+      try {
+        window.nurseryPublishedAddons = JSON.parse(localStorage.getItem('nursery_custom_addons_v1') || '[]');
+      } catch (_) {
+        window.nurseryPublishedAddons = [];
+      }
+    }
     plants = data || [];
     pList.innerHTML = ''; vList.innerHTML = '';
     const gList = document.getElementById('groceryOnlyList');
@@ -3642,7 +3667,9 @@ async function loadPlants() {
             /cake|cold drink|कोल्ड ड्रिंक|केक|coca.?cola|coke|sprite|pepsi|mirinda|fanta|thums.?up|maaza|limca|7.?up/i.test(String(p.name || ''))
           );
           if (isCakeOrColdDrink) {
-            const globalAddons = (() => { try { return JSON.parse(localStorage.getItem('nursery_custom_addons_v1') || '[]'); } catch (_) { return []; } })();
+            const globalAddons = Array.isArray(window.nurseryPublishedAddons)
+              ? window.nurseryPublishedAddons
+              : (() => { try { return JSON.parse(localStorage.getItem('nursery_custom_addons_v1') || '[]'); } catch (_) { return []; } })();
             globalAddons.forEach(a => {
               if (a && a.name && !addonItems.some(x => x.name === a.name)) {
                 addonItems.push({ name: String(a.name), price: Number(a.price) || 0 });
@@ -5438,6 +5465,7 @@ document.getElementById('publishCustomAddonsBtn')?.addEventListener('click', asy
     const config = Object.assign({}, existing?.config || {}, { customAddons: list });
     const { error: saveError } = await db.from('site_settings').upsert({id:'public',config,updated_at:new Date().toISOString(),updated_by:user.id},{onConflict:'id'});
     if (saveError) throw saveError;
+    window.nurseryPublishedAddons = list;
     localStorage.setItem('nursery_custom_addons_v1', JSON.stringify(list));
     localStorage.removeItem('nursery_custom_addons_draft_v1');
     if (status) status.textContent = '✅ प्रकाशित! अब ग्राहक वेबसाइट रीफ्रेश करें।';
