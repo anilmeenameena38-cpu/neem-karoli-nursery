@@ -3744,6 +3744,7 @@ async function loadPlants() {
           // Adding a vegetable keeps the customer on the vegetables tab.
           event.preventDefault();
           event.stopPropagation();
+          if (typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
           const existingIndex = shoppingCart.findIndex(item => item.id === p.id && Boolean(item.veg) === Boolean(veg));
           if (existingIndex !== -1) {
             shoppingCart.splice(existingIndex, 1);
@@ -3848,7 +3849,10 @@ function updateProductCartButtons() {
 function updateCartBadge() {
   // बैज में अलग-अलग उत्पाद नहीं, कुल चुनी हुई मात्रा दिखाएँ।
   const totalCount = shoppingCart.reduce((sum, item) => sum + (Number(item.qty) || 0), 0);
-  const totalPrice = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const totalPrice = shoppingCart.reduce((sum, item) => {
+    const addonsTotal = (item.addons || []).reduce((addonSum, addon) => addonSum + (Number(addon.price) || 0), 0);
+    return sum + (Number(item.price) || 0) * (Number(item.qty) || 0) + addonsTotal;
+  }, 0);
 
   const bottomBar = document.getElementById('floatingBottomCartBar');
   const barCount = document.getElementById('barItemCount');
@@ -5884,7 +5888,7 @@ loadPlants();
   const clear=document.getElementById('clearStoreSearch');
   function filterProducts(){
     const q=(search?.value||'').trim().toLocaleLowerCase('hi');
-    document.querySelectorAll('#plantOnlyList .plant, #vegOnlyList .plant').forEach(card=>{
+    document.querySelectorAll('#plantOnlyList .plant, #vegOnlyList .plant, #groceryOnlyList .plant').forEach(card=>{
       const match=!q || card.textContent.toLocaleLowerCase('hi').includes(q);
       card.style.display=match?'':'none';
     });
@@ -5978,7 +5982,9 @@ loadPlants();
 
   // Keep the appropriate layout if the device is rotated or resized.
   window.addEventListener('resize', function(){
-    const currentView = document.body.classList.contains('store-view-veg') ? 'veg' : 'plants';
+    const currentView = document.body.classList.contains('store-view-grocery')
+      ? 'grocery'
+      : (document.body.classList.contains('store-view-veg') ? 'veg' : 'plants');
     setStoreView(currentView);
   });
 })();
