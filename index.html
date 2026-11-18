@@ -4182,6 +4182,30 @@ function closeOrderPopup() {
 
 document.getElementById('closeOrderModal').addEventListener('click', closeOrderPopup);
 
+async function getReadableLocationAddress(lat, lon) {
+  // GPS coordinates को पढ़ने योग्य पते में बदलें (Reverse Geocoding).
+  const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=18&addressdetails=1&accept-language=hi`;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 9000);
+  try {
+    const response = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: controller.signal });
+    if (!response.ok) throw new Error('पता सेवा उपलब्ध नहीं है');
+    const data = await response.json();
+    const a = data.address || {};
+    const parts = [
+      a.house_number, a.road || a.pedestrian || a.footway,
+      a.neighbourhood || a.suburb || a.village || a.hamlet,
+      a.town || a.city || a.county || a.district,
+      a.state
+    ].filter(Boolean);
+    return [...new Set(parts)].join(', ') || data.display_name || '';
+  } catch (_) {
+    return '';
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 document.getElementById('locationButton').addEventListener('click', () => {
   const stat = document.getElementById('locationStatus');
   if (!navigator.geolocation) {
@@ -4189,7 +4213,7 @@ document.getElementById('locationButton').addEventListener('click', () => {
     return;
   }
   stat.textContent = 'सटीक GPS लोकेशन ली जा रही है… कृपया अनुमति दें और कुछ सेकंड प्रतीक्षा करें।';
-  navigator.geolocation.getCurrentPosition(pos => {
+  navigator.geolocation.getCurrentPosition(async pos => {
     const lat = pos.coords.latitude, lon = pos.coords.longitude;
     const accuracyM = Number(pos.coords.accuracy || 0);
     // Use one-way straight-line GPS distance only; do not multiply it by two.
@@ -4197,11 +4221,14 @@ document.getElementById('locationButton').addEventListener('click', () => {
     const oneWayKm = distanceKm(NURSERY_LOCATION.lat, NURSERY_LOCATION.lon, lat, lon);
     deliveryDistanceKm = oneWayKm;
     const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${NURSERY_LOCATION.lat},${NURSERY_LOCATION.lon}&destination=${lat},${lon}&travelmode=driving`;
-    customerLocation = { lat, lon, accuracyM, mapsUrl, pointUrl: `https://www.google.com/maps?q=${lat},${lon}` };
+    customerLocation = { lat, lon, accuracyM, mapsUrl, pointUrl: `https://www.google.com/maps?q=${lat},${lon}`, address: '' };
+    stat.textContent = '✅ GPS लोकेशन मिल गई। जगह का पता खोजा जा रहा है…';
+    customerLocation.address = await getReadableLocationAddress(lat, lon);
     const accuracyText = accuracyM ? ` GPS सटीकता लगभग ${Math.round(accuracyM)} मीटर।` : '';
-    stat.textContent = `✅ नर्सरी से सीधी GPS दूरी: ${oneWayKm.toFixed(1)} किमी।${accuracyText} सड़क की दूरी Google Maps में देखें।`;
+    const addressText = customerLocation.address ? `\n📍 पहचाना गया पता: ${customerLocation.address}` : '\n📍 जगह का नाम नहीं मिला; GPS मैप लिंक उपलब्ध है।';
+    stat.textContent = `✅ नर्सरी से सीधी GPS दूरी: ${oneWayKm.toFixed(1)} किमी।${accuracyText}${addressText} सड़क की दूरी Google Maps में देखें।`;
     document.getElementById('deliveryEstimate').style.display = 'block';
-    document.getElementById('deliveryEstimate').textContent = `सीधी GPS दूरी: ${oneWayKm.toFixed(1)} किमी (सड़क की दूरी अलग हो सकती है)`;
+    document.getElementById('deliveryEstimate').textContent = `सीधी GPS दूरी: ${oneWayKm.toFixed(1)} किमी (सड़क की दूरी अलग हो सकती है)` + (customerLocation.address ? ` | पता: ${customerLocation.address}` : ' | पता उपलब्ध नहीं हुआ; मैप लिंक देखें।');
     document.getElementById('bharatpePaymentBox').style.display = 'block';
     renderCartModal();
   }, err => {
@@ -4336,7 +4363,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
       customer_name: customerName,
       customer_phone: cleanPhone,
       customer_address: fullAddress,
-      notes: `CART_ORDER | UTR:${utrNumber} | DISTANCE:${deliveryDistanceKm?.toFixed(1)}km | DELIVERY_FEE:${appliedDeliveryFee} | DISCOUNT:${discountAmt} | MAPS:${customerLocation?.mapsUrl || ''} | PROOF:${proofUrl}`,
+      notes: `CART_ORDER | UTR:${utrNumber} | DISTANCE:${deliveryDistanceKm?.toFixed(1)}km | DELIVERY_FEE:${appliedDeliveryFee} | DISCOUNT:${discountAmt} | LOCATION_NAME:${encodeURIComponent(customerLocation?.address || '')} | MAPS:${customerLocation?.mapsUrl || ''} | PROOF:${proofUrl}`,
       stock_items: shoppingCart.map(item => ({ id: String(item.id), qty: Number(item.qty) })),
       status: 'pending'
     }).select('id').single();
@@ -4356,6 +4383,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
       '\nकुल राशि: ₹' + totalAmount +
       '\nUTR / Ref No: ' + utrNumber +
       '\nपता: ' + fullAddress +
+      (customerLocation?.address ? '\nGPS से पहचाना गया पता: ' + customerLocation.address : '') +
       (customerLocation ? '\nGPS लोकेशन: ' + customerLocation.mapsUrl : '') +
       (proofUrl ? '\nस्क्रीनशॉट: ' + proofUrl : '');
 
@@ -4813,6 +4841,9 @@ function renderOrderHtml(o, allOrders) {
 
   const total = Number(o.unit_price || 0).toFixed(2);
   const mapsMatch = String(o.notes || '').match(/MAPS:(https:\/\/www\.google\.com\/maps\/(?:\?q=[0-9.,-]+|dir\/\?api=1&origin=[0-9.,-]+&destination=[0-9.,-]+&travelmode=driving))/);
+  const locationNameMatch = String(o.notes || '').match(/LOCATION_NAME:([^|]*)/);
+  let detectedAddress = '';
+  try { detectedAddress = locationNameMatch ? decodeURIComponent(locationNameMatch[1]) : ''; } catch (_) {}
   const proofMatch = String(o.notes || '').match(/PROOF:(https:[^|]+)/);
   const utrMatch = String(o.notes || '').match(/UTR:([^\s|]+)/);
   const cancelReasonMatch = String(o.notes || '').match(/CANCEL_REASON:([^|]+)/);
@@ -4870,9 +4901,10 @@ function renderOrderHtml(o, allOrders) {
           <strong style="color:#065f46;background:#ecfdf5;padding:2px 8px;border-radius:6px;border:1px solid #a7f3d0;display:inline-block">${safe(utrMatch ? utrMatch[1] : 'उपलब्ध नहीं')}</strong>
         </div>
         <div class="meta-cell full">
-          <small>📍 डिलीवरी पता</small>
+          <small>📍 ग्राहक द्वारा लिखा डिलीवरी पता</small>
           <strong>${safe(o.customer_address)}</strong>
         </div>
+        ${detectedAddress ? `<div class="meta-cell full"><small>🧭 GPS से अपने आप पहचाना गया पता</small><strong>${safe(detectedAddress)}</strong></div>` : ''}
       </div>
 
       <div class="order-actions admin-order-actions-bar" id="actions-container-${o.id}">
