@@ -2832,7 +2832,11 @@ body.info-fullscreen-open > main > .nav-page-open {
                 <button type="button" id="cmsxExportBtn">⬇️ बैकअप डाउनलोड</button>
                 <label class="cmsx-import">⬆️ बैकअप वापस लाएँ<input type="file" id="cmsxImportFile" accept="application/json"></label>
               </div>
-              <p class="cmsx-help">डेटाबेस में सेव होने पर यही सेटिंग ग्राहक की वेबसाइट पर दूसरे मोबाइल और कंप्यूटर में भी लागू होगी। अगर टेबल अभी नहीं बनी है, तो नीचे दिए SQL को Supabase SQL Editor में एक बार चलाना होगा।</p>
+              <p class="cmsx-help">डेटाबेस में सेव होने पर यही सेटिंग ग्राहक की वेबसाइट पर दूसरे मोबाइल और कंप्यूटर में भी लागू होगी। पुराने मोबाइल के localStorage का डेटा भी नीचे दिए सुरक्षित माइग्रेशन बटन से डेटाबेस में भेजें।</p>
+              <div class="cmsx-actions" style="margin-top:10px">
+                <button type="button" id="cmsxMigrateLocalBtn">📦 इस डिवाइस का पूरा लोकल डेटा डेटाबेस में भेजें</button>
+              </div>
+              <p class="cmsx-help">यह सुविधा मालिक के लॉगिन के बाद localStorage की सभी सामान्य डेटा keys को अलग सुरक्षित टेबल में सेव करेगी। Supabase के लॉगिन/सेशन टोकन इसमें शामिल नहीं होंगे। पहले SQL एक बार चलाएँ, फिर माइग्रेशन बटन दबाएँ।</p>
               <details class="cmsx-sql"><summary>Supabase में एक बार चलाने वाला SQL</summary><pre id="cmsxSqlText">create table if not exists public.site_settings (
   id text primary key,
   config jsonb not null default '{}'::jsonb,
@@ -2851,7 +2855,21 @@ for insert to authenticated with check (id = 'public' and auth.uid() = '1a014e64
 drop policy if exists "Owner can update nursery settings" on public.site_settings;
 create policy "Owner can update nursery settings" on public.site_settings
 for update to authenticated using (id = 'public' and auth.uid() = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9') with check (id = 'public' and auth.uid() = '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9');
-insert into public.site_settings (id, config) values ('public', '{}'::jsonb) on conflict (id) do nothing;</pre><button type="button" id="cmsxCopySqlBtn">SQL कॉपी करें</button></details>
+insert into public.site_settings (id, config) values ('public', '{}'::jsonb) on conflict (id) do nothing;
+
+-- लोकल डेटा के लिए अलग सुरक्षित टेबल
+create table if not exists public.nursery_app_data (
+  owner_id uuid not null references auth.users(id) on delete cascade,
+  data_key text not null,
+  data_value jsonb not null,
+  updated_at timestamptz not null default now(),
+  primary key (owner_id, data_key)
+);
+alter table public.nursery_app_data enable row level security;
+grant select, insert, update, delete on public.nursery_app_data to authenticated;
+drop policy if exists "Owner manages own nursery app data" on public.nursery_app_data;
+create policy "Owner manages own nursery app data" on public.nursery_app_data
+for all to authenticated using (auth.uid() = owner_id) with check (auth.uid() = owner_id);</pre><button type="button" id="cmsxCopySqlBtn">SQL कॉपी करें</button></details>
             </section>
           </div>
         </div>
@@ -7518,7 +7536,30 @@ body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .
  function escapeHtml(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
  async function loadRemote(){try{if(typeof db==='undefined'||!db.from)throw new Error('Supabase क्लाइंट उपलब्ध नहीं');const {data,error}=await db.from('site_settings').select('config').eq('id','public').maybeSingle();if(error)throw error;if(data&&data.config){const merged=Object.assign({},cfg(),data.config);setCfg(merged);fill(merged);if(typeof window.applySiteConfigToUI==='function')window.applySiteConfigToUI();apply(merged);status('☁️ डेटाबेस से सेटिंग सफलतापूर्वक लोड हुई।','ok');}else status('डेटाबेस टेबल में public सेटिंग नहीं मिली। SQL चलाकर सेव करें।','err');}catch(e){status('डेटाबेस सिंक उपलब्ध नहीं: '+(e.message||e)+' | अभी इस डिवाइस की सेव सेटिंग लागू है।','err');}}
  async function saveRemote(){const c=Object.assign({},cfg(),readForm());setCfg(c);apply(c);if(typeof window.applySiteConfigToUI==='function')window.applySiteConfigToUI();if(typeof window.loadPlants==='function')await window.loadPlants();try{const {data:{user}}=await db.auth.getUser();if(!user||user.id!=='1a014e64-4b85-4d2a-ba62-2cae5d9f10c9')throw new Error('पहले मालिक के एडमिन अकाउंट से लॉगिन करें');const {error}=await db.from('site_settings').upsert({id:'public',config:c,updated_at:new Date().toISOString(),updated_by:user.id},{onConflict:'id'});if(error)throw error;status('✅ सेटिंग डेटाबेस में सेव हो गईं। सभी डिवाइस पर लागू होंगी।','ok');}catch(e){status('⚠️ इस डिवाइस पर सेव हुआ, लेकिन डेटाबेस सेव नहीं हुआ: '+(e.message||e)+' | SQL / लॉगिन / RLS जाँचें।','err');}}
- function init(){const c=cfg();fill(c);apply(c);$('cmsxSaveBtn')?.addEventListener('click',saveRemote);$('cmsxReloadBtn')?.addEventListener('click',loadRemote);$('cmsxExportBtn')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify(cfg(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='neem-nursery-site-backup.json';a.click();URL.revokeObjectURL(a.href);});$('cmsxImportFile')?.addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const imported=JSON.parse(await f.text());const merged=Object.assign({},cfg(),imported);setCfg(merged);fill(merged);apply(merged);status('बैकअप लोड हुआ। अब डेटाबेस में सेव करें।','ok');}catch(_){status('गलत बैकअप फाइल।','err');}});$('cmsxCopySqlBtn')?.addEventListener('click',()=>{const t=$('cmsxSqlText')?.textContent||'';if(navigator.clipboard?.writeText)navigator.clipboard.writeText(t).then(()=>status('SQL कॉपी हो गया।','ok')).catch(()=>status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err'));else status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err');});window.addEventListener('resize',()=>apply(cfg()),{passive:true});document.querySelectorAll('.settings-subtab').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.subtab==='complete')fill(cfg());}));$('siteSettingsForm')?.addEventListener('submit',()=>setTimeout(saveRemote,0));['plantOnlyList','vegOnlyList','groceryOnlyList'].forEach(id=>{const root=$(id);if(root&&window.MutationObserver)new MutationObserver(()=>apply(cfg())).observe(root,{childList:true,subtree:true});});loadRemote();}
+ async function migrateLocalStorageToDatabase(){
+   try{
+     const {data:{user},error:userError}=await db.auth.getUser();
+     if(userError)throw userError;
+     if(!user||user.id!=='1a014e64-4b85-4d2a-ba62-2cae5d9f10c9')throw new Error('पहले मालिक के एडमिन अकाउंट से लॉगिन करें।');
+     const rows=[];
+     for(let i=0;i<localStorage.length;i++){
+       const key=localStorage.key(i); if(!key)continue;
+       // Supabase authentication/session secrets को कभी migrate न करें।
+       if(/^sb-.+-auth-token$/i.test(key)||/supabase.*(token|session)|access_token|refresh_token/i.test(key))continue;
+       const raw=localStorage.getItem(key); if(raw===null)continue;
+       let value; try{value=JSON.parse(raw);}catch(_){value=raw;}
+       rows.push({owner_id:user.id,data_key:key,data_value:value,updated_at:new Date().toISOString()});
+     }
+     if(!rows.length){status('इस ब्राउज़र में माइग्रेट करने योग्य लोकल डेटा नहीं मिला।','err');return;}
+     const batchSize=100;
+     for(let i=0;i<rows.length;i+=batchSize){
+       const {error}=await db.from('nursery_app_data').upsert(rows.slice(i,i+batchSize),{onConflict:'owner_id,data_key'});
+       if(error)throw error;
+     }
+     status('✅ '+rows.length+' लोकल डेटा आइटम सुरक्षित रूप से Supabase डेटाबेस में सेव हो गए।','ok');
+   }catch(e){status('❌ लोकल डेटा माइग्रेशन नहीं हुआ: '+(e.message||e)+' | SQL चलाएँ और मालिक के अकाउंट से लॉगिन जाँचें।','err');}
+ }
+ function init(){const c=cfg();fill(c);apply(c);$('cmsxMigrateLocalBtn')?.addEventListener('click',migrateLocalStorageToDatabase);$('cmsxSaveBtn')?.addEventListener('click',saveRemote);$('cmsxReloadBtn')?.addEventListener('click',loadRemote);$('cmsxExportBtn')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify(cfg(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='neem-nursery-site-backup.json';a.click();URL.revokeObjectURL(a.href);});$('cmsxImportFile')?.addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const imported=JSON.parse(await f.text());const merged=Object.assign({},cfg(),imported);setCfg(merged);fill(merged);apply(merged);status('बैकअप लोड हुआ। अब डेटाबेस में सेव करें।','ok');}catch(_){status('गलत बैकअप फाइल।','err');}});$('cmsxCopySqlBtn')?.addEventListener('click',()=>{const t=$('cmsxSqlText')?.textContent||'';if(navigator.clipboard?.writeText)navigator.clipboard.writeText(t).then(()=>status('SQL कॉपी हो गया।','ok')).catch(()=>status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err'));else status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err');});window.addEventListener('resize',()=>apply(cfg()),{passive:true});document.querySelectorAll('.settings-subtab').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.subtab==='complete')fill(cfg());}));$('siteSettingsForm')?.addEventListener('submit',()=>setTimeout(saveRemote,0));['plantOnlyList','vegOnlyList','groceryOnlyList'].forEach(id=>{const root=$(id);if(root&&window.MutationObserver)new MutationObserver(()=>apply(cfg())).observe(root,{childList:true,subtree:true});});loadRemote();}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
