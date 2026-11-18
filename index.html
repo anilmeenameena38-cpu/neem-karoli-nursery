@@ -4251,22 +4251,6 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
   const button = document.getElementById('orderButton');
   const status = document.getElementById('orderStatus');
-  // Keep one checkout idempotency key across retries/reloads in this tab.
-  let submissionKey = '';
-  try {
-    submissionKey = sessionStorage.getItem('neemNurseryPendingSubmissionKey') || '';
-    if (!submissionKey) {
-      submissionKey = (window.crypto && crypto.randomUUID)
-        ? crypto.randomUUID()
-        : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-            const r = Math.random() * 16 | 0;
-            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-          });
-      sessionStorage.setItem('neemNurseryPendingSubmissionKey', submissionKey);
-    }
-  } catch (_) {
-    submissionKey = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2);
-  }
   button.disabled = true;
   status.style.display = 'block';
   status.textContent = 'ऑर्डर दर्ज हो रहा है…';
@@ -4328,17 +4312,10 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
       customer_address: fullAddress,
       notes: `CART_ORDER | UTR:${utrNumber} | DISTANCE:${deliveryDistanceKm?.toFixed(1)}km | DELIVERY_FEE:${appliedDeliveryFee} | DISCOUNT:${discountAmt} | MAPS:${customerLocation?.mapsUrl || ''} | PROOF:${proofUrl}`,
       stock_items: shoppingCart.map(item => ({ id: String(item.id), qty: Number(item.qty) })),
-      submission_key: submissionKey,
       status: 'pending'
     }).select('id').single();
 
-    if (insErr) {
-      if (insErr.code === '23505') {
-        throw new Error('यह checkout पहले ही दर्ज हो चुका है। कृपया ऑर्डर सूची/WhatsApp जाँचें; दोबारा भुगतान न करें।');
-      }
-      throw insErr;
-    }
-    try { sessionStorage.removeItem('neemNurseryPendingSubmissionKey'); } catch (_) {}
+    if (insErr) throw insErr;
     const newOrderId = insertedOrder ? insertedOrder.id : 'नया';
     if (insertedOrder && insertedOrder.id) window.dispatchEvent(new CustomEvent('nursery-order-created', { detail: { orderId: insertedOrder.id } }));
 
@@ -5544,48 +5521,41 @@ loadPlants();
     const btn = event ? event.currentTarget || event.target : null;
     if (btn) { btn.disabled = true; btn.dataset.oldText = btn.textContent; btn.textContent = 'जाँच रहे हैं…'; }
     try {
-      const { data: authData, error: authError } = await db.auth.getUser();
-      if (authError) throw authError;
-      if (!authData?.user || authData.user.id !== '1a014e64-4b85-4d2a-ba62-2cae5d9f10c9') {
-        throw new Error('केवल मालिक के लॉगिन से भुगतान सत्यापित किया जा सकता है।');
-      }
       const { data: order, error } = await db.from('order_requests')
-        .select('id,status,notes,total_amount')
+        .select('id,status,notes,unit_price,total_amount')
         .eq('id', orderId).single();
       if (error) throw error;
-      if (!order || order.status !== 'pending') throw new Error('यह ऑर्डर अब Pending नहीं है। कृपया सूची रीफ्रेश करें।');
-      const submittedMatch = String(order.notes || '').match(/(?:^|\|)\s*UTR\s*:\s*([0-9]{12})(?:\s*\||$)/i);
+      if (!order || order.status !== 'pending') throw new Error('यह ऑर्डर अब Pending नहीं है। कृपया ऑर्डर सूची रीफ्रेश करें।');
+      const submittedMatch = String(order.notes || '').match(/(?:^|\|)\s*UTR\s*:\s*([^|\n]+)/i);
       const customerUtr = submittedMatch ? submittedMatch[1].trim() : '';
-      if (!customerUtr) throw new Error('इस ऑर्डर में ग्राहक का 12 अंकों का UTR नहीं मिला।');
-      const expectedAmount = Number(order.total_amount ?? order.unit_price);
-      if (!Number.isFinite(expectedAmount) || expectedAmount <= 0) throw new Error('ऑर्डर की कुल राशि उपलब्ध/सही नहीं है।');
-      order._verificationAmount = expectedAmount;
+      if (!customerUtr) throw new Error('इस ऑर्डर में ग्राहक का UTR नहीं मिला। इसे अभी कन्फर्म न करें।');
       window.openPaymentUtrVerification(order, customerUtr, btn);
     } catch (err) {
-      alert('भुगतान जाँच नहीं खुल पाई: ' + (err.message || err));
+      alert('UTR जाँच नहीं खुल पाई: ' + (err.message || err));
       if (btn) { btn.disabled = false; btn.textContent = btn.dataset.oldText || '💳 भुगतान जाँचकर कन्फर्म करें'; }
     }
   };
 
   window.openPaymentUtrVerification = function(order, customerUtr, sourceButton) {
-    const modal = document.getElementById('paymentUtrVerifyModal');
+    let modal = document.getElementById('paymentUtrVerifyModal');
     if (!modal) return;
+    const expectedAmount = Number(order.total_amount ?? order.unit_price ?? 0);
     modal.dataset.orderId = String(order.id);
     modal.dataset.customerUtr = String(customerUtr);
-    modal.dataset.expectedAmount = Number(order._verificationAmount ?? order.total_amount ?? order.unit_price).toFixed(2);
+    modal.dataset.expectedAmount = String(expectedAmount);
     modal.dataset.sourceButtonId = sourceButton && sourceButton.id ? sourceButton.id : '';
     document.getElementById('verifyUtrOrderId').textContent = '#' + order.id;
     document.getElementById('customerSubmittedUtr').textContent = customerUtr;
-    document.getElementById('verifyExpectedAmount').textContent = '₹' + Number(order._verificationAmount ?? order.total_amount ?? order.unit_price).toFixed(2);
+    document.getElementById('verifyExpectedAmount').textContent = '₹' + expectedAmount.toFixed(2);
     document.getElementById('manualVerifiedUtr').value = '';
-    document.getElementById('verifyReceivedAmount').value = Number(order._verificationAmount ?? order.total_amount ?? order.unit_price).toFixed(2);
+    document.getElementById('verifyReceivedAmount').value = expectedAmount.toFixed(2);
     document.getElementById('verifyPaymentReceived').checked = false;
-    document.getElementById('verifyUtrMessage').textContent = 'अपने बैंक/UPI ऐप में सफल भुगतान और पूरी राशि जाँचें।';
-    document.getElementById('verifyUtrMessage').style.color = '#64748b';
+    document.getElementById('verifyUtrMessage').textContent = '';
+    document.getElementById('verifyUtrMessage').style.color = '#b91c1c';
     document.getElementById('verifyUtrSubmit').disabled = true;
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
-    setTimeout(() => document.getElementById('manualVerifiedUtr').focus(), 80);
+    window.bindUtrVerificationControls();
   };
 
   window.closePaymentUtrVerification = function() {
@@ -5597,71 +5567,67 @@ loadPlants();
     if (btn) { btn.disabled = false; btn.textContent = '💳 भुगतान जाँचकर कन्फर्म करें'; }
   };
 
-  function bindUtrVerificationControls(){
+  window.bindUtrVerificationControls = function(){
     const input = document.getElementById('manualVerifiedUtr');
-    const amount = document.getElementById('verifyReceivedAmount');
+    const amountInput = document.getElementById('verifyReceivedAmount');
     const received = document.getElementById('verifyPaymentReceived');
     const submit = document.getElementById('verifyUtrSubmit');
-    if (!input || !amount || !received || !submit || submit.dataset.bound) return;
+    if (!input || !amountInput || !received || !submit || submit.dataset.bound) return;
     submit.dataset.bound = '1';
     const validate = () => {
       const modal = document.getElementById('paymentUtrVerifyModal');
-      const expectedUtr = String(modal?.dataset.customerUtr || '').replace(/\s/g, '');
-      const enteredUtr = input.value.trim().replace(/\s/g, '');
+      const expected = String(modal?.dataset.customerUtr || '').replace(/\s/g, '');
+      const entered = input.value.trim().replace(/\s/g, '');
       const expectedAmount = Number(modal?.dataset.expectedAmount || 0);
-      const enteredAmount = Number(amount.value);
-      const utrMatch = !!expectedUtr && enteredUtr === expectedUtr && /^[0-9]{12}$/.test(enteredUtr);
-      const amountMatch = Number.isFinite(enteredAmount) && Math.round(enteredAmount * 100) === Math.round(expectedAmount * 100);
+      const receivedAmount = Number(amountInput.value);
+      const match = !!expected && entered === expected && /^[0-9]{12}$/.test(entered);
+      const amountMatch = Number.isFinite(receivedAmount) && receivedAmount > 0 &&
+        Math.round(receivedAmount * 100) === Math.round(expectedAmount * 100);
       const msg = document.getElementById('verifyUtrMessage');
-      if (!enteredUtr) { msg.textContent = 'बैंक/UPI ऐप में दिखा UTR दर्ज करें।'; msg.style.color = '#64748b'; }
-      else if (!utrMatch) { msg.textContent = '❌ बैंक में मिला UTR ग्राहक के UTR से मेल नहीं खा रहा।'; msg.style.color = '#b91c1c'; }
-      else if (!amountMatch) { msg.textContent = '❌ प्राप्त राशि ऑर्डर की कुल राशि से मेल नहीं खाती।'; msg.style.color = '#b91c1c'; }
-      else if (!received.checked) { msg.textContent = 'UTR और राशि मेल खाते हैं। अब वास्तविक बैंक क्रेडिट की पुष्टि करें।'; msg.style.color = '#a16207'; }
-      else { msg.textContent = 'कृपया सुनिश्चित करें कि बैंक/UPI ऐप में पैसा वास्तव में प्राप्त हुआ है।'; msg.style.color = '#15803d'; }
-      submit.disabled = !(utrMatch && amountMatch && received.checked);
+      if (!entered) { msg.textContent = 'बैंक/UPI ऐप में दिखा UTR दर्ज करें।'; msg.style.color = '#64748b'; }
+      else if (!match) { msg.textContent = '❌ UTR मेल नहीं खा रहा। ऑर्डर कन्फर्म नहीं होगा।'; msg.style.color = '#b91c1c'; }
+      else if (!amountMatch) { msg.textContent = '❌ प्राप्त राशि ऑर्डर की पूरी राशि से मेल नहीं खाती।'; msg.style.color = '#b91c1c'; }
+      else if (!received.checked) { msg.textContent = 'UTR और राशि सही हैं। अब बैंक में सफल क्रेडिट की पुष्टि करें।'; msg.style.color = '#a16207'; }
+      else { msg.textContent = '✅ UTR और पूरी राशि सही हैं। बैंक में सफल भुगतान की पुष्टि की गई है।'; msg.style.color = '#15803d'; }
+      submit.disabled = !(match && amountMatch && received.checked);
       submit.style.opacity = submit.disabled ? '.55' : '1';
-      submit.style.cursor = submit.disabled ? 'not-allowed' : 'pointer';
     };
     input.addEventListener('input', validate);
-    amount.addEventListener('input', validate);
+    amountInput.addEventListener('input', validate);
     received.addEventListener('change', validate);
     submit.addEventListener('click', async () => {
       const modal = document.getElementById('paymentUtrVerifyModal');
-      const orderId = modal?.dataset.orderId;
-      const enteredUtr = input.value.trim().replace(/\s/g, '');
-      const enteredAmount = Number(amount.value);
-      if (!orderId || submit.disabled) { validate(); return; }
+      const orderId = Number(modal?.dataset.orderId);
+      const expected = String(modal?.dataset.customerUtr || '').replace(/\s/g, '');
+      const entered = input.value.trim().replace(/\s/g, '');
+      const receivedAmount = Number(amountInput.value);
+      if (!orderId || entered !== expected || !received.checked) { validate(); return; }
+      if (!Number.isFinite(receivedAmount) || receivedAmount <= 0) { validate(); return; }
       submit.disabled = true;
-      submit.textContent = 'बैंक भुगतान सत्यापित हो रहा है…';
+      submit.textContent = 'बैंक से सत्यापन दर्ज हो रहा है…';
       try {
         const { data, error } = await db.rpc('verify_nursery_order_payment', {
-          p_order_id: Number(orderId),
-          p_verified_utr: enteredUtr,
-          p_received_amount: enteredAmount
+          p_order_id: orderId,
+          p_verified_utr: entered,
+          p_received_amount: receivedAmount
         });
         if (error) throw error;
-        if (!data || data.status !== 'confirmed') throw new Error('डेटाबेस ने भुगतान सत्यापन की पुष्टि नहीं की।');
+        if (!data || data.status !== 'confirmed') throw new Error('सर्वर से पुष्टि नहीं मिली। ऑर्डर Pending ही रहेगा।');
         modal.style.display = 'none';
         document.body.style.overflow = '';
         stopLoudAlert();
-        if (typeof window.loadAdminAll === 'function') await window.loadAdminAll();
-        if (typeof window.loadPlants === 'function') await window.loadPlants();
-        alert('✅ मालिक का UTR और राशि सत्यापन डेटाबेस में सुरक्षित हुआ। ऑर्डर कन्फर्म हो गया।');
+        await window.loadAdminAll();
+        alert('✅ Supabase ने UTR, राशि और मालिक की अनुमति सत्यापित कर ऑर्डर कन्फर्म कर दिया।');
       } catch (err) {
-        document.getElementById('verifyUtrMessage').textContent = '❌ सत्यापन असफल: ' + (err.message || err);
+        document.getElementById('verifyUtrMessage').textContent = 'त्रुटि: ' + (err.message || err);
         document.getElementById('verifyUtrMessage').style.color = '#b91c1c';
         submit.disabled = false;
+        validate();
       } finally {
         submit.textContent = 'UTR Verify करके Confirm करें';
       }
     });
-  }
-  // The modal markup is below this script. Bind after the browser has parsed it.
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bindUtrVerificationControls, { once: true });
-  } else {
-    bindUtrVerificationControls();
-  }
+  };
 
   // Cancellation only changes status; the BEFORE UPDATE trigger restores stock exactly once.
   window.cancelOrderPrompt = async function (event, orderId) {
@@ -7545,19 +7511,19 @@ body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .
     <p style="margin:0 0 12px;color:#475569;font-size:13px;">ऑर्डर <b id="verifyUtrOrderId"></b> को कन्फर्म करने से पहले ग्राहक का UTR बैंक/UPI ऐप से मिलाएँ।</p>
     <label style="display:block;font-size:13px;font-weight:800;color:#334155;margin-bottom:5px;">ग्राहक ने जो UTR भेजा है</label>
     <div id="customerSubmittedUtr" style="padding:12px;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:10px;color:#065f46;font-weight:900;letter-spacing:1px;word-break:break-all;margin-bottom:14px;"></div>
-    <div style="padding:10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:12px;font-size:14px;">ऑर्डर की अपेक्षित पूरी राशि: <b id="verifyExpectedAmount">₹0.00</b></div>
     <label for="manualVerifiedUtr" style="display:block;font-size:13px;font-weight:800;color:#334155;margin-bottom:5px;">बैंक/UPI ऐप में मिला असली UTR यहाँ दर्ज करें</label>
-    <input id="manualVerifiedUtr" type="text" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="12 अंकों का UTR" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd5e1;border-radius:10px;font-size:16px;margin-bottom:10px;">
-    <label for="verifyReceivedAmount" style="display:block;font-size:13px;font-weight:800;color:#334155;margin-bottom:5px;">बैंक में वास्तव में प्राप्त राशि (₹)</label>
-    <input id="verifyReceivedAmount" type="number" inputmode="decimal" min="0.01" step="0.01" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd5e1;border-radius:10px;font-size:16px;margin-bottom:10px;">
-    <div id="verifyUtrMessage" aria-live="polite" style="min-height:22px;font-size:13px;font-weight:700;margin:4px 0 12px;color:#64748b;">बैंक/UPI ऐप में दिखा UTR और प्राप्त राशि दर्ज करें।</div>
+    <input id="manualVerifiedUtr" type="text" inputmode="numeric" autocomplete="off" maxlength="30" placeholder="बैंक में दिख रहा UTR नंबर" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd5e1;border-radius:10px;font-size:16px;margin-bottom:10px;">
+    <div style="padding:11px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;margin:8px 0 12px;color:#334155;font-size:13px;font-weight:700;">ऑर्डर की अपेक्षित पूरी राशि: <span id="verifyExpectedAmount">₹0.00</span></div>
+    <label for="verifyReceivedAmount" style="display:block;font-size:13px;font-weight:800;color:#334155;margin-bottom:5px;">बैंक/UPI ऐप में वास्तव में प्राप्त राशि (₹)</label>
+    <input id="verifyReceivedAmount" type="number" min="0.01" step="0.01" inputmode="decimal" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd5e1;border-radius:10px;font-size:16px;margin-bottom:10px;">
+    <div id="verifyUtrMessage" aria-live="polite" style="min-height:22px;font-size:13px;font-weight:700;margin:4px 0 12px;color:#64748b;">बैंक/UPI ऐप में दिखा UTR दर्ज करें।</div>
     <label style="display:flex;align-items:flex-start;gap:9px;padding:12px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;color:#713f12;font-size:13px;line-height:1.45;margin-bottom:14px;">
       <input id="verifyPaymentReceived" type="checkbox" style="width:18px;height:18px;flex:0 0 auto;margin-top:1px;">
-      <span>मैंने अपने बैंक/UPI ऐप की transaction history में सफल क्रेडिट देखा है और ऊपर दर्ज पूरी राशि वास्तव में प्राप्त होने की पुष्टि करता/करती हूँ।</span>
+      <span>मैंने अपने बैंक/UPI ऐप में वास्तविक सफल भुगतान देखा है और ऑर्डर की पूरी राशि प्राप्त होने की पुष्टि करता/करती हूँ।</span>
     </label>
     <button id="verifyUtrSubmit" type="button" disabled style="width:100%;padding:13px;border:0;border-radius:11px;background:#15803d;color:#fff;font-weight:900;font-size:15px;opacity:.55;">UTR Verify करके Confirm करें</button>
     <button type="button" onclick="closePaymentUtrVerification()" style="width:100%;margin-top:8px;padding:11px;border:1px solid #cbd5e1;border-radius:11px;background:#fff;color:#334155;font-weight:800;">अभी नहीं — ऑर्डर Pending रहने दें</button>
-    <p style="font-size:11px;color:#64748b;margin:12px 0 0;">सिर्फ ग्राहक का स्क्रीनशॉट या UTR पर्याप्त नहीं है। बैंक/UPI ऐप में वास्तविक क्रेडिट देखकर ही पुष्टि करें। डेटाबेस UTR की दोबारा एंट्री और गलत राशि को रोकेगा, लेकिन बैंक में पैसा आया है या नहीं यह मालिक को स्वयं जाँचना होगा।</p>
+    <p style="font-size:11px;color:#64748b;margin:12px 0 0;">गलत UTR या भुगतान की पुष्टि न होने पर Confirm न करें। UTR मैच होना अपने आप में बैंक भुगतान का प्रमाण नहीं है।</p>
   </div>
 </div>
 
