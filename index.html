@@ -1729,36 +1729,6 @@ body.info-fullscreen-open > main > .nav-page-open {
 }
 </style>
 
-<style id="addon-accordion-mobile-cart-fix">
-.product-addon-selector summary::-webkit-details-marker{display:none}
-.product-addon-selector .addon-toggle-open{display:none}
-.product-addon-selector[open] .addon-toggle-closed{display:none}
-.product-addon-selector[open] .addon-toggle-open{display:inline}
-.product-addon-selector summary{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-@media(max-width:700px){
- .product-addon-selector{width:100%;max-width:100%;margin:5px 0!important}
- .product-addon-selector summary{min-height:34px;padding:6px 8px!important;font-size:11px!important}
- .product-addon-selector .addon-toggle-hint{font-size:10px!important;white-space:nowrap}
- .product-addon-selector [data-addon-action]{width:27px!important;height:27px!important;font-size:16px!important;font-weight:1000!important}
- .product-addon-selector .card-addon-qty{width:40px!important;height:27px!important;font-size:12px!important}
-}
-</style>
-<style id="mobile-addon-visibility-fix-v2">
-.product-addon-selector{display:block!important;visibility:visible!important;opacity:1!important}
-.product-addon-selector:not([open])> :not(summary){display:none}
-.product-addon-selector[open]> :not(summary){display:block}
-.product-addon-selector summary{display:flex!important;visibility:visible!important;cursor:pointer!important;pointer-events:auto!important}
-@media(max-width:700px){
-  .plant .product-addon-selector,
-  #groceryOnlyList .product-addon-selector,
-  .product-addon-selector{
-    display:block!important;visibility:visible!important;opacity:1!important;
-    width:100%!important;max-width:100%!important;box-sizing:border-box!important;
-    position:relative!important;z-index:2!important;overflow:visible!important;
-  }
-  .plant .product-addon-selector summary{display:flex!important;min-height:36px!important;align-items:center!important}
-}
-</style>
 </head>
 <body>
 
@@ -3516,19 +3486,14 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
 
 function safe(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function isGrocery(p) {
-  const cat = String(p && (p.category || p.category_name || p.type) || '').toLowerCase();
+  const cat = String(p && p.category || '').toLowerCase();
   const name = String(p && p.name || '').toLowerCase();
-  const explicitVeg = /सब्जी|सब्ज़ी|सब्जियां|सब्ज़ियां|vegetable|vegetables|fresh.?veg|हरी.?सब्ज/i.test(cat);
-  if (explicitVeg) return false;
   return cat.includes('किराना') || cat.includes('grocery') || cat.includes('cake') || cat.includes('drink') || cat.includes('बेकरी') ||
-         /केक|कोल्ड ड्रिंक|coca.?cola|sprite|pepsi|thumbs.?up|fanta|cake|pastry|grocery|किराना|मसाला|तेल|चाय|चीनी/i.test(name + ' ' + cat);
+         /केक|कोल्ड ड्रिंक|coca-cola|sprite|pepsi|thumbs up|fanta|cake|pastry|grocery|किराना|मसाला|तेल|चाय|चीनी/i.test(name + ' ' + cat);
 }
 function isVeg(p) {
-  const cat = String(p && (p.category || p.category_name || p.type) || '').toLowerCase();
-  const name = String(p && p.name || '').toLowerCase();
   if (isGrocery(p)) return false;
-  return /सब्जी|सब्ज़ी|सब्जियां|सब्ज़ियां|veg|vegetable|fresh.?produce/i.test(cat) ||
-         /टमाटर|आलू|प्याज|प्याज़|भिंडी|बैंगन|हरी मिर्च|मिर्च|खीरा|ककड़ी|लौकी|तोरई|पालक|मेथी|धनिया|पुदीना|गोभी|फूलगोभी|गाजर|मूली|करेला|कद्दू|tomato|potato|onion|okra|brinjal|eggplant|chilli|chili|cucumber|bottle gourd|spinach|coriander|mint|cauliflower|carrot|radish|bitter gourd/i.test(name);
+  return /सब्जी|सब्ज़ी|veg|vegetable/i.test(String(p && p.category || ''));
 }
 function isPlant(p) {
   return !isVeg(p) && !isGrocery(p);
@@ -3568,19 +3533,10 @@ async function loadPlants() {
     const { data, error } = await db.from('plants').select('*').order('name');
     if (error) throw error;
     try {
-      const { data: addonSettings, error: addonSettingsError } = await db.from('site_settings').select('config').eq('id', 'public').maybeSingle();
-      if (addonSettingsError) throw addonSettingsError;
+      const { data: addonSettings } = await db.from('site_settings').select('config').eq('id', 'public').maybeSingle();
       const published = addonSettings?.config?.customAddons;
-      window.nurseryPublishedAddons = Array.isArray(published) ? published : [];
-      localStorage.setItem('nursery_custom_addons_v1', JSON.stringify(window.nurseryPublishedAddons));
-    } catch (addonLoadError) {
-      console.warn('Published add-ons could not be loaded from Supabase:', addonLoadError);
-      try {
-        window.nurseryPublishedAddons = JSON.parse(localStorage.getItem('nursery_custom_addons_v1') || '[]');
-      } catch (_) {
-        window.nurseryPublishedAddons = [];
-      }
-    }
+      if (Array.isArray(published)) localStorage.setItem('nursery_custom_addons_v1', JSON.stringify(published));
+    } catch (_) {}
     plants = data || [];
     pList.innerHTML = ''; vList.innerHTML = '';
     const gList = document.getElementById('groceryOnlyList');
@@ -3667,9 +3623,7 @@ async function loadPlants() {
             /cake|cold drink|कोल्ड ड्रिंक|केक|coca.?cola|coke|sprite|pepsi|mirinda|fanta|thums.?up|maaza|limca|7.?up/i.test(String(p.name || ''))
           );
           if (isCakeOrColdDrink) {
-            const globalAddons = Array.isArray(window.nurseryPublishedAddons)
-              ? window.nurseryPublishedAddons
-              : (() => { try { return JSON.parse(localStorage.getItem('nursery_custom_addons_v1') || '[]'); } catch (_) { return []; } })();
+            const globalAddons = (() => { try { return JSON.parse(localStorage.getItem('nursery_custom_addons_v1') || '[]'); } catch (_) { return []; } })();
             globalAddons.forEach(a => {
               if (a && a.name && !addonItems.some(x => x.name === a.name)) {
                 addonItems.push({ name: String(a.name), price: Number(a.price) || 0 });
@@ -3681,7 +3635,7 @@ async function loadPlants() {
           <details class="product-addon-selector" style="margin:5px 0;padding:0;background:#fffdf0;border:1px solid #eadb91;border-radius:9px;text-align:left;font-size:11.5px;overflow:hidden">
             <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:7px 9px;color:#75420b;font-weight:900;font-size:12px">
               <span><b style="font-size:15px;font-weight:1000;margin-right:3px">＋</b> साथ में क्या चाहिए?</span>
-              <span class="addon-toggle-hint" style="font-size:10px;font-weight:900;color:#0f766e"><span class="addon-toggle-closed">खोलें ＋</span><span class="addon-toggle-open">बंद करें −</span></span>
+              <span style="font-size:10px;font-weight:900;color:#0f766e">चुनने के लिए खोलें ▾</span>
             </summary>
             <div style="padding:5px 8px 7px;border-top:1px solid #f1e6b5">
               ${addonItems.map(a => `
@@ -3819,16 +3773,22 @@ async function loadPlants() {
             price: Number(input.dataset.addonPrice) || 0,
             qty: Math.max(0, Math.floor(Number(input.value) || 0))
           })).filter(addon => addon.name && addon.qty > 0);
+          if (existingIndex !== -1 && selectedAddons.length) {
+            // If the product is already in the cart, a new add-on selection updates
+            // its add-ons instead of removing the product.
+            shoppingCart[existingIndex].addons = selectedAddons;
+            
+            updateCartBadge();
+            updateProductCartButtons();
+            if (!document.getElementById('order').hidden) renderCartModal();
+            return;
+          }
           if (existingIndex !== -1) {
             shoppingCart.splice(existingIndex, 1);
-            card.querySelectorAll('.card-addon-qty').forEach(input => { input.value = ''; });
-            const addonDetails = card.querySelector('.product-addon-selector');
-            if (addonDetails) addonDetails.open = false;
             updateCartBadge();
             updateProductCartButtons();
             if (!shoppingCart.length && !document.getElementById('order').hidden) closeOrderPopup();
             else if (!document.getElementById('order').hidden) renderCartModal();
-            syncButton();
             return;
           }
 
@@ -4167,16 +4127,7 @@ function renderCartModal() {
 }
 
 function removeFromCart(index) {
-  const removedItem = shoppingCart[index];
   shoppingCart.splice(index, 1);
-  if (removedItem) {
-    document.querySelectorAll('.plant').forEach(card => {
-      if (!card.dataset.cartKey || !card.dataset.cartKey.endsWith('-' + removedItem.id)) return;
-      card.querySelectorAll('.card-addon-qty').forEach(input => { input.value = ''; });
-      const details = card.querySelector('.product-addon-selector');
-      if (details) details.open = false;
-    });
-  }
   updateCartBadge();
   updateProductCartButtons();
   if (shoppingCart.length === 0) {
@@ -5465,7 +5416,6 @@ document.getElementById('publishCustomAddonsBtn')?.addEventListener('click', asy
     const config = Object.assign({}, existing?.config || {}, { customAddons: list });
     const { error: saveError } = await db.from('site_settings').upsert({id:'public',config,updated_at:new Date().toISOString(),updated_by:user.id},{onConflict:'id'});
     if (saveError) throw saveError;
-    window.nurseryPublishedAddons = list;
     localStorage.setItem('nursery_custom_addons_v1', JSON.stringify(list));
     localStorage.removeItem('nursery_custom_addons_draft_v1');
     if (status) status.textContent = '✅ प्रकाशित! अब ग्राहक वेबसाइट रीफ्रेश करें।';
@@ -6115,8 +6065,6 @@ loadPlants();
   const grocerySection = document.getElementById('viewGroceryCategory');
 
   function setStoreView(view) {
-    window.__nurseryActiveStoreView = view;
-    window.setNurseryStoreView = setStoreView;
     const isPlants = view === 'plants';
     const isVeg = view === 'veg';
     const isGrocery = view === 'grocery';
