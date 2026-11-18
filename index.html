@@ -3762,7 +3762,18 @@ async function loadPlants() {
             qtyInput.value = limit;
             return;
           }
-          addToCart(p, q, veg, isGram);
+          const availableStock = Number(p.stock_quantity) || 0;
+          if (q > availableStock) {
+            alert(`⚠️ इस उत्पाद का उपलब्ध स्टॉक केवल ${availableStock} है। कृपया मात्रा कम करें।`);
+            qtyInput.value = availableStock;
+            return;
+          }
+          const selectedAddons = Array.from(card.querySelectorAll('.card-addon-chk:checked')).map(chk => ({
+            name: chk.dataset.addonName || '',
+            price: Number(chk.dataset.addonPrice) || 0
+          })).filter(addon => addon.name);
+          addToCart(p, q, veg, isGram, selectedAddons);
+          card.querySelectorAll('.card-addon-chk').forEach(chk => { chk.checked = false; });
           syncButton();
         });
       }
@@ -4177,8 +4188,9 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
   }
 
   const utrNumber = document.getElementById('paymentUtrNumber').value.trim();
-  if (!utrNumber || utrNumber.length < 8) {
-    alert('⚠️ कृपया सही 12 अंकों का UPI UTR / ट्रांजैक्शन नंबर दर्ज करें!');
+  if (!/^\d{12}$/.test(utrNumber)) {
+    alert('⚠️ कृपया 12 अंकों का सही UPI UTR / ट्रांजैक्शन नंबर दर्ज करें!');
+    document.getElementById('paymentUtrNumber').focus();
     return;
   }
 
@@ -4197,16 +4209,26 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
   const file = document.getElementById('paymentProofFile')?.files[0];
 
   try {
+    const { data: freshStockRows, error: stockCheckError } = await db.from('plants').select('id, name, stock_quantity');
+    if (stockCheckError) throw stockCheckError;
+    for (const cartItem of shoppingCart) {
+      const stockRow = (freshStockRows || []).find(row => String(row.id) === String(cartItem.id));
+      if (!stockRow) throw new Error(`“${cartItem.name}” का स्टॉक रिकॉर्ड नहीं मिला। कृपया पेज रिफ्रेश करके फिर कोशिश करें।`);
+      const available = Number(stockRow.stock_quantity) || 0;
+      if (Number(cartItem.qty) > available) throw new Error(`“${cartItem.name}” का उपलब्ध स्टॉक ${available} है, जबकि आपने ${cartItem.qty} चुना है। कृपया मात्रा कम करें।`);
+    }
     let proofUrl = '';
     if (file) {
       const ext = file.type === 'image/png' ? 'png' : (file.type === 'image/webp' ? 'webp' : 'jpg');
       const path = 'customer-submissions/' + Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.' + ext;
-      await db.storage.from('payment-proofs').upload(path, file, { contentType: file.type });
-      const { data: signed } = await db.storage.from('payment-proofs').createSignedUrl(path, 60 * 60 * 24 * 30);
-      proofUrl = signed?.signedUrl || '';
+      const { error: uploadError } = await db.storage.from('payment-proofs').upload(path, file, { contentType: file.type });
+      if (uploadError) throw new Error('भुगतान स्क्रीनशॉट अपलोड नहीं हो पाया: ' + uploadError.message);
+      const { data: signed, error: signedError } = await db.storage.from('payment-proofs').createSignedUrl(path, 60 * 60 * 24 * 30);
+      if (signedError || !signed?.signedUrl) throw new Error('भुगतान स्क्रीनशॉट का लिंक नहीं बन पाया। कृपया दोबारा कोशिश करें।');
+      proofUrl = signed.signedUrl;
     }
 
-    let subtotal = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    let subtotal = shoppingCart.reduce((sum, item) => sum + (item.price * item.qty) + (item.addons || []).reduce((a, addon) => a + (Number(addon.price) || 0), 0), 0);
     const discountAmt = cfg.discountPercent > 0 ? (subtotal * cfg.discountPercent) / 100 : 0;
     const finalSubtotal = subtotal - discountAmt;
 
@@ -4239,6 +4261,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
     if (insErr) throw insErr;
     const newOrderId = insertedOrder ? insertedOrder.id : 'नया';
+    if (insertedOrder && insertedOrder.id) window.dispatchEvent(new CustomEvent('nursery-order-created', { detail: { orderId: insertedOrder.id } }));
 
     const message = 'नया मल्टी-आइटम नर्सरी ऑर्डर' +
       '\nऑर्डर आईडी: #' + newOrderId +
@@ -5345,7 +5368,7 @@ loadPlants();
   function parseOrderItemsFromText(order, allPlants) {
     const rawText = String((order && order.plant_name) || '');
     const parts = rawText.split(',').map(s => s.trim()).filter(Boolean);
-    const pattern = /^(.+?)\s*\(([0-9.]+)\s*(pcs|kg|g|पौधे|किलो|ग्राम)?\)$/i;
+    const pattern = /^(.+?)\s*\(([0-9.]+)\s*(pcs|kg|g|पौधे|किलो|ग्राम)?\)(?:\s*\[साथ में:.*\])?$/i;
     const result = [];
 
     parts.forEach(part => {
@@ -5420,37 +5443,26 @@ loadPlants();
     return map;
   }
 
-  // जब ग्राहक नया ऑर्डर सबमिट करे, तो तुरंत स्टॉक घटाएँ या STOCK_SYNC:pending मार्क करें
-  const orderFormEl = document.getElementById('orderForm');
-  if (orderFormEl) {
-    orderFormEl.addEventListener('submit', function () {
-      setTimeout(async () => {
-        try {
-          const { data: recentOrders } = await db
-            .from('order_requests')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(3);
-
-          if (recentOrders && recentOrders.length) {
-            const latest = recentOrders[0];
-            const notes = String(latest.notes || '');
-            if (!notes.includes('STOCK_DEDUCTED:1') && !notes.includes('STOCK_SYNC:')) {
-              const updatedInDb = await adjustDatabaseStockForOrder(latest, -1);
-              const newNotes = notes + (updatedInDb ? ' | STOCK_DEDUCTED:1' : ' | STOCK_SYNC:pending');
-              await db.from('order_requests').update({ notes: newNotes }).eq('id', latest.id);
-            }
-          }
-          await window.loadPlants();
-          if (document.body.classList.contains('admin-authenticated')) {
-            await window.loadAdminAll();
-          }
-        } catch (err) {
-          console.error('Auto stock deduct after order error:', err);
+  // सफलतापूर्वक insert हुए उसी ऑर्डर की ID पर स्टॉक घटाएँ; किसी दूसरे ग्राहक का latest order न चुनें।
+  window.addEventListener('nursery-order-created', async function (event) {
+    const orderId = event.detail && event.detail.orderId;
+    if (!orderId) return;
+    try {
+      const { data: createdOrder, error: orderFetchError } = await db.from('order_requests').select('*').eq('id', orderId).maybeSingle();
+      if (orderFetchError) throw orderFetchError;
+      if (createdOrder) {
+        const notes = String(createdOrder.notes || '');
+        if (!notes.includes('STOCK_DEDUCTED:1') && !notes.includes('STOCK_SYNC:')) {
+          const updatedInDb = await adjustDatabaseStockForOrder(createdOrder, -1);
+          const newNotes = notes + (updatedInDb ? ' | STOCK_DEDUCTED:1' : ' | STOCK_SYNC:pending');
+          const { error: noteError } = await db.from('order_requests').update({ notes: newNotes }).eq('id', orderId);
+          if (noteError) console.error('Stock sync marker update failed:', noteError);
         }
-      }, 1500);
-    });
-  }
+      }
+      await window.loadPlants();
+      if (document.body.classList.contains('admin-authenticated')) await window.loadAdminAll();
+    } catch (err) { console.error('Auto stock deduct after order error:', err); }
+  });
 
   // कस्टमर पैनल (loadPlants) में भी पेंडिंग सिंक वाले ऑर्डर्स का स्टॉक घटाकर दिखाएँ
   const originalLoadPlants = window.loadPlants;
