@@ -1759,32 +1759,6 @@ body.info-fullscreen-open > main > .nav-page-open {
   .plant .product-addon-selector summary{display:flex!important;min-height:36px!important;align-items:center!important}
 }
 </style>
-
-<style id="mobile-category-isolation-fix">
-@media (max-width:700px){
-  #viewPlantCategory,#viewVegCategory,#viewGroceryCategory{
-    width:100%!important;max-width:100%!important;min-width:0!important;
-    box-sizing:border-box!important;
-  }
-  body:not(.store-view-veg):not(.store-view-grocery) #viewPlantCategory{display:block!important}
-  body:not(.store-view-veg):not(.store-view-grocery) #viewVegCategory,
-  body:not(.store-view-veg):not(.store-view-grocery) #viewGroceryCategory{display:none!important}
-  body.store-view-plants #viewPlantCategory{display:block!important}
-  body.store-view-plants #viewVegCategory,
-  body.store-view-plants #viewGroceryCategory{display:none!important}
-  body.store-view-veg #viewVegCategory{display:block!important}
-  body.store-view-veg #viewPlantCategory,
-  body.store-view-veg #viewGroceryCategory{display:none!important}
-  body.store-view-grocery #viewGroceryCategory{display:block!important}
-  body.store-view-grocery #viewPlantCategory,
-  body.store-view-grocery #viewVegCategory{display:none!important}
-  #storeViewTabs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
-}
-@media (min-width:701px){
-  #viewPlantCategory,#viewVegCategory,#viewGroceryCategory{display:block!important}
-  #storeViewTabs{display:none!important}
-}
-</style>
 </head>
 <body>
 
@@ -7646,47 +7620,3 @@ body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .
 </body>
 
 </html>
-
-
-<script id="mobile-category-controller-final">
-(function(){
-  'use strict';
-  const ids={plants:'viewPlantCategory',veg:'viewVegCategory',grocery:'viewGroceryCategory'};
-  const buttons={plants:'showPlantsTab',veg:'showVegTab',grocery:'showGroceryTab'};
-  function apply(view){
-    if(!ids[view]) view='plants';
-    const mobile=window.matchMedia('(max-width:700px)').matches;
-    Object.keys(ids).forEach(key=>{
-      const section=document.getElementById(ids[key]);
-      const button=document.getElementById(buttons[key]);
-      if(section){
-        if(mobile) section.style.setProperty('display',key===view?'block':'none','important');
-        else section.style.removeProperty('display');
-      }
-      if(button){
-        button.classList.toggle('active',key===view);
-        button.setAttribute('aria-selected',String(key===view));
-      }
-    });
-    const tabs=document.getElementById('storeViewTabs');
-    if(tabs) tabs.style.setProperty('display',mobile?'grid':'none','important');
-    document.body.classList.remove('store-view-plants','store-view-veg','store-view-grocery');
-    document.body.classList.add('store-view-'+view);
-    window.__nurseryActiveStoreView=view;
-  }
-  function selectFromClick(event){
-    const button=event.target.closest('#showPlantsTab,#showVegTab,#showGroceryTab');
-    if(!button) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    const view=button.id==='showVegTab'?'veg':(button.id==='showGroceryTab'?'grocery':'plants');
-    apply(view);
-  }
-  const tabs=document.getElementById('storeViewTabs');
-  if(tabs) tabs.addEventListener('click',selectFromClick,true);
-  window.addEventListener('resize',()=>apply(window.__nurseryActiveStoreView||'plants'));
-  window.addEventListener('pageshow',()=>apply(window.__nurseryActiveStoreView||'plants'));
-  apply('plants');
-})();
-</script>
-
