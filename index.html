@@ -3477,77 +3477,6 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
   window.addEventListener('DOMContentLoaded', applyColumnSettings);
 })();
 <\/script>
-
-<style id="mobile-addon-visible-v1">
-/* मोबाइल पर एड-ऑन्स का पूरा विकल्प हमेशा कार्ड में दिखाई दे */
-@media screen and (max-width:700px) {
-  .product-addon-selector {
-    display:block !important;
-    width:100% !important;
-    margin:7px 0 !important;
-    border-radius:10px !important;
-    font-size:11px !important;
-  }
-  .product-addon-selector > summary {
-    min-height:34px !important;
-    padding:8px 7px !important;
-    font-size:11px !important;
-    flex-wrap:wrap !important;
-  }
-  .product-addon-selector > div {
-    display:block !important;
-    padding:5px 6px 7px !important;
-  }
-  .product-addon-selector > div > div {
-    min-height:34px !important;
-    gap:4px !important;
-    padding:5px 0 !important;
-  }
-  .product-addon-selector .addon-qty-btn {
-    width:27px !important;
-    min-width:27px !important;
-    height:29px !important;
-    font-size:16px !important;
-  }
-  .product-addon-selector .card-addon-qty {
-    width:43px !important;
-    min-width:43px !important;
-    height:29px !important;
-    margin:0 !important;
-    padding:2px !important;
-    font-size:13px !important;
-  }
-}
-</style>
-<script id="mobile-addon-auto-expand-v1">
-(function(){
-  function expandMobileAddons(root){
-    if(!window.matchMedia('(max-width:700px)').matches) return;
-    const scope = root && root.querySelectorAll ? root : document;
-    scope.querySelectorAll('.product-addon-selector').forEach(function(details){
-      details.open = true;
-      const summary = details.querySelector('summary');
-      if(summary) summary.setAttribute('aria-label','साथ में मिलने वाले एड-ऑन्स चुनें');
-    });
-  }
-  document.addEventListener('DOMContentLoaded',function(){
-    expandMobileAddons(document);
-    const observer = new MutationObserver(function(records){
-      records.forEach(function(record){
-        record.addedNodes.forEach(function(node){
-          if(node.nodeType !== 1) return;
-          if(node.matches && node.matches('.product-addon-selector')) expandMobileAddons(node.parentElement || node);
-          else expandMobileAddons(node);
-        });
-      });
-    });
-    observer.observe(document.body,{childList:true,subtree:true});
-  });
-  window.addEventListener('resize',function(){ expandMobileAddons(document); });
-  window.addEventListener('orientationchange',function(){ setTimeout(function(){expandMobileAddons(document);},150); });
-})();
-</script>
-
 </body>
 
     </html>
@@ -7633,6 +7562,45 @@ body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .
  async function saveRemote(){const c=Object.assign({},cfg(),readForm());setCfg(c);apply(c);if(typeof window.applySiteConfigToUI==='function')window.applySiteConfigToUI();if(typeof window.loadPlants==='function')await window.loadPlants();try{const {data:{user}}=await db.auth.getUser();if(!user||user.id!=='1a014e64-4b85-4d2a-ba62-2cae5d9f10c9')throw new Error('पहले मालिक के एडमिन अकाउंट से लॉगिन करें');const {error}=await db.from('site_settings').upsert({id:'public',config:c,updated_at:new Date().toISOString(),updated_by:user.id},{onConflict:'id'});if(error)throw error;status('✅ सेटिंग डेटाबेस में सेव हो गईं। सभी डिवाइस पर लागू होंगी।','ok');}catch(e){status('⚠️ इस डिवाइस पर सेव हुआ, लेकिन डेटाबेस सेव नहीं हुआ: '+(e.message||e)+' | SQL / लॉगिन / RLS जाँचें।','err');}}
  function init(){const c=cfg();fill(c);apply(c);$('cmsxSaveBtn')?.addEventListener('click',saveRemote);$('cmsxReloadBtn')?.addEventListener('click',loadRemote);$('cmsxExportBtn')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify(cfg(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='neem-nursery-site-backup.json';a.click();URL.revokeObjectURL(a.href);});$('cmsxImportFile')?.addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const imported=JSON.parse(await f.text());const merged=Object.assign({},cfg(),imported);setCfg(merged);fill(merged);apply(merged);status('बैकअप लोड हुआ। अब डेटाबेस में सेव करें।','ok');}catch(_){status('गलत बैकअप फाइल।','err');}});$('cmsxCopySqlBtn')?.addEventListener('click',()=>{const t=$('cmsxSqlText')?.textContent||'';if(navigator.clipboard?.writeText)navigator.clipboard.writeText(t).then(()=>status('SQL कॉपी हो गया।','ok')).catch(()=>status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err'));else status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err');});document.querySelectorAll('.settings-subtab').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.subtab==='complete')fill(cfg());}));$('siteSettingsForm')?.addEventListener('submit',()=>setTimeout(saveRemote,0));['plantOnlyList','vegOnlyList','groceryOnlyList'].forEach(id=>{const root=$(id);if(root&&window.MutationObserver)new MutationObserver(()=>apply(cfg())).observe(root,{childList:true,subtree:true});});loadRemote();}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+<style id="mobile-addon-visible-v2">
+@media screen and (max-width:700px) {
+  details.product-addon-selector { display:block !important; width:100% !important; margin:7px 0 !important; }
+  details.product-addon-selector > summary {
+    display:flex !important; align-items:center !important; justify-content:space-between !important;
+    min-height:36px !important; padding:8px 7px !important; font-size:11px !important;
+    flex-wrap:wrap !important; cursor:pointer !important;
+  }
+  details.product-addon-selector[open] > div { display:block !important; padding:5px 6px 7px !important; }
+  details.product-addon-selector .addon-qty-btn {
+    width:27px !important; min-width:27px !important; height:29px !important; font-size:16px !important;
+  }
+  details.product-addon-selector .card-addon-qty {
+    width:43px !important; min-width:43px !important; height:29px !important;
+    margin:0 !important; padding:2px !important; font-size:13px !important;
+  }
+}
+</style>
+<script id="mobile-addon-auto-expand-v2">
+(function(){
+  function expandAddons(){
+    if(!window.matchMedia || !window.matchMedia('(max-width:700px)').matches) return;
+    document.querySelectorAll('details.product-addon-selector').forEach(function(details){
+      details.open = true;
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',expandAddons);
+  else expandAddons();
+  window.addEventListener('resize',expandAddons);
+  window.addEventListener('orientationchange',function(){ setTimeout(expandAddons,150); });
+  var target=document.body;
+  if(target && window.MutationObserver){
+    var observer=new MutationObserver(function(){ expandAddons(); });
+    observer.observe(target,{childList:true,subtree:true});
+  }
 })();
 </script>
 
