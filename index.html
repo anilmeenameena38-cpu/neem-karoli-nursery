@@ -5187,10 +5187,11 @@ async function renderAdminEdit() {
         const file = fileInput && fileInput.files ? fileInput.files[0] : null;
         const addonsText = row.querySelector('.ea')?.value.trim() || '';
         
+        // Add-ons are stored locally for this browser; the plants table does not
+        // have an addons_text column. Keep the database update limited to real columns.
         let updates = {
           selling_price: price,
-          stock_quantity: stock,
-          addons_text: addonsText
+          stock_quantity: stock
         };
 
         if (file) {
@@ -5204,6 +5205,9 @@ async function renderAdminEdit() {
 
         const { error: updateErr } = await db.from('plants').update(updates).eq('id', p.id);
         if (updateErr) throw updateErr;
+        // Match the existing editor and storefront fallback, without requiring
+        // a non-existent Supabase plants.addons_text column.
+        localStorage.setItem('nursery_addons_' + p.id, addonsText);
 
         alert('✅ उत्पाद और फोटो सफलतापूर्वक अपडेट हो गए!');
         await loadPlants();
