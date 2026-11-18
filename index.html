@@ -3153,7 +3153,8 @@ document.querySelectorAll('.settings-subtab').forEach(btn => {
 
 document.getElementById('siteSettingsForm')?.addEventListener('submit', function(e) {
   e.preventDefault();
-  const newConfig = {
+  // पुराने सेटिंग फॉर्म को केवल अपने fields बदलने दें; CMS की बाकी keys सुरक्षित रहें।
+  const newConfig = Object.assign({}, getSiteConfig(), {
     minPlantQty: Math.max(1, Number(document.getElementById('settingMinPlantQty').value) || 1),
     minVegQty: Math.max(0.25, Number(document.getElementById('settingMinVegQty').value) || 0.25),
     minGroceryQty: Math.max(1, Number(document.getElementById('settingMinGroceryQty').value) || 1),
@@ -3182,7 +3183,7 @@ document.getElementById('siteSettingsForm')?.addEventListener('submit', function
     themeColor: document.getElementById('settingThemeColor').value,
     waWidget: document.getElementById('settingWaWidget').value,
     couponCode: document.getElementById('settingCouponCode').value.trim()
-  };
+  });
 
   localStorage.setItem('nursery_site_config', JSON.stringify(newConfig));
   
@@ -4310,7 +4311,10 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
     const { data: insertedOrder, error: insErr } = await db.from('order_requests').insert({
       plant_name: itemsSummaryText,
       quantity: totalQtyCount,
-      unit_price: Number(totalAmount),
+      // order_requests.total_amount is derived from unit_price × quantity.
+      // Store the average per-unit amount here, not the whole cart total,
+      // otherwise a 25-piece order of ₹50 is incorrectly stored as ₹1,250.
+      unit_price: totalQtyCount > 0 ? Number((Number(totalAmount) / totalQtyCount).toFixed(4)) : Number(totalAmount),
       customer_name: customerName,
       customer_phone: cleanPhone,
       customer_address: fullAddress,
@@ -7450,16 +7454,18 @@ body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .
    const about=$('about');
    if(about){
      const directPs=Array.from(about.children).filter(el=>el.tagName==='P');
-     if(directPs[0] && c.cmsxAboutText){
-       directPs[0].innerHTML='<strong>हमारा परिचय:</strong> '+escapeHtml(c.cmsxAboutText);
-     }
-     if(directPs[1] && c.cmsxPromiseText){
-       directPs[1].innerHTML='<strong>हमारा वादा:</strong> '+escapeHtml(c.cmsxPromiseText);
-     }
+     // मूल सामग्री एक बार सुरक्षित रखें ताकि खाली करने पर पुराना टेक्स्ट वापस आ सके।
+     directPs.forEach((el,i)=>{const key='cmsxOriginalHtml'+i;if(!el.dataset[key])el.dataset[key]=el.innerHTML;});
+     if(directPs[0]) directPs[0].innerHTML=c.cmsxAboutText
+       ? '<strong>हमारा परिचय:</strong> '+escapeHtml(c.cmsxAboutText) : directPs[0].dataset.cmsxOriginalHtml0;
+     if(directPs[1]) directPs[1].innerHTML=c.cmsxPromiseText
+       ? '<strong>हमारा वादा:</strong> '+escapeHtml(c.cmsxPromiseText) : directPs[1].dataset.cmsxOriginalHtml1;
      const ul=about.querySelector(':scope > ul');
-     if(ul && c.cmsxFeaturesText){
-       ul.innerHTML=String(c.cmsxFeaturesText).split(String.fromCharCode(10)).filter(Boolean)
-         .map(x=>'<li>'+escapeHtml(x)+'</li>').join('');
+     if(ul){
+       if(!ul.dataset.cmsxOriginalHtml)ul.dataset.cmsxOriginalHtml=ul.innerHTML;
+       ul.innerHTML=c.cmsxFeaturesText
+         ? String(c.cmsxFeaturesText).split(String.fromCharCode(10)).map(x=>x.trim()).filter(Boolean).map(x=>'<li>'+escapeHtml(x)+'</li>').join('')
+         : ul.dataset.cmsxOriginalHtml;
      }
    }
 
@@ -7478,9 +7484,18 @@ body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .
    rules.forEach(([id,enabled])=>{
      const root=$(id); if(!root)return;
      root.querySelectorAll('.plant-buy-button').forEach(b=>{
-       b.disabled=!enabled;
-       if(!enabled){b.dataset.cmsxWasDisabled=b.disabled?'1':'0';b.textContent='आज ऑर्डर बंद';}
-       else if(b.textContent==='आज ऑर्डर बंद') b.textContent='कार्ट में जोड़ें';
+       // पहली बार की वास्तविक disabled अवस्था और मूल label याद रखें।
+       if(!Object.prototype.hasOwnProperty.call(b.dataset,'cmsxOriginalDisabled')){
+         b.dataset.cmsxOriginalDisabled=b.disabled?'1':'0';
+         b.dataset.cmsxOriginalLabel=b.textContent;
+       }
+       if(!enabled){
+         b.disabled=true;
+         b.textContent='आज ऑर्डर बंद';
+       } else {
+         b.disabled=b.dataset.cmsxOriginalDisabled==='1';
+         if(b.textContent==='आज ऑर्डर बंद') b.textContent=b.dataset.cmsxOriginalLabel||'कार्ट में जोड़ें';
+       }
      });
    });
 
@@ -7499,7 +7514,7 @@ body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .
  function escapeHtml(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
  async function loadRemote(){try{if(typeof db==='undefined'||!db.from)throw new Error('Supabase क्लाइंट उपलब्ध नहीं');const {data,error}=await db.from('site_settings').select('config').eq('id','public').maybeSingle();if(error)throw error;if(data&&data.config){const merged=Object.assign({},cfg(),data.config);setCfg(merged);fill(merged);if(typeof window.applySiteConfigToUI==='function')window.applySiteConfigToUI();apply(merged);status('☁️ डेटाबेस से सेटिंग सफलतापूर्वक लोड हुई।','ok');}else status('डेटाबेस टेबल में public सेटिंग नहीं मिली। SQL चलाकर सेव करें।','err');}catch(e){status('डेटाबेस सिंक उपलब्ध नहीं: '+(e.message||e)+' | अभी इस डिवाइस की सेव सेटिंग लागू है।','err');}}
  async function saveRemote(){const c=Object.assign({},cfg(),readForm());setCfg(c);apply(c);if(typeof window.applySiteConfigToUI==='function')window.applySiteConfigToUI();if(typeof window.loadPlants==='function')await window.loadPlants();try{const {data:{user}}=await db.auth.getUser();if(!user||user.id!=='1a014e64-4b85-4d2a-ba62-2cae5d9f10c9')throw new Error('पहले मालिक के एडमिन अकाउंट से लॉगिन करें');const {error}=await db.from('site_settings').upsert({id:'public',config:c,updated_at:new Date().toISOString(),updated_by:user.id},{onConflict:'id'});if(error)throw error;status('✅ सेटिंग डेटाबेस में सेव हो गईं। सभी डिवाइस पर लागू होंगी।','ok');}catch(e){status('⚠️ इस डिवाइस पर सेव हुआ, लेकिन डेटाबेस सेव नहीं हुआ: '+(e.message||e)+' | SQL / लॉगिन / RLS जाँचें।','err');}}
- function init(){const c=cfg();fill(c);apply(c);$('cmsxSaveBtn')?.addEventListener('click',saveRemote);$('cmsxReloadBtn')?.addEventListener('click',loadRemote);$('cmsxExportBtn')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify(cfg(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='neem-nursery-site-backup.json';a.click();URL.revokeObjectURL(a.href);});$('cmsxImportFile')?.addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const imported=JSON.parse(await f.text());const merged=Object.assign({},cfg(),imported);setCfg(merged);fill(merged);apply(merged);status('बैकअप लोड हुआ। अब डेटाबेस में सेव करें।','ok');}catch(_){status('गलत बैकअप फाइल।','err');}});$('cmsxCopySqlBtn')?.addEventListener('click',()=>{const t=$('cmsxSqlText')?.textContent||'';if(navigator.clipboard?.writeText)navigator.clipboard.writeText(t).then(()=>status('SQL कॉपी हो गया।','ok')).catch(()=>status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err'));else status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err');});document.querySelectorAll('.settings-subtab').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.subtab==='complete')fill(cfg());}));$('siteSettingsForm')?.addEventListener('submit',()=>setTimeout(saveRemote,0));['plantOnlyList','vegOnlyList','groceryOnlyList'].forEach(id=>{const root=$(id);if(root&&window.MutationObserver)new MutationObserver(()=>apply(cfg())).observe(root,{childList:true,subtree:true});});loadRemote();}
+ function init(){const c=cfg();fill(c);apply(c);$('cmsxSaveBtn')?.addEventListener('click',saveRemote);$('cmsxReloadBtn')?.addEventListener('click',loadRemote);$('cmsxExportBtn')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify(cfg(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='neem-nursery-site-backup.json';a.click();URL.revokeObjectURL(a.href);});$('cmsxImportFile')?.addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const imported=JSON.parse(await f.text());const merged=Object.assign({},cfg(),imported);setCfg(merged);fill(merged);apply(merged);status('बैकअप लोड हुआ। अब डेटाबेस में सेव करें।','ok');}catch(_){status('गलत बैकअप फाइल।','err');}});$('cmsxCopySqlBtn')?.addEventListener('click',()=>{const t=$('cmsxSqlText')?.textContent||'';if(navigator.clipboard?.writeText)navigator.clipboard.writeText(t).then(()=>status('SQL कॉपी हो गया।','ok')).catch(()=>status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err'));else status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err');});window.addEventListener('resize',()=>apply(cfg()),{passive:true});document.querySelectorAll('.settings-subtab').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.subtab==='complete')fill(cfg());}));$('siteSettingsForm')?.addEventListener('submit',()=>setTimeout(saveRemote,0));['plantOnlyList','vegOnlyList','groceryOnlyList'].forEach(id=>{const root=$(id);if(root&&window.MutationObserver)new MutationObserver(()=>apply(cfg())).observe(root,{childList:true,subtree:true});});loadRemote();}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
