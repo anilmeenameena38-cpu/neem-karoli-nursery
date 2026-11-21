@@ -3862,6 +3862,7 @@ async function loadPlants() {
     };
     showError(pList, 'पौधे');
     showError(vList, 'सब्जियाँ');
+    showError(document.getElementById('groceryOnlyList'), 'किराना');
     console.error('Nursery products could not be loaded:', err);
   }
 }
@@ -6034,9 +6035,18 @@ loadPlants();
       const match=!q || card.textContent.toLocaleLowerCase('hi').includes(q);
       card.style.display=match?'':'none';
     });
-    // खोज के दौरान तीनों श्रेणियाँ दिखें ताकि परिणाम दूसरे टैब में छिपे नहीं।
+    // Search may reveal matching products only inside categories enabled by the owner.
+    let saved={};
+    try { saved=JSON.parse(localStorage.getItem('nursery_site_config')||'{}'); } catch(_) {}
+    const visible={
+      viewPlantCategory: saved.cmsxShowHome!==false && saved.cmsxPlantsVisible!==false,
+      viewVegCategory: saved.cmsxShowHome!==false && saved.cmsxVegVisible!==false,
+      viewGroceryCategory: saved.cmsxShowHome!==false && saved.cmsxGroceryVisible!==false
+    };
     categorySections.forEach(section=>{
-      if(q) section.style.setProperty('display','block','important');
+      const enabled=visible[section.id]!==false;
+      if(q && enabled) section.style.setProperty('display','block','important');
+      else if(!enabled) section.style.setProperty('display','none','important');
       else section.style.removeProperty('display');
     });
     document.body.classList.toggle('store-search-active',Boolean(q));
@@ -7497,6 +7507,27 @@ body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .
      toggle(tabId,visible);
    });
 
+   // If the currently selected tab was hidden, move to the first category still enabled.
+   // This prevents CSS from hiding both the selected category and its alternatives.
+   const enabledViews = [
+     ['plants', !!c.cmsxShowHome && !!c.cmsxPlantsVisible, 'showPlantsTab'],
+     ['veg', !!c.cmsxShowHome && !!c.cmsxVegVisible, 'showVegTab'],
+     ['grocery', !!c.cmsxShowHome && !!c.cmsxGroceryVisible, 'showGroceryTab']
+   ];
+   const currentView = document.body.classList.contains('store-view-grocery') ? 'grocery'
+     : (document.body.classList.contains('store-view-veg') ? 'veg' : 'plants');
+   const currentEnabled = enabledViews.find(v => v[0] === currentView)?.[1] === true;
+   if (!currentEnabled) {
+     const fallback = enabledViews.find(v => v[1]);
+     if (fallback) $(fallback[2])?.click();
+     else {
+       document.body.classList.remove('store-view-plants','store-view-veg','store-view-grocery');
+     }
+   }
+   const visibleCount = enabledViews.filter(v => v[1]).length;
+   const tabBar = $('storeViewTabs');
+   if (tabBar) tabBar.style.setProperty('grid-template-columns', 'repeat(' + Math.max(1, visibleCount) + ', minmax(0,1fr))', 'important');
+
    // Content pages and their navigation links.
    const pageRules = [
      ['about','cmsxShowAbout'],['plantCare','cmsxShowCare'],
@@ -7598,7 +7629,28 @@ body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .
  }
  function escapeHtml(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
  async function loadRemote(){try{if(typeof db==='undefined'||!db.from)throw new Error('Supabase क्लाइंट उपलब्ध नहीं');const {data,error}=await db.from('site_settings').select('config').eq('id','public').maybeSingle();if(error)throw error;if(data&&data.config){const merged=Object.assign({},cfg(),data.config);setCfg(merged);fill(merged);if(typeof window.applySiteConfigToUI==='function')window.applySiteConfigToUI();apply(merged);status('☁️ डेटाबेस से सेटिंग सफलतापूर्वक लोड हुई।','ok');}else status('डेटाबेस टेबल में public सेटिंग नहीं मिली। SQL चलाकर सेव करें।','err');}catch(e){status('डेटाबेस सिंक उपलब्ध नहीं: '+(e.message||e)+' | अभी इस डिवाइस की सेव सेटिंग लागू है।','err');}}
- async function saveRemote(){const c=Object.assign({},cfg(),readForm());setCfg(c);apply(c);if(typeof window.applySiteConfigToUI==='function')window.applySiteConfigToUI();if(typeof window.loadPlants==='function')await window.loadPlants();try{const {data:{user}}=await db.auth.getUser();if(!user||user.id!=='1a014e64-4b85-4d2a-ba62-2cae5d9f10c9')throw new Error('पहले मालिक के एडमिन अकाउंट से लॉगिन करें');const {error}=await db.from('site_settings').upsert({id:'public',config:c,updated_at:new Date().toISOString(),updated_by:user.id},{onConflict:'id'});if(error)throw error;status('✅ सेटिंग डेटाबेस में सेव हो गईं। सभी डिवाइस पर लागू होंगी।','ok');}catch(e){status('⚠️ इस डिवाइस पर सेव हुआ, लेकिन डेटाबेस सेव नहीं हुआ: '+(e.message||e)+' | SQL / लॉगिन / RLS जाँचें।','err');}}
+ async function saveRemote(){
+   const c=Object.assign({},cfg(),readForm());
+   try{
+     if(typeof db==='undefined'||!db.from)throw new Error('Supabase क्लाइंट उपलब्ध नहीं');
+     const {data:{user},error:userError}=await db.auth.getUser();
+     if(userError)throw userError;
+     if(!user||user.id!=='1a014e64-4b85-4d2a-ba62-2cae5d9f10c9')throw new Error('पहले मालिक के एडमिन अकाउंट से लॉगिन करें');
+     const {error}=await db.from('site_settings').upsert({id:'public',config:c,updated_at:new Date().toISOString(),updated_by:user.id},{onConflict:'id'});
+     if(error)throw error;
+     // Persist locally only after the database confirms the write.
+     setCfg(c); fill(c); apply(c);
+     if(typeof window.applySiteConfigToUI==='function')window.applySiteConfigToUI();
+     status('✅ वेबसाइट की सेटिंग डेटाबेस में सेव हो गईं। अब वेबसाइट रिफ्रेश करें।','ok');
+     // Product refresh is independent: a product API delay must not undo or block saved CMS settings.
+     if(typeof window.loadPlants==='function'){
+       try{await Promise.race([window.loadPlants(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('उत्पाद सूची रिफ्रेश में समय लग रहा है')),12000))]);}
+       catch(refreshError){console.warn('Settings saved, but product refresh needs retry:',refreshError);}
+     }
+   }catch(e){
+     status('⚠️ सेटिंग डेटाबेस में सेव नहीं हुईं: '+(e.message||e)+' | लॉगिन / RLS जाँचें।','err');
+   }
+ }
  async function migrateLocalStorageToDatabase(){
    try{
      const {data:{user},error:userError}=await db.auth.getUser();
