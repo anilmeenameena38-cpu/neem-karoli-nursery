@@ -7607,10 +7607,15 @@ body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .
        }
        if(!enabled){
          b.disabled=true;
-         b.textContent='आज ऑर्डर बंद';
+         // MutationObserver watches product-list child changes. Do not replace the
+         // same text node repeatedly, or a disabled-order setting can create a loop.
+         if(b.textContent!=='आज ऑर्डर बंद') b.textContent='आज ऑर्डर बंद';
        } else {
          b.disabled=b.dataset.cmsxOriginalDisabled==='1';
-         if(b.textContent==='आज ऑर्डर बंद') b.textContent=b.dataset.cmsxOriginalLabel||'कार्ट में जोड़ें';
+         if(b.textContent==='आज ऑर्डर बंद') {
+           const originalLabel=b.dataset.cmsxOriginalLabel||'कार्ट में जोड़ें';
+           if(b.textContent!==originalLabel) b.textContent=originalLabel;
+         }
        }
      });
    });
