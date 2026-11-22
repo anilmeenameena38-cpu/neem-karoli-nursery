@@ -3558,78 +3558,8 @@ function printOrderInvoice(orderId, itemsSummary, subtotal, deliveryAmt, custNam
       <script>
         window.onload = function() { window.print(); }
       <\/script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script id="dynamic-column-controller-final">
-(function(){
-  function applyColumnSettings() {
-    try {
-      const cfg = JSON.parse(localStorage.getItem('nursery_site_config') || '{}');
-      const pCols = cfg.plantCols || '3';
-      const vCols = cfg.vegCols || '3';
-      const gCols = cfg.groceryCols || '3';
-
-      const pList = document.getElementById('plantOnlyList');
-      const vList = document.getElementById('vegOnlyList');
-      const gList = document.getElementById('groceryOnlyList');
-
-      if (pList) pList.style.gridTemplateColumns = `repeat(${pCols}, minmax(0, 1fr))`;
-      if (vList) vList.style.gridTemplateColumns = `repeat(${vCols}, minmax(0, 1fr))`;
-      if (gList) gList.style.gridTemplateColumns = `repeat(${gCols}, minmax(0, 1fr))`;
-    } catch (_) {}
-  }
-
-  // Hook into loadPlants
-  const oldLoad = window.loadPlants;
-  if (typeof oldLoad === 'function') {
-    window.loadPlants = async function() {
-      await oldLoad();
-      applyColumnSettings();
-    };
-  }
-
-  // Hook into siteSettingsForm submit to save column settings
-  document.getElementById('siteSettingsForm')?.addEventListener('submit', function() {
-    try {
-      const cfg = JSON.parse(localStorage.getItem('nursery_site_config') || '{}');
-      cfg.plantCols = document.getElementById('settingPlantCols')?.value || '3';
-      cfg.vegCols = document.getElementById('settingVegCols')?.value || '3';
-      cfg.groceryCols = document.getElementById('settingGroceryCols')?.value || '3';
-      localStorage.setItem('nursery_site_config', JSON.stringify(cfg));
-      applyColumnSettings();
-    } catch (_) {}
-  });
-
-  // Hook into fillSettingsForm to populate selectors
-  const oldFill = window.fillSettingsForm;
-  if (typeof oldFill === 'function') {
-    window.fillSettingsForm = function() {
-      oldFill();
-      try {
-        const cfg = JSON.parse(localStorage.getItem('nursery_site_config') || '{}');
-        if (document.getElementById('settingPlantCols')) document.getElementById('settingPlantCols').value = cfg.plantCols || '3';
-        if (document.getElementById('settingVegCols')) document.getElementById('settingVegCols').value = cfg.vegCols || '3';
-        if (document.getElementById('settingGroceryCols')) document.getElementById('settingGroceryCols').value = cfg.groceryCols || '3';
-      } catch (_) {}
-    };
-  }
-
-  window.addEventListener('DOMContentLoaded', applyColumnSettings);
-})();
-<\/script>
+    </body>
+    </html>
   `);
   printWindow.document.close();
 }
@@ -3678,12 +3608,24 @@ async function loadPlants() {
   const minPlantLimit = Number(cfg.minPlantQty) || 25;
 
   try {
-    const { data, error } = await db.from('plants').select('*').order('name');
+    // नेटवर्क या Supabase से जवाब न आने पर ग्राहक को अनंत समय तक Loading न दिखे।
+    const plantsRequest = db.from('plants').select('*').order('name');
+    const timeoutRequest = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Supabase से 15 सेकंड में जवाब नहीं मिला। इंटरनेट कनेक्शन, plants टेबल और Supabase API की जाँच करें।')), 15000);
+    });
+    const { data, error } = await Promise.race([plantsRequest, timeoutRequest]);
     if (error) throw error;
-    plants = data || [];
+    plants = Array.isArray(data) ? data : [];
     pList.innerHTML = ''; vList.innerHTML = '';
     const gList = document.getElementById('groceryOnlyList');
     if (gList) gList.innerHTML = '';
+
+    if (!plants.length) {
+      pList.textContent = 'अभी कोई पौधा उपलब्ध नहीं है। कृपया बाद में देखें।';
+      vList.textContent = 'अभी कोई सब्ज़ी उपलब्ध नहीं है।';
+      if (gList) gList.textContent = 'अभी कोई किराना आइटम उपलब्ध नहीं है।';
+      return;
+    }
 
     plants.forEach(p => {
       const grocery = isGrocery(p);
@@ -3870,6 +3812,7 @@ async function loadPlants() {
     };
     showError(pList, 'पौधे');
     showError(vList, 'सब्जियाँ');
+    showError(document.getElementById('groceryOnlyList'), 'किराना आइटम');
     console.error('Nursery products could not be loaded:', err);
   }
 }
@@ -5409,6 +5352,7 @@ document.querySelectorAll('.settings-subtab').forEach(btn => {
 
 
 applySiteConfigToUI();
+window.loadPlants = loadPlants;
 loadPlants();
 </script>
 
