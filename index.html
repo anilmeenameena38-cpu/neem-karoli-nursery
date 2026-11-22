@@ -7495,6 +7495,32 @@ body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .
  function readForm(){return {cmsxHomeTitle:val('cmsxHomeTitle').trim(),cmsxHomeSubtitle:val('cmsxHomeSubtitle').trim(),cmsxShowHome:checked('cmsxShowHome'),cmsxShowAbout:checked('cmsxShowAbout'),cmsxShowCare:checked('cmsxShowCare'),cmsxShowTypes:checked('cmsxShowTypes'),cmsxShowContact:checked('cmsxShowContact'),cmsxPlantsVisible:checked('cmsxPlantsVisible'),cmsxPlantsOrder:checked('cmsxPlantsOrder'),cmsxVegVisible:checked('cmsxVegVisible'),cmsxVegOrder:checked('cmsxVegOrder'),cmsxGroceryVisible:checked('cmsxGroceryVisible'),cmsxGroceryOrder:checked('cmsxGroceryOrder'),cmsxAllOrders:checked('cmsxAllOrders'),cmsxAboutText:val('cmsxAboutText').trim(),cmsxFeaturesText:val('cmsxFeaturesText').trim(),cmsxPromiseText:val('cmsxPromiseText').trim(),cmsxDesktopPlantCols:val('cmsxDesktopPlantCols')||'3',cmsxDesktopVegCols:val('cmsxDesktopVegCols')||'3',cmsxDesktopGroceryCols:val('cmsxDesktopGroceryCols')||'3',cmsxMobilePlantCols:val('cmsxMobilePlantCols')||'2',cmsxMobileVegCols:val('cmsxMobileVegCols')||'2',cmsxMobileGroceryCols:val('cmsxMobileGroceryCols')||'2',cmsxProductImageHeight:val('cmsxProductImageHeight')||'120',cmsxCardStyle:val('cmsxCardStyle')||'soft',cmsxThemeColor:val('cmsxThemeColor')||'#087a4b',cmsxHeroImageUrl:val('cmsxHeroImageUrl').trim(),cmsxHeroButtonText:val('cmsxHeroButtonText').trim(),cmsxHeroButtonUrl:val('cmsxHeroButtonUrl').trim(),cmsxMetaDescription:val('cmsxMetaDescription').trim(),cmsxMobileCompact:checked('cmsxMobileCompact')};}
  function fill(c){Object.keys(DEFAULTS).forEach(k=>{const e=$(k);if(!e)return;if(e.type==='checkbox')e.checked=c[k]!==undefined?!!c[k]:!!DEFAULTS[k];else e.value=c[k]??DEFAULTS[k];});}
  function toggle(id,on){const e=$(id);if(e){if(on)e.style.removeProperty('display');else e.style.setProperty('display','none','important');}}
+ function toggleElement(e,on){if(!e)return;if(on)e.style.removeProperty('display');else e.style.setProperty('display','none','important');}
+ // Order availability is deliberately isolated from category visibility and product rendering.
+ // This function only changes the buy buttons; it never changes list DOM structure.
+ function applyOrderControls(c){
+   const rules=[
+     ['plantOnlyList',!!c.cmsxPlantsOrder && !!c.cmsxAllOrders],
+     ['vegOnlyList',!!c.cmsxVegOrder && !!c.cmsxAllOrders],
+     ['groceryOnlyList',!!c.cmsxGroceryOrder && !!c.cmsxAllOrders]
+   ];
+   rules.forEach(([id,enabled])=>{
+     const root=$(id); if(!root)return;
+     root.querySelectorAll('.plant-buy-button').forEach(b=>{
+       if(!Object.prototype.hasOwnProperty.call(b.dataset,'cmsxOriginalDisabled')){
+         b.dataset.cmsxOriginalDisabled=b.disabled?'1':'0';
+         b.dataset.cmsxOriginalLabel=b.textContent;
+       }
+       if(!enabled){
+         b.disabled=true;
+         if(b.textContent!=='आज ऑर्डर बंद') b.textContent='आज ऑर्डर बंद';
+       }else{
+         b.disabled=b.dataset.cmsxOriginalDisabled==='1';
+         if(b.textContent==='आज ऑर्डर बंद') b.textContent=b.dataset.cmsxOriginalLabel||'कार्ट में जोड़ें';
+       }
+     });
+   });
+ }
  function apply(c){
    // Keep the category switcher and its matching content in sync.
    const categoryRules = [
@@ -7526,7 +7552,13 @@ body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .
    }
    const visibleCount = enabledViews.filter(v => v[1]).length;
    const tabBar = $('storeViewTabs');
-   if (tabBar) tabBar.style.setProperty('grid-template-columns', 'repeat(' + Math.max(1, visibleCount) + ', minmax(0,1fr))', 'important');
+   if (tabBar) {
+     tabBar.style.setProperty('grid-template-columns', 'repeat(' + Math.max(1, visibleCount) + ', minmax(0,1fr))', 'important');
+     toggleElement(tabBar, !!c.cmsxShowHome && visibleCount > 0);
+   }
+   // Search belongs to the home product catalogue and should follow the home switch.
+   const searchCard = $('storeProductSearch')?.closest('.card');
+   toggleElement(searchCard, !!c.cmsxShowHome && visibleCount > 0);
 
    // Content pages and their navigation links.
    const pageRules = [
@@ -7591,34 +7623,8 @@ body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .
    }
    if(meta && c.cmsxMetaDescription) meta.setAttribute('content',c.cmsxMetaDescription);
 
-   // Enforce category-specific order switches on all currently rendered products.
-   const rules=[
-     ['plantOnlyList',!!c.cmsxPlantsOrder && !!c.cmsxAllOrders],
-     ['vegOnlyList',!!c.cmsxVegOrder && !!c.cmsxAllOrders],
-     ['groceryOnlyList',!!c.cmsxGroceryOrder && !!c.cmsxAllOrders]
-   ];
-   rules.forEach(([id,enabled])=>{
-     const root=$(id); if(!root)return;
-     root.querySelectorAll('.plant-buy-button').forEach(b=>{
-       // पहली बार की वास्तविक disabled अवस्था और मूल label याद रखें।
-       if(!Object.prototype.hasOwnProperty.call(b.dataset,'cmsxOriginalDisabled')){
-         b.dataset.cmsxOriginalDisabled=b.disabled?'1':'0';
-         b.dataset.cmsxOriginalLabel=b.textContent;
-       }
-       if(!enabled){
-         b.disabled=true;
-         // MutationObserver watches product-list child changes. Do not replace the
-         // same text node repeatedly, or a disabled-order setting can create a loop.
-         if(b.textContent!=='आज ऑर्डर बंद') b.textContent='आज ऑर्डर बंद';
-       } else {
-         b.disabled=b.dataset.cmsxOriginalDisabled==='1';
-         if(b.textContent==='आज ऑर्डर बंद') {
-           const originalLabel=b.dataset.cmsxOriginalLabel||'कार्ट में जोड़ें';
-           if(b.textContent!==originalLabel) b.textContent=originalLabel;
-         }
-       }
-     });
-   });
+   // Apply category-specific order availability without changing category visibility.
+   applyOrderControls(c);
 
    // Mobile columns apply immediately and also on viewport resize.
    const mobile=window.matchMedia('(max-width:700px)').matches;
@@ -7679,7 +7685,7 @@ body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .
      status('✅ '+rows.length+' लोकल डेटा आइटम सुरक्षित रूप से Supabase डेटाबेस में सेव हो गए।','ok');
    }catch(e){status('❌ लोकल डेटा माइग्रेशन नहीं हुआ: '+(e.message||e)+' | SQL चलाएँ और मालिक के अकाउंट से लॉगिन जाँचें।','err');}
  }
- function init(){const c=cfg();fill(c);apply(c);$('cmsxMigrateLocalBtn')?.addEventListener('click',migrateLocalStorageToDatabase);$('cmsxSaveBtn')?.addEventListener('click',saveRemote);$('cmsxReloadBtn')?.addEventListener('click',loadRemote);$('cmsxExportBtn')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify(cfg(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='neem-nursery-site-backup.json';a.click();URL.revokeObjectURL(a.href);});$('cmsxImportFile')?.addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const imported=JSON.parse(await f.text());const merged=Object.assign({},cfg(),imported);setCfg(merged);fill(merged);apply(merged);status('बैकअप लोड हुआ। अब डेटाबेस में सेव करें।','ok');}catch(_){status('गलत बैकअप फाइल।','err');}});$('cmsxCopySqlBtn')?.addEventListener('click',()=>{const t=$('cmsxSqlText')?.textContent||'';if(navigator.clipboard?.writeText)navigator.clipboard.writeText(t).then(()=>status('SQL कॉपी हो गया।','ok')).catch(()=>status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err'));else status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err');});window.addEventListener('resize',()=>apply(cfg()),{passive:true});document.querySelectorAll('.settings-subtab').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.subtab==='complete')fill(cfg());}));$('siteSettingsForm')?.addEventListener('submit',()=>setTimeout(saveRemote,0));['plantOnlyList','vegOnlyList','groceryOnlyList'].forEach(id=>{const root=$(id);if(root&&window.MutationObserver)new MutationObserver(()=>apply(cfg())).observe(root,{childList:true,subtree:true});});loadRemote();}
+ function init(){const c=cfg();fill(c);apply(c);$('cmsxMigrateLocalBtn')?.addEventListener('click',migrateLocalStorageToDatabase);$('cmsxSaveBtn')?.addEventListener('click',saveRemote);$('cmsxReloadBtn')?.addEventListener('click',loadRemote);$('cmsxExportBtn')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify(cfg(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='neem-nursery-site-backup.json';a.click();URL.revokeObjectURL(a.href);});$('cmsxImportFile')?.addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const imported=JSON.parse(await f.text());const merged=Object.assign({},cfg(),imported);setCfg(merged);fill(merged);apply(merged);status('बैकअप लोड हुआ। अब डेटाबेस में सेव करें।','ok');}catch(_){status('गलत बैकअप फाइल।','err');}});$('cmsxCopySqlBtn')?.addEventListener('click',()=>{const t=$('cmsxSqlText')?.textContent||'';if(navigator.clipboard?.writeText)navigator.clipboard.writeText(t).then(()=>status('SQL कॉपी हो गया।','ok')).catch(()=>status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err'));else status('SQL को टेक्स्ट से चुनकर कॉपी करें।','err');});window.addEventListener('resize',()=>apply(cfg()),{passive:true});document.querySelectorAll('.settings-subtab').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.subtab==='complete')fill(cfg());}));$('siteSettingsForm')?.addEventListener('submit',()=>setTimeout(saveRemote,0));['plantOnlyList','vegOnlyList','groceryOnlyList'].forEach(id=>{const root=$(id);if(root&&window.MutationObserver)new MutationObserver(()=>applyOrderControls(cfg())).observe(root,{childList:true,subtree:true});});loadRemote();}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
