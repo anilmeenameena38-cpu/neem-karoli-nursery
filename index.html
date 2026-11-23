@@ -3519,9 +3519,7 @@ function isVeg(p) {
   return /सब्जी|सब्ज़ी|veg|vegetable/i.test(String(p && p.category || ''));
 }
 function isPlant(p) {
-  if (isVeg(p) || isGrocery(p)) return false;
-  const cat = String(p && p.category || '').trim().toLowerCase();
-  return !cat || /पौधा|पौधे|nursery|plant|seedling/i.test(cat) || !/सब्जी|सब्ज़ी|veg|vegetable|किराना|grocery|drink|cake|बेकरी/i.test(cat);
+  return !isVeg(p) && !isGrocery(p);
 }
 
 // 🟢 चेक करने के लिए कि क्या यह ग्राम (जैसे धनिया, पुदीना) वाली सब्जी है
@@ -3549,17 +3547,12 @@ function getISTDate(dateInput) {
 async function loadPlants() {
   const pList = document.getElementById('plantOnlyList');
   const vList = document.getElementById('vegOnlyList');
-  const gList = document.getElementById('groceryOnlyList');
+  const cfg = getSiteConfig();
+  const minPlantLimit = Math.max(1, Number(cfg.minPlantQty ?? 25));
+  const minVegLimit = Math.max(0.25, Number(cfg.minVegQty ?? 1));
+  const minGroceryLimit = Math.max(1, Number(cfg.minGroceryQty ?? 1));
 
   try {
-    if (!pList || !vList) throw new Error('वेबसाइट में उत्पाद सूची का HTML सेक्शन नहीं मिला।');
-    const cfg = getSiteConfig();
-    const minPlantLimit = Math.max(1, Number(cfg.minPlantQty ?? 25));
-    const minVegLimit = Math.max(0.25, Number(cfg.minVegQty ?? 1));
-    const minGroceryLimit = Math.max(1, Number(cfg.minGroceryQty ?? 1));
-    if (typeof db === 'undefined' || !db || typeof db.from !== 'function') {
-      throw new Error('Supabase कनेक्शन शुरू नहीं हुआ। इंटरनेट/ Supabase JS लाइब्रेरी जाँचें और पेज रीफ्रेश करें।');
-    }
     const { data, error } = await db.from('plants').select('*').order('name');
     if (error) throw error;
     try {
@@ -3569,6 +3562,7 @@ async function loadPlants() {
     } catch (_) {}
     plants = data || [];
     pList.innerHTML = ''; vList.innerHTML = '';
+    const gList = document.getElementById('groceryOnlyList');
     if (gList) gList.innerHTML = '';
 
     plants.forEach(p => {
@@ -4400,6 +4394,10 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
       customer_name: customerName,
       customer_phone: cleanPhone,
       customer_address: fullAddress,
+      delivery_address: fullAddress,
+      customer_latitude: customerLocation ? Number(customerLocation.lat) : null,
+      customer_longitude: customerLocation ? Number(customerLocation.lon) : null,
+      customer_location_accuracy: customerLocation ? Number(customerLocation.accuracyM || 0) : null,
       notes: `CART_ORDER | UTR:${utrNumber} | DISTANCE:${deliveryDistanceKm?.toFixed(1)}km | DELIVERY_FEE:${appliedDeliveryFee} | DISCOUNT:${discountAmt} | LOCATION_NAME:${encodeURIComponent(customerLocation?.address || '')} | MAPS:${customerLocation?.mapsUrl || ''} | PROOF:${proofUrl}`,
       stock_items: shoppingCart.map(item => ({ id: String(item.id), qty: Number(item.qty) })),
       status: 'pending'
@@ -5888,7 +5886,7 @@ loadPlants();
 
   menu.addEventListener('click', (event) => {
     const item = event.target.closest('a, button');
-    if (item && isMobileScreen() && item.id !== 'aboutNavToggle') setMenu(false);
+    if (item && isMobileScreen()) setMenu(false);
   }, true);
 
   document.addEventListener('click', (event) => {
@@ -7659,41 +7657,6 @@ body.cmsx-card-shadow #plantOnlyList .plant,body.cmsx-card-shadow #vegOnlyList .
   </div>
 </div>
 
-<!-- v35 product-list recovery: runs after all page scripts and reports useful connection errors -->
-<script id="v35-product-list-recovery">
-(function () {
-  function showFailure(message) {
-    ['plantOnlyList','vegOnlyList','groceryOnlyList'].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (!el) return;
-      if (el.querySelector('.plant')) return;
-      el.innerHTML = '';
-      var box = document.createElement('div');
-      box.style.cssText = 'grid-column:1/-1;padding:14px;border:1px solid #fecaca;border-radius:12px;background:#fff7f7;color:#991b1b;font-size:13px;';
-      var title = document.createElement('strong'); title.textContent = 'उत्पाद सूची लोड नहीं हो पाई।';
-      var detail = document.createElement('p'); detail.style.margin = '6px 0'; detail.textContent = 'कारण: ' + message;
-      var retry = document.createElement('button'); retry.type = 'button'; retry.textContent = '↻ दोबारा कोशिश करें';
-      retry.addEventListener('click', function () { run(true); });
-      box.append(title, detail, retry); el.appendChild(box);
-    });
-  }
-  async function run(force) {
-    try {
-      if (typeof window.loadPlants !== 'function' && typeof loadPlants !== 'function') {
-        throw new Error('उत्पाद लोड करने वाला JavaScript शुरू नहीं हुआ। पेज को GitHub/Hostinger पर पूरी तरह अपडेट करें।');
-      }
-      var fn = window.loadPlants || loadPlants;
-      await fn();
-      var lists = ['plantOnlyList','vegOnlyList','groceryOnlyList'].map(function(id){return document.getElementById(id)}).filter(Boolean);
-      var hasCards = lists.some(function(el){return el.querySelector('.plant')});
-      var hasError = lists.some(function(el){return /लोड नहीं हो पाई|लोड नहीं हो पाए/.test(el.textContent)});
-      if (!hasCards && !hasError) showFailure('Supabase से कोई उत्पाद नहीं आया। Supabase में plants टेबल, RLS SELECT policy और नेटवर्क जाँचें।');
-    } catch (e) { showFailure(e && e.message ? e.message : String(e)); }
-  }
-  if (document.readyState === 'complete') setTimeout(function(){run(false)}, 250);
-  else window.addEventListener('load', function(){setTimeout(function(){run(false)}, 250)}, {once:true});
-})();
-</script>
 </body>
 
 </html>
